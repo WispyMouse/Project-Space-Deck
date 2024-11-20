@@ -5,14 +5,28 @@ namespace SpaceDeck.Tokenization.Minimum
 
     /// <summary>
     /// Describes a stack of LinkedTokens.
+    /// 
+    /// TODO: Cache "First" such that it isn't requeried each time.
     /// </summary>
     public struct LinkedTokenList
     {
-        public List<LinkedToken> Tokens;
-
-        public LinkedTokenList(List<LinkedToken> tokens)
+        public List<LinkedTokenScope> Scopes;
+        public LinkedToken First
         {
-            this.Tokens = tokens;
+            get
+            {
+                if (this.Scopes == null || this.Scopes.Count == 0 || this.Scopes[0].Tokens == null || this.Scopes[0].Tokens.Count == 0)
+                {
+                    return null;
+                }
+
+                return this.Scopes[0].Tokens[0];
+            }
+        }
+
+        public LinkedTokenList(List<LinkedTokenScope> scopes)
+        {
+            this.Scopes = scopes;
         }
     }
 }

@@ -9,6 +9,10 @@ namespace SpaceDeck.Tokenization.Minimum
     /// Through the combination of <see cref="ScriptingCommandIdentifier"/>
     /// and optionally any <see cref="Arguments"/>, this TokenStatement can be
     /// used to create one or more ParsedTokens.
+    /// 
+    /// As it does not yet know about the details or requirements of
+    /// its parameters, it is possible for an impossible or unparseable
+    /// TokenStatement to be provided.
     /// </summary>
     public class TokenStatement
     {

@@ -8,11 +8,11 @@ namespace SpaceDeck.Tokenization.Minimum
     /// </summary>
     public struct ParsedTokenList
     {
-        public List<ParsedToken> Tokens;
+        public List<ParsedTokenScope> Scopes;
 
-        public ParsedTokenList(List<ParsedToken> tokens)
+        public ParsedTokenList(List<ParsedTokenScope> scopes)
         {
-            this.Tokens = tokens;
+            this.Scopes = scopes;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace SpaceDeck.Gamestate.Minimum
+namespace SpaceDeck.GameState.Minimum
 {
     using System.Collections;
     using System.Collections.Generic;

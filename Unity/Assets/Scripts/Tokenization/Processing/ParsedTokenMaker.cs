@@ -11,27 +11,50 @@ namespace SpaceDeck.Tokenization.Processing
     {
         public static bool TryGetParsedTokensFromTokenText(TokenText baseText, out ParsedTokenList parsedSet)
         {
-            List<ParsedToken> tokens = new List<ParsedToken>();
+            List<ParsedTokenScope> parsedScopes = new List<ParsedTokenScope>();
+            ParsedTokenScope previousScope = null;
+            ParsedToken previousToken = null;
 
             foreach (TokenTextScope scope in baseText.Scopes)
             {
+                List<ParsedToken> parsedTokens = new List<ParsedToken>();
+                ParsedTokenScope parsedScope = new ParsedTokenScope(parsedTokens);
+                parsedScopes.Add(parsedScope);
+
                 foreach (TokenStatement statement in scope.Statements)
                 {
-                    if (!ScriptingCommandReference.TryGetScriptingCommandByIdentifier(statement.ScriptingCommandIdentifier, out ScriptingCommand command))
+                    if (!ScriptingCommandReference.TryGetScriptingCommandByIdentifier(statement.ScriptingCommandIdentifier, out ScriptingCommand scriptingCommand))
                     {
-                        // TODO: This means something has been input incorrectly
-                        // What's the best way to gracefully inform the user?
-                        // Probably hooking up the logs soon
+                        // TODO Log failure
                         parsedSet = default(ParsedTokenList);
                         return false;
                     }
 
-                    ParsedToken token = new ParsedToken(command, statement.Arguments);
-                    tokens.Add(token);
+                    // TODO Validate that the provided Arguments are potentially valid for the selected command
+
+                    ParsedToken parsedToken = new ParsedToken(scriptingCommand, statement.Arguments);
+                    parsedTokens.Add(parsedToken);
+                    parsedToken.Scope = parsedScope;
+
+                    // If this is the first statement after a scope has closed, then assign
+                    // that scope's "Next" to this Statement's ParsedToken
+                    if (previousScope != null && previousScope != parsedScope)
+                    {
+                        previousScope.NextStatementAfterScope = parsedToken;
+                    }
+
+                    if (previousToken != null)
+                    {
+                        previousToken.NextToken = parsedToken;
+                    }
+
+                    previousToken = parsedToken;
                 }
+
+                previousScope = parsedScope;
             }
 
-            parsedSet = new ParsedTokenList(tokens);
+            parsedSet = new ParsedTokenList(parsedScopes);
             return true;
         }
     }

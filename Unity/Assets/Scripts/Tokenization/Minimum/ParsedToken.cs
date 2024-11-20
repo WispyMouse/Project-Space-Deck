@@ -20,6 +20,9 @@ namespace SpaceDeck.Tokenization.Minimum
         public readonly ScriptingCommand CommandToExecute;
         public readonly List<LowercaseString> Arguments;
 
+        public ParsedToken NextToken;
+        public ParsedTokenScope Scope;
+
         public ParsedToken(ScriptingCommand commandToExecute, List<LowercaseString> arguments)
         {
             this.CommandToExecute = commandToExecute;

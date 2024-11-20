@@ -11,7 +11,10 @@ namespace SpaceDeck.Tokenization.Minimum
     /// </summary>
     public class LinkedToken : ParsedToken
     {
-        public LinkedToken(ScriptingCommand commandToExecute, List<LowercaseString> arguments) : base(commandToExecute, arguments)
+        public LinkedTokenScope LinkedScope;
+        public LinkedToken NextLinkedToken;
+
+        public LinkedToken(ParsedToken parsedToken) : base(parsedToken.CommandToExecute, parsedToken.Arguments)
         {
         }
     }

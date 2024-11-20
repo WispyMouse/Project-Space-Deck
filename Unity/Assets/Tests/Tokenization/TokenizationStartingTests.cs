@@ -64,8 +64,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             string helloWorldTokenTextString = $"[{HelloWorldScriptingCommand.IdentifierString}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(helloWorldTokenTextString, out TokenText helloWorldTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(helloWorldTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
-            Assert.AreEqual(1, parsedSet.Tokens.Count, "There should be one token in the parse results, because only one token is supplied.");
-            Assert.True(parsedSet.Tokens[0].CommandToExecute is HelloWorldScriptingCommand, "The token that was created should be the testing Hello World token.");
+            Assert.AreEqual(1, parsedSet.Scopes.Count, "There should be one scope in the parse results, because only one token is supplied.");
+            Assert.AreEqual(1, parsedSet.Scopes[0].Tokens.Count, "There should be one token in the parse results, because only one token is supplied.");
+            Assert.True(parsedSet.Scopes[0].Tokens[0].CommandToExecute is HelloWorldScriptingCommand, "The token that was created should be the testing Hello World token.");
         }
 
         /// <summary>
@@ -80,12 +81,13 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             string twoArgumentTokenTextString = $"[{TwoArgumentScriptingCommand.IdentifierString}:FOO 123]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(twoArgumentTokenTextString, out TokenText twoArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(twoArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
-            Assert.AreEqual(1, parsedSet.Tokens.Count, "There should be one token in the parse results, because only one token is supplied.");
-            Assert.True(parsedSet.Tokens[0].CommandToExecute is TwoArgumentScriptingCommand, "The token that was created should be the testing Two Argument token.");
-            Assert.True(parsedSet.Tokens[0].Arguments != null, "Should have arguments array, as two were supplied.");
-            Assert.True(parsedSet.Tokens[0].Arguments.Count == 2, "Should have two arguments.");
-            Assert.AreEqual("FOO", parsedSet.Tokens[0].Arguments[0], "Argument should be as expected in the correct order.");
-            Assert.AreEqual("123", parsedSet.Tokens[0].Arguments[1], "Argument should be as expected in the correct order.");
+            Assert.AreEqual(1, parsedSet.Scopes.Count, "There should be one scope in the parse results, because only one token is supplied.");
+            Assert.AreEqual(1, parsedSet.Scopes[0].Tokens.Count, "There should be one token in the parse results, because only one token is supplied.");
+            Assert.True(parsedSet.Scopes[0].Tokens[0].CommandToExecute is TwoArgumentScriptingCommand, "The token that was created should be the testing Two Argument token.");
+            Assert.True(parsedSet.Scopes[0].Tokens[0].Arguments != null, "Should have arguments array, as two were supplied.");
+            Assert.True(parsedSet.Scopes[0].Tokens[0].Arguments.Count == 2, "Should have two arguments.");
+            Assert.AreEqual("FOO", parsedSet.Scopes[0].Tokens[0].Arguments[0], "Argument should be as expected in the correct order.");
+            Assert.AreEqual("123", parsedSet.Scopes[0].Tokens[0].Arguments[1], "Argument should be as expected in the correct order.");
         }
 
         /// <summary>
@@ -103,24 +105,25 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(mixedTokenTextString, out TokenText mixedArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(mixedArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
 
-            Assert.AreEqual(5, parsedSet.Tokens.Count, "There should be five tokens in the parse results.");
+            Assert.AreEqual(5, parsedSet.Scopes.Count, "There should be one scope in the parse results.");
+            Assert.AreEqual(5, parsedSet.Scopes[0].Tokens.Count, "There should be five tokens in the parse results.");
 
-            Assert.True(parsedSet.Tokens[0].CommandToExecute is HelloWorldScriptingCommand, "The first token should be a Hello World token.");
-            Assert.True(parsedSet.Tokens[1].CommandToExecute is HelloWorldScriptingCommand, "The second token should be a Hello World token.");
+            Assert.True(parsedSet.Scopes[0].Tokens[0].CommandToExecute is HelloWorldScriptingCommand, "The first token should be a Hello World token.");
+            Assert.True(parsedSet.Scopes[0].Tokens[1].CommandToExecute is HelloWorldScriptingCommand, "The second token should be a Hello World token.");
 
-            Assert.True(parsedSet.Tokens[2].CommandToExecute is TwoArgumentScriptingCommand, "The third token should be a Two Argument token.");
-            Assert.True(parsedSet.Tokens[2].Arguments != null, "Should have arguments array, as two were supplied.");
-            Assert.True(parsedSet.Tokens[2].Arguments.Count == 2, "Should have two arguments.");
-            Assert.AreEqual("456", parsedSet.Tokens[2].Arguments[0], "Argument should be as expected in the correct order.");
-            Assert.AreEqual("ABC", parsedSet.Tokens[2].Arguments[1], "Argument should be as expected in the correct order.");
+            Assert.True(parsedSet.Scopes[0].Tokens[2].CommandToExecute is TwoArgumentScriptingCommand, "The third token should be a Two Argument token.");
+            Assert.True(parsedSet.Scopes[0].Tokens[2].Arguments != null, "Should have arguments array, as two were supplied.");
+            Assert.True(parsedSet.Scopes[0].Tokens[2].Arguments.Count == 2, "Should have two arguments.");
+            Assert.AreEqual("456", parsedSet.Scopes[0].Tokens[2].Arguments[0], "Argument should be as expected in the correct order.");
+            Assert.AreEqual("ABC", parsedSet.Scopes[0].Tokens[2].Arguments[1], "Argument should be as expected in the correct order.");
 
-            Assert.True(parsedSet.Tokens[3].CommandToExecute is HelloWorldScriptingCommand, "The fourth token should be a Hello World token.");
+            Assert.True(parsedSet.Scopes[0].Tokens[3].CommandToExecute is HelloWorldScriptingCommand, "The fourth token should be a Hello World token.");
 
-            Assert.True(parsedSet.Tokens[4].CommandToExecute is TwoArgumentScriptingCommand, "The fifth token should be a Two Argument token.");
-            Assert.True(parsedSet.Tokens[4].Arguments != null, "Should have arguments array, as two were supplied.");
-            Assert.True(parsedSet.Tokens[4].Arguments.Count == 2, "Should have two arguments.");
-            Assert.AreEqual("9.9", parsedSet.Tokens[4].Arguments[0], "Argument should be as expected in the correct order.");
-            Assert.AreEqual("EEEEE", parsedSet.Tokens[4].Arguments[1], "Argument should be as expected in the correct order.");
+            Assert.True(parsedSet.Scopes[0].Tokens[4].CommandToExecute is TwoArgumentScriptingCommand, "The fifth token should be a Two Argument token.");
+            Assert.True(parsedSet.Scopes[0].Tokens[4].Arguments != null, "Should have arguments array, as two were supplied.");
+            Assert.True(parsedSet.Scopes[0].Tokens[4].Arguments.Count == 2, "Should have two arguments.");
+            Assert.AreEqual("9.9", parsedSet.Scopes[0].Tokens[4].Arguments[0], "Argument should be as expected in the correct order.");
+            Assert.AreEqual("EEEEE", parsedSet.Scopes[0].Tokens[4].Arguments[1], "Argument should be as expected in the correct order.");
         }
 
         /// <summary>

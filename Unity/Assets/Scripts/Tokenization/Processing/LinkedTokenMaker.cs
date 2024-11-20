@@ -11,21 +11,47 @@ namespace SpaceDeck.Tokenization.Processing
     {
         public static bool TryGetLinkedTokenList(ParsedTokenList parsedTokenSet, out LinkedTokenList linkedTokenList)
         {
-            List<LinkedToken> linkedTokens = new List<LinkedToken>();
+            List<LinkedTokenScope> linkedScopes = new List<LinkedTokenScope>();
+            LinkedTokenScope previousScope = null;
+            LinkedToken previousToken = null;
 
-            foreach (ParsedToken parsedToken in parsedTokenSet.Tokens)
+            foreach (ParsedTokenScope scope in parsedTokenSet.Scopes)
             {
-                if (!parsedToken.CommandToExecute.TryGetLinkedToken(parsedToken, out LinkedToken linkedToken))
+                List<LinkedToken> linkedTokens = new List<LinkedToken>();
+                LinkedTokenScope linkedScope = new LinkedTokenScope(linkedTokens);
+                linkedScopes.Add(linkedScope);
+
+                foreach (ParsedToken parsedToken in scope.Tokens)
                 {
-                    // TODO log failure
-                    linkedTokenList = default(LinkedTokenList);
-                    return false;
+                    if (!parsedToken.CommandToExecute.TryGetLinkedToken(parsedToken, out LinkedToken linkedToken))
+                    {
+                        // TODO log failure
+                        linkedTokenList = default(LinkedTokenList);
+                        return false;
+                    }
+
+                    linkedTokens.Add(linkedToken);
+                    linkedToken.LinkedScope = linkedScope;
+
+                    // If this is the first statement after a scope has closed, then assign
+                    // that scope's "Next" to this Statement's ParsedToken
+                    if (previousScope != null && previousScope != linkedScope)
+                    {
+                        previousScope.NextStatementAfterScope = linkedToken;
+                    }
+
+                    if (previousToken != null)
+                    {
+                        previousToken.NextToken = parsedToken;
+                    }
+
+                    previousToken = linkedToken;
                 }
 
-                linkedTokens.Add(linkedToken);
+                previousScope = linkedScope;
             }
 
-            linkedTokenList = new LinkedTokenList(linkedTokens);
+            linkedTokenList = new LinkedTokenList(linkedScopes);
             return true;
         }
     }
