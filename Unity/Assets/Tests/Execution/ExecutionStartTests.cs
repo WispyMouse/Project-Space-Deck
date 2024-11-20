@@ -24,14 +24,27 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     {
         private class ZeroArgumentDebugLogScriptingCommand : ScriptingCommand
         {
+            public const string HelloString = "HELLO!";
             public static readonly LowercaseString IdentifierString = new LowercaseString("ZEROARGUMENTDEBUG");
             public override LowercaseString Identifier => IdentifierString;
+
+            public override bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+            {
+                delta.DebugLogs.Add(HelloString);
+                return true;
+            }
         }
 
         private class OneArgumentDebugLogScriptingCommand : ScriptingCommand
         {
             public static readonly LowercaseString IdentifierString = new LowercaseString("ONEARGUMENTDEBUG");
             public override LowercaseString Identifier => IdentifierString;
+
+            public override bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+            {
+                delta.DebugLogs.Add(token.Arguments[0].ToString());
+                return true;
+            }
         }
 
         [TearDown]
@@ -61,7 +74,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.DebugLogs.Count, "Expecting one debug log from the zero argument test.");
-            Assert.AreEqual("HELLO!", generatedDelta.DebugLogs[0], "Expecting debug log to be as designated.");
+            Assert.AreEqual(ZeroArgumentDebugLogScriptingCommand.HelloString, generatedDelta.DebugLogs[0], "Expecting debug log to be as designated.");
         }
 
         /// <summary>

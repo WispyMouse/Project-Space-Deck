@@ -105,7 +105,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(mixedTokenTextString, out TokenText mixedArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(mixedArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
 
-            Assert.AreEqual(5, parsedSet.Scopes.Count, "There should be one scope in the parse results.");
+            Assert.AreEqual(1, parsedSet.Scopes.Count, "There should be one scope in the parse results.");
             Assert.AreEqual(5, parsedSet.Scopes[0].Tokens.Count, "There should be five tokens in the parse results.");
 
             Assert.True(parsedSet.Scopes[0].Tokens[0].CommandToExecute is HelloWorldScriptingCommand, "The first token should be a Hello World token.");
