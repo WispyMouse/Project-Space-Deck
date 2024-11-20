@@ -6,11 +6,11 @@ namespace SpaceDeck.Tokenization.Minimum
     /// <summary>
     /// Describes a stack of LinkedTokens.
     /// </summary>
-    public struct LinkedTokenSet
+    public struct LinkedTokenList
     {
         public List<LinkedToken> Tokens;
 
-        public LinkedTokenSet(List<LinkedToken> tokens)
+        public LinkedTokenList(List<LinkedToken> tokens)
         {
             this.Tokens = tokens;
         }

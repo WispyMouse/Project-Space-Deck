@@ -5,18 +5,18 @@ namespace SpaceDeck.GameState.Execution
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents a token set with the appropriate play context
+    /// Represents a token list with the appropriate play context
     /// to start representing the necessary questions to answer
     /// in order to play the card.
     /// 
     /// When this is provided with answers, it can be parsed
     /// into a <see cref="GameState.Minimum.GameStateDelta"/>.
     /// </summary>
-    public struct ContextualizedTokenSet
+    public struct ContextualizedTokenList
     {
-        public readonly LinkedTokenSet Tokens;
+        public readonly LinkedTokenList Tokens;
 
-        public ContextualizedTokenSet(LinkedTokenSet tokens)
+        public ContextualizedTokenList(LinkedTokenList tokens)
         {
             this.Tokens = tokens;
         }

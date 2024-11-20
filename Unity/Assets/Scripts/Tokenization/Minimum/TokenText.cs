@@ -13,7 +13,7 @@ namespace SpaceDeck.Tokenization.Minimum
     /// Each TokenStatement can have its <see cref="TokenStatement.ScriptingCommandIdentifier"/>
     /// matched to a <see cref="ScriptingCommand"/>, and then <see cref="TokenStatement.Arguments"/>
     /// can be provided to form a <see cref="ParsedToken"/>. An entire TokenText parsed
-    /// becomes a <see cref="ParsedTokenSet"/>.
+    /// becomes a <see cref="ParsedTokenList"/>.
     /// </summary>
     public struct TokenText
     {

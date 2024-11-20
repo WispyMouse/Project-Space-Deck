@@ -52,12 +52,12 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             string zeroArgumentDebugLogTokenTextString = $"[{ZeroArgumentDebugLogScriptingCommand.IdentifierString}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(zeroArgumentDebugLogTokenTextString, out TokenText zeroArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
-            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(zeroArgumentTokenText, out ParsedTokenSet parsedSet), "Should be able to parse tokens from token text.");
-            Assert.True(LinkedTokenMaker.TryGetLinkedTokenSet(parsedSet, out LinkedTokenSet linkedTokenSet), "Should be able to link tokens.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(zeroArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             GameState gameState = new GameState();
 
-            ContextualizedTokenSet contextualizedTokens = new ContextualizedTokenSet(linkedTokenSet);
+            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.DebugLogs.Count, "Expecting one debug log from the zero argument test.");
@@ -75,12 +75,12 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             string oneArgumentDebugLogTokenTextString = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:111]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(oneArgumentDebugLogTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
-            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenSet parsedSet), "Should be able to parse tokens from token text.");
-            Assert.True(LinkedTokenMaker.TryGetLinkedTokenSet(parsedSet, out LinkedTokenSet linkedTokenSet), "Should be able to link tokens.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             GameState gameState = new GameState();
 
-            ContextualizedTokenSet contextualizedTokens = new ContextualizedTokenSet(linkedTokenSet);
+            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.DebugLogs.Count, "Expecting one debug log from the one argument test.");

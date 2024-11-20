@@ -5,11 +5,11 @@ namespace SpaceDeck.Tokenization.Processing
     using System.Collections.Generic;
 
     /// <summary>
-    /// Static helper class for turning <see cref="TokenText"/> into <see cref="ParsedTokenSet"/>.
+    /// Static helper class for turning <see cref="TokenText"/> into <see cref="ParsedTokenList"/>.
     /// </summary>
     public static class LinkedTokenMaker
     {
-        public static bool TryGetLinkedTokenSet(ParsedTokenSet parsedTokenSet, out LinkedTokenSet linkedTokenSet)
+        public static bool TryGetLinkedTokenList(ParsedTokenList parsedTokenSet, out LinkedTokenList linkedTokenList)
         {
             List<LinkedToken> linkedTokens = new List<LinkedToken>();
 
@@ -18,14 +18,14 @@ namespace SpaceDeck.Tokenization.Processing
                 if (!parsedToken.CommandToExecute.TryGetLinkedToken(parsedToken, out LinkedToken linkedToken))
                 {
                     // TODO log failure
-                    linkedTokenSet = default(LinkedTokenSet);
+                    linkedTokenList = default(LinkedTokenList);
                     return false;
                 }
 
                 linkedTokens.Add(linkedToken);
             }
 
-            linkedTokenSet = new LinkedTokenSet(linkedTokens);
+            linkedTokenList = new LinkedTokenList(linkedTokens);
             return true;
         }
     }

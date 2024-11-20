@@ -6,11 +6,11 @@ namespace SpaceDeck.Tokenization.Minimum
     /// <summary>
     /// Describes a stack of <see cref="ParsedToken"/>s.
     /// </summary>
-    public struct ParsedTokenSet
+    public struct ParsedTokenList
     {
         public List<ParsedToken> Tokens;
 
-        public ParsedTokenSet(List<ParsedToken> tokens)
+        public ParsedTokenList(List<ParsedToken> tokens)
         {
             this.Tokens = tokens;
         }

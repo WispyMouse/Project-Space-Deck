@@ -11,17 +11,17 @@ namespace SpaceDeck.Models.Prototypes
     /// </summary>
     public class CardPrototype
     {
-        public readonly ParsedTokenSet ParsedTokens;
-        public LinkedTokenSet LinkedTokens { get; private set; }
+        public readonly ParsedTokenList ParsedTokens;
+        public LinkedTokenList LinkedTokens { get; private set; }
 
-        public CardPrototype(ParsedTokenSet parsedTokens)
+        public CardPrototype(ParsedTokenList parsedTokens)
         {
             this.ParsedTokens = parsedTokens;
         }
 
         public void LinkTokens()
         {
-            this.LinkedTokens = new LinkedTokenSet();
+            this.LinkedTokens = new LinkedTokenList();
         }
     }
 }

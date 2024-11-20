@@ -5,11 +5,11 @@ namespace SpaceDeck.Tokenization.Processing
     using System.Collections.Generic;
 
     /// <summary>
-    /// Static helper class for turning <see cref="TokenText"/> into <see cref="ParsedTokenSet"/>.
+    /// Static helper class for turning <see cref="TokenText"/> into <see cref="ParsedTokenList"/>.
     /// </summary>
     public static class ParsedTokenMaker
     {
-        public static bool TryGetParsedTokensFromTokenText(TokenText baseText, out ParsedTokenSet parsedSet)
+        public static bool TryGetParsedTokensFromTokenText(TokenText baseText, out ParsedTokenList parsedSet)
         {
             List<ParsedToken> tokens = new List<ParsedToken>();
 
@@ -22,7 +22,7 @@ namespace SpaceDeck.Tokenization.Processing
                         // TODO: This means something has been input incorrectly
                         // What's the best way to gracefully inform the user?
                         // Probably hooking up the logs soon
-                        parsedSet = default(ParsedTokenSet);
+                        parsedSet = default(ParsedTokenList);
                         return false;
                     }
 
@@ -31,7 +31,7 @@ namespace SpaceDeck.Tokenization.Processing
                 }
             }
 
-            parsedSet = new ParsedTokenSet(tokens);
+            parsedSet = new ParsedTokenList(tokens);
             return true;
         }
     }

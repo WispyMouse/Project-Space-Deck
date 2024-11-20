@@ -63,7 +63,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             string helloWorldTokenTextString = $"[{HelloWorldScriptingCommand.IdentifierString}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(helloWorldTokenTextString, out TokenText helloWorldTokenText), "Should be able to parse Token Text String into Token Text.");
-            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(helloWorldTokenText, out ParsedTokenSet parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(helloWorldTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.AreEqual(1, parsedSet.Tokens.Count, "There should be one token in the parse results, because only one token is supplied.");
             Assert.True(parsedSet.Tokens[0].CommandToExecute is HelloWorldScriptingCommand, "The token that was created should be the testing Hello World token.");
         }
@@ -79,7 +79,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             string twoArgumentTokenTextString = $"[{TwoArgumentScriptingCommand.IdentifierString}:FOO 123]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(twoArgumentTokenTextString, out TokenText twoArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
-            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(twoArgumentTokenText, out ParsedTokenSet parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(twoArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.AreEqual(1, parsedSet.Tokens.Count, "There should be one token in the parse results, because only one token is supplied.");
             Assert.True(parsedSet.Tokens[0].CommandToExecute is TwoArgumentScriptingCommand, "The token that was created should be the testing Two Argument token.");
             Assert.True(parsedSet.Tokens[0].Arguments != null, "Should have arguments array, as two were supplied.");
@@ -101,7 +101,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             string mixedTokenTextString = $"[{HelloWorldScriptingCommand.IdentifierString}][{HelloWorldScriptingCommand.IdentifierString}][{TwoArgumentScriptingCommand.IdentifierString}:456 ABC][{HelloWorldScriptingCommand.IdentifierString}][{TwoArgumentScriptingCommand.IdentifierString}:9.9 EEEEE]";
 
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(mixedTokenTextString, out TokenText mixedArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
-            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(mixedArgumentTokenText, out ParsedTokenSet parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(mixedArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
 
             Assert.AreEqual(5, parsedSet.Tokens.Count, "There should be five tokens in the parse results.");
 
