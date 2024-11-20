@@ -1,7 +1,10 @@
 {
-    "name": "GameState.Minimum",
+    "name": "GameState.Execution",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:1ba9ced06be1c2c4ebb5e89532ed9b33",
+        "GUID:83c0cb67214157147ac8b718f26fcb6f"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

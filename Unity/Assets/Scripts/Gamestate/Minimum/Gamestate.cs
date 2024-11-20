@@ -1,4 +1,4 @@
-namespace SpaceDeck.Gamestate.Minimum
+namespace SpaceDeck.GameState.Minimum
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -14,7 +14,8 @@ namespace SpaceDeck.Gamestate.Minimum
     /// state in order to show certain properties and values that might
     /// exist after something is executed.
     /// </summary>
-    public class Gamestate
+    public class GameState
     {
+        public EncounterState CurrentEncounterState;
     }
 }

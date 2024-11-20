@@ -8,7 +8,11 @@
         "ImportModels",
         "UX",
         "Tokenization.Minimum",
-        "Tokenization.Processing"
+        "Tokenization.Processing",
+        "Models.Instances",
+        "Models.Prototypes",
+        "GameState.Execution",
+        "GameState.Minimum"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,7 +1,10 @@
 {
-    "name": "GameState.Minimum",
+    "name": "Models.Instances",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:1ba9ced06be1c2c4ebb5e89532ed9b33",
+        "GUID:31667f780d446374da7da21f62872160"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

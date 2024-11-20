@@ -16,5 +16,11 @@ namespace SpaceDeck.Tokenization.Minimum
     public abstract class ScriptingCommand
     {
         public abstract LowercaseString Identifier { get; }
+
+        public bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
+        {
+            linkedToken = new LinkedToken(this, parsedToken.Arguments);
+            return true;
+        }
     }
 }
