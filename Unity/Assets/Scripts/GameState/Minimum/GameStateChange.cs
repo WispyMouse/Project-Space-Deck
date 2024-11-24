@@ -9,6 +9,11 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public abstract class GameStateChange
     {
+        public readonly IChangeTarget Target;
 
+        public GameStateChange(IChangeTarget target)
+        {
+            this.Target = target;
+        }
     }
 }

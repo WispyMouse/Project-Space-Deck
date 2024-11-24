@@ -12,6 +12,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Execution;
+    using SpaceDeck.GameState.Changes.Targets;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -26,7 +27,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         {
             public readonly string ToLog;
 
-            public LoggingGameStateChange(string toLog)
+            public LoggingGameStateChange(string toLog) : base(NobodyTarget.Instance)
             {
                 this.ToLog = toLog;
             }

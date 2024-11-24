@@ -18,7 +18,7 @@ namespace SpaceDeck.Tokenization.Minimum
     {
         public abstract LowercaseString Identifier { get; }
 
-        public bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
+        public virtual bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
         {
             linkedToken = new LinkedToken(parsedToken);
             return true;

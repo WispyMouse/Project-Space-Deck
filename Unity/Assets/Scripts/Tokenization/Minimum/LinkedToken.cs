@@ -18,4 +18,17 @@ namespace SpaceDeck.Tokenization.Minimum
         {
         }
     }
+
+    /// <summary>
+    /// This represents that this <see cref="LinkedToken"/> is made to represent
+    /// the result of a <see cref="ScriptingCommand"/> hydrating itself with its
+    /// arguments.
+    /// </summary>
+    /// <typeparam name="T">The type of ScriptingCommand this represents.</typeparam>
+    public abstract class LinkedToken<T> : ParsedToken where T : ScriptingCommand
+    {
+        public LinkedToken(ParsedToken parsedToken) : base(parsedToken.CommandToExecute, parsedToken.Arguments)
+        {
+        }
+    }
 }
