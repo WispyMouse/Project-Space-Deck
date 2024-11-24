@@ -17,5 +17,6 @@ namespace SpaceDeck.GameState.Minimum
     public class GameState
     {
         public EncounterState CurrentEncounterState;
+        public readonly List<Entity> PersistentEntities = new List<Entity>();
     }
 }

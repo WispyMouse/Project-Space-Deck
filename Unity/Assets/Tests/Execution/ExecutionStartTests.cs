@@ -22,6 +22,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     /// </summary>
     public class ExecutionStartTests
     {
+        private class LoggingGameStateChange : GameStateChange
+        {
+            public readonly string ToLog;
+
+            public LoggingGameStateChange(string toLog)
+            {
+                this.ToLog = toLog;
+            }
+        }
+
         private class ZeroArgumentDebugLogScriptingCommand : ScriptingCommand
         {
             public const string HelloString = "HELLO!";
@@ -30,7 +40,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             public override bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
             {
-                delta.DebugLogs.Add(HelloString);
+                delta.Changes.Add(new LoggingGameStateChange(HelloString));
                 return true;
             }
         }
@@ -42,7 +52,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             public override bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
             {
-                delta.DebugLogs.Add(token.Arguments[0].ToString());
+                delta.Changes.Add(new LoggingGameStateChange(token.Arguments[0].ToString()));
                 return true;
             }
         }
@@ -73,8 +83,10 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
-            Assert.AreEqual(1, generatedDelta.DebugLogs.Count, "Expecting one debug log from the zero argument test.");
-            Assert.AreEqual(ZeroArgumentDebugLogScriptingCommand.HelloString, generatedDelta.DebugLogs[0], "Expecting debug log to be as designated.");
+            Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
+            Assert.IsTrue(generatedDelta.Changes[0] is LoggingGameStateChange, "Expecting token to be a logging token.");
+            LoggingGameStateChange log = generatedDelta.Changes[0] as LoggingGameStateChange;
+            Assert.AreEqual(ZeroArgumentDebugLogScriptingCommand.HelloString, log.ToLog, "Expecting debug log to be as designated.");
         }
 
         /// <summary>
@@ -95,9 +107,10 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
-
-            Assert.AreEqual(1, generatedDelta.DebugLogs.Count, "Expecting one debug log from the one argument test.");
-            Assert.AreEqual("111", generatedDelta.DebugLogs[0], "Expecting debug log to be as designated.");
+            Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
+            Assert.IsTrue(generatedDelta.Changes[0] is LoggingGameStateChange, "Expecting token to be a logging token.");
+            LoggingGameStateChange log = generatedDelta.Changes[0] as LoggingGameStateChange;
+            Assert.AreEqual("111", log.ToLog, "Expecting debug log to be as designated.");
         }
     }
 }

@@ -1,11 +1,7 @@
 {
-    "name": "GameState.Execution",
+    "name": "GameState.Changes",
     "rootNamespace": "",
-    "references": [
-        "GUID:1ba9ced06be1c2c4ebb5e89532ed9b33",
-        "GUID:83c0cb67214157147ac8b718f26fcb6f",
-        "GUID:c810a108174b150468e66093d83b7ef5"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

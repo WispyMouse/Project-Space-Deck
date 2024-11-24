@@ -12,7 +12,8 @@
         "Models.Instances",
         "Models.Prototypes",
         "GameState.Execution",
-        "GameState.Minimum"
+        "GameState.Minimum",
+        "GameState.Changes"
     ],
     "includePlatforms": [
         "Editor"
