@@ -3,26 +3,28 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Changes.Targets;
+    using SpaceDeck.Tokenization.Minimum.Evaluatables;
+    using SpaceDeck.Tokenization.Processing;
 
     public class DamageScriptingCommand : ScriptingCommand
     {
         public override LowercaseString Identifier => "DAMAGE";
 
-        public bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
+        public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
         {
             IChangeTarget target = PreviousTarget.Instance;
 
-            // Damage scripts require exactly one or two arguments.
-            // If there are two arguments, one must be an evaluatable number, and the other must be an evaluatable target.
-            // If there is one argument, it must be an evaluatable number. The target is assumed to be the previous target.
-            // that was specific in the executing parse tree.
+            // Presently, Damage Scripting Commands can only have one argument; the damage amount to deal
+            // TODO: Add a target, so that the target can be set as an argument
+            // TODO: Add a user, so that both the user and the target can be set as an argument
             if (parsedToken.Arguments.Count == 1)
             {
-
-            }
-            else if (parsedToken.Arguments.Count == 2)
-            {
-
+                // Try to evaluate the first token as a numeric value. If it can't be done, this isn't a hit.
+                if (!EvaluatablesReference.TryGetNumericEvaluatableValue(parsedToken.Arguments[0], out INumericEvaluatableValue evaluatable))
+                {
+                    linkedToken = new DamageLinkedToken(parsedToken, target, evaluatable);
+                    return true;
+                }
             }
             else
             {
@@ -44,9 +46,21 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     public class DamageLinkedToken : LinkedToken<DamageScriptingCommand>
     {
         public readonly IChangeTarget ChangeTarget;
-        public readonly int Mod;
+        public readonly INumericEvaluatableValue Mod;
 
         public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, int mod) : base(parsedToken)
+        {
+            this.ChangeTarget = changeTarget;
+            this.Mod = new ConstantNumericValue(mod);
+        }
+
+        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, decimal mod) : base(parsedToken)
+        {
+            this.ChangeTarget = changeTarget;
+            this.Mod = new ConstantNumericValue(mod);
+        }
+
+        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, INumericEvaluatableValue mod) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
             this.Mod = mod;

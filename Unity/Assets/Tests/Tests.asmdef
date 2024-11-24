@@ -13,7 +13,8 @@
         "Models.Prototypes",
         "GameState.Execution",
         "GameState.Minimum",
-        "GameState.Changes"
+        "GameState.Changes",
+        "Tokenization.ScriptingCommands"
     ],
     "includePlatforms": [
         "Editor"

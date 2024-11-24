@@ -10,17 +10,29 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public class Entity
     {
-        private readonly Dictionary<string, int> Qualities = new Dictionary<string, int>();
+        private readonly Dictionary<string, decimal> Qualities = new Dictionary<string, decimal>();
 
-        public int GetQuality(string index, int defaultValue = 0)
+        public decimal GetQuality(string index, decimal defaultValue = 0)
         {
-            if (this.Qualities.TryGetValue(index, out int qualityValue))
+            if (this.Qualities.TryGetValue(index, out decimal qualityValue))
             {
                 return qualityValue;
             }
 
             this.Qualities.Add(index, defaultValue);
             return defaultValue;
+        }
+
+        public void SetQuality(string index, decimal newValue)
+        {
+            if (this.Qualities.ContainsKey(index))
+            {
+                this.Qualities[index] = newValue;
+            }
+            else
+            {
+                this.Qualities.Add(index, newValue);
+            }
         }
     }
 }

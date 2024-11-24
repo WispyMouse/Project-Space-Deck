@@ -25,9 +25,9 @@ namespace SpaceDeck.Tokenization.Minimum
     /// arguments.
     /// </summary>
     /// <typeparam name="T">The type of ScriptingCommand this represents.</typeparam>
-    public abstract class LinkedToken<T> : ParsedToken where T : ScriptingCommand
+    public abstract class LinkedToken<T> : LinkedToken where T : ScriptingCommand
     {
-        public LinkedToken(ParsedToken parsedToken) : base(parsedToken.CommandToExecute, parsedToken.Arguments)
+        public LinkedToken(ParsedToken parsedToken) : base(parsedToken)
         {
         }
     }

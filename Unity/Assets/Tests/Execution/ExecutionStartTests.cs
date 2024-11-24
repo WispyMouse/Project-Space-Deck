@@ -13,6 +13,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Changes.Targets;
+    using SpaceDeck.Tokenization.ScriptingCommands;
+    using SpaceDeck.GameState.Changes;
+    using SpaceDeck.Tokenization.Minimum.Evaluatables;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -112,6 +115,43 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.IsTrue(generatedDelta.Changes[0] is LoggingGameStateChange, "Expecting token to be a logging token.");
             LoggingGameStateChange log = generatedDelta.Changes[0] as LoggingGameStateChange;
             Assert.AreEqual("111", log.ToLog, "Expecting debug log to be as designated.");
+        }
+
+        /// <summary>
+        /// This is a test of the system leading up to damage being applied to a character.
+        /// Through the flow of parsing, linking, and applying to a game state, we can see if damage can result
+        /// in a different game state value being set when the entire operation runs.
+        /// 
+        /// </summary>
+        [Test]
+        public void Damage_CausesHealthLoss()
+        {
+            var damageScriptingCommand = new DamageScriptingCommand();
+            ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
+
+
+            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
+            Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
+            Assert.True(linkedTokenSet.Scopes.Count == 1 && linkedTokenSet.Scopes[0].Tokens.Count == 1 && linkedTokenSet.Scopes[0].Tokens[0] is DamageLinkedToken damageToken, $"Expecting linking to result in a single token of the {nameof(DamageLinkedToken)} type.");
+
+            GameState gameState = new GameState();
+            Entity targetingEntity = new Entity();
+            targetingEntity.SetQuality("health", 100);
+            gameState.PersistentEntities.Add(targetingEntity);
+
+            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
+            Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
+            Assert.IsTrue(generatedDelta.Changes[0] is ModifyQuality, "Expecting token to be a quality change token.");
+            ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
+            Assert.IsTrue(modifyQuality.ModifyValue is ConstantNumericValue, "Expecting damage amount to be a constant value, given the arguments provided.");
+            ConstantNumericValue constantValue = modifyQuality.ModifyValue as ConstantNumericValue;
+            Assert.AreEqual(constantValue.Constant == 1, "Expecting damage amount to be one.");
+
+            gameState = GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
+            Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
     }
 }

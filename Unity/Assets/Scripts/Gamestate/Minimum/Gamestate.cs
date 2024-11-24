@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Minimum
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
