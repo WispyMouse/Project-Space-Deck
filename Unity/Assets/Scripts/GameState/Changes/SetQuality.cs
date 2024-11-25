@@ -5,11 +5,19 @@ namespace SpaceDeck.GameState.Changes
 
     public class SetQuality : QualityChange
     {
-        public readonly int NewValue;
+        public readonly decimal NewValue;
 
-        public SetQuality(IChangeTarget changeTarget, string qualityToChange, int newValue) : base(changeTarget, qualityToChange)
+        public SetQuality(IChangeTarget changeTarget, string qualityToChange, decimal newValue) : base(changeTarget, qualityToChange)
         {
             this.NewValue = newValue;
+        }
+
+        public override void ApplyToGameState(ref GameState toApplyTo, ref ExecutionContext executionContext)
+        {
+            foreach (Entity curEntity in this.Target.GetRepresentedEntities(executionContext))
+            {
+                curEntity.SetQuality(this.QualityToChange, this.NewValue);
+            }
         }
     }
 }

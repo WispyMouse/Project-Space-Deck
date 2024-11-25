@@ -1,6 +1,7 @@
 namespace SpaceDeck.GameState.Changes.Targets
 {
     using System.Collections;
+    using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
     
     /// <summary>
@@ -28,6 +29,11 @@ namespace SpaceDeck.GameState.Changes.Targets
         private PreviousTarget()
         {
 
+        }
+
+        public IEnumerable<Entity> GetRepresentedEntities(ExecutionContext executionContext)
+        {
+            return executionContext?.CurrentDefaultTarget?.GetRepresentedEntities(executionContext);
         }
     }
 }

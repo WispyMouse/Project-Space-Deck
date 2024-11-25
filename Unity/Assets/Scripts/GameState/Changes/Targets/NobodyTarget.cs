@@ -1,6 +1,8 @@
 namespace SpaceDeck.GameState.Changes.Targets
 {
+    using System;
     using System.Collections;
+    using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
 
     /// <summary>
@@ -20,6 +22,11 @@ namespace SpaceDeck.GameState.Changes.Targets
         private NobodyTarget()
         {
 
+        }
+
+        public IEnumerable<Entity> GetRepresentedEntities(ExecutionContext executionContext)
+        {
+            return Array.Empty<Entity>();
         }
     }
 }

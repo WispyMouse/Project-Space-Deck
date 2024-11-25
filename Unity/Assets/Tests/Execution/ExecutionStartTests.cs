@@ -34,6 +34,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             {
                 this.ToLog = toLog;
             }
+
+            public override void ApplyToGameState(ref GameState toApplyTo, ref ExecutionContext executionContext)
+            {
+                // TODO: Log something?
+            }
         }
 
         private class ZeroArgumentDebugLogScriptingCommand : ScriptingCommand
@@ -150,7 +155,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             ConstantNumericValue constantValue = modifyQuality.ModifyValue as ConstantNumericValue;
             Assert.AreEqual(constantValue.Constant, 1, "Expecting damage amount to be one.");
 
-            gameState = GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
+            gameState = GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta, new ExecutionContext() { CurrentDefaultTarget = targetingEntity });
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
     }
