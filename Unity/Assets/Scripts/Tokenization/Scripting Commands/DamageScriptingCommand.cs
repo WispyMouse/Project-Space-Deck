@@ -5,6 +5,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.Tokenization.Minimum.Evaluatables;
     using SpaceDeck.Tokenization.Processing;
+    using SpaceDeck.GameState.Changes;
 
     public class DamageScriptingCommand : ScriptingCommand
     {
@@ -22,9 +23,12 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 // Try to evaluate the first token as a numeric value. If it can't be done, this isn't a hit.
                 if (!EvaluatablesReference.TryGetNumericEvaluatableValue(parsedToken.Arguments[0], out INumericEvaluatableValue evaluatable))
                 {
-                    linkedToken = new DamageLinkedToken(parsedToken, target, evaluatable);
-                    return true;
+                    linkedToken = null;
+                    return false;
                 }
+
+                linkedToken = new DamageLinkedToken(parsedToken, target, evaluatable);
+                return true;
             }
             else
             {
@@ -33,13 +37,20 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            linkedToken = new LinkedToken(parsedToken);
-            return true;
+            linkedToken = null;
+            return false;
         }
 
-        public override bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+        public override bool TryApplyDelta(ExecutionContext executionContext, GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
         {
-            return base.TryApplyDelta(stateToApplyTo, token, ref delta);
+            if (!(token is DamageLinkedToken damageLinkedToken))
+            {
+                return false;
+            }
+
+            delta.Changes.Add(new ModifyQuality(damageLinkedToken.ChangeTarget, "health", damageLinkedToken.Mod));
+
+            return true;
         }
     }
 
@@ -48,18 +59,22 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         public readonly IChangeTarget ChangeTarget;
         public readonly INumericEvaluatableValue Mod;
 
-        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, int mod) : base(parsedToken)
+        /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
+        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, int damageToApply) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
-            this.Mod = new ConstantNumericValue(mod);
+            this.Mod = new ConstantNumericValue(-damageToApply);
         }
 
-        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, decimal mod) : base(parsedToken)
+
+        /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
+        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, decimal damageToApply) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
-            this.Mod = new ConstantNumericValue(mod);
+            this.Mod = new ConstantNumericValue(damageToApply);
         }
-
+        
+        /// <param name="mod">Amount of damage to apply. Is already assumed to be negative.</param>
         public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, INumericEvaluatableValue mod) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;

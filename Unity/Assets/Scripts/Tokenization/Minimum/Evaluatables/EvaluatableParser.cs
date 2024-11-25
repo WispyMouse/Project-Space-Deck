@@ -9,9 +9,16 @@ namespace SpaceDeck.Tokenization.Minimum.Evaluatables
     {
         public override bool TryParse(LowercaseString argument, out IEvaluatableValue parsedValue)
         {
-            return this.TryParse(argument, out parsedValue);
+            if (this.TryParse(argument, out IEvaluatableValue<V> boxedEvaluatedParsedValue))
+            {
+                parsedValue = boxedEvaluatedParsedValue;
+                return true;
+            }
+
+            parsedValue = null;
+            return false;
         }
 
-        public abstract bool TryParse(LowercaseString argument, IEvaluatableValue<V> parsedValue);
+        public abstract bool TryParse(LowercaseString argument, out IEvaluatableValue<V> parsedValue);
     }
 }

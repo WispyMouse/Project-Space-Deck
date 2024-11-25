@@ -20,7 +20,7 @@ namespace SpaceDeck.Tokenization.Minimum.Evaluatables
 
     public class ConstantNumericEvaluatableParser : EvaluatableParser<ConstantEvaluatableValue<decimal>, decimal>
     {
-        public override bool TryParse(LowercaseString argument, IEvaluatableValue<decimal> parsedValue)
+        public override bool TryParse(LowercaseString argument, out IEvaluatableValue<decimal> parsedValue)
         {
             if (decimal.TryParse(argument.ToString(), out decimal parsedDecimal))
             {

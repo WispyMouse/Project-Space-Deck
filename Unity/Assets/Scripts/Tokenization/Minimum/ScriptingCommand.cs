@@ -24,7 +24,7 @@ namespace SpaceDeck.Tokenization.Minimum
             return true;
         }
 
-        public virtual bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+        public virtual bool TryApplyDelta(ExecutionContext executionContext, GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
         {
             return true;
         }

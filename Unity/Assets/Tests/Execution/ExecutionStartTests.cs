@@ -42,7 +42,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             public static readonly LowercaseString IdentifierString = new LowercaseString("ZEROARGUMENTDEBUG");
             public override LowercaseString Identifier => IdentifierString;
 
-            public override bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+            public override bool TryApplyDelta(ExecutionContext executionContext, GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
             {
                 delta.Changes.Add(new LoggingGameStateChange(HelloString));
                 return true;
@@ -54,7 +54,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             public static readonly LowercaseString IdentifierString = new LowercaseString("ONEARGUMENTDEBUG");
             public override LowercaseString Identifier => IdentifierString;
 
-            public override bool TryApplyDelta(GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+            public override bool TryApplyDelta(ExecutionContext executionContext, GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
             {
                 delta.Changes.Add(new LoggingGameStateChange(token.Arguments[0].ToString()));
                 return true;
@@ -128,7 +128,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         {
             var damageScriptingCommand = new DamageScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
-
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
 
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
@@ -148,7 +148,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
             Assert.IsTrue(modifyQuality.ModifyValue is ConstantNumericValue, "Expecting damage amount to be a constant value, given the arguments provided.");
             ConstantNumericValue constantValue = modifyQuality.ModifyValue as ConstantNumericValue;
-            Assert.AreEqual(constantValue.Constant == 1, "Expecting damage amount to be one.");
+            Assert.AreEqual(constantValue.Constant, 1, "Expecting damage amount to be one.");
 
             gameState = GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");

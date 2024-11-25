@@ -8,7 +8,7 @@ namespace SpaceDeck.GameState.Minimum
     /// Enemies are generally only Entities that are
     /// stored while in an Encounter.
     /// </summary>
-    public class Entity
+    public class Entity : IChangeTarget
     {
         private readonly Dictionary<string, decimal> Qualities = new Dictionary<string, decimal>();
 
