@@ -18,16 +18,12 @@ namespace SpaceDeck.GameState.Execution
     /// </summary>
     public static class GameStateDeltaApplier
     {
-        public static GameState ApplyGameStateDelta(GameState originalState, GameStateDelta delta, ExecutionContext executionContext)
+        public static void ApplyGameStateDelta(ref GameState originalState, GameStateDelta delta, ExecutionContext executionContext)
         {
-            GameState clonedState = originalState.GetClone();
-
             foreach (GameStateChange change in delta.Changes)
             {
-                change.ApplyToGameState(ref clonedState, ref executionContext);
+                change.ApplyToGameState(ref originalState, ref executionContext);
             }
-
-            return clonedState;
         }
     }
 }

@@ -151,11 +151,13 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is ModifyQuality, "Expecting token to be a quality change token.");
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
-            Assert.IsTrue(modifyQuality.ModifyValue is ConstantNumericValue, "Expecting damage amount to be a constant value, given the arguments provided.");
-            ConstantNumericValue constantValue = modifyQuality.ModifyValue as ConstantNumericValue;
+            Assert.IsTrue(modifyQuality.ModifyValue is NegativeNumericEvaluatableValue, "Expecting damage to negate the value provided to it.");
+            NegativeNumericEvaluatableValue negative = modifyQuality.ModifyValue as NegativeNumericEvaluatableValue;
+            Assert.IsTrue(negative.ToNegate is ConstantNumericValue, "Expecting damage amount to be a constant value, given the arguments provided.");
+            ConstantNumericValue constantValue = negative.ToNegate as ConstantNumericValue;
             Assert.AreEqual(constantValue.Constant, 1, "Expecting damage amount to be one.");
 
-            gameState = GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta, new ExecutionContext() { CurrentDefaultTarget = targetingEntity });
+            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext() { CurrentDefaultTarget = targetingEntity });
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
     }

@@ -71,14 +71,14 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, decimal damageToApply) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
-            this.Mod = new ConstantNumericValue(damageToApply);
+            this.Mod = new ConstantNumericValue(-damageToApply);
         }
-        
-        /// <param name="mod">Amount of damage to apply. Is already assumed to be negative.</param>
+
+        /// <param name="mod">Amount of damage to apply. The negative of this value is taken.</param>
         public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, INumericEvaluatableValue mod) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
-            this.Mod = mod;
+            this.Mod = new NegativeNumericEvaluatableValue(mod);
         }
     }
 }
