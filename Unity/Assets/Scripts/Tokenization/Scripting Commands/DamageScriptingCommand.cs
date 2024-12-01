@@ -6,6 +6,8 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using SpaceDeck.Tokenization.Minimum.Evaluatables;
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Changes;
+    using System.Collections.Generic;
+    using SpaceDeck.Tokenization.Minimum.Questions;
 
     public class DamageScriptingCommand : ScriptingCommand
     {
@@ -58,6 +60,11 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     {
         public readonly IChangeTarget ChangeTarget;
         public readonly INumericEvaluatableValue Mod;
+
+        public override IEnumerable<ExecutionQuestion> Questions => new List<ExecutionQuestion>()
+        {
+            new EffectTargetExecutionQuestion()
+        };
 
         /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
         public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, int damageToApply) : base(parsedToken)

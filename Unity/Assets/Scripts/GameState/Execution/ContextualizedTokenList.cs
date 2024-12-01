@@ -1,6 +1,7 @@
 namespace SpaceDeck.GameState.Execution
 {
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Questions;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -15,10 +16,24 @@ namespace SpaceDeck.GameState.Execution
     public struct ContextualizedTokenList
     {
         public readonly LinkedTokenList Tokens;
+        public readonly IEnumerable<LinkedExecutionQuestion> Questions;
 
         public ContextualizedTokenList(LinkedTokenList tokens)
         {
             this.Tokens = tokens;
+
+            List<LinkedExecutionQuestion> questions = new List<LinkedExecutionQuestion>();
+
+            LinkedToken nextToken = this.Tokens.First;
+            while (nextToken != null)
+            {
+                foreach (ExecutionQuestion question in nextToken.Questions)
+                {
+                    questions.Add(new LinkedExecutionQuestion(nextToken, question));
+                }
+            }
+
+            this.Questions = questions;
         }
     }
 }

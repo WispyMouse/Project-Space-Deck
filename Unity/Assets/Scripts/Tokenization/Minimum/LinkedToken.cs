@@ -1,5 +1,7 @@
 namespace SpaceDeck.Tokenization.Minimum
 {
+    using SpaceDeck.Tokenization.Minimum.Questions;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -13,6 +15,8 @@ namespace SpaceDeck.Tokenization.Minimum
     {
         public LinkedTokenScope LinkedScope;
         public LinkedToken NextLinkedToken;
+
+        public virtual IEnumerable<ExecutionQuestion> Questions => Array.Empty<ExecutionQuestion>();
 
         public LinkedToken(ParsedToken parsedToken) : base(parsedToken.CommandToExecute, parsedToken.Arguments)
         {
