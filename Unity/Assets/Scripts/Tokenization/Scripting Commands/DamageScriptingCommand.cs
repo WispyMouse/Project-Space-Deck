@@ -64,7 +64,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         public readonly ChangeTargetEvaluatableValue ChangeTarget;
         public readonly INumericEvaluatableValue Mod;
 
-        public override IEnumerable<ExecutionQuestion> Questions => new List<ExecutionQuestion>()
+        public override IReadOnlyList<ExecutionQuestion> Questions => new List<ExecutionQuestion>()
         {
             new EffectTargetExecutionQuestion()
         };

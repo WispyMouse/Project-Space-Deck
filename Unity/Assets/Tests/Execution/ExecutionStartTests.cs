@@ -126,6 +126,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         /// <summary>
         /// This test creates a command involving dealing damage.
         /// It doesn't specify a target beforehand, and so it should fail to evaluate.
+        /// Then a target is provided, showing that it can evaluate.
         /// </summary>
         [Test]
         public void Damage_RequiresTarget()
@@ -148,14 +149,10 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             // Assert that you can't perform this without a target
             Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
 
-            // Provide a list of answers, but don't contain the answer needed
-            List<LinkedExecutionAnswer> answers = new List<LinkedExecutionAnswer>();
-            Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out generatedDelta), "Should not be able to create delta without providing targeting answers.");
-
             // With the appropriate answers provided, assert this can be performed
-            IReadOnlyList<LinkedExecutionQuestion> questions = contextualizedTokens.Questions;
-            answers.Add(new LinkedExecutionAnswer(questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
-            Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out generatedDelta), "Should not be able to create delta without providing targeting answers.");
+            Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers = new Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer>();
+            answers.Add(contextualizedTokens.Questions[0], new LinkedExecutionAnswer(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out generatedDelta), "Should be able to create delta after providing answers.");
         }
 
         /// <summary>
@@ -183,7 +180,10 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             gameState.PersistentEntities.Add(targetingEntity);
 
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
+            Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers = new Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer>();
+            answers.Add(contextualizedTokens.Questions[0], new LinkedExecutionAnswer(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
+
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is ModifyQuality, "Expecting token to be a quality change token.");
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;

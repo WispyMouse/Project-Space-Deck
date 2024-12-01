@@ -3,6 +3,7 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -11,22 +12,19 @@ namespace SpaceDeck.GameState.Execution
 
         public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, GameState stateToApplyTo, out GameStateDelta delta)
         {
-            List<LinkedExecutionAnswer> noAnswers = new List<LinkedExecutionAnswer>();
-            return TryCreateDelta(contextualizedTokens, noAnswers, stateToApplyTo, out delta);
+            return TryCreateDelta(contextualizedTokens, new Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer>(), stateToApplyTo, out delta);
         }
 
-        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, IEnumerable<LinkedExecutionAnswer> answers, GameState stateToApplyTo, out GameStateDelta delta)
+        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers, GameState stateToApplyTo, out GameStateDelta delta)
         {
             delta = new GameStateDelta();
 
-            ExecutionContext executionContext = new ExecutionContext();
-
-            // TODO: We're going to assign the target to the first enemy, if one is available
-            // This would normally be provided with answers to the contextualized tokens list
-            if (stateToApplyTo.PersistentEntities.Count > 0)
+            if (!contextualizedTokens.AllAnswersAccountedFor(answers))
             {
-                executionContext.CurrentDefaultTarget = stateToApplyTo.PersistentEntities[0];
+                return false;
             }
+
+            ExecutionContext executionContext = new ExecutionContext();
 
             LinkedToken nextToken = contextualizedTokens.Tokens.First;
             while (nextToken != null)

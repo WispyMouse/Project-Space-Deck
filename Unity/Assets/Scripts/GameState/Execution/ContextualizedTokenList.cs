@@ -37,5 +37,24 @@ namespace SpaceDeck.GameState.Execution
 
             this.Questions = questions;
         }
+
+        public bool AllAnswersAccountedFor(Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers)
+        {
+            // If there are more questions than answers, there couldn't possibly be enough answers
+            if (this.Questions.Count > answers.Count)
+            {
+                return false;
+            }
+
+            foreach (LinkedExecutionQuestion question in this.Questions)
+            {
+                if (!answers.ContainsKey(question))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
