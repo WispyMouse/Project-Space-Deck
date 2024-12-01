@@ -1,3 +1,5 @@
+using SpaceDeck.GameState.Minimum;
+
 namespace SpaceDeck.Tokenization.Minimum.Evaluatables
 {
     public interface IEvaluatableValue
@@ -7,6 +9,6 @@ namespace SpaceDeck.Tokenization.Minimum.Evaluatables
 
     public interface IEvaluatableValue<T> : IEvaluatableValue
     {
-        public bool TryEvaluate(out T value);
+        public bool TryEvaluate(ExecutionContext context, out T value);
     }
 }

@@ -1,3 +1,5 @@
+using SpaceDeck.GameState.Minimum;
+
 namespace SpaceDeck.Tokenization.Minimum.Evaluatables
 {
     /// <summary>
@@ -21,7 +23,7 @@ namespace SpaceDeck.Tokenization.Minimum.Evaluatables
             this.Constant = constant;
         }
 
-        public bool TryEvaluate(out T value)
+        public bool TryEvaluate(ExecutionContext context, out T value)
         {
             value = this.Constant;
             return true;

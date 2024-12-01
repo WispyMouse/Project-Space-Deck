@@ -34,7 +34,7 @@ namespace SpaceDeck.GameState.Minimum
             return defaultValue;
         }
 
-        public IEnumerable<Entity> GetRepresentedEntities(ExecutionContext executionContext)
+        public IEnumerable<Entity> GetRepresentedEntities()
         {
             return this.selfList;
         }

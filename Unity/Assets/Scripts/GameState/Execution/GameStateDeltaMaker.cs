@@ -2,12 +2,20 @@ namespace SpaceDeck.GameState.Execution
 {
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Questions;
     using System.Collections;
     using System.Collections.Generic;
 
     public static class GameStateDeltaMaker
     {
+
         public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, GameState stateToApplyTo, out GameStateDelta delta)
+        {
+            List<LinkedExecutionAnswer> noAnswers = new List<LinkedExecutionAnswer>();
+            return TryCreateDelta(contextualizedTokens, noAnswers, stateToApplyTo, out delta);
+        }
+
+        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, IEnumerable<LinkedExecutionAnswer> answers, GameState stateToApplyTo, out GameStateDelta delta)
         {
             delta = new GameStateDelta();
             ExecutionContext executionContext = new ExecutionContext();

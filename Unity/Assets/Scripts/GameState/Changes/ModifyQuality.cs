@@ -15,12 +15,12 @@ namespace SpaceDeck.GameState.Changes
 
         public override void ApplyToGameState(ref GameState toApplyTo, ref ExecutionContext executionContext)
         {
-            if (!this.ModifyValue.TryEvaluate(out decimal modifyValueEvaluated))
+            if (!this.ModifyValue.TryEvaluate(executionContext, out decimal modifyValueEvaluated))
             {
                 return;
             }
 
-            foreach (Entity curEntity in this.Target.GetRepresentedEntities(executionContext))
+            foreach (Entity curEntity in this.Target.GetRepresentedEntities())
             {
                 curEntity.SetQuality(this.QualityToChange, curEntity.GetQuality(this.QualityToChange) + modifyValueEvaluated);
             }

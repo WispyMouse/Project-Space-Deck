@@ -15,8 +15,6 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
         public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
         {
-            IChangeTarget target = PreviousTarget.Instance;
-
             // Presently, Damage Scripting Commands can only have one argument; the damage amount to deal
             // TODO: Add a target, so that the target can be set as an argument
             // TODO: Add a user, so that both the user and the target can be set as an argument
@@ -29,7 +27,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                     return false;
                 }
 
-                linkedToken = new DamageLinkedToken(parsedToken, target, evaluatable);
+                linkedToken = new DamageLinkedToken(parsedToken, DefaultTargetEvaluatableValue.Instance, evaluatable);
                 return true;
             }
             else
@@ -50,7 +48,12 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            delta.Changes.Add(new ModifyQuality(damageLinkedToken.ChangeTarget, "health", damageLinkedToken.Mod));
+            if (!damageLinkedToken.ChangeTarget.TryEvaluate(executionContext, out IChangeTarget target))
+            {
+                return false;
+            }
+
+            delta.Changes.Add(new ModifyQuality(target, "health", damageLinkedToken.Mod));
 
             return true;
         }
@@ -58,7 +61,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
     public class DamageLinkedToken : LinkedToken<DamageScriptingCommand>
     {
-        public readonly IChangeTarget ChangeTarget;
+        public readonly ChangeTargetEvaluatableValue ChangeTarget;
         public readonly INumericEvaluatableValue Mod;
 
         public override IEnumerable<ExecutionQuestion> Questions => new List<ExecutionQuestion>()
@@ -67,7 +70,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         };
 
         /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
-        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, int damageToApply) : base(parsedToken)
+        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, int damageToApply) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
             this.Mod = new ConstantNumericValue(-damageToApply);
@@ -75,14 +78,14 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
 
         /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
-        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, decimal damageToApply) : base(parsedToken)
+        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, decimal damageToApply) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
             this.Mod = new ConstantNumericValue(-damageToApply);
         }
 
         /// <param name="mod">Amount of damage to apply. The negative of this value is taken.</param>
-        public DamageLinkedToken(ParsedToken parsedToken, IChangeTarget changeTarget, INumericEvaluatableValue mod) : base(parsedToken)
+        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, INumericEvaluatableValue mod) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
             this.Mod = new NegativeNumericEvaluatableValue(mod);

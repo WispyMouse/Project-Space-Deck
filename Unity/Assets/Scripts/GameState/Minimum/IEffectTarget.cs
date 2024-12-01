@@ -11,6 +11,6 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public interface IChangeTarget
     {
-        public IEnumerable<Entity> GetRepresentedEntities(ExecutionContext executionContext);
+        public IEnumerable<Entity> GetRepresentedEntities();
     }
 }

@@ -31,6 +31,8 @@ namespace SpaceDeck.GameState.Execution
                 {
                     questions.Add(new LinkedExecutionQuestion(nextToken, question));
                 }
+
+                nextToken = nextToken.NextLinkedToken;
             }
 
             this.Questions = questions;

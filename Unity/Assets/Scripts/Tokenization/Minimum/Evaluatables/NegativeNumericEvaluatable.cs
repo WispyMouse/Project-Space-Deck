@@ -1,3 +1,5 @@
+using SpaceDeck.GameState.Minimum;
+
 namespace SpaceDeck.Tokenization.Minimum.Evaluatables
 {
     /// <summary>
@@ -16,9 +18,9 @@ namespace SpaceDeck.Tokenization.Minimum.Evaluatables
             this.ToNegate = toNegate;
         }
 
-        public bool TryEvaluate(out decimal value)
+        public bool TryEvaluate(ExecutionContext executionContext, out decimal value)
         {
-            if(!this.ToNegate.TryEvaluate(out value))
+            if(!this.ToNegate.TryEvaluate(executionContext, out value))
             {
                 return false;
             }

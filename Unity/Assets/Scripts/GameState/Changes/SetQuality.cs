@@ -14,7 +14,7 @@ namespace SpaceDeck.GameState.Changes
 
         public override void ApplyToGameState(ref GameState toApplyTo, ref ExecutionContext executionContext)
         {
-            foreach (Entity curEntity in this.Target.GetRepresentedEntities(executionContext))
+            foreach (Entity curEntity in this.Target.GetRepresentedEntities())
             {
                 curEntity.SetQuality(this.QualityToChange, this.NewValue);
             }
