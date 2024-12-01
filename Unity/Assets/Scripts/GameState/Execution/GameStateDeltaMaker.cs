@@ -18,6 +18,7 @@ namespace SpaceDeck.GameState.Execution
         public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, IEnumerable<LinkedExecutionAnswer> answers, GameState stateToApplyTo, out GameStateDelta delta)
         {
             delta = new GameStateDelta();
+
             ExecutionContext executionContext = new ExecutionContext();
 
             // TODO: We're going to assign the target to the first enemy, if one is available

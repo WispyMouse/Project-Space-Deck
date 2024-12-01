@@ -16,6 +16,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.Tokenization.Minimum.Evaluatables;
+    using SpaceDeck.Tokenization.Minimum.Questions;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -120,6 +121,41 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.IsTrue(generatedDelta.Changes[0] is LoggingGameStateChange, "Expecting token to be a logging token.");
             LoggingGameStateChange log = generatedDelta.Changes[0] as LoggingGameStateChange;
             Assert.AreEqual("111", log.ToLog, "Expecting debug log to be as designated.");
+        }
+
+        /// <summary>
+        /// This test creates a command involving dealing damage.
+        /// It doesn't specify a target beforehand, and so it should fail to evaluate.
+        /// </summary>
+        [Test]
+        public void Damage_RequiresTarget()
+        {
+            var damageScriptingCommand = new DamageScriptingCommand();
+            ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+
+            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
+            Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
+
+            GameState gameState = new GameState();
+            Entity targetingEntity = new Entity();
+            targetingEntity.SetQuality("health", 100);
+            gameState.PersistentEntities.Add(targetingEntity);
+            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
+
+            // Assert that you can't perform this without a target
+            Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
+
+            // Provide a list of answers, but don't contain the answer needed
+            List<LinkedExecutionAnswer> answers = new List<LinkedExecutionAnswer>();
+            Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out generatedDelta), "Should not be able to create delta without providing targeting answers.");
+
+            // With the appropriate answers provided, assert this can be performed
+            IReadOnlyList<LinkedExecutionQuestion> questions = contextualizedTokens.Questions;
+            answers.Add(new LinkedExecutionAnswer(questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
+            Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out generatedDelta), "Should not be able to create delta without providing targeting answers.");
         }
 
         /// <summary>

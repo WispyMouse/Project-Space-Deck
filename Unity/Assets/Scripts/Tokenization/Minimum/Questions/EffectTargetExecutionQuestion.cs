@@ -1,5 +1,7 @@
 namespace SpaceDeck.Tokenization.Minimum.Questions
 {
+    using SpaceDeck.GameState.Minimum;
+
     /// <summary>
     /// Describes that an effect needs a target to be resolved.
     /// </summary>
@@ -13,6 +15,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     /// </summary>
     public class EffectTargetExecutionAnswer : ExecutionAnswer<EffectTargetExecutionQuestion>
     {
+        public IChangeTarget Answer;
 
+        public EffectTargetExecutionAnswer(IChangeTarget answer)
+        {
+            this.Answer = answer;
+        }
     }
 }

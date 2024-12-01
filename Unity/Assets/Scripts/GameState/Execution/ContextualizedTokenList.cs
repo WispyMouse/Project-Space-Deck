@@ -16,7 +16,7 @@ namespace SpaceDeck.GameState.Execution
     public struct ContextualizedTokenList
     {
         public readonly LinkedTokenList Tokens;
-        public readonly IEnumerable<LinkedExecutionQuestion> Questions;
+        public readonly IReadOnlyList<LinkedExecutionQuestion> Questions;
 
         public ContextualizedTokenList(LinkedTokenList tokens)
         {

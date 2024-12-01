@@ -12,7 +12,7 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     /// Represents an answer to a particular kind of <see cref="ExecutionQuestion"/>.
     /// This one is linked to a particular kind of ExecutionQuestion.
     /// </summary>
-    public abstract class ExecutionAnswer<T> : ExecutionQuestion where T : ExecutionQuestion
+    public abstract class ExecutionAnswer<T> : ExecutionAnswer where T : ExecutionQuestion
     {
 
     }
