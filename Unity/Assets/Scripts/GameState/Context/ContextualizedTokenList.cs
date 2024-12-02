@@ -1,4 +1,4 @@
-namespace SpaceDeck.GameState.Execution
+namespace SpaceDeck.GameState.Context
 {
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Questions;

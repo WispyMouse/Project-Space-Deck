@@ -15,7 +15,8 @@
         "GameState.Minimum",
         "GameState.Changes",
         "Tokenization.ScriptingCommands",
-        "Tokenization.Evaluatables"
+        "Tokenization.Evaluatables",
+        "GameState.Context"
     ],
     "includePlatforms": [
         "Editor"
