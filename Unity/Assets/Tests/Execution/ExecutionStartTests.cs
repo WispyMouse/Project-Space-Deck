@@ -37,9 +37,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 this.ToLog = toLog;
             }
 
-            public override void ApplyToGameState(ref GameState toApplyTo, ref ExecutionContext executionContext)
+            public override void ApplyToGameState(ref GameState toApplyTo)
             {
-                // TODO: Log something?
+                Debug.Log(this.ToLog);
             }
         }
 
@@ -49,9 +49,23 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             public static readonly LowercaseString IdentifierString = new LowercaseString("ZEROARGUMENTDEBUG");
             public override LowercaseString Identifier => IdentifierString;
 
-            public override bool TryApplyDelta(ExecutionContext executionContext, GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+            public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
             {
-                delta.Changes.Add(new LoggingGameStateChange(HelloString));
+                linkedToken = new ZeroArgumentDebugLogLinkedToken(parsedToken);
+                return true;
+            }
+        }
+
+        private class ZeroArgumentDebugLogLinkedToken : LinkedToken<ZeroArgumentDebugLogScriptingCommand>
+        {
+            public ZeroArgumentDebugLogLinkedToken(ParsedToken parsedToken) : base(parsedToken)
+            {
+            }
+
+            public override bool TryGetChanges(GameState stateToApplyTo, ExecutionAnswerSet answers, out List<GameStateChange> changes)
+            {
+                changes = new List<GameStateChange>();
+                changes.Add(new LoggingGameStateChange(ZeroArgumentDebugLogScriptingCommand.HelloString));
                 return true;
             }
         }
@@ -61,9 +75,29 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             public static readonly LowercaseString IdentifierString = new LowercaseString("ONEARGUMENTDEBUG");
             public override LowercaseString Identifier => IdentifierString;
 
-            public override bool TryApplyDelta(ExecutionContext executionContext, GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
+            public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
             {
-                delta.Changes.Add(new LoggingGameStateChange(token.Arguments[0].ToString()));
+                linkedToken = new OneArgumentDebugLogLinkedToken(parsedToken);
+                return true;
+            }
+        }
+
+        private class OneArgumentDebugLogLinkedToken : LinkedToken<OneArgumentDebugLogScriptingCommand>
+        {
+            public OneArgumentDebugLogLinkedToken(ParsedToken parsedToken) : base(parsedToken)
+            {
+            }
+
+            public override bool TryGetChanges(GameState stateToApplyTo, ExecutionAnswerSet answers, out List<GameStateChange> changes)
+            {
+                if (this.Arguments == null || this.Arguments.Count == 0)
+                {
+                    changes = null;
+                    return false;
+                }
+
+                changes = new List<GameStateChange>();
+                changes.Add(new LoggingGameStateChange(this.Arguments[0].ToString()));
                 return true;
             }
         }
@@ -151,8 +185,8 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
 
             // With the appropriate answers provided, assert this can be performed
-            Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers = new Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer>();
-            answers.Add(contextualizedTokens.Questions[0], new LinkedExecutionAnswer(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
+            Dictionary<LinkedToken, ExecutionAnswerSet> answers = new Dictionary<LinkedToken, ExecutionAnswerSet>();
+            answers.Add(contextualizedTokens.Questions[0].Token, new ExecutionAnswerSet(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out generatedDelta), "Should be able to create delta after providing answers.");
         }
 
@@ -181,18 +215,14 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             gameState.PersistentEntities.Add(targetingEntity);
 
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers = new Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer>();
-            answers.Add(contextualizedTokens.Questions[0], new LinkedExecutionAnswer(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
+            Dictionary<LinkedToken, ExecutionAnswerSet> answers = new Dictionary<LinkedToken, ExecutionAnswerSet>();
+            answers.Add(contextualizedTokens.Tokens.First, new ExecutionAnswerSet(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is ModifyQuality, "Expecting token to be a quality change token.");
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
-            Assert.IsTrue(modifyQuality.ModifyValue is NegativeNumericEvaluatableValue, "Expecting damage to negate the value provided to it.");
-            NegativeNumericEvaluatableValue negative = modifyQuality.ModifyValue as NegativeNumericEvaluatableValue;
-            Assert.IsTrue(negative.ToNegate is ConstantNumericValue, "Expecting damage amount to be a constant value, given the arguments provided.");
-            ConstantNumericValue constantValue = negative.ToNegate as ConstantNumericValue;
-            Assert.AreEqual(constantValue.Constant, 1, "Expecting damage amount to be one.");
+            Assert.AreEqual(modifyQuality.ModifyValue, 1, "Expecting damage amount to be one.");
 
             GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext() { CurrentDefaultTarget = targetingEntity });
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");

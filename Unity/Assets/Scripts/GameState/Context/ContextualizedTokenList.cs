@@ -16,20 +16,20 @@ namespace SpaceDeck.GameState.Context
     public struct ContextualizedTokenList
     {
         public readonly LinkedTokenList Tokens;
-        public readonly IReadOnlyList<LinkedExecutionQuestion> Questions;
+        public readonly IReadOnlyList<ExecutionQuestion> Questions;
 
         public ContextualizedTokenList(LinkedTokenList tokens)
         {
             this.Tokens = tokens;
 
-            List<LinkedExecutionQuestion> questions = new List<LinkedExecutionQuestion>();
+            List<ExecutionQuestion> questions = new List<ExecutionQuestion>();
 
             LinkedToken nextToken = this.Tokens.First;
             while (nextToken != null)
             {
                 foreach (ExecutionQuestion question in nextToken.Questions)
                 {
-                    questions.Add(new LinkedExecutionQuestion(nextToken, question));
+                    questions.Add(question);
                 }
 
                 nextToken = nextToken.NextLinkedToken;
@@ -38,17 +38,27 @@ namespace SpaceDeck.GameState.Context
             this.Questions = questions;
         }
 
-        public bool AllAnswersAccountedFor(Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers)
+        public bool AllAnswersAccountedFor(Dictionary<LinkedToken, ExecutionAnswerSet> answers)
         {
+            if (this.Questions.Count == 0)
+            {
+                return true;
+            }
+
             // If there are more questions than answers, there couldn't possibly be enough answers
             if (this.Questions.Count > answers.Count)
             {
                 return false;
             }
 
-            foreach (LinkedExecutionQuestion question in this.Questions)
+            foreach (ExecutionQuestion question in this.Questions)
             {
-                if (!answers.ContainsKey(question))
+                if (!answers.TryGetValue(question.Token, out ExecutionAnswerSet answerForToken))
+                {
+                    return false;
+                }
+
+                if (!answerForToken.TryGetAnswerForQuestion(question, out ExecutionAnswer associatedAnswer))
                 {
                     return false;
                 }

@@ -2,6 +2,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
 {
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.GameState.Context;
+    using System.Collections.Generic;
+    using SpaceDeck.Tokenization.Minimum.Questions;
 
     public class DefaultTargetEvaluatableValue : ChangeTargetEvaluatableValue
     {
@@ -12,9 +15,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         }
 
-        public override bool TryEvaluate(ExecutionContext context, out IChangeTarget value)
+        public override bool TryEvaluate(ExecutionAnswerSet answers, out IChangeTarget value)
         {
-            value = context.CurrentDefaultTarget;
+            value = null;
             return value != null;
         }
     }

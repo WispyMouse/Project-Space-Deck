@@ -7,7 +7,10 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     /// </summary>
     public class EffectTargetExecutionQuestion : ExecutionQuestion
     {
-
+        public EffectTargetExecutionQuestion(LinkedToken linkedToken) : base(linkedToken)
+        {
+            
+        }
     }
     
     /// <summary>

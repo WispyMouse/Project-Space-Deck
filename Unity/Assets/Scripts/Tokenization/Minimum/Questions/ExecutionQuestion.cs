@@ -5,5 +5,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     /// </summary>
     public abstract class ExecutionQuestion
     {
+        public readonly LinkedToken Token;
+
+        public ExecutionQuestion(LinkedToken token)
+        {
+            this.Token = token;
+        }
     }
 }

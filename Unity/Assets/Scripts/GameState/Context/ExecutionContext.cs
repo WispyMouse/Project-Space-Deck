@@ -1,5 +1,6 @@
-namespace SpaceDeck.GameState.Minimum
+namespace SpaceDeck.GameState.Context
 {
+    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -15,5 +16,6 @@ namespace SpaceDeck.GameState.Minimum
     public class ExecutionContext
     {
         public IChangeTarget CurrentDefaultTarget;
+        public ContextualizedTokenList TokenList;
     }
 }

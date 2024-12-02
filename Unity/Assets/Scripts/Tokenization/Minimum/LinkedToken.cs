@@ -1,6 +1,7 @@
 namespace SpaceDeck.Tokenization.Minimum
 {
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -20,6 +21,12 @@ namespace SpaceDeck.Tokenization.Minimum
 
         public LinkedToken(ParsedToken parsedToken) : base(parsedToken.CommandToExecute, parsedToken.Arguments)
         {
+        }
+
+        public virtual bool TryGetChanges(GameState stateToApplyTo, ExecutionAnswerSet answers, out List<GameStateChange> changes)
+        {
+            changes = null;
+            return true;
         }
     }
 

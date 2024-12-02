@@ -2,6 +2,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
 {
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.GameState.Context;
+    using System.Collections.Generic;
+    using SpaceDeck.Tokenization.Minimum.Questions;
 
     /// <summary>
     /// Describes a very reliable answer to an evaluation question.
@@ -24,7 +27,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
             this.Constant = constant;
         }
 
-        public bool TryEvaluate(ExecutionContext context, out T value)
+        public bool TryEvaluate(ExecutionAnswerSet answers, out T value)
         {
             value = this.Constant;
             return true;

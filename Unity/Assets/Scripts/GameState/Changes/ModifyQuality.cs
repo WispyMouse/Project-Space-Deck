@@ -6,23 +6,18 @@ namespace SpaceDeck.GameState.Changes
 
     public class ModifyQuality : QualityChange
     {
-        public readonly INumericEvaluatableValue ModifyValue;
+        public readonly decimal ModifyValue;
 
-        public ModifyQuality(IChangeTarget changeTarget, string qualityToChange, INumericEvaluatableValue modifyValue) : base(changeTarget, qualityToChange)
+        public ModifyQuality(IChangeTarget changeTarget, string qualityToChange, decimal modifyValue) : base(changeTarget, qualityToChange)
         {
             this.ModifyValue = modifyValue;
         }
 
-        public override void ApplyToGameState(ref GameState toApplyTo, ref ExecutionContext executionContext)
+        public override void ApplyToGameState(ref GameState toApplyTo)
         {
-            if (!this.ModifyValue.TryEvaluate(executionContext, out decimal modifyValueEvaluated))
-            {
-                return;
-            }
-
             foreach (Entity curEntity in this.Target.GetRepresentedEntities())
             {
-                curEntity.SetQuality(this.QualityToChange, curEntity.GetQuality(this.QualityToChange) + modifyValueEvaluated);
+                curEntity.SetQuality(this.QualityToChange, curEntity.GetQuality(this.QualityToChange) + ModifyValue);
             }
         }
     }

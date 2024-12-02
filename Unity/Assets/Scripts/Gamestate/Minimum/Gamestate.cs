@@ -15,7 +15,7 @@ namespace SpaceDeck.GameState.Minimum
     /// state in order to show certain properties and values that might
     /// exist after something is executed.
     /// </summary>
-    public class GameState : ICloneable
+    public class GameState
     {
         public EncounterState CurrentEncounterState;
         public readonly List<Entity> PersistentEntities = new List<Entity>();
@@ -24,32 +24,5 @@ namespace SpaceDeck.GameState.Minimum
         {
 
         }
-
-        /// <summary>
-        /// Construtor used to clone another GameState.
-        /// This is a deep copy; do not share any references.
-        /// </summary>
-        /// <param name="toClone">The GameState to clone.</param>
-        private GameState(GameState toClone)
-        {
-            if (toClone.CurrentEncounterState != null)
-            {
-                // TODO: CLONE CURRENTENCOUNTERSTATE
-            }
-            
-            foreach(Entity cloningEntity in toClone.PersistentEntities)
-            {
-                // TODO: CLONE PERSISTENTENTITIES
-            }
-        }
-
-        public object Clone()
-        {
-            GameState clonedState = new GameState(this);
-            return clonedState;
-        }
-
-        public GameState GetClone() => this.Clone() as GameState;
-
     }
 }

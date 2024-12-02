@@ -40,23 +40,6 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             linkedToken = null;
             return false;
         }
-
-        public override bool TryApplyDelta(ExecutionContext executionContext, GameState stateToApplyTo, LinkedToken token, ref GameStateDelta delta)
-        {
-            if (!(token is DamageLinkedToken damageLinkedToken))
-            {
-                return false;
-            }
-
-            if (!damageLinkedToken.ChangeTarget.TryEvaluate(executionContext, out IChangeTarget target))
-            {
-                return false;
-            }
-
-            delta.Changes.Add(new ModifyQuality(target, "health", damageLinkedToken.Mod));
-
-            return true;
-        }
     }
 
     public class DamageLinkedToken : LinkedToken<DamageScriptingCommand>
@@ -66,7 +49,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
         public override IReadOnlyList<ExecutionQuestion> Questions => new List<ExecutionQuestion>()
         {
-            new EffectTargetExecutionQuestion()
+            new EffectTargetExecutionQuestion(this)
         };
 
         /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
@@ -75,7 +58,6 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             this.ChangeTarget = changeTarget;
             this.Mod = new ConstantNumericValue(-damageToApply);
         }
-
 
         /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
         public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, decimal damageToApply) : base(parsedToken)
@@ -89,6 +71,18 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         {
             this.ChangeTarget = changeTarget;
             this.Mod = new NegativeNumericEvaluatableValue(mod);
+        }
+
+        public override bool TryGetChanges(GameState stateToApplyTo, ExecutionAnswerSet answers, out List<GameStateChange> changes)
+        {
+            if (!this.ChangeTarget.TryEvaluate(answers, out IChangeTarget target) || !this.Mod.TryEvaluate(answers, out decimal mod))
+            {
+                changes = null;
+                return false;
+            }
+
+            changes = new List<GameStateChange>() { new ModifyQuality(target, "health", mod) };
+            return true;
         }
     }
 }

@@ -10,13 +10,12 @@ namespace SpaceDeck.GameState.Execution
 
     public static class GameStateDeltaMaker
     {
-
         public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, GameState stateToApplyTo, out GameStateDelta delta)
         {
-            return TryCreateDelta(contextualizedTokens, new Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer>(), stateToApplyTo, out delta);
+            return TryCreateDelta(contextualizedTokens, new Dictionary<LinkedToken, ExecutionAnswerSet>(), stateToApplyTo, out delta);
         }
 
-        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, Dictionary<LinkedExecutionQuestion, LinkedExecutionAnswer> answers, GameState stateToApplyTo, out GameStateDelta delta)
+        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, Dictionary<LinkedToken, ExecutionAnswerSet> answers, GameState stateToApplyTo, out GameStateDelta delta)
         {
             delta = new GameStateDelta();
 
@@ -33,10 +32,20 @@ namespace SpaceDeck.GameState.Execution
                 // TODO: Check conditional for permission to be inside scope before applying
                 if (true)
                 {
-                    if (!nextToken.CommandToExecute.TryApplyDelta(executionContext, stateToApplyTo, nextToken, ref delta))
+                    if (!answers.TryGetValue(nextToken, out ExecutionAnswerSet answersForToken))
+                    {
+                        answersForToken = null;
+                    }
+
+                    if (!nextToken.TryGetChanges(stateToApplyTo, answersForToken, out List<GameStateChange> changes))
                     {
                         // TODO LOG FAILURE
                         return false;
+                    }
+
+                    if (changes != null)
+                    {
+                        delta.Changes.AddRange(changes);
                     }
 
                     nextToken = nextToken.NextLinkedToken;

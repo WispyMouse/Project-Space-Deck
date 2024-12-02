@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Execution
 {
+    using SpaceDeck.GameState.Context;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
     using System.Collections;
@@ -22,7 +23,7 @@ namespace SpaceDeck.GameState.Execution
         {
             foreach (GameStateChange change in delta.Changes)
             {
-                change.ApplyToGameState(ref originalState, ref executionContext);
+                change.ApplyToGameState(ref originalState);
             }
         }
     }

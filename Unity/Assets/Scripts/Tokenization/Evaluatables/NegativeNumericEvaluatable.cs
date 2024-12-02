@@ -2,6 +2,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
 {
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.GameState.Context;
+    using System.Collections.Generic;
+    using SpaceDeck.Tokenization.Minimum.Questions;
 
     /// <summary>
     /// Describes a <see cref="ConstantEvaluatableValue{T}"/> that represents
@@ -19,9 +22,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
             this.ToNegate = toNegate;
         }
 
-        public bool TryEvaluate(ExecutionContext executionContext, out decimal value)
+        public bool TryEvaluate(ExecutionAnswerSet answers, out decimal value)
         {
-            if(!this.ToNegate.TryEvaluate(executionContext, out value))
+            if(!this.ToNegate.TryEvaluate(answers, out value))
             {
                 return false;
             }
