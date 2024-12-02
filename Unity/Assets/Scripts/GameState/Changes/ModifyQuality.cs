@@ -2,7 +2,7 @@ namespace SpaceDeck.GameState.Changes
 {
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Tokenization.Minimum.Evaluatables;
+    using SpaceDeck.Tokenization.Evaluatables;
 
     public class ModifyQuality : QualityChange
     {

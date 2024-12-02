@@ -1,7 +1,7 @@
-using SpaceDeck.GameState.Minimum;
-
-namespace SpaceDeck.Tokenization.Minimum.Evaluatables
+namespace SpaceDeck.Tokenization.Evaluatables
 {
+    using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.GameState.Minimum;
 
     public class SpecificTargetEvaluatableValue : ChangeTargetEvaluatableValue
     {

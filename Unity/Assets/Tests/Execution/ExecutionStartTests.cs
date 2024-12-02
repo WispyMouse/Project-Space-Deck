@@ -15,7 +15,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.GameState.Changes;
-    using SpaceDeck.Tokenization.Minimum.Evaluatables;
+    using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum.Questions;
 
     /// <summary>

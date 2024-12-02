@@ -3,7 +3,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Changes.Targets;
-    using SpaceDeck.Tokenization.Minimum.Evaluatables;
+    using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Changes;
     using System.Collections.Generic;

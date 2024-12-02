@@ -1,7 +1,7 @@
 namespace SpaceDeck.Tokenization.Processing
 {
     using SpaceDeck.Tokenization.Minimum;
-    using SpaceDeck.Tokenization.Minimum.Evaluatables;
+    using SpaceDeck.Tokenization.Evaluatables;
     using System.Collections;
     using System.Collections.Generic;
 

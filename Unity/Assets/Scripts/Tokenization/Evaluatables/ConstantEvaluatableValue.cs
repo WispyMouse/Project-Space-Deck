@@ -1,7 +1,8 @@
-using SpaceDeck.GameState.Minimum;
-
-namespace SpaceDeck.Tokenization.Minimum.Evaluatables
+namespace SpaceDeck.Tokenization.Evaluatables
 {
+    using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.GameState.Minimum;
+
     /// <summary>
     /// Describes a very reliable answer to an evaluation question.
     /// It's always <see cref="Constant"/>.
