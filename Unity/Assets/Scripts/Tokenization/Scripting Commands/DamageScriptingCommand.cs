@@ -1,5 +1,6 @@
 namespace SpaceDeck.Tokenization.ScriptingCommands
 {
+    using System;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Changes.Targets;
@@ -47,29 +48,28 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         public readonly ChangeTargetEvaluatableValue ChangeTarget;
         public readonly INumericEvaluatableValue Mod;
 
-        public override IReadOnlyList<ExecutionQuestion> Questions => new List<ExecutionQuestion>()
-        {
-            new EffectTargetExecutionQuestion(this)
-        };
-
-        /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
-        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, int damageToApply) : base(parsedToken)
+        private DamageLinkedToken(ChangeTargetEvaluatableValue changeTarget, ParsedToken parsedToken) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
+            this._Questions.AddRange(ChangeTarget.GetQuestions(this));
+        }
+
+
+        /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
+        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, int damageToApply) : this(changeTarget, parsedToken)
+        {
             this.Mod = new ConstantNumericValue(-damageToApply);
         }
 
         /// <param name="damageToApply">Amount of damage to apply. The negative of this value is taken.</param>
-        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, decimal damageToApply) : base(parsedToken)
+        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, decimal damageToApply) : this(changeTarget, parsedToken)
         {
-            this.ChangeTarget = changeTarget;
             this.Mod = new ConstantNumericValue(-damageToApply);
         }
 
         /// <param name="mod">Amount of damage to apply. The negative of this value is taken.</param>
-        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, INumericEvaluatableValue mod) : base(parsedToken)
+        public DamageLinkedToken(ParsedToken parsedToken, ChangeTargetEvaluatableValue changeTarget, INumericEvaluatableValue mod) : this(changeTarget, parsedToken)
         {
-            this.ChangeTarget = changeTarget;
             this.Mod = new NegativeNumericEvaluatableValue(mod);
         }
 

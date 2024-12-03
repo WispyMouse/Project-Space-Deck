@@ -8,7 +8,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
     public interface IEvaluatableValue
     {
-
+        public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken);
     }
 
     public interface IEvaluatableValue<T> : IEvaluatableValue

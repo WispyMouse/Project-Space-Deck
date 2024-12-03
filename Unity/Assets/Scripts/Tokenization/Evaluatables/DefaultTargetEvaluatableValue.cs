@@ -12,13 +12,6 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         private DefaultTargetEvaluatableValue()
         {
-
-        }
-
-        public override bool TryEvaluate(ExecutionAnswerSet answers, out IChangeTarget value)
-        {
-            value = null;
-            return value != null;
         }
     }
 }

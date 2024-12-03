@@ -14,11 +14,5 @@ namespace SpaceDeck.Tokenization.Evaluatables
         {
             this.Target = target;
         }
-
-        public override bool TryEvaluate(ExecutionAnswerSet answers, out IChangeTarget value)
-        {
-            value = this.Target;
-            return this.Target != null;
-        }
     }
 }

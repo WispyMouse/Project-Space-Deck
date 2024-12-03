@@ -161,33 +161,62 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         /// <summary>
         /// This test creates a command involving dealing damage.
         /// It doesn't specify a target beforehand, and so it should fail to evaluate.
-        /// Then a target is provided, showing that it can evaluate.
         /// </summary>
         [Test]
-        public void Damage_RequiresTarget()
+        public void Damage_RequiresTarget_FailWithoutTarget()
         {
+            // ARRANGE
             var damageScriptingCommand = new DamageScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
-
-            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
-            Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
-            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
-            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality("health", 100);
             gameState.PersistentEntities.Add(targetingEntity);
+
+            // ACT
+            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
+            Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
 
-            // Assert that you can't perform this without a target
+            // ASSERT
+            // DAMAGE requires a target, and without a target this shouldn't be able to evaluate
             Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
+        }
 
-            // With the appropriate answers provided, assert this can be performed
+        /// <summary>
+        /// This test creates a command involving dealing damage.
+        /// The a target is provided programmatically, showing that it can evaluate.
+        /// </summary>
+        [Test]
+        public void Damage_RequiresTarget_SucceedWithTarget()
+        {
+            // ARRANGE
+            var damageScriptingCommand = new DamageScriptingCommand();
+            ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+
+            GameState gameState = new GameState();
+            Entity targetingEntity = new Entity();
+            targetingEntity.SetQuality("health", 100);
+            gameState.PersistentEntities.Add(targetingEntity);
+
             Dictionary<LinkedToken, ExecutionAnswerSet> answers = new Dictionary<LinkedToken, ExecutionAnswerSet>();
+
+            // ACT
+            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
+            Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
+            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
+
+            // ASSERT
+            // With the appropriate answers provided, assert this can be performed
             answers.Add(contextualizedTokens.Questions[0].Token, new ExecutionAnswerSet(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(targetingEntity)));
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out generatedDelta), "Should be able to create delta after providing answers.");
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
         }
 
         /// <summary>
@@ -222,7 +251,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is ModifyQuality, "Expecting token to be a quality change token.");
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
-            Assert.AreEqual(modifyQuality.ModifyValue, 1, "Expecting damage amount to be one.");
+            Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
             GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext() { CurrentDefaultTarget = targetingEntity });
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");

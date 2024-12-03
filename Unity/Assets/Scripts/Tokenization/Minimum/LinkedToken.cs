@@ -17,7 +17,14 @@ namespace SpaceDeck.Tokenization.Minimum
         public LinkedTokenScope LinkedScope;
         public LinkedToken NextLinkedToken;
 
-        public virtual IReadOnlyList<ExecutionQuestion> Questions => Array.Empty<ExecutionQuestion>();
+        public IReadOnlyList<ExecutionQuestion> Questions
+        {
+            get
+            {
+                return this._Questions;
+            }
+        }
+        protected readonly List<ExecutionQuestion> _Questions = new List<ExecutionQuestion>();
 
         public LinkedToken(ParsedToken parsedToken) : base(parsedToken.CommandToExecute, parsedToken.Arguments)
         {
