@@ -15,6 +15,24 @@ namespace SpaceDeck.GameState.Execution
             return TryCreateDelta(contextualizedTokens, new Dictionary<LinkedToken, ExecutionAnswerSet>(), stateToApplyTo, out delta);
         }
 
+        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, IReadOnlyList<ExecutionAnswerSet> answers, GameState stateToApplyTo, out GameStateDelta delta)
+        {
+            Dictionary<LinkedToken, ExecutionAnswerSet> answerDictionary = new Dictionary<LinkedToken, ExecutionAnswerSet>();
+
+            foreach (ExecutionAnswerSet curAnswerSet in answers)
+            {
+                if (answerDictionary.ContainsKey(curAnswerSet.Token))
+                {
+                    // TODO : Log failure
+                    continue;
+                }
+
+                answerDictionary.Add(curAnswerSet.Token, curAnswerSet);
+            }
+
+            return TryCreateDelta(contextualizedTokens, answerDictionary, stateToApplyTo, out delta);
+        }
+
         public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, Dictionary<LinkedToken, ExecutionAnswerSet> answers, GameState stateToApplyTo, out GameStateDelta delta)
         {
             delta = new GameStateDelta();

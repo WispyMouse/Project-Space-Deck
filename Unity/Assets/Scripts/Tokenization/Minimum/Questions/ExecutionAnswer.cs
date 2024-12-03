@@ -6,6 +6,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     public abstract class ExecutionAnswer
     {
         public ExecutionQuestion Question { get; set; }
+
+        public ExecutionAnswer(ExecutionQuestion question)
+        {
+            this.Question = question;
+        }
     }
 
     /// <summary>
@@ -15,5 +20,9 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     public abstract class ExecutionAnswer<T> : ExecutionAnswer where T : ExecutionQuestion
     {
         public T BoxedQuestion { get; set; }
+
+        public ExecutionAnswer(ExecutionQuestion question) : base(question)
+        {
+        }
     }
 }

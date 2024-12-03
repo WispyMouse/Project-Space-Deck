@@ -20,7 +20,7 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     {
         public IChangeTarget Answer;
 
-        public EffectTargetExecutionAnswer(IChangeTarget answer)
+        public EffectTargetExecutionAnswer(ExecutionQuestion question, IChangeTarget answer) : base(question)
         {
             this.Answer = answer;
         }

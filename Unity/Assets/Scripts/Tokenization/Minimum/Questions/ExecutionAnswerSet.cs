@@ -5,9 +5,12 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     public class ExecutionAnswerSet
     {
         private readonly Dictionary<ExecutionQuestion, ExecutionAnswer> questionsToAnswers = new Dictionary<ExecutionQuestion, ExecutionAnswer>();
+        public IEnumerable<ExecutionAnswer> Answers => questionsToAnswers.Values;
+        public LinkedToken Token;
 
         public ExecutionAnswerSet(ExecutionQuestion question, ExecutionAnswer answer)
         {
+            this.Token = question.Token;
             this.questionsToAnswers.Add(question, answer);
         }
 
