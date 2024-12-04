@@ -24,7 +24,7 @@ namespace SpaceDeck.GameState.Execution
                 return false;
             }
 
-            ExecutionContext executionContext = new ExecutionContext();
+            ExecutionContext executionContext = new ExecutionContext(stateToApplyTo, contextualizedTokens);
 
             LinkedToken nextToken = contextualizedTokens.Tokens.First;
             while (nextToken != null)

@@ -5,14 +5,17 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using SpaceDeck.GameState.Context;
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Tokenization.Evaluatables.Questions;
 
     public abstract class ChangeTargetEvaluatableValue : IEvaluatableValue<IChangeTarget>
     {
+        public readonly List<IChangeTarget> Options = new List<IChangeTarget>();
+
         public virtual IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken)
         {
             return new List<ExecutionQuestion>()
             {
-                new EffectTargetExecutionQuestion(linkedToken)
+                new EffectTargetExecutionQuestion(linkedToken, this.Options)
             };
         }
 

@@ -1,9 +1,14 @@
 namespace SpaceDeck.Tokenization.Minimum.Questions
 {
+    public abstract class ExecutionQuestion
+    {
+        public abstract ExecutionAnswer GetAnswerByIndex(int index);
+    }
+
     /// <summary>
     /// Represents a question that must be answered to execute a <see cref="LinkedTokenList"/>.
     /// </summary>
-    public abstract class ExecutionQuestion
+    public abstract class ExecutionQuestion<A> : ExecutionQuestion where A : ExecutionAnswer
     {
         public readonly LinkedToken Token;
 
@@ -11,5 +16,12 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
         {
             this.Token = token;
         }
+
+        public override ExecutionAnswer GetAnswerByIndex(int index)
+        {
+            return this.GetTypedAnswerByIndex(index);
+        }
+
+        public abstract A GetTypedAnswerByIndex(int index);
     }
 }

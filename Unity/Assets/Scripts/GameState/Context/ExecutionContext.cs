@@ -15,7 +15,14 @@ namespace SpaceDeck.GameState.Context
     /// </summary>
     public class ExecutionContext
     {
+        public readonly GameState ExecutedOnGameState;
         public IChangeTarget CurrentDefaultTarget;
-        public ContextualizedTokenList TokenList;
+        public readonly ContextualizedTokenList TokenList;
+
+        public ExecutionContext(GameState executedOnGameState, ContextualizedTokenList tokenList)
+        {
+            this.ExecutedOnGameState = executedOnGameState;
+            this.TokenList = tokenList;
+        }
     }
 }

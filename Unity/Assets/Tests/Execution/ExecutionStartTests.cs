@@ -18,6 +18,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.GameState.Context;
+    using SpaceDeck.Tokenization.Evaluatables.Questions;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -128,7 +129,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             public override void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
             {
-                throw new NotImplementedException();
+                answerReceiver.Invoke(question.GetAnswerByIndex(this.Index));
             }
         }
 
@@ -280,7 +281,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
-            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext() { CurrentDefaultTarget = targetingEntity });
+            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext(gameState, contextualizedTokens) { CurrentDefaultTarget = targetingEntity });
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
 
@@ -325,7 +326,44 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         [Test]
         public void Question_RequiringSpecificTarget_CanProvideWithInterface()
         {
+            // ARRANGE
+            var damageScriptingCommand = new DamageScriptingCommand();
+            ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
 
+            GameState gameState = new GameState();
+
+            // Add three enemies, so there's some ambiguity on who to target
+            Entity entityOne = new Entity();
+            entityOne.SetQuality("health", 100);
+            gameState.PersistentEntities.Add(entityOne);
+            Entity entityTwoThisOneIsTheTarget = new Entity();
+            entityTwoThisOneIsTheTarget.SetQuality("health", 100);
+            gameState.PersistentEntities.Add(entityTwoThisOneIsTheTarget);
+            Entity entityThree = new Entity();
+            entityThree.SetQuality("health", 100);
+            gameState.PersistentEntities.Add(entityThree);
+
+            // ACT
+            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
+            Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
+            Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
+            Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
+            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
+
+            ExecutionAnswerSet answers = null;
+            new TestIndexAnswerer(2).HandleQuestions(contextualizedTokens.Questions, (ExecutionAnswerSet handledAnswer) =>
+            {
+                answers = handledAnswer;
+            });
+
+            // ASSERT
+            // With the appropriate answers provided, assert this can be performed
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
+
+            Assert.AreEqual(100, entityOne.GetQuality("health"), "The first target should be unharmed.");
+            Assert.AreEqual(99, entityTwoThisOneIsTheTarget.GetQuality("health"), "The second target should be specifically harmed to 99 health.");
+            Assert.AreEqual(100, entityThree.GetQuality("health"), "The third target should be unharmed.");
         }
     }
 }
