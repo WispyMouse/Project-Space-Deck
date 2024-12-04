@@ -102,18 +102,33 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             }
         }
 
-        private class TestAnswerer : AnswererBase
+        private class TestSpecificTargetAnswerer : AnswererBase
         {
             private IChangeTarget Target;
 
-            public TestAnswerer(IChangeTarget target)
+            public TestSpecificTargetAnswerer(IChangeTarget target)
             {
                 this.Target = target;
             }
 
             public override void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
             {
-                answerReceiver.Invoke(new ExecutionAnswerSet(question, new EffectTargetExecutionAnswer(question, this.Target)));
+                answerReceiver.Invoke(new EffectTargetExecutionAnswer(question, this.Target));
+            }
+        }
+
+        private class TestIndexAnswerer : AnswererBase
+        {
+            private int Index;
+
+            public TestIndexAnswerer(int index)
+            {
+                this.Index = index;
+            }
+
+            public override void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -219,15 +234,13 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             targetingEntity.SetQuality("health", 100);
             gameState.PersistentEntities.Add(targetingEntity);
 
-            Dictionary<LinkedToken, ExecutionAnswerSet> answers = new Dictionary<LinkedToken, ExecutionAnswerSet>();
-
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            answers.Add(contextualizedTokens.Questions[0].Token, new ExecutionAnswerSet(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(contextualizedTokens.Questions[0], targetingEntity)));
+            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(contextualizedTokens.Questions[0], targetingEntity));
 
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
@@ -259,8 +272,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             gameState.PersistentEntities.Add(targetingEntity);
 
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            Dictionary<LinkedToken, ExecutionAnswerSet> answers = new Dictionary<LinkedToken, ExecutionAnswerSet>();
-            answers.Add(contextualizedTokens.Tokens.First, new ExecutionAnswerSet(contextualizedTokens.Questions[0], new EffectTargetExecutionAnswer(contextualizedTokens.Questions[0], targetingEntity)));
+            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(contextualizedTokens.Questions[0], targetingEntity));
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
@@ -296,8 +308,8 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
             ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
 
-            IReadOnlyList<ExecutionAnswerSet> answers = null;
-            new TestAnswerer(targetingEntity).HandleQuestions(contextualizedTokens.Questions, (IReadOnlyList<ExecutionAnswerSet> handledAnswer) =>
+            ExecutionAnswerSet answers = null;
+            new TestSpecificTargetAnswerer(targetingEntity).HandleQuestions(contextualizedTokens.Questions, (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });
@@ -305,6 +317,15 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
             Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void Question_RequiringSpecificTarget_CanProvideWithInterface()
+        {
+
         }
     }
 }

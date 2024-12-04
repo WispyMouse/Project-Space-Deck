@@ -38,27 +38,11 @@ namespace SpaceDeck.GameState.Context
             this.Questions = questions;
         }
 
-        public bool AllAnswersAccountedFor(Dictionary<LinkedToken, ExecutionAnswerSet> answers)
+        public bool AllAnswersAccountedFor(ExecutionAnswerSet answers)
         {
-            if (this.Questions.Count == 0)
-            {
-                return true;
-            }
-
-            // If there are more questions than answers, there couldn't possibly be enough answers
-            if (this.Questions.Count > answers.Count)
-            {
-                return false;
-            }
-
             foreach (ExecutionQuestion question in this.Questions)
             {
-                if (!answers.TryGetValue(question.Token, out ExecutionAnswerSet answerForToken))
-                {
-                    return false;
-                }
-
-                if (!answerForToken.TryGetAnswerForQuestion(question, out ExecutionAnswer associatedAnswer))
+                if (!answers.TryGetAnswerForQuestion(question, out ExecutionAnswer associatedAnswer))
                 {
                     return false;
                 }

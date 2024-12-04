@@ -6,12 +6,28 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     {
         private readonly Dictionary<ExecutionQuestion, ExecutionAnswer> questionsToAnswers = new Dictionary<ExecutionQuestion, ExecutionAnswer>();
         public IEnumerable<ExecutionAnswer> Answers => questionsToAnswers.Values;
-        public LinkedToken Token;
 
-        public ExecutionAnswerSet(ExecutionQuestion question, ExecutionAnswer answer)
+        public ExecutionAnswerSet()
         {
-            this.Token = question.Token;
-            this.questionsToAnswers.Add(question, answer);
+        }
+
+        public ExecutionAnswerSet(ExecutionAnswer answer)
+        {
+            this.questionsToAnswers.Add(answer.Question, answer);
+        }
+
+        public ExecutionAnswerSet(IEnumerable<ExecutionAnswer> answers)
+        {
+            foreach (ExecutionAnswer answer in answers)
+            {
+                if (this.questionsToAnswers.ContainsKey(answer.Question))
+                {
+                    // TODO: LOG ERROR
+                    continue;
+                }
+
+                this.questionsToAnswers.Add(answer.Question, answer);
+            }
         }
 
         public bool TryGetAnswerForQuestion(ExecutionQuestion question, out ExecutionAnswer associatedAnswer)

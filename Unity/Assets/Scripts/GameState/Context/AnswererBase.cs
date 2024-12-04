@@ -11,18 +11,23 @@ namespace SpaceDeck.GameState.Context
     {
         public abstract void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver);
 
+        public virtual void HandleQuestion<Q>(Q question, ProvideQuestionAnswerDelegate<Q> answerReceiver) where Q : ExecutionQuestion
+        {
+            this.HandleQuestion(question, answerReceiver);
+        }
+
         public virtual void HandleQuestions(IReadOnlyList<ExecutionQuestion> questions, ProvideQuestionsAnswersDelegate answerReceiver)
         {
-            ConcurrentBag<ExecutionAnswerSet> answers = new ConcurrentBag<ExecutionAnswerSet>();
+            ConcurrentBag<ExecutionAnswer> answers = new ConcurrentBag<ExecutionAnswer>();
 
-            ProvideQuestionAnswerDelegate provideAnswer = (ExecutionAnswerSet answer) =>
+            ProvideQuestionAnswerDelegate provideAnswer = (ExecutionAnswer answer) =>
             {
                 lock (answers)
                 {
                     answers.Add(answer);
                     if (answers.Count == questions.Count)
                     {
-                        answerReceiver.Invoke(answers.ToArray());
+                        answerReceiver.Invoke(new ExecutionAnswerSet(answers));
                         return;
                     }
                 }
