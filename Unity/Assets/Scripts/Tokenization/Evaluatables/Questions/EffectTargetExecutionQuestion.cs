@@ -11,16 +11,16 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     /// </summary>
     public class EffectTargetExecutionQuestion : ExecutionQuestion<EffectTargetExecutionAnswer>
     {
-        public readonly IReadOnlyList<IChangeTarget> Options;
+        public readonly ChangeTargetProvider Options;
 
-        public EffectTargetExecutionQuestion(LinkedToken linkedToken, IReadOnlyList<IChangeTarget> options) : base(linkedToken)
+        public EffectTargetExecutionQuestion(LinkedToken linkedToken, ChangeTargetProvider options) : base(linkedToken)
         {
             this.Options = options;
         }
 
         public override EffectTargetExecutionAnswer GetTypedAnswerByIndex(int index)
         {
-            return new EffectTargetExecutionAnswer(this, Options[index]);
+            return new EffectTargetExecutionAnswer(this, this.Options.ChooseByIndex(index));
         }
     }
     

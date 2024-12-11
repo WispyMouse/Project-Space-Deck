@@ -10,13 +10,18 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
     public abstract class ChangeTargetEvaluatableValue : IEvaluatableValue<IChangeTarget>
     {
-        public readonly List<IChangeTarget> Options = new List<IChangeTarget>();
+        protected ChangeTargetProvider Provider;
+
+        protected ChangeTargetEvaluatableValue(ChangeTargetProvider provider)
+        {
+            this.Provider = provider;
+        }
 
         public virtual IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken)
         {
             return new List<ExecutionQuestion>()
             {
-                new EffectTargetExecutionQuestion(linkedToken, this.Options)
+                new EffectTargetExecutionQuestion(linkedToken, this.Provider)
             };
         }
 
