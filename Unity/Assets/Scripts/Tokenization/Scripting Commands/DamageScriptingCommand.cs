@@ -76,7 +76,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
         public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
         {
-            if (!this.ChangeTarget.TryEvaluate(context.Answers, out IChangeTarget target) || !this.Mod.TryEvaluate(context.Answers, out decimal mod))
+            if (!this.ChangeTarget.TryEvaluate(context, out IChangeTarget target) || !this.Mod.TryEvaluate(context, out decimal mod))
             {
                 changes = null;
                 return false;

@@ -6,6 +6,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using System;
+    using SpaceDeck.Tokenization.Minimum.Context;
 
     /// <summary>
     /// Describes a <see cref="ConstantEvaluatableValue{T}"/> that represents
@@ -25,9 +26,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken) => Array.Empty<ExecutionQuestion>();
 
-        public bool TryEvaluate(ExecutionAnswerSet answers, out decimal value)
+        public bool TryEvaluate(ScriptingExecutionContext context, out decimal value)
         {
-            if(!this.ToNegate.TryEvaluate(answers, out value))
+            if(!this.ToNegate.TryEvaluate(context, out value))
             {
                 return false;
             }

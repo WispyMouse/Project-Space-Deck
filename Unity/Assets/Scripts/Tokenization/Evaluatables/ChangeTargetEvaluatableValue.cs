@@ -6,6 +6,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Tokenization.Evaluatables.Questions;
+    using SpaceDeck.Tokenization.Minimum.Context;
 
     public abstract class ChangeTargetEvaluatableValue : IEvaluatableValue<IChangeTarget>
     {
@@ -19,9 +20,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
             };
         }
 
-        public bool TryEvaluate(ExecutionAnswerSet answers, out IChangeTarget value)
+        public bool TryEvaluate(ScriptingExecutionContext context, out IChangeTarget value)
         {
-            if (!answers.TryGetTypedAnswerForQuestionType(out EffectTargetExecutionQuestion question, out EffectTargetExecutionAnswer answer))
+            if (!context.Answers.TryGetTypedAnswerForQuestionType(out EffectTargetExecutionQuestion question, out EffectTargetExecutionAnswer answer))
             {
                 value = null;
                 return false;

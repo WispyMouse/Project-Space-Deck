@@ -6,6 +6,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using System;
+    using SpaceDeck.Tokenization.Minimum.Context;
 
     /// <summary>
     /// Describes a very reliable answer to an evaluation question.
@@ -30,7 +31,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken) => Array.Empty<ExecutionQuestion>();
 
-        public bool TryEvaluate(ExecutionAnswerSet answers, out T value)
+        public bool TryEvaluate(ScriptingExecutionContext context, out T value)
         {
             value = this.Constant;
             return true;
