@@ -15,14 +15,14 @@ namespace SpaceDeck.Tokenization.Minimum.Context
     /// This class changes as the set is executed, and should be maintained only during
     /// the lifetime of an execution.
     /// </summary>
-    public class ExecutionContext
+    public class ScriptingExecutionContext
     {
         public readonly GameState ExecutedOnGameState;
         public IChangeTarget CurrentDefaultTarget;
         public readonly LinkedTokenList TokenList;
         public readonly ExecutionAnswerSet Answers;
 
-        public ExecutionContext(GameState executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers)
+        public ScriptingExecutionContext(GameState executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers)
         {
             this.ExecutedOnGameState = executedOnGameState;
             this.TokenList = tokenList;

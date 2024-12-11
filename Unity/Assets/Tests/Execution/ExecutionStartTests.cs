@@ -64,7 +64,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             {
             }
 
-            public override bool TryGetChanges(ExecutionContext context, out List<GameStateChange> changes)
+            public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
             {
                 changes = new List<GameStateChange>();
                 changes.Add(new LoggingGameStateChange(ZeroArgumentDebugLogScriptingCommand.HelloString));
@@ -90,7 +90,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             {
             }
 
-            public override bool TryGetChanges(ExecutionContext context, out List<GameStateChange> changes)
+            public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
             {
                 if (this.Arguments == null || this.Arguments.Count == 0)
                 {
@@ -277,7 +277,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
-            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext(gameState, linkedTokenSet, answers) { CurrentDefaultTarget = targetingEntity });
+            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ScriptingExecutionContext(gameState, linkedTokenSet, answers) { CurrentDefaultTarget = targetingEntity });
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
 

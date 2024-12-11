@@ -74,7 +74,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             this.Mod = new NegativeNumericEvaluatableValue(mod);
         }
 
-        public override bool TryGetChanges(ExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
         {
             if (!this.ChangeTarget.TryEvaluate(context.Answers, out IChangeTarget target) || !this.Mod.TryEvaluate(context.Answers, out decimal mod))
             {

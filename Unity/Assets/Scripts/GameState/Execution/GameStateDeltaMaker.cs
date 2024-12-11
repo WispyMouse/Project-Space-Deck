@@ -20,7 +20,7 @@ namespace SpaceDeck.GameState.Execution
         {
             delta = new GameStateDelta();
 
-            ExecutionContext executionContext = new ExecutionContext(stateToApplyTo, linkedTokenList, answers);
+            ScriptingExecutionContext executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers);
 
             LinkedToken nextToken = linkedTokenList.First;
             while (nextToken != null)
