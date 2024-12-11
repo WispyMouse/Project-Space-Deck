@@ -1,7 +1,8 @@
-namespace SpaceDeck.GameState.Context
+namespace SpaceDeck.Tokenization.Minimum.Context
 {
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Questions;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -19,11 +20,13 @@ namespace SpaceDeck.GameState.Context
         public readonly GameState ExecutedOnGameState;
         public IChangeTarget CurrentDefaultTarget;
         public readonly LinkedTokenList TokenList;
+        public readonly ExecutionAnswerSet Answers;
 
-        public ExecutionContext(GameState executedOnGameState, LinkedTokenList tokenList)
+        public ExecutionContext(GameState executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers)
         {
             this.ExecutedOnGameState = executedOnGameState;
             this.TokenList = tokenList;
+            this.Answers = answers;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using SpaceDeck.GameState.Changes;
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Tokenization.Minimum.Context;
 
     public class DamageScriptingCommand : ScriptingCommand
     {
@@ -73,9 +74,9 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             this.Mod = new NegativeNumericEvaluatableValue(mod);
         }
 
-        public override bool TryGetChanges(GameState stateToApplyTo, ExecutionAnswerSet answers, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ExecutionContext context, out List<GameStateChange> changes)
         {
-            if (!this.ChangeTarget.TryEvaluate(answers, out IChangeTarget target) || !this.Mod.TryEvaluate(answers, out decimal mod))
+            if (!this.ChangeTarget.TryEvaluate(context.Answers, out IChangeTarget target) || !this.Mod.TryEvaluate(context.Answers, out decimal mod))
             {
                 changes = null;
                 return false;

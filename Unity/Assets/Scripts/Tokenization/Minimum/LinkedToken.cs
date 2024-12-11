@@ -5,6 +5,7 @@ namespace SpaceDeck.Tokenization.Minimum
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.Tokenization.Minimum.Context;
 
     /// <summary>
     /// The combination of <see cref="ParsedToken"/>,
@@ -30,7 +31,7 @@ namespace SpaceDeck.Tokenization.Minimum
         {
         }
 
-        public virtual bool TryGetChanges(GameState stateToApplyTo, ExecutionAnswerSet answers, out List<GameStateChange> changes)
+        public virtual bool TryGetChanges(ExecutionContext context, out List<GameStateChange> changes)
         {
             changes = null;
             return true;

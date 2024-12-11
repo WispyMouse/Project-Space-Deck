@@ -3,6 +3,7 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.GameState.Context;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using System;
     using System.Collections;
@@ -19,7 +20,7 @@ namespace SpaceDeck.GameState.Execution
         {
             delta = new GameStateDelta();
 
-            ExecutionContext executionContext = new ExecutionContext(stateToApplyTo, linkedTokenList);
+            ExecutionContext executionContext = new ExecutionContext(stateToApplyTo, linkedTokenList, answers);
 
             LinkedToken nextToken = linkedTokenList.First;
             while (nextToken != null)
@@ -27,7 +28,7 @@ namespace SpaceDeck.GameState.Execution
                 // TODO: Check conditional for permission to be inside scope before applying
                 if (true)
                 {
-                    if (!nextToken.TryGetChanges(stateToApplyTo, answers, out List<GameStateChange> changes))
+                    if (!nextToken.TryGetChanges(executionContext, out List<GameStateChange> changes))
                     {
                         // TODO LOG FAILURE
                         return false;
