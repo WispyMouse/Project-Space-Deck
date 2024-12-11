@@ -1,6 +1,7 @@
 namespace SpaceDeck.GameState.Context
 {
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Tokenization.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace SpaceDeck.GameState.Context
     {
         public readonly GameState ExecutedOnGameState;
         public IChangeTarget CurrentDefaultTarget;
-        public readonly ContextualizedTokenList TokenList;
+        public readonly LinkedTokenList TokenList;
 
-        public ExecutionContext(GameState executedOnGameState, ContextualizedTokenList tokenList)
+        public ExecutionContext(GameState executedOnGameState, LinkedTokenList tokenList)
         {
             this.ExecutedOnGameState = executedOnGameState;
             this.TokenList = tokenList;

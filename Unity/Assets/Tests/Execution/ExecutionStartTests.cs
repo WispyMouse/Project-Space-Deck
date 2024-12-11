@@ -156,8 +156,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             GameState gameState = new GameState();
 
-            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is LoggingGameStateChange, "Expecting token to be a logging token.");
@@ -181,8 +180,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             GameState gameState = new GameState();
 
-            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is LoggingGameStateChange, "Expecting token to be a logging token.");
             LoggingGameStateChange log = generatedDelta.Changes[0] as LoggingGameStateChange;
@@ -211,11 +209,10 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
-            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
 
             // ASSERT
             // DAMAGE requires a target, and without a target this shouldn't be able to evaluate
-            Assert.False(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
+            Assert.False(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
         }
 
         /// <summary>
@@ -240,12 +237,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
-            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(contextualizedTokens.Questions[0], targetingEntity));
+            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
 
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
         }
 
         /// <summary>
@@ -272,16 +268,15 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             targetingEntity.SetQuality("health", 100);
             gameState.PersistentEntities.Add(targetingEntity);
 
-            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
-            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(contextualizedTokens.Questions[0], targetingEntity));
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
+            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is ModifyQuality, "Expecting token to be a quality change token.");
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
-            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext(gameState, contextualizedTokens) { CurrentDefaultTarget = targetingEntity });
+            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ExecutionContext(gameState, linkedTokenSet) { CurrentDefaultTarget = targetingEntity });
             Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
 
@@ -307,17 +302,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
-            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
 
             ExecutionAnswerSet answers = null;
-            new TestSpecificTargetAnswerer(targetingEntity).HandleQuestions(contextualizedTokens.Questions, (ExecutionAnswerSet handledAnswer) =>
+            new TestSpecificTargetAnswerer(targetingEntity).HandleQuestions(linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });
 
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
         }
 
         /// <summary>
@@ -349,17 +343,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
-            ContextualizedTokenList contextualizedTokens = new ContextualizedTokenList(linkedTokenSet);
 
             ExecutionAnswerSet answers = null;
-            new TestIndexAnswerer(2).HandleQuestions(contextualizedTokens.Questions, (ExecutionAnswerSet handledAnswer) =>
+            new TestIndexAnswerer(2).HandleQuestions(linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });
 
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(contextualizedTokens, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
 
             Assert.AreEqual(100, entityOne.GetQuality("health"), "The first target should be unharmed.");
             Assert.AreEqual(99, entityTwoThisOneIsTheTarget.GetQuality("health"), "The second target should be specifically harmed to 99 health.");

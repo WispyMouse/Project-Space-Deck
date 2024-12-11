@@ -1,5 +1,6 @@
 namespace SpaceDeck.Tokenization.Minimum
 {
+    using SpaceDeck.Tokenization.Minimum.Questions;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -11,6 +12,7 @@ namespace SpaceDeck.Tokenization.Minimum
     public struct LinkedTokenList
     {
         public List<LinkedTokenScope> Scopes;
+
         public LinkedToken First
         {
             get
@@ -27,6 +29,24 @@ namespace SpaceDeck.Tokenization.Minimum
         public LinkedTokenList(List<LinkedTokenScope> scopes)
         {
             this.Scopes = scopes;
+        }
+
+        public List<ExecutionQuestion> GetQuestions()
+        {
+            List<ExecutionQuestion> questions = new List<ExecutionQuestion>();
+
+            LinkedToken nextToken = this.First;
+            while (nextToken != null)
+            {
+                foreach (ExecutionQuestion question in nextToken.Questions)
+                {
+                    questions.Add(question);
+                }
+
+                nextToken = nextToken.NextLinkedToken;
+            }
+
+            return questions;
         }
     }
 }

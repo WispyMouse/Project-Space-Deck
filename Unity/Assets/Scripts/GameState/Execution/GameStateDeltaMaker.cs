@@ -10,23 +10,18 @@ namespace SpaceDeck.GameState.Execution
 
     public static class GameStateDeltaMaker
     {
-        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, GameState stateToApplyTo, out GameStateDelta delta)
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, GameState stateToApplyTo, out GameStateDelta delta)
         {
-            return TryCreateDelta(contextualizedTokens, new ExecutionAnswerSet(), stateToApplyTo, out delta);
+            return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(), stateToApplyTo, out delta);
         }
 
-        public static bool TryCreateDelta(ContextualizedTokenList contextualizedTokens, ExecutionAnswerSet answers, GameState stateToApplyTo, out GameStateDelta delta)
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, GameState stateToApplyTo, out GameStateDelta delta)
         {
             delta = new GameStateDelta();
 
-            if (!contextualizedTokens.AllAnswersAccountedFor(answers))
-            {
-                return false;
-            }
+            ExecutionContext executionContext = new ExecutionContext(stateToApplyTo, linkedTokenList);
 
-            ExecutionContext executionContext = new ExecutionContext(stateToApplyTo, contextualizedTokens);
-
-            LinkedToken nextToken = contextualizedTokens.Tokens.First;
+            LinkedToken nextToken = linkedTokenList.First;
             while (nextToken != null)
             {
                 // TODO: Check conditional for permission to be inside scope before applying
