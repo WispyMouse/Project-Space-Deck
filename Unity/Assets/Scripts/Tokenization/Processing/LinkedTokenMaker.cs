@@ -43,6 +43,7 @@ namespace SpaceDeck.Tokenization.Processing
                     if (previousToken != null)
                     {
                         previousToken.NextToken = parsedToken;
+                        previousToken.NextLinkedToken = linkedToken;
                     }
 
                     previousToken = linkedToken;

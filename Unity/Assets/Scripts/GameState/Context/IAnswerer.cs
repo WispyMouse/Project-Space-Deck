@@ -11,7 +11,7 @@ namespace SpaceDeck.GameState.Context
 
     public interface IAnswerer
     {
-        public void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver);
-        public void HandleQuestions(IReadOnlyList<ExecutionQuestion> questions, ProvideQuestionsAnswersDelegate answerReceiver);
+        public void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver);
+        public void HandleQuestions(QuestionAnsweringContext answeringContext, IReadOnlyList<ExecutionQuestion> questions, ProvideQuestionsAnswersDelegate answerReceiver);
     }
 }

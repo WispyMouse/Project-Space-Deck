@@ -10,9 +10,9 @@ namespace SpaceDeck.GameState.Context
 
     public abstract class AnswererBase : IAnswerer
     {
-        public abstract void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver);
+        public abstract void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver);
 
-        public virtual void HandleQuestions(IReadOnlyList<ExecutionQuestion> questions, ProvideQuestionsAnswersDelegate answerReceiver)
+        public virtual void HandleQuestions(QuestionAnsweringContext answeringContext, IReadOnlyList<ExecutionQuestion> questions, ProvideQuestionsAnswersDelegate answerReceiver)
         {
             if (questions.Count == 0)
             {
@@ -20,24 +20,33 @@ namespace SpaceDeck.GameState.Context
                 return;
             }
 
-            ConcurrentBag<ExecutionAnswer> answers = new ConcurrentBag<ExecutionAnswer>();
+            // Ask the first question
+            this.HandleNextQuestion(answeringContext, questions, 0, answerReceiver, new List<ExecutionAnswer>());
+        }
 
+        void HandleNextQuestion(QuestionAnsweringContext answeringContext, IReadOnlyList<ExecutionQuestion> questions, int questionIndex, ProvideQuestionsAnswersDelegate answerReceiver, List<ExecutionAnswer> answers)
+        {
             ProvideQuestionAnswerDelegate provideAnswer = (ExecutionAnswer answer) =>
             {
-                lock (answers)
+                answers.Add(answer);
+                if (answers.Count == questions.Count)
                 {
-                    answers.Add(answer);
-                    if (answers.Count == questions.Count)
-                    {
-                        answerReceiver.Invoke(new ExecutionAnswerSet(answers));
-                        return;
-                    }
+                    answerReceiver.Invoke(new ExecutionAnswerSet(answers));
+                    return;
                 }
+
+                this.HandleNextQuestion(answeringContext, questions, ++questionIndex, answerReceiver, answers);
             };
 
-            foreach (ExecutionQuestion curQuestion in questions)
+            ExecutionQuestion curQuestion = questions[questionIndex];
+
+            if (curQuestion.TryGetDefaultAnswer(answeringContext, out ExecutionAnswer answer))
             {
-                this.HandleQuestion(curQuestion, provideAnswer);
+                provideAnswer.Invoke(answer);
+            }
+            else
+            {
+                this.HandleQuestion(answeringContext, questions[questionIndex], provideAnswer);
             }
         }
     }

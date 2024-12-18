@@ -42,6 +42,24 @@ namespace SpaceDeck.Tokenization.Processing
             return true;
         }
 
+        public static bool TryGetChangeTargetEvaluatableValue(LowercaseString argument, out ChangeTargetEvaluatableValue targetEvaluatable)
+        {
+            if (!TrySelectParser(argument, out EvaluatableParser parser, out IEvaluatableValue evaluatedValue))
+            {
+                targetEvaluatable = null;
+                return false;
+            }
+
+            if (!(evaluatedValue is ChangeTargetEvaluatableValue targetEvaluatableValue))
+            {
+                targetEvaluatable = null;
+                return false;
+            }
+
+            targetEvaluatable = targetEvaluatableValue;
+            return true;
+        }
+
         public static bool TrySelectParser(LowercaseString argument, out EvaluatableParser parser, out IEvaluatableValue parsedEvaluatableValue)
         {
             if (parserHistory.TryGetValue(argument, out parser) && parser.TryParse(argument, out parsedEvaluatableValue))

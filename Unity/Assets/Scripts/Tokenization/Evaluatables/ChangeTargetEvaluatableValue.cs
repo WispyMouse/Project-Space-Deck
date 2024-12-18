@@ -8,11 +8,11 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
 
-    public abstract class ChangeTargetEvaluatableValue : IEvaluatableValue<IChangeTarget>
+    public class ChangeTargetEvaluatableValue : IEvaluatableValue<IChangeTarget>
     {
-        protected ChangeTargetProvider Provider;
+        public readonly ChangeTargetProvider Provider;
 
-        protected ChangeTargetEvaluatableValue(ChangeTargetProvider provider)
+        public ChangeTargetEvaluatableValue(ChangeTargetProvider provider)
         {
             this.Provider = provider;
         }

@@ -3,12 +3,14 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using System;
     using System.Collections.Generic;
 
     public class SpecificTargetProvider : ChangeTargetProvider
     {
-        private IReadOnlyList<IChangeTarget> Options;
+        public readonly IReadOnlyList<IChangeTarget> Options = Array.Empty<IChangeTarget>();
 
         public SpecificTargetProvider(IChangeTarget target)
         {
@@ -20,9 +22,9 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
             this.Options = target;
         }
 
-        public override IChangeTarget ChooseByIndex(int index)
+        public override IReadOnlyList<IChangeTarget> GetProvidedTargets(QuestionAnsweringContext answeringContext)
         {
-            return this.Options[index];
+            return this.Options;
         }
     }
 }

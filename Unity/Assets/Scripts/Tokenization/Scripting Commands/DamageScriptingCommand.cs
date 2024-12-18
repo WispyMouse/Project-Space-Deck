@@ -10,6 +10,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Tokenization.Evaluatables.Questions;
 
     public class DamageScriptingCommand : ScriptingCommand
     {
@@ -29,7 +30,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                     return false;
                 }
 
-                linkedToken = new DamageLinkedToken(parsedToken, DefaultTargetEvaluatableValue.Instance, evaluatable);
+                linkedToken = new DamageLinkedToken(parsedToken, new ChangeTargetEvaluatableValue(DefaultTargetProvider.Instance), evaluatable);
                 return true;
             }
             else

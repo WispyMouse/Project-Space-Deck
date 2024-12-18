@@ -3,6 +3,7 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using System.Collections.Generic;
 
@@ -15,9 +16,9 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
 
         }
 
-        public override IChangeTarget ChooseByIndex(int index)
+        public override IReadOnlyList<IChangeTarget> GetProvidedTargets(QuestionAnsweringContext answeringContext)
         {
-            throw new System.NotImplementedException();
+            return new List<IChangeTarget>() { answeringContext.DefaultTarget };
         }
     }
 }

@@ -10,7 +10,7 @@ namespace SpaceDeck.Tokenization.Minimum
     /// All ids and actions are done in lowercase. This promises
     /// that designers don't need to fuss about capitalization.
     /// </summary>
-    public struct LowercaseString : IEquatable<string>
+    public struct LowercaseString : IEquatable<string>, IEquatable<LowercaseString>
     {
         public string Value;
 
@@ -44,6 +44,11 @@ namespace SpaceDeck.Tokenization.Minimum
         public bool Equals(string other)
         {
             return this.Value.Equals(other.ToLower());
+        }
+
+        public bool Equals(LowercaseString other)
+        {
+            return this.Value.Equals(other.Value);
         }
     }
 }

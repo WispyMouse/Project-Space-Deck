@@ -113,24 +113,32 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 this.Target = target;
             }
 
-            public override void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
+            public override void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
             {
                 answerReceiver.Invoke(new EffectTargetExecutionAnswer(question, this.Target));
             }
         }
 
-        private class TestIndexAnswerer : AnswererBase
+        private class IndexChoosingAnswerer : AnswererBase
         {
             private int Index;
 
-            public TestIndexAnswerer(int index)
+            public IndexChoosingAnswerer(int index)
             {
                 this.Index = index;
             }
 
-            public override void HandleQuestion(ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
+            public override void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
             {
-                answerReceiver.Invoke(question.GetAnswerByIndex(this.Index));
+                if (question is EffectTargetExecutionQuestion targetQuestion)
+                {
+                    IChangeTarget target = targetQuestion.Options.GetProvidedTargets(answeringContext)[this.Index];
+                    answerReceiver.Invoke(new EffectTargetExecutionAnswer(question, target));
+                }
+                else
+                {
+                    Assert.Fail($"This answerer does not have the tools to handle this question.");
+                }
             }
         }
 
@@ -305,7 +313,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             ExecutionAnswerSet answers = null;
-            new TestSpecificTargetAnswerer(targetingEntity).HandleQuestions(linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
+            new TestSpecificTargetAnswerer(targetingEntity).HandleQuestions(new QuestionAnsweringContext(gameState), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });
@@ -316,15 +324,20 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         }
 
         /// <summary>
-        /// 
+        /// Similar to <see cref="Damage_RequiresTarget_SucceedWithTarget"/>, this aims to succeed.
+        /// This one uses the <see cref="IndexChoosingAnswerer"/> to pick.
+        /// This will show that the targets are enumerated properly in the damage scripting command.
         /// </summary>
         [Test]
-        public void Question_RequiringSpecificTarget_CanProvideWithInterface()
+        public void Damage_RequiresTarget_ProvidedByIndexChoosingInterface()
         {
             // ARRANGE
             var damageScriptingCommand = new DamageScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+            var targetScriptingCommand = new TargetScriptingCommand();
+            ScriptingCommandReference.RegisterScriptingCommand(targetScriptingCommand);
+            EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
 
             GameState gameState = new GameState();
 
@@ -340,13 +353,13 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             gameState.PersistentEntities.Add(entityThree);
 
             // ACT
-            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
+            string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             ExecutionAnswerSet answers = null;
-            new TestIndexAnswerer(1).HandleQuestions(linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
+            new IndexChoosingAnswerer(1).HandleQuestions(new QuestionAnsweringContext(gameState), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });
@@ -354,6 +367,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
+            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ScriptingExecutionContext(gameState, linkedTokenSet, answers));
 
             Assert.AreEqual(100, entityOne.GetQuality("health"), "The first target should be unharmed.");
             Assert.AreEqual(99, entityTwoThisOneIsTheTarget.GetQuality("health"), "The second target should be specifically harmed to 99 health.");

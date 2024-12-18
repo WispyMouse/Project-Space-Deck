@@ -4,7 +4,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
 {
     public abstract class ExecutionQuestion
     {
-        public abstract ExecutionAnswer GetAnswerByIndex(int index);
+        public virtual bool TryGetDefaultAnswer(QuestionAnsweringContext answeringContext, out ExecutionAnswer answer)
+        {
+            answer = null;
+            return false;
+        }
     }
 
     /// <summary>
@@ -19,11 +23,22 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
             this.Token = token;
         }
 
-        public override ExecutionAnswer GetAnswerByIndex(int index)
+        public override bool TryGetDefaultAnswer(QuestionAnsweringContext answeringContext, out ExecutionAnswer answer)
         {
-            return this.GetTypedAnswerByIndex(index);
+            if (this.TryGetDefaultTypedAnswer(answeringContext, out A typedAnswer))
+            {
+                answer = typedAnswer;
+                return true;
+            }
+
+            answer = null;
+            return false;
         }
 
-        public abstract A GetTypedAnswerByIndex(int index);
+        public virtual bool TryGetDefaultTypedAnswer(QuestionAnsweringContext answeringContext, out A answer)
+        {
+            answer = null;
+            return false;
+        }
     }
 }

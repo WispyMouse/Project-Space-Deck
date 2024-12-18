@@ -3,6 +3,7 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using System.Collections.Generic;
 
@@ -18,9 +19,17 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
             this.Options = options;
         }
 
-        public override EffectTargetExecutionAnswer GetTypedAnswerByIndex(int index)
+        public override bool TryGetDefaultTypedAnswer(QuestionAnsweringContext answeringContext, out EffectTargetExecutionAnswer answer)
         {
-            return new EffectTargetExecutionAnswer(this, this.Options.ChooseByIndex(index));
+            IReadOnlyList<IChangeTarget> targets = this.Options.GetProvidedTargets(answeringContext);
+            if (targets.Count == 1)
+            {
+                answer = new EffectTargetExecutionAnswer(this, targets[0]);
+                return true;
+            }
+
+            answer = null;
+            return false;
         }
     }
     
