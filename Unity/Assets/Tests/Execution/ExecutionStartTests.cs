@@ -211,7 +211,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality("health", 100);
-            gameState.PersistentEntities.Add(targetingEntity);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -239,7 +239,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality("health", 100);
-            gameState.PersistentEntities.Add(targetingEntity);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -275,7 +275,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality("health", 100);
-            gameState.PersistentEntities.Add(targetingEntity);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
 
             ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
@@ -286,7 +286,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
             GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ScriptingExecutionContext(gameState, linkedTokenSet, answers) { CurrentDefaultTarget = targetingEntity });
-            Assert.AreEqual(99, gameState.PersistentEntities[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
+            Assert.AreEqual(99, gameState.CurrentEncounterState.EncounterEnemies[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality("health", 100);
-            gameState.PersistentEntities.Add(targetingEntity);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -344,13 +344,13 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             // Add three enemies, so there's some ambiguity on who to target
             Entity entityOne = new Entity();
             entityOne.SetQuality("health", 100);
-            gameState.PersistentEntities.Add(entityOne);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(entityOne);
             Entity entityTwoThisOneIsTheTarget = new Entity();
             entityTwoThisOneIsTheTarget.SetQuality("health", 100);
-            gameState.PersistentEntities.Add(entityTwoThisOneIsTheTarget);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(entityTwoThisOneIsTheTarget);
             Entity entityThree = new Entity();
             entityThree.SetQuality("health", 100);
-            gameState.PersistentEntities.Add(entityThree);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(entityThree);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";

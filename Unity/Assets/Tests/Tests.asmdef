@@ -16,7 +16,8 @@
         "GameState.Changes",
         "Tokenization.ScriptingCommands",
         "Tokenization.Evaluatables",
-        "GameState.Context"
+        "GameState.Context",
+        "GameState.Rules"
     ],
     "includePlatforms": [
         "Editor"

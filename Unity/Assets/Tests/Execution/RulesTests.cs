@@ -20,6 +20,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.GameState.Context;
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.GameState.Rules;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -50,6 +51,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         {
             // Clear all Scripting Tokens
             ScriptingCommandReference.Clear();
+            RuleReference.ClearRules();
         }
 
         /// <summary>
@@ -68,11 +70,13 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             var targetScriptingCommand = new TargetScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(targetScriptingCommand);
             EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
+            ZeroHealthRule zeroLifeIsDeathRule = new ZeroHealthRule();
+            RuleReference.RegisterRule(zeroLifeIsDeathRule);
 
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality("health", healthAmount);
-            gameState.PersistentEntities.Add(targetingEntity);
+            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:{healthAmount}]";
@@ -85,7 +89,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
             GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ScriptingExecutionContext(gameState, linkedTokenSet, answers));
             Assert.False(targetingEntity.IsAlive, "After losing all health, this entity should be not-alive.");
-            Assert.False(gameState.PersistentEntities.Contains(targetingEntity), "Dead entities should be removed from the entity list.");
+            Assert.False(gameState.CurrentEncounterState.EncounterEnemies.Contains(targetingEntity), "Dead entities should be removed from the entity list.");
         }
     }
 }

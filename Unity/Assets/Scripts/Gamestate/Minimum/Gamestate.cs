@@ -17,8 +17,20 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public class GameState
     {
-        public EncounterState CurrentEncounterState;
+        public EncounterState CurrentEncounterState = new EncounterState();
         public readonly List<Entity> PersistentEntities = new List<Entity>();
+
+        public List<Entity> AllEntities
+        {
+            get
+            {
+                // TODO: This is pretty horrible (I wrote it!)! It has a lot of allocating the
+                // same list repeatedly. We should revisit this soon.
+                List<Entity> allEntities = new List<Entity>(PersistentEntities);
+                allEntities.AddRange(this.CurrentEncounterState.EncounterEnemies);
+                return allEntities;
+            }
+        }
 
         public GameState()
         {

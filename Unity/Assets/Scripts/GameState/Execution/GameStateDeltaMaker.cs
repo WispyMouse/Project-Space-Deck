@@ -36,7 +36,21 @@ namespace SpaceDeck.GameState.Execution
 
                     if (changes != null)
                     {
-                        delta.Changes.AddRange(changes);
+                        // Iterate across each change, one at a time, so that it can be determined
+                        // if there are any AppliedRules that result from this, they should be applied
+                        // and then continued to process
+                        List<GameStateChange> changeStack = new List<GameStateChange>(changes);
+
+                        for (int ii = 0; ii < changeStack.Count; ii++)
+                        {
+                            delta.Changes.Add(changeStack[ii]);
+
+                            List<GameStateChange> rules = RuleReference.GetAppliedRules(executionContext, changeStack[ii]);
+                            if (rules != null && rules.Count > 0)
+                            {
+                                changeStack.InsertRange(ii+1, rules);
+                            }
+                        }
                     }
 
                     nextToken = nextToken.NextLinkedToken;

@@ -1,0 +1,20 @@
+{
+    "name": "GameState.Rules",
+    "rootNamespace": "",
+    "references": [
+        "GUID:83c0cb67214157147ac8b718f26fcb6f",
+        "GUID:fb4c8757e426c65428e61a1dc5b09ca7",
+        "GUID:c810a108174b150468e66093d83b7ef5",
+        "GUID:7635439a22b3e86479148cf22894db9e",
+        "GUID:1ba9ced06be1c2c4ebb5e89532ed9b33"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
