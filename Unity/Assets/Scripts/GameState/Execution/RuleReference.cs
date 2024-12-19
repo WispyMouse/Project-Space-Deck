@@ -20,13 +20,13 @@ namespace SpaceDeck.GameState.Execution
             Rules.Clear();
         }
 
-        public static List<GameStateChange> GetAppliedRules(ScriptingExecutionContext context, GameStateChange change)
+        public static List<GameStateChange> GetAppliedRules(ScriptingExecutionContext context, GameStateDelta developingDelta, GameStateChange change)
         {
             List<GameStateChange> applications = new List<GameStateChange>();
 
             foreach (Rule curRule in Rules)
             {
-                if (curRule.TryApplyRule(context, change, out List<GameStateChange> thisRuleApplications))
+                if (curRule.TryApplyRule(context, developingDelta, change, out List<GameStateChange> thisRuleApplications))
                 {
                     applications.AddRange(thisRuleApplications);
                 }

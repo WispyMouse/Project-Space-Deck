@@ -12,7 +12,7 @@ namespace SpaceDeck.GameState.Context
     {
         public abstract void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver);
 
-        public virtual void HandleQuestions(QuestionAnsweringContext answeringContext, IReadOnlyList<ExecutionQuestion> questions, ProvideQuestionsAnswersDelegate answerReceiver)
+        public void HandleQuestions(QuestionAnsweringContext answeringContext, IReadOnlyList<ExecutionQuestion> questions, ProvideQuestionsAnswersDelegate answerReceiver)
         {
             if (questions.Count == 0)
             {
@@ -29,13 +29,16 @@ namespace SpaceDeck.GameState.Context
             ProvideQuestionAnswerDelegate provideAnswer = (ExecutionAnswer answer) =>
             {
                 answers.Add(answer);
+
                 if (answers.Count == questions.Count)
                 {
                     answerReceiver.Invoke(new ExecutionAnswerSet(answers));
                     return;
                 }
 
-                this.HandleNextQuestion(answeringContext, questions, ++questionIndex, answerReceiver, answers);
+                answer.ApplyToQuestionAnsweringContext(answeringContext);
+
+                this.HandleNextQuestion(answeringContext, questions, questionIndex+1, answerReceiver, answers);
             };
 
             ExecutionQuestion curQuestion = questions[questionIndex];

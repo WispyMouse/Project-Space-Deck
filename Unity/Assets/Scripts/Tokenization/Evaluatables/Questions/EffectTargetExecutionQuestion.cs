@@ -22,7 +22,7 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
         public override bool TryGetDefaultTypedAnswer(QuestionAnsweringContext answeringContext, out EffectTargetExecutionAnswer answer)
         {
             IReadOnlyList<IChangeTarget> targets = this.Options.GetProvidedTargets(answeringContext);
-            if (targets.Count == 1)
+            if (targets != null && targets.Count == 1)
             {
                 answer = new EffectTargetExecutionAnswer(this, targets[0]);
                 return true;
@@ -43,6 +43,11 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
         public EffectTargetExecutionAnswer(ExecutionQuestion question, IChangeTarget answer) : base(question)
         {
             this.Answer = answer;
+        }
+
+        public override void ApplyToQuestionAnsweringContext(QuestionAnsweringContext context)
+        {
+            context.DefaultTarget = this.Answer;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 this.ToLog = toLog;
             }
 
-            public override void ApplyToGameState(ref GameState toApplyTo)
+            public override void ApplyToGameState(IGameStateMutator toApplyTo)
             {
                 Debug.Log(this.ToLog);
             }
@@ -285,7 +285,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
-            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ScriptingExecutionContext(gameState, linkedTokenSet, answers) { CurrentDefaultTarget = targetingEntity });
+            GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
             Assert.AreEqual(99, gameState.CurrentEncounterState.EncounterEnemies[0].GetQuality("health"), "Expecting health to currently be 1 less than starting, so 99.");
         }
 
@@ -300,6 +300,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             var damageScriptingCommand = new DamageScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+            var targetScriptingCommand = new TargetScriptingCommand();
+            ScriptingCommandReference.RegisterScriptingCommand(targetScriptingCommand);
+            EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
 
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
@@ -307,7 +310,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
 
             // ACT
-            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
+            string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
@@ -367,7 +370,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
-            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ScriptingExecutionContext(gameState, linkedTokenSet, answers));
+            GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
 
             Assert.AreEqual(100, entityOne.GetQuality("health"), "The first target should be unharmed.");
             Assert.AreEqual(99, entityTwoThisOneIsTheTarget.GetQuality("health"), "The second target should be specifically harmed to 99 health.");

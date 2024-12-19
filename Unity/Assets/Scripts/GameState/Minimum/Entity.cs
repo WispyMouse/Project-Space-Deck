@@ -18,8 +18,6 @@ namespace SpaceDeck.GameState.Minimum
         /// </summary>
         private readonly List<Entity> selfList = new List<Entity>();
 
-        public bool IsAlive = true;
-
         public Entity()
         {
             this.selfList = new List<Entity>() { this };
@@ -36,7 +34,7 @@ namespace SpaceDeck.GameState.Minimum
             return defaultValue;
         }
 
-        public IEnumerable<Entity> GetRepresentedEntities()
+        public IEnumerable<Entity> GetRepresentedEntities(IGameStateMutator gameState)
         {
             return this.selfList;
         }

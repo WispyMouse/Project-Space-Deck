@@ -24,7 +24,7 @@ namespace SpaceDeck.GameState.Changes.Targets
 
         }
 
-        public IEnumerable<Entity> GetRepresentedEntities()
+        public IEnumerable<Entity> GetRepresentedEntities(IGameStateMutator gameState)
         {
             return Array.Empty<Entity>();
         }

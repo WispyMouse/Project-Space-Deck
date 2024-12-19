@@ -87,8 +87,8 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             // ASSERT
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
-            GameStateDeltaApplier.ApplyGameStateDelta(ref gameState, generatedDelta, new ScriptingExecutionContext(gameState, linkedTokenSet, answers));
-            Assert.False(targetingEntity.IsAlive, "After losing all health, this entity should be not-alive.");
+            GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
+            Assert.False(gameState.EntityIsAlive(targetingEntity), "After losing all health, this entity should be not-alive.");
             Assert.False(gameState.CurrentEncounterState.EncounterEnemies.Contains(targetingEntity), "Dead entities should be removed from the entity list.");
         }
     }

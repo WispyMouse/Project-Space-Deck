@@ -10,12 +10,11 @@ namespace SpaceDeck.GameState.Changes
         {
         }
 
-        public override void ApplyToGameState(ref GameState toApplyTo)
+        public override void ApplyToGameState(IGameStateMutator toApplyTo)
         {
-            foreach (Entity curEntity in new List<Entity>(this.Target.GetRepresentedEntities()))
+            foreach (Entity curEntity in new List<Entity>(this.Target.GetRepresentedEntities(toApplyTo)))
             {
-                toApplyTo.CurrentEncounterState.EncounterEnemies.Remove(curEntity);
-                curEntity.IsAlive = false;
+                toApplyTo.RemoveEntity(curEntity);
             }
         }
     }

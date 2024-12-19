@@ -16,6 +16,6 @@ namespace SpaceDeck.GameState.Minimum
             this.Target = target;
         }
 
-        public abstract void ApplyToGameState(ref GameState toApplyTo);
+        public abstract void ApplyToGameState(IGameStateMutator toApplyTo);
     }
 }

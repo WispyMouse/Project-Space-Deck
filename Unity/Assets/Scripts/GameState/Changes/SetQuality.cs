@@ -12,9 +12,9 @@ namespace SpaceDeck.GameState.Changes
             this.NewValue = newValue;
         }
 
-        public override void ApplyToGameState(ref GameState toApplyTo)
+        public override void ApplyToGameState(IGameStateMutator toApplyTo)
         {
-            foreach (Entity curEntity in this.Target.GetRepresentedEntities())
+            foreach (Entity curEntity in this.Target.GetRepresentedEntities(toApplyTo))
             {
                 curEntity.SetQuality(this.QualityToChange, this.NewValue);
             }

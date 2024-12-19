@@ -18,8 +18,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         public override IReadOnlyList<IChangeTarget> GetProvidedTargets(QuestionAnsweringContext answeringContext)
         {
-            // TODO: Only return foes of the user! This currently just gets everything.
-            return answeringContext.StartingGameState.PersistentEntities;
+            return answeringContext.StartingGameState.GetAllEntities();
         }
     }
 

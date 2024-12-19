@@ -20,11 +20,11 @@ namespace SpaceDeck.GameState.Execution
     /// </summary>
     public static class GameStateDeltaApplier
     {
-        public static void ApplyGameStateDelta(ref GameState originalState, GameStateDelta delta, ScriptingExecutionContext executionContext)
+        public static void ApplyGameStateDelta(IGameStateMutator originalState, GameStateDelta delta)
         {
             foreach (GameStateChange change in delta.Changes)
             {
-                change.ApplyToGameState(ref originalState);
+                change.ApplyToGameState(originalState);
             }
         }
     }

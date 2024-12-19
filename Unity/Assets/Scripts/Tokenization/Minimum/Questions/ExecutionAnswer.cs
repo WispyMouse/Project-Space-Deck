@@ -1,3 +1,5 @@
+using SpaceDeck.Tokenization.Minimum.Context;
+
 namespace SpaceDeck.Tokenization.Minimum.Questions
 {
     /// <summary>
@@ -10,6 +12,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
         public ExecutionAnswer(ExecutionQuestion question)
         {
             this.Question = question;
+        }
+
+        public virtual void ApplyToQuestionAnsweringContext(QuestionAnsweringContext context)
+        {
+
         }
     }
 

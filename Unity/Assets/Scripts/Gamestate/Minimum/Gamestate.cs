@@ -15,7 +15,7 @@ namespace SpaceDeck.GameState.Minimum
     /// state in order to show certain properties and values that might
     /// exist after something is executed.
     /// </summary>
-    public class GameState
+    public class GameState : IGameStateMutator
     {
         public EncounterState CurrentEncounterState = new EncounterState();
         public readonly List<Entity> PersistentEntities = new List<Entity>();
@@ -35,6 +35,32 @@ namespace SpaceDeck.GameState.Minimum
         public GameState()
         {
 
+        }
+
+        public void SetQuality(Entity entity, string index, decimal toValue)
+        {
+            entity.SetQuality(index, toValue);
+        }
+
+        public decimal GetQuality(Entity entity, string index, decimal defaultValue = 0)
+        {
+            return entity.GetQuality(index, defaultValue);
+        }
+
+        public void RemoveEntity(Entity entity)
+        {
+            this.PersistentEntities.Remove(entity);
+            this.CurrentEncounterState.EncounterEnemies.Remove(entity);
+        }
+
+        public bool EntityIsAlive(Entity entity)
+        {
+            return this.PersistentEntities.Contains(entity) || (this.CurrentEncounterState?.EncounterEnemies.Contains(entity) ?? false);
+        }
+
+        public IReadOnlyList<Entity> GetAllEntities()
+        {
+            return this.AllEntities;
         }
     }
 }

@@ -5,6 +5,7 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using System;
     using System.Collections.Generic;
 
     public class DefaultTargetProvider : ChangeTargetProvider
@@ -18,7 +19,14 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
 
         public override IReadOnlyList<IChangeTarget> GetProvidedTargets(QuestionAnsweringContext answeringContext)
         {
-            return new List<IChangeTarget>() { answeringContext.DefaultTarget };
+            if (answeringContext.DefaultTarget == null)
+            {
+                return null;
+            }
+            else
+            {
+                return new List<IChangeTarget>() { answeringContext.DefaultTarget };
+            }
         }
     }
 }

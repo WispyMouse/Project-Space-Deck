@@ -18,7 +18,7 @@ namespace SpaceDeck.GameState.Execution
 
         public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, GameState stateToApplyTo, out GameStateDelta delta)
         {
-            delta = new GameStateDelta();
+            delta = new GameStateDelta(stateToApplyTo);
 
             ScriptingExecutionContext executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers);
 
@@ -44,8 +44,9 @@ namespace SpaceDeck.GameState.Execution
                         for (int ii = 0; ii < changeStack.Count; ii++)
                         {
                             delta.Changes.Add(changeStack[ii]);
+                            changeStack[ii].ApplyToGameState(delta);
 
-                            List<GameStateChange> rules = RuleReference.GetAppliedRules(executionContext, changeStack[ii]);
+                            List<GameStateChange> rules = RuleReference.GetAppliedRules(executionContext, delta, changeStack[ii]);
                             if (rules != null && rules.Count > 0)
                             {
                                 changeStack.InsertRange(ii+1, rules);

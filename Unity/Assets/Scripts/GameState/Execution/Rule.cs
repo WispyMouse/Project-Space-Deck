@@ -7,7 +7,7 @@ namespace SpaceDeck.GameState.Execution
 
     public class Rule
     {
-        public virtual bool TryApplyRule(ScriptingExecutionContext context, GameStateChange change, out List<GameStateChange> applications)
+        public virtual bool TryApplyRule(ScriptingExecutionContext context, IGameStateMutator gameStateMutator, GameStateChange change, out List<GameStateChange> applications)
         {
             applications = null;
             return false;

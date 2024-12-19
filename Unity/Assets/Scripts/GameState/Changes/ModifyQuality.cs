@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Changes
 {
+    using System;
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
@@ -13,11 +14,11 @@ namespace SpaceDeck.GameState.Changes
             this.ModifyValue = modifyValue;
         }
 
-        public override void ApplyToGameState(ref GameState toApplyTo)
+        public override void ApplyToGameState(IGameStateMutator toApplyTo)
         {
-            foreach (Entity curEntity in this.Target.GetRepresentedEntities())
+            foreach (Entity curEntity in this.Target.GetRepresentedEntities(toApplyTo) ?? Array.Empty<Entity>())
             {
-                curEntity.SetQuality(this.QualityToChange, curEntity.GetQuality(this.QualityToChange) + ModifyValue);
+                toApplyTo.SetQuality(curEntity, this.QualityToChange, toApplyTo.GetQuality(curEntity, this.QualityToChange) + ModifyValue);
             }
         }
     }
