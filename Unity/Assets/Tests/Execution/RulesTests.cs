@@ -21,6 +21,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.GameState.Rules;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// This class holds tests that were made as part of a

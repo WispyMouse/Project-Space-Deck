@@ -3,6 +3,7 @@ namespace SpaceDeck.Tokenization.Minimum
     using SpaceDeck.GameState.Minimum;
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// Represents the base concept of a ScriptingCommand.

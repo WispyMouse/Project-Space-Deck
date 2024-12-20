@@ -2,6 +2,7 @@ namespace SpaceDeck.Tokenization.Minimum
 {
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// The combination of a <see cref="ScriptingCommand"/>

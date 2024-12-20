@@ -10,6 +10,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using UnityEngine.Events;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Processing;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// This class holds tests that were made as part of a

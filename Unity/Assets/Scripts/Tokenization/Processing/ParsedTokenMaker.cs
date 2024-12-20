@@ -3,6 +3,7 @@ namespace SpaceDeck.Tokenization.Processing
     using SpaceDeck.Tokenization.Minimum;
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// Static helper class for turning <see cref="TokenText"/> into <see cref="ParsedTokenList"/>.

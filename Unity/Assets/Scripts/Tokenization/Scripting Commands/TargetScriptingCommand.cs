@@ -10,6 +10,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Utility.Minimum;
 
     public class TargetScriptingCommand : ScriptingCommand
     {

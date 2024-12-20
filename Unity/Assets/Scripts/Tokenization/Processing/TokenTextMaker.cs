@@ -6,6 +6,7 @@ namespace SpaceDeck.Tokenization.Processing
     using System.Collections;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// Static helper class for turning Token Text Strings into <see cref="TokenText"/>.

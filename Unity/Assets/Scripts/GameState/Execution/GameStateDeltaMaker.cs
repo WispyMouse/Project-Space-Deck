@@ -5,6 +5,7 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace SpaceDeck.GameState.Execution
                             delta.Changes.Add(changeStack[ii]);
                             changeStack[ii].ApplyToGameState(delta);
 
-                            List<GameStateChange> rules = RuleReference.GetAppliedRules(executionContext, delta, changeStack[ii]);
+                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, changeStack[ii]));
                             if (rules != null && rules.Count > 0)
                             {
                                 changeStack.InsertRange(ii+1, rules);

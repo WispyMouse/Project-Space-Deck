@@ -1,10 +1,7 @@
 {
-    "name": "Tokenization.Minimum",
+    "name": "Utility.Minimum",
     "rootNamespace": "",
-    "references": [
-        "GUID:83c0cb67214157147ac8b718f26fcb6f",
-        "GUID:236eebad63b2bc641bb665bdea6c026a"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -2,6 +2,7 @@ namespace SpaceDeck.Tokenization.Minimum
 {
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// Describes a sanitized string representing a Token Statement.

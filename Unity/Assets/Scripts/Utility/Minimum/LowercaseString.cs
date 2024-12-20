@@ -1,4 +1,4 @@
-namespace SpaceDeck.Tokenization.Minimum
+namespace SpaceDeck.Utility.Minimum
 {
     using System;
     using System.Collections;

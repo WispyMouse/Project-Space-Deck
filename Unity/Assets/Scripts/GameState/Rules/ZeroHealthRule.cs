@@ -7,14 +7,21 @@ namespace SpaceDeck.GameState.Rules
     using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class ZeroHealthRule : Rule
     {
-        public override bool TryApplyRule(ScriptingExecutionContext context, IGameStateMutator gameStateMutator, GameStateChange change, out List<GameStateChange> applications)
+        public ZeroHealthRule() : base(WellknownGameStateEvents.RuleApplication)
+        {
+
+        }
+
+        public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
             applications = new List<GameStateChange>();
 
-            foreach (Entity curEntity in context.ExecutedOnGameState.AllEntities)
+            foreach (Entity curEntity in gameStateMutator.GetAllEntities())
             {
                 if (gameStateMutator.EntityIsAlive(curEntity) && gameStateMutator.GetQuality(curEntity, "health", 0) <= 0)
                 {
