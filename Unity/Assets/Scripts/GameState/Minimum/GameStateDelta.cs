@@ -10,11 +10,18 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public class GameStateDelta : IGameStateMutator
     {
+        public enum EntityDestination
+        {
+            Removed,
+            Encounter,
+            Persistent
+        }
+
         public readonly IGameStateMutator BaseGameState;
         public readonly List<GameStateChange> Changes = new List<GameStateChange>();
 
         public readonly Dictionary<Entity, Dictionary<string, decimal>> DeltaValues = new Dictionary<Entity, Dictionary<string, decimal>>();
-        public readonly List<Entity> RemovedEntities = new List<Entity>();
+        public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
 
         public GameStateDelta(IGameStateMutator baseGameState)
         {
@@ -51,14 +58,21 @@ namespace SpaceDeck.GameState.Minimum
 
         public void RemoveEntity(Entity entity)
         {
-            this.RemovedEntities.Add(entity);
+            if (this.EntityDestinationChanges.ContainsKey(entity))
+            {
+                this.EntityDestinationChanges[entity] = EntityDestination.Removed;
+            }
+            else
+            {
+                this.EntityDestinationChanges.Add(entity, EntityDestination.Removed);
+            }
         }
 
         public bool EntityIsAlive(Entity entity)
         {
-            if (this.RemovedEntities.Contains(entity))
+            if (this.EntityDestinationChanges.TryGetValue(entity, out EntityDestination destination))
             {
-                return false;
+                return destination != EntityDestination.Removed;
             }
 
             return this.BaseGameState.EntityIsAlive(entity);
@@ -69,12 +83,48 @@ namespace SpaceDeck.GameState.Minimum
             List<Entity> entities = new List<Entity>();
             entities.AddRange(this.BaseGameState.GetAllEntities());
 
-            foreach (Entity removedEntity in this.RemovedEntities)
+            foreach (Entity movedEntity in this.EntityDestinationChanges.Keys)
             {
-                entities.Remove(removedEntity);
+                switch (EntityDestinationChanges[movedEntity])
+                {
+                    case EntityDestination.Removed:
+                        entities.Remove(movedEntity);
+                        break;
+                    case EntityDestination.Persistent:
+                    case EntityDestination.Encounter:
+                        if (!entities.Contains(movedEntity))
+                        {
+                            entities.Add(movedEntity);
+                        }
+                        break;
+                }
             }
 
             return entities;
+        }
+
+        public void AddEncounterEntity(Entity toAdd)
+        {
+            if (this.EntityDestinationChanges.ContainsKey(toAdd))
+            {
+                this.EntityDestinationChanges[toAdd] = EntityDestination.Encounter;
+            }
+            else
+            {
+                this.EntityDestinationChanges.Add(toAdd, EntityDestination.Persistent);
+            }
+        }
+
+        public void AddPersistentEntity(Entity toAdd)
+        {
+            if (this.EntityDestinationChanges.ContainsKey(toAdd))
+            {
+                this.EntityDestinationChanges[toAdd] = EntityDestination.Encounter;
+            }
+            else
+            {
+                this.EntityDestinationChanges.Add(toAdd, EntityDestination.Persistent);
+            }
         }
     }
 }

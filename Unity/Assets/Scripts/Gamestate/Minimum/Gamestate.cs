@@ -62,5 +62,15 @@ namespace SpaceDeck.GameState.Minimum
         {
             return this.AllEntities;
         }
+
+        public void AddEncounterEntity(Entity toAdd)
+        {
+            this.CurrentEncounterState?.EncounterEnemies.Add(toAdd);
+        }
+
+        public void AddPersistentEntity(Entity toAdd)
+        {
+            this.PersistentEntities.Add(toAdd);
+        }
     }
 }

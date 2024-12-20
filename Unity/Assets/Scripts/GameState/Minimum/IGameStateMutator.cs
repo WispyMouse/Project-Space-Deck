@@ -8,6 +8,8 @@ namespace SpaceDeck.GameState.Minimum
     {
         void SetQuality(Entity entity, string index, decimal toValue);
         decimal GetQuality(Entity entity, string index, decimal defaultValue = 0);
+        void AddEncounterEntity(Entity toAdd);
+        void AddPersistentEntity(Entity toAdd);
         void RemoveEntity(Entity entity);
         bool EntityIsAlive(Entity entity);
         IReadOnlyList<Entity> GetAllEntities();

@@ -147,6 +147,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         {
             // Clear all Scripting Tokens
             ScriptingCommandReference.Clear();
+            RuleReference.ClearRules();
         }
 
         /// <summary>
