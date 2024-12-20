@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Minimum
 {
+    using SpaceDeck.Utility.Minimum;
     using System.Collections.Generic;
 
     /// <summary>
@@ -10,20 +11,20 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public class Entity : IChangeTarget
     {
-        private readonly Dictionary<string, decimal> Qualities = new Dictionary<string, decimal>();
+        private readonly Dictionary<LowercaseString, decimal> Qualities = new Dictionary<LowercaseString, decimal>();
 
         /// <summary>
         /// Holds a list to answer the question of <see cref="GetRepresentedEntities"/>.
         /// Since this object only represents itself, it can reuse the same list persistently.
         /// </summary>
-        private readonly List<Entity> selfList = new List<Entity>();
+        private readonly List<Entity> selfList;
 
         public Entity()
         {
             this.selfList = new List<Entity>() { this };
         }
 
-        public decimal GetQuality(string index, decimal defaultValue = 0)
+        public decimal GetQuality(LowercaseString index, decimal defaultValue = 0)
         {
             if (this.Qualities.TryGetValue(index, out decimal qualityValue))
             {
@@ -39,7 +40,7 @@ namespace SpaceDeck.GameState.Minimum
             return this.selfList;
         }
 
-        public void SetQuality(string index, decimal newValue)
+        public void SetQuality(LowercaseString index, decimal newValue)
         {
             if (this.Qualities.ContainsKey(index))
             {

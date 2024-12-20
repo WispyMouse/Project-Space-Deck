@@ -23,7 +23,7 @@ namespace SpaceDeck.GameState.Rules
 
             foreach (Entity curEntity in gameStateMutator.GetAllEntities())
             {
-                if (gameStateMutator.EntityIsAlive(curEntity) && gameStateMutator.GetQuality(curEntity, "health", 0) <= 0)
+                if (gameStateMutator.EntityIsAlive(curEntity) && gameStateMutator.GetQuality(curEntity, WellknownQualities.Health, 0) <= 0)
                 {
                     applications.Add(new RemoveEntity(curEntity));
                 }

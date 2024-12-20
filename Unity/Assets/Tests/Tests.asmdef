@@ -18,7 +18,8 @@
         "Tokenization.Evaluatables",
         "GameState.Context",
         "GameState.Rules",
-        "Utility.Minimum"
+        "Utility.Minimum",
+        "Utility.Wellknown"
     ],
     "includePlatforms": [
         "Editor"

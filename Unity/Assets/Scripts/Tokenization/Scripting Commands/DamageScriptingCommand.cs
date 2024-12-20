@@ -12,6 +12,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class DamageScriptingCommand : ScriptingCommand
     {
@@ -84,7 +85,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            changes = new List<GameStateChange>() { new ModifyQuality(target, "health", mod) };
+            changes = new List<GameStateChange>() { new ModifyQuality(target, WellknownQualities.Health, mod) };
             return true;
         }
     }

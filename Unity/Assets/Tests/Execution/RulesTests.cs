@@ -22,6 +22,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.GameState.Rules;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -76,7 +77,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             GameState gameState = new GameState();
             Entity targetingEntity = new Entity();
-            targetingEntity.SetQuality("health", healthAmount);
+            targetingEntity.SetQuality(WellknownQualities.Health, healthAmount);
             gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
 
             // ACT

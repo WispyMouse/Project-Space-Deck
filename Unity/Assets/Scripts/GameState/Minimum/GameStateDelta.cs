@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Minimum
 {
+    using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -20,7 +21,7 @@ namespace SpaceDeck.GameState.Minimum
         public readonly IGameStateMutator BaseGameState;
         public readonly List<GameStateChange> Changes = new List<GameStateChange>();
 
-        public readonly Dictionary<Entity, Dictionary<string, decimal>> DeltaValues = new Dictionary<Entity, Dictionary<string, decimal>>();
+        public readonly Dictionary<Entity, Dictionary<LowercaseString, decimal>> DeltaValues = new Dictionary<Entity, Dictionary<LowercaseString, decimal>>();
         public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
 
         public GameStateDelta(IGameStateMutator baseGameState)
@@ -28,11 +29,11 @@ namespace SpaceDeck.GameState.Minimum
             this.BaseGameState = baseGameState;
         }
 
-        public void SetQuality(Entity entity, string index, decimal toValue)
+        public void SetQuality(Entity entity, LowercaseString index, decimal toValue)
         {
-            if (!this.DeltaValues.TryGetValue(entity, out Dictionary<string, decimal> entityAttributes))
+            if (!this.DeltaValues.TryGetValue(entity, out Dictionary<LowercaseString, decimal> entityAttributes))
             {
-                entityAttributes = new Dictionary<string, decimal>();
+                entityAttributes = new Dictionary<LowercaseString, decimal>();
                 this.DeltaValues.Add(entity, entityAttributes);
             }
 
@@ -46,9 +47,9 @@ namespace SpaceDeck.GameState.Minimum
             }
         }
 
-        public decimal GetQuality(Entity entity, string index, decimal defaultValue = 0)
+        public decimal GetQuality(Entity entity, LowercaseString index, decimal defaultValue = 0)
         {
-            if (this.DeltaValues.TryGetValue(entity, out Dictionary<string, decimal> entityAttributes) && entityAttributes.TryGetValue(index, out decimal existingValue))
+            if (this.DeltaValues.TryGetValue(entity, out Dictionary<LowercaseString, decimal> entityAttributes) && entityAttributes.TryGetValue(index, out decimal existingValue))
             {
                 return existingValue;
             }

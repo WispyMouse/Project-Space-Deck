@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Minimum
 {
+    using SpaceDeck.Utility.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -37,12 +38,12 @@ namespace SpaceDeck.GameState.Minimum
 
         }
 
-        public void SetQuality(Entity entity, string index, decimal toValue)
+        public void SetQuality(Entity entity, LowercaseString index, decimal toValue)
         {
             entity.SetQuality(index, toValue);
         }
 
-        public decimal GetQuality(Entity entity, string index, decimal defaultValue = 0)
+        public decimal GetQuality(Entity entity, LowercaseString index, decimal defaultValue = 0)
         {
             return entity.GetQuality(index, defaultValue);
         }

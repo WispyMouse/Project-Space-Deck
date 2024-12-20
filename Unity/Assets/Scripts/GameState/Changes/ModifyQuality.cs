@@ -4,12 +4,13 @@ namespace SpaceDeck.GameState.Changes
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
+    using SpaceDeck.Utility.Minimum;
 
     public class ModifyQuality : QualityChange
     {
         public readonly decimal ModifyValue;
 
-        public ModifyQuality(IChangeTarget changeTarget, string qualityToChange, decimal modifyValue) : base(changeTarget, qualityToChange)
+        public ModifyQuality(IChangeTarget changeTarget, LowercaseString qualityToChange, decimal modifyValue) : base(changeTarget, qualityToChange)
         {
             this.ModifyValue = modifyValue;
         }
