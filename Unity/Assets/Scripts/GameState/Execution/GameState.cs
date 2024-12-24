@@ -1,5 +1,6 @@
-namespace SpaceDeck.GameState.Minimum
+namespace SpaceDeck.GameState.Execution
 {
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Minimum;
     using System;
     using System.Collections;

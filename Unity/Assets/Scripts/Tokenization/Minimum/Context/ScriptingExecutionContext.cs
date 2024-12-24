@@ -17,12 +17,12 @@ namespace SpaceDeck.Tokenization.Minimum.Context
     /// </summary>
     public class ScriptingExecutionContext
     {
-        public readonly GameState ExecutedOnGameState;
+        public readonly IGameStateMutator ExecutedOnGameState;
         public IChangeTarget CurrentDefaultTarget;
         public readonly LinkedTokenList TokenList;
         public readonly ExecutionAnswerSet Answers;
 
-        public ScriptingExecutionContext(GameState executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers)
+        public ScriptingExecutionContext(IGameStateMutator executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers)
         {
             this.ExecutedOnGameState = executedOnGameState;
             this.TokenList = tokenList;

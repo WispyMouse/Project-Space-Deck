@@ -15,9 +15,9 @@ namespace SpaceDeck.Tokenization.Minimum.Context
     public class QuestionAnsweringContext
     {
         public IChangeTarget DefaultTarget;
-        public readonly GameState StartingGameState;
+        public readonly IGameStateMutator StartingGameState;
 
-        public QuestionAnsweringContext(GameState startingGameState)
+        public QuestionAnsweringContext(IGameStateMutator startingGameState)
         {
             this.StartingGameState = startingGameState;
         }
