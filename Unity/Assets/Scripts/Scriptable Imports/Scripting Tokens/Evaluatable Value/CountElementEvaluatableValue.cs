@@ -42,7 +42,7 @@ namespace SFDDCards.ScriptingTokens.EvaluatableValues
             else
             {
                 evaluatedValue = 0;
-                return false;
+                return true;
             }
         }
 

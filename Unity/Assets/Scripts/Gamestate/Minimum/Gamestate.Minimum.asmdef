@@ -2,7 +2,8 @@
     "name": "GameState.Minimum",
     "rootNamespace": "",
     "references": [
-        "GUID:236eebad63b2bc641bb665bdea6c026a"
+        "GUID:236eebad63b2bc641bb665bdea6c026a",
+        "GUID:0c01b03fb9b2e924080bd50e3681c4fc"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

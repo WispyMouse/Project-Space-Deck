@@ -21,6 +21,9 @@ namespace SpaceDeck.GameState.Minimum
         public EncounterState CurrentEncounterState = new EncounterState();
         public readonly List<Entity> PersistentEntities = new List<Entity>();
 
+        public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
+        public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
+
         public List<Entity> AllEntities
         {
             get
@@ -72,6 +75,23 @@ namespace SpaceDeck.GameState.Minimum
         public void AddPersistentEntity(Entity toAdd)
         {
             this.PersistentEntities.Add(toAdd);
+        }
+
+        public void StartFactionTurn(decimal factionId)
+        {
+        }
+
+        public void StartEntityTurn(Entity toStart)
+        {
+        }
+
+        public void EndCurrentEntityTurn()
+        {
+        }
+
+        public void EndCurrentFactionTurn()
+        {
+
         }
     }
 }

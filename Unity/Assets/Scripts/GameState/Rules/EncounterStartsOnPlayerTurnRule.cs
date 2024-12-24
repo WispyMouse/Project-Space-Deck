@@ -13,7 +13,24 @@ namespace SpaceDeck.GameState.Rules
     {
         public EncounterStartPlayerTurnRule() : base(WellknownGameStateEvents.EncounterStart)
         {
+        }
 
+        public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        {
+            foreach (Entity curEntity in gameStateMutator.GetAllEntities())
+            {
+                if (curEntity.GetQuality(WellknownQualities.Faction, WellknownFactions.UnknownFaction) == WellknownFactions.Player)
+                {
+                    applications = new List<GameStateChange>()
+                    {
+                        new StartFactionTurn(WellknownFactions.Player)
+                    };
+                    return true;
+                }
+            }
+
+            applications = new List<GameStateChange>();
+            return false;
         }
     }
 }

@@ -18,11 +18,17 @@ namespace SpaceDeck.GameState.Minimum
             Persistent
         }
 
+        public EntityTurnTakerCalculator EntityTurnTakerCalculator { get => BaseGameState.EntityTurnTakerCalculator; set => BaseGameState.EntityTurnTakerCalculator = value; }
+        public FactionTurnTakerCalculator FactionTurnTakerCalculator { get => BaseGameState.FactionTurnTakerCalculator; set => BaseGameState.FactionTurnTakerCalculator = value; }
+
         public readonly IGameStateMutator BaseGameState;
         public readonly List<GameStateChange> Changes = new List<GameStateChange>();
 
         public readonly Dictionary<Entity, Dictionary<LowercaseString, decimal>> DeltaValues = new Dictionary<Entity, Dictionary<LowercaseString, decimal>>();
         public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
+
+        public decimal? NewFactionTurn = null;
+        public Entity NewEntityTurn = null;
 
         public GameStateDelta(IGameStateMutator baseGameState)
         {
@@ -126,6 +132,25 @@ namespace SpaceDeck.GameState.Minimum
             {
                 this.EntityDestinationChanges.Add(toAdd, EntityDestination.Persistent);
             }
+        }
+
+        public void StartFactionTurn(decimal factionId)
+        {
+            this.NewFactionTurn = factionId;
+        }
+
+        public void StartEntityTurn(Entity toStart)
+        {
+            this.NewEntityTurn = toStart;
+        }
+
+        public void EndCurrentEntityTurn()
+        {
+            this.NewEntityTurn = null;
+        }
+
+        public void EndCurrentFactionTurn()
+        {
         }
     }
 }
