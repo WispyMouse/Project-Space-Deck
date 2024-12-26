@@ -1,6 +1,7 @@
 namespace SpaceDeck.GameState.Execution
 {
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Instances;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System;
@@ -123,6 +124,11 @@ namespace SpaceDeck.GameState.Execution
         {
             this.CurrentEncounterState = encounter;
             this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
+        }
+
+        public void MoveCard(CardInstance card, LowercaseString zone)
+        {
+            throw new NotImplementedException();
         }
     }
 }

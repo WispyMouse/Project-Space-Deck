@@ -2,6 +2,8 @@ namespace SpaceDeck.GameState.Minimum
 {
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Models.Instances;
 
     /// <summary>
     /// Describes the state of a encounter.
@@ -19,5 +21,7 @@ namespace SpaceDeck.GameState.Minimum
     {
         public readonly List<Entity> EncounterEnemies = new List<Entity>();
         public Entity CurrentTurnTaker;
+        public Dictionary<CardInstance, LowercaseString> CardsInZones = new Dictionary<CardInstance, LowercaseString>();
+        public Dictionary<LowercaseString, List<CardInstance>> ZonesWithCards = new Dictionary<LowercaseString, List<CardInstance>>();
     }
 }
