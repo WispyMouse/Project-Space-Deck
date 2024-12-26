@@ -1,6 +1,7 @@
 namespace SpaceDeck.GameState.Minimum
 {
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -8,46 +9,52 @@ namespace SpaceDeck.GameState.Minimum
     public class EntityTurnTakerCalculator
     {
         public readonly List<Entity> EntitiesToTakeTurn = new List<Entity>();
-        public int NextEntityTurnIndex = 0;
+        public int CurrentEntityTurnIndex = 0;
 
         public EntityTurnTakerCalculator(IGameStateMutator gameState, decimal factionId)
         {
-
+            foreach (Entity curEntity in gameState.GetAllEntities())
+            {
+                if (curEntity.GetQuality(WellknownQualities.Faction, -1) == factionId)
+                {
+                    this.EntitiesToTakeTurn.Add(curEntity);
+                }
+            }
         }
 
         public bool TryGetCurrentEntityTurn(IGameStateMutator gameState, out Entity currentTurn)
         {
-            if (this.EntitiesToTakeTurn.Count < this.NextEntityTurnIndex)
+            if (this.EntitiesToTakeTurn.Count <= this.CurrentEntityTurnIndex)
             {
                 currentTurn = null;
                 return false;
             }
 
-            if (!gameState.EntityIsAlive(this.EntitiesToTakeTurn[this.NextEntityTurnIndex]))
+            if (!gameState.EntityIsAlive(this.EntitiesToTakeTurn[this.CurrentEntityTurnIndex]))
             {
-                this.NextEntityTurnIndex++;
-                return this.TryGetCurrentEntityTurn(gameState, out currentTurn);
+                return this.TryGetNextEntityTurn(gameState, out currentTurn);
             }
 
-            currentTurn = this.EntitiesToTakeTurn[this.NextEntityTurnIndex];
+            currentTurn = this.EntitiesToTakeTurn[this.CurrentEntityTurnIndex];
             return true;
         }
 
         public bool TryGetNextEntityTurn(IGameStateMutator gameState, out Entity nextTurn)
         {
-            if (this.EntitiesToTakeTurn.Count < this.NextEntityTurnIndex)
+            this.CurrentEntityTurnIndex++;
+
+            if (this.EntitiesToTakeTurn.Count <= this.CurrentEntityTurnIndex)
             {
                 nextTurn = null;
                 return false;
             }
 
-            if (!gameState.EntityIsAlive(this.EntitiesToTakeTurn[this.NextEntityTurnIndex]))
+            if (!gameState.EntityIsAlive(this.EntitiesToTakeTurn[this.CurrentEntityTurnIndex]))
             {
                 return this.TryGetNextEntityTurn(gameState, out nextTurn);
             }
 
-            nextTurn = this.EntitiesToTakeTurn[this.NextEntityTurnIndex];
-            this.NextEntityTurnIndex++;
+            nextTurn = this.EntitiesToTakeTurn[this.CurrentEntityTurnIndex];
             return true;
         }
     }

@@ -17,20 +17,15 @@ namespace SpaceDeck.GameState.Rules
 
         public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
-            foreach (Entity curEntity in gameStateMutator.GetAllEntities())
-            {
-                if (curEntity.GetQuality(WellknownQualities.Faction, WellknownFactions.UnknownFaction) == WellknownFactions.Player)
-                {
-                    applications = new List<GameStateChange>()
-                    {
-                        new StartFactionTurn(WellknownFactions.Player)
-                    };
-                    return true;
-                }
-            }
+            gameStateMutator.FactionTurnTakerCalculator = new FactionTurnTakerCalculator(gameStateMutator);
+            decimal nextTurn = gameStateMutator.FactionTurnTakerCalculator.GetCurrentFaction();
 
-            applications = new List<GameStateChange>();
-            return false;
+            applications = new List<GameStateChange>()
+            {
+                new StartFactionTurn(nextTurn)
+            };
+
+            return true;
         }
     }
 }
