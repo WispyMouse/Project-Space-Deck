@@ -2,6 +2,7 @@ namespace SpaceDeck.GameState.Execution
 {
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -81,19 +82,22 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartFactionTurn(decimal factionId)
         {
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted));
         }
 
         public void StartEntityTurn(Entity toStart)
         {
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted));
         }
 
         public void EndCurrentEntityTurn()
         {
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded));
         }
 
         public void EndCurrentFactionTurn()
         {
-
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded));
         }
 
         public void TriggerAndStack(GameStateEventTrigger trigger)
@@ -113,6 +117,12 @@ namespace SpaceDeck.GameState.Execution
             }
 
             return true;
+        }
+
+        public void StartEncounter(EncounterState encounter)
+        {
+            this.CurrentEncounterState = encounter;
+            this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
         }
     }
 }

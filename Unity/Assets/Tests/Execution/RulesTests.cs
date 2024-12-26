@@ -48,6 +48,24 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             }
         }
 
+        private class ExecuteOnTriggerRule : Rule
+        {
+            private Action<IGameStateMutator> ToExecute;
+
+            public ExecuteOnTriggerRule(LowercaseString trigger, Action<IGameStateMutator> toExecute) : base(trigger)
+            {
+                this.ToExecute = toExecute;
+            }
+
+            public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+            {
+                Assert.IsTrue(this.TriggerOnEventIds.Contains(trigger.EventId), "Should only execute rule upon the correct rule event id triggering.");
+
+                applications = new List<GameStateChange>() { new ActionExecutor(this.ToExecute) };
+                return true;
+            }
+        }
+
         [TearDown]
         public void TearDown()
         {
@@ -92,6 +110,27 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
             Assert.False(gameState.EntityIsAlive(targetingEntity), "After losing all health, this entity should be not-alive.");
             Assert.False(gameState.CurrentEncounterState.EncounterEnemies.Contains(targetingEntity), "Dead entities should be removed from the entity list.");
+        }
+
+        /// <summary>
+        /// Creates a rule that sets a variable when an encounter starts.
+        /// Validates that the variable is set.
+        /// </summary>
+        [Test]
+        public void EncounterStart_TriggersRule()
+        {
+            // ARRANGE
+            bool ruleTriggered = false;
+            ExecuteOnTriggerRule triggeredRule = new ExecuteOnTriggerRule(WellknownGameStateEvents.EncounterStart, (IGameStateMutator mutator) => ruleTriggered = true);
+            RuleReference.RegisterRule(triggeredRule);
+            GameState gameState = new GameState();
+
+            // ACT
+            gameState.StartEncounter(new EncounterState());
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.True(ruleTriggered, "Rule should be triggered when the encounter starts, changing the variable to true.");
         }
     }
 }

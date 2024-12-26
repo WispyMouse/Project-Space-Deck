@@ -139,20 +139,24 @@ namespace SpaceDeck.GameState.Execution
         public void StartFactionTurn(decimal factionId)
         {
             this.NewFactionTurn = factionId;
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted));
         }
 
         public void StartEntityTurn(Entity toStart)
         {
             this.NewEntityTurn = toStart;
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted));
         }
 
         public void EndCurrentEntityTurn()
         {
             this.NewEntityTurn = null;
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded));
         }
 
         public void EndCurrentFactionTurn()
         {
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded));
         }
 
         public bool TryGetNextResolve(out IResolve currentResolve)
