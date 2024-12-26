@@ -1,5 +1,6 @@
-namespace SpaceDeck.GameState.Minimum
+namespace SpaceDeck.GameState.Execution
 {
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace SpaceDeck.GameState.Minimum
 
         public readonly IGameStateMutator BaseGameState;
         public readonly List<GameStateChange> Changes = new List<GameStateChange>();
+        public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
 
         public readonly Dictionary<Entity, Dictionary<LowercaseString, decimal>> DeltaValues = new Dictionary<Entity, Dictionary<LowercaseString, decimal>>();
         public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
@@ -151,6 +153,25 @@ namespace SpaceDeck.GameState.Minimum
 
         public void EndCurrentFactionTurn()
         {
+        }
+
+        public bool TryGetNextResolve(out IResolve currentResolve)
+        {
+            if (!this.PendingResolves.TryGetNextResolve(out currentResolve))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void TriggerAndStack(GameStateEventTrigger trigger)
+        {
+            List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, trigger);
+            foreach (GameStateChange change in appliedRules)
+            {
+                this.PendingResolves.Push(change);
+            }
         }
     }
 }

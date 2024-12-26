@@ -21,6 +21,7 @@ namespace SpaceDeck.GameState.Execution
     {
         public EncounterState CurrentEncounterState = new EncounterState();
         public readonly List<Entity> PersistentEntities = new List<Entity>();
+        public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
@@ -93,6 +94,25 @@ namespace SpaceDeck.GameState.Execution
         public void EndCurrentFactionTurn()
         {
 
+        }
+
+        public void TriggerAndStack(GameStateEventTrigger trigger)
+        {
+            List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, trigger);
+            foreach (GameStateChange change in appliedRules)
+            {
+                this.PendingResolves.Push(change);
+            }
+        }
+
+        public bool TryGetNextResolve(out IResolve currentResolve)
+        {
+            if (!this.PendingResolves.TryGetNextResolve(out currentResolve))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

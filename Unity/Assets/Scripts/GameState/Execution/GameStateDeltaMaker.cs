@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Execution
 {
+    using SpaceDeck.GameState.Changes;
     using SpaceDeck.GameState.Context;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
@@ -45,8 +46,16 @@ namespace SpaceDeck.GameState.Execution
                         for (int ii = 0; ii < changeStack.Count; ii++)
                         {
                             delta.Changes.Add(changeStack[ii]);
-                            changeStack[ii].ApplyToGameState(delta);
+                            changeStack[ii].Apply(delta);
 
+                            // First stack any triggered events that resulted from the above application
+                            // Check if there's any pending resolves, and try to apply them
+                            while (delta.TryGetNextResolve(out IResolve currentResolve))
+                            {
+                                changeStack.Insert(ii+1, new ResolveChange(currentResolve));
+                            }
+
+                            // Then stack rules that are at RuleApplication level
                             List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, changeStack[ii]));
                             if (rules != null && rules.Count > 0)
                             {

@@ -14,7 +14,7 @@ namespace SpaceDeck.GameState.Changes
             this.MyEntityTarget = turnToStart;
         }
 
-        public override void ApplyToGameState(IGameStateMutator toApplyTo)
+        public override void Apply(IGameStateMutator toApplyTo)
         {
             toApplyTo.StartEntityTurn(this.MyEntityTarget);
         }

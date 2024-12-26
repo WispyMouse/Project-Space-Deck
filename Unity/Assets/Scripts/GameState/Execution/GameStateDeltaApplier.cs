@@ -24,7 +24,7 @@ namespace SpaceDeck.GameState.Execution
         {
             foreach (GameStateChange change in delta.Changes)
             {
-                change.ApplyToGameState(originalState);
+                change.Apply(originalState);
             }
         }
     }

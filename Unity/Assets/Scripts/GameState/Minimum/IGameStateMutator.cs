@@ -23,5 +23,8 @@ namespace SpaceDeck.GameState.Minimum
 
         void StartEntityTurn(Entity toStart);
         void EndCurrentEntityTurn();
+
+        void TriggerAndStack(GameStateEventTrigger trigger);
+        bool TryGetNextResolve(out IResolve currentResolve);
     }
 }

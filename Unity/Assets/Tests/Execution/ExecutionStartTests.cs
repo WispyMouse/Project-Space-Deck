@@ -41,7 +41,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 this.ToLog = toLog;
             }
 
-            public override void ApplyToGameState(IGameStateMutator toApplyTo)
+            public override void Apply(IGameStateMutator toApplyTo)
             {
                 Debug.Log(this.ToLog);
             }

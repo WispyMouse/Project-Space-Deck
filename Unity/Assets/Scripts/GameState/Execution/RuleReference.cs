@@ -45,7 +45,7 @@ namespace SpaceDeck.GameState.Execution
             AlwaysConsideredRules.Clear();
         }
 
-        public static List<GameStateChange> GetAppliedRules(GameStateDelta developingDelta, GameStateEventTrigger trigger)
+        public static List<GameStateChange> GetAppliedRules(IGameStateMutator mutator, GameStateEventTrigger trigger)
         {
             List<GameStateChange> applications = new List<GameStateChange>();
 
@@ -59,7 +59,7 @@ namespace SpaceDeck.GameState.Execution
 
             foreach (Rule curRule in rulesToConsider)
             {
-                if (curRule.TryApplyRule(trigger, developingDelta, out List<GameStateChange> thisRuleApplications))
+                if (curRule.TryApplyRule(trigger, mutator, out List<GameStateChange> thisRuleApplications))
                 {
                     applications.AddRange(thisRuleApplications);
                 }

@@ -7,7 +7,7 @@ namespace SpaceDeck.GameState.Minimum
     /// Represents anything that affects a <see cref="GameState"/>
     /// in any way. This is the base class of all potential changes.
     /// </summary>
-    public abstract class GameStateChange
+    public abstract class GameStateChange : IResolve
     {
         public readonly IChangeTarget Target;
 
@@ -16,6 +16,6 @@ namespace SpaceDeck.GameState.Minimum
             this.Target = target;
         }
 
-        public abstract void ApplyToGameState(IGameStateMutator toApplyTo);
+        public abstract void Apply(IGameStateMutator toApplyTo);
     }
 }

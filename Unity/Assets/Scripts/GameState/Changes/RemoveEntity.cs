@@ -10,7 +10,7 @@ namespace SpaceDeck.GameState.Changes
         {
         }
 
-        public override void ApplyToGameState(IGameStateMutator toApplyTo)
+        public override void Apply(IGameStateMutator toApplyTo)
         {
             foreach (Entity curEntity in new List<Entity>(this.Target.GetRepresentedEntities(toApplyTo)))
             {

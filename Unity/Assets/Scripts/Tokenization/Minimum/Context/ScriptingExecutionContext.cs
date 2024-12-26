@@ -8,7 +8,7 @@ namespace SpaceDeck.Tokenization.Minimum.Context
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents the information about a currently executing <see cref="GameStateDelta"/>.
+    /// Represents the information about a currently executing <see cref="IGameStateMutator"/>.
     /// This holds information as a Delta is being applied, such as the previously established
     /// target, the user of the ability, etc.
     /// 

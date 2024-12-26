@@ -14,7 +14,7 @@ namespace SpaceDeck.GameState.Changes
             this.FactionToChangeTo = factionToChangeTo;
         }
 
-        public override void ApplyToGameState(IGameStateMutator toApplyTo)
+        public override void Apply(IGameStateMutator toApplyTo)
         {
             toApplyTo.StartFactionTurn(this.FactionToChangeTo);
         }

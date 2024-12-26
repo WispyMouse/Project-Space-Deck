@@ -15,7 +15,7 @@ namespace SpaceDeck.GameState.Changes
             this.ModifyValue = modifyValue;
         }
 
-        public override void ApplyToGameState(IGameStateMutator toApplyTo)
+        public override void Apply(IGameStateMutator toApplyTo)
         {
             foreach (Entity curEntity in this.Target.GetRepresentedEntities(toApplyTo) ?? Array.Empty<Entity>())
             {

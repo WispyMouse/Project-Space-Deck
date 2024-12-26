@@ -11,7 +11,7 @@ namespace SpaceDeck.GameState.Changes
         {
         }
 
-        public override void ApplyToGameState(IGameStateMutator toApplyTo)
+        public override void Apply(IGameStateMutator toApplyTo)
         {
             toApplyTo.EndCurrentEntityTurn();
         }
