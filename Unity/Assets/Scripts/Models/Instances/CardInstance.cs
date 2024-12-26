@@ -1,7 +1,8 @@
-namespace SpaceDeck.Models.Prototypes
+namespace SpaceDeck.Models.Instances
 {
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.Models.Prototypes;
 
     /// <summary>
     /// Represents a specific instance of a card.

@@ -1,6 +1,7 @@
 namespace SpaceDeck.Models.Prototypes
 {
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -11,11 +12,13 @@ namespace SpaceDeck.Models.Prototypes
     /// </summary>
     public class CardPrototype
     {
+        public readonly LowercaseString Id;
         public readonly ParsedTokenList ParsedTokens;
         public LinkedTokenList LinkedTokens { get; private set; }
 
-        public CardPrototype(ParsedTokenList parsedTokens)
+        public CardPrototype(LowercaseString id, ParsedTokenList parsedTokens)
         {
+            this.Id = id;
             this.ParsedTokens = parsedTokens;
         }
 
