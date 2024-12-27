@@ -23,6 +23,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.GameState.Rules;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using System.Linq;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -94,9 +95,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             RuleReference.RegisterRule(zeroLifeIsDeathRule);
 
             GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality(WellknownQualities.Health, healthAmount);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
+            encounter.EncounterEntities.Add(targetingEntity);
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:{healthAmount}]";
@@ -109,7 +112,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
             Assert.False(gameState.EntityIsAlive(targetingEntity), "After losing all health, this entity should be not-alive.");
-            Assert.False(gameState.CurrentEncounterState.EncounterEnemies.Contains(targetingEntity), "Dead entities should be removed from the entity list.");
+            Assert.False(gameState.GetAllEntities().Contains(targetingEntity), "Dead entities should be removed from the entity list.");
         }
 
         /// <summary>

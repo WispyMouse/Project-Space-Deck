@@ -78,14 +78,14 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             Entity factionOneEntityFirst = new Entity();
             factionOneEntityFirst.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEnemies.Add(factionOneEntityFirst);
+            encounter.EncounterEntities.Add(factionOneEntityFirst);
             Entity factionOneEntitySecond = new Entity();
             factionOneEntitySecond.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEnemies.Add(factionOneEntitySecond);
+            encounter.EncounterEntities.Add(factionOneEntitySecond);
 
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEnemies.Add(factionTwoEntity);
+            encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
             gameState.StartEncounter(encounter);
@@ -112,14 +112,14 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             Entity factionOneEntityFirst = new Entity();
             factionOneEntityFirst.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEnemies.Add(factionOneEntityFirst);
+            encounter.EncounterEntities.Add(factionOneEntityFirst);
             Entity factionOneEntitySecond = new Entity();
             factionOneEntitySecond.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEnemies.Add(factionOneEntitySecond);
+            encounter.EncounterEntities.Add(factionOneEntitySecond);
 
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEnemies.Add(factionTwoEntity);
+            encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
             gameState.StartEncounter(encounter);
@@ -149,11 +149,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             Entity factionOneEntity = new Entity();
             factionOneEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEnemies.Add(factionOneEntity);
+            encounter.EncounterEntities.Add(factionOneEntity);
 
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEnemies.Add(factionTwoEntity);
+            encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
             gameState.StartEncounter(encounter);
@@ -184,11 +184,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             Entity factionOneEntity = new Entity();
             factionOneEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEnemies.Add(factionOneEntity);
+            encounter.EncounterEntities.Add(factionOneEntity);
 
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEnemies.Add(factionTwoEntity);
+            encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
             gameState.StartEncounter(encounter);
@@ -227,7 +227,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             Entity playerEntity = new Entity();
             playerEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEnemies.Add(playerEntity);
+            encounter.EncounterEntities.Add(playerEntity);
 
             // ACT
             gameState.StartEncounter(encounter);

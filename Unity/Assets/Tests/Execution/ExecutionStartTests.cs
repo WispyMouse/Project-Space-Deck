@@ -212,9 +212,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
 
             GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality(WellknownQualities.Health, 100);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
+            encounter.EncounterEntities.Add(targetingEntity);
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -240,9 +242,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
 
             GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality(WellknownQualities.Health, 100);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
+            encounter.EncounterEntities.Add(targetingEntity);
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -279,7 +283,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality(WellknownQualities.Health, 100);
-            encounter.EncounterEnemies.Add(targetingEntity);
+            encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 
             ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
@@ -291,7 +295,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
-            Assert.AreEqual(99, gameState.CurrentEncounterState.EncounterEnemies[0].GetQuality(WellknownQualities.Health), "Expecting health to currently be 1 less than starting, so 99.");
+            Assert.AreEqual(99, gameState.GetAllEntities()[0].GetQuality(WellknownQualities.Health), "Expecting health to currently be 1 less than starting, so 99.");
         }
 
         /// <summary>
@@ -310,9 +314,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
 
             GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality(WellknownQualities.Health, 100);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
+            encounter.EncounterEntities.Add(targetingEntity);
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";
@@ -348,17 +354,22 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
 
             GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
 
             // Add three enemies, so there's some ambiguity on who to target
             Entity entityOne = new Entity();
             entityOne.SetQuality(WellknownQualities.Health, 100);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(entityOne);
+            entityOne.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            encounter.EncounterEntities.Add(entityOne);
             Entity entityTwoThisOneIsTheTarget = new Entity();
             entityTwoThisOneIsTheTarget.SetQuality(WellknownQualities.Health, 100);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(entityTwoThisOneIsTheTarget);
+            entityTwoThisOneIsTheTarget.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            encounter.EncounterEntities.Add(entityTwoThisOneIsTheTarget);
             Entity entityThree = new Entity();
             entityThree.SetQuality(WellknownQualities.Health, 100);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(entityThree);
+            entityThree.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            encounter.EncounterEntities.Add(entityThree);
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";

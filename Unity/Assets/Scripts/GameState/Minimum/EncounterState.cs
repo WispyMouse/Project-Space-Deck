@@ -18,7 +18,7 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public class EncounterState
     {
-        public readonly List<Entity> EncounterEnemies = new List<Entity>();
+        public readonly List<Entity> EncounterEntities = new List<Entity>();
         public Entity CurrentTurnTaker;
         public Dictionary<CardInstance, LowercaseString> CardsInZones = new Dictionary<CardInstance, LowercaseString>();
         public Dictionary<LowercaseString, List<CardInstance>> ZonesWithCards = new Dictionary<LowercaseString, List<CardInstance>>();

@@ -36,7 +36,11 @@ namespace SpaceDeck.GameState.Execution
                 // TODO: This is pretty horrible (I wrote it!)! It has a lot of allocating the
                 // same list repeatedly. We should revisit this soon.
                 List<Entity> allEntities = new List<Entity>(PersistentEntities);
-                allEntities.AddRange(this.CurrentEncounterState.EncounterEnemies);
+
+                if (this.CurrentEncounterState != null)
+                {
+                    allEntities.AddRange(this.CurrentEncounterState.EncounterEntities);
+                }
                 return allEntities;
             }
         }
@@ -59,12 +63,12 @@ namespace SpaceDeck.GameState.Execution
         public void RemoveEntity(Entity entity)
         {
             this.PersistentEntities.Remove(entity);
-            this.CurrentEncounterState.EncounterEnemies.Remove(entity);
+            this.CurrentEncounterState.EncounterEntities.Remove(entity);
         }
 
         public bool EntityIsAlive(Entity entity)
         {
-            return this.PersistentEntities.Contains(entity) || (this.CurrentEncounterState?.EncounterEnemies.Contains(entity) ?? false);
+            return this.PersistentEntities.Contains(entity) || (this.CurrentEncounterState?.EncounterEntities.Contains(entity) ?? false);
         }
 
         public IReadOnlyList<Entity> GetAllEntities()
@@ -74,7 +78,7 @@ namespace SpaceDeck.GameState.Execution
 
         public void AddEncounterEntity(Entity toAdd)
         {
-            this.CurrentEncounterState?.EncounterEnemies.Add(toAdd);
+            this.CurrentEncounterState?.EncounterEntities.Add(toAdd);
         }
 
         public void AddPersistentEntity(Entity toAdd)
