@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Execution
 {
+    using SpaceDeck.GameState.Changes;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Utility.Minimum;
@@ -19,7 +20,7 @@ namespace SpaceDeck.GameState.Execution
     /// state in order to show certain properties and values that might
     /// exist after something is executed.
     /// </summary>
-    public class GameState : IGameStateMutator
+    public class GameState : IGameStateMutator, ICardPlayer
     {
         public EncounterState CurrentEncounterState = null;
         public readonly List<Entity> PersistentEntities = new List<Entity>();
@@ -193,6 +194,23 @@ namespace SpaceDeck.GameState.Execution
 
             this.CurrentEncounterState.ZonesWithCards[zone].Add(card);
             this.CurrentEncounterState.CardsInZones.Add(card, zone);
+        }
+
+        public void StartPlayCard(CardInstance toPlay)
+        {
+            // Put the movement to discard on the stack first
+            this.PendingResolves.Push(new MoveCard(toPlay, WellknownZones.Discard));
+
+            // If the token has the appropriate information, execute it
+            if (toPlay is LinkedCardInstance linkedCard)
+            {
+                if (linkedCard.Prototype.LinkedTokens.HasValue && GameStateDeltaMaker.TryCreateDelta(linkedCard.Prototype.LinkedTokens.Value, this, out GameStateDelta delta))
+                {
+                    GameStateDeltaApplier.ApplyGameStateDelta(this, delta);
+                }
+            }
+
+            PendingResolveExecutor.ResolveAll(this);
         }
     }
 }

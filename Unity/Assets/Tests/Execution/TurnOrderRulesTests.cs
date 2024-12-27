@@ -58,8 +58,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         [TearDown]
         public void TearDown()
         {
-            RuleReference.ClearRules();
-            CardDatabase.ClearDatabase();
+            CommonTestUtility.TearDownDatabases();
         }
 
 

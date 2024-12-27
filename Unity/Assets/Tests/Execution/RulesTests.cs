@@ -1,4 +1,4 @@
-namespace SpaceDeck.Tests.EditMode.Tokenization
+namespace SpaceDeck.Tests.EditMode.Execution
 {
     using NUnit.Framework;
     using System;
@@ -70,9 +70,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         [TearDown]
         public void TearDown()
         {
-            // Clear all Scripting Tokens
-            ScriptingCommandReference.Clear();
-            RuleReference.ClearRules();
+            CommonTestUtility.TearDownDatabases();
         }
 
         /// <summary>

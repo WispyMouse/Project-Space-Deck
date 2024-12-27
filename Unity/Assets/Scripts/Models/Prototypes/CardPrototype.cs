@@ -13,18 +13,21 @@ namespace SpaceDeck.Models.Prototypes
     public class CardPrototype
     {
         public readonly LowercaseString Id;
-        public readonly ParsedTokenList ParsedTokens;
-        public LinkedTokenList LinkedTokens { get; private set; }
+        public ParsedTokenList? ParsedTokens;
+        public LinkedTokenList? LinkedTokens;
 
         public CardPrototype(LowercaseString id, ParsedTokenList parsedTokens)
         {
             this.Id = id;
             this.ParsedTokens = parsedTokens;
+            this.LinkedTokens = null;
         }
 
-        public void LinkTokens()
+        public CardPrototype(LowercaseString id, LinkedTokenList linkedTokens)
         {
-            this.LinkedTokens = new LinkedTokenList();
+            this.Id = id;
+            this.ParsedTokens = null;
+            this.LinkedTokens = linkedTokens;
         }
     }
 }

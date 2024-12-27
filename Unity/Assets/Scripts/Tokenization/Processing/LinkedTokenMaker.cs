@@ -55,5 +55,18 @@ namespace SpaceDeck.Tokenization.Processing
             linkedTokenList = new LinkedTokenList(linkedScopes);
             return true;
         }
+
+        public static LinkedTokenList CreateTokenListFromLinkedTokens(params LinkedToken[] linkedTokens)
+        {
+            List<LinkedToken> tokens = new List<LinkedToken>();
+            LinkedTokenScope onlyScope = new LinkedTokenScope(tokens);
+
+            foreach (LinkedToken token in linkedTokens)
+            {
+                tokens.Add(token);
+            }
+
+            return new LinkedTokenList(new List<LinkedTokenScope>() { onlyScope });
+        }
     }
 }

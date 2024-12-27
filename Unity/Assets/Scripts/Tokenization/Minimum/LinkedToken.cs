@@ -27,6 +27,11 @@ namespace SpaceDeck.Tokenization.Minimum
         }
         protected readonly List<ExecutionQuestion> _Questions = new List<ExecutionQuestion>();
 
+        public LinkedToken() : base()
+        {
+
+        }
+
         public LinkedToken(ParsedToken parsedToken) : base(parsedToken.CommandToExecute, parsedToken.Arguments)
         {
         }
@@ -46,6 +51,11 @@ namespace SpaceDeck.Tokenization.Minimum
     /// <typeparam name="T">The type of ScriptingCommand this represents.</typeparam>
     public abstract class LinkedToken<T> : LinkedToken where T : ScriptingCommand
     {
+        public LinkedToken() : base()
+        {
+
+        }
+
         public LinkedToken(ParsedToken parsedToken) : base(parsedToken)
         {
         }

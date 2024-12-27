@@ -5,6 +5,8 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Tokenization.Processing;
+    using SpaceDeck.Tokenization.Minimum;
 
     public static class CardDatabase
     {
@@ -23,6 +25,20 @@ namespace SpaceDeck.Models.Databases
         public static void ClearDatabase()
         {
             Prototypes.Clear();
+        }
+
+        public static void LinkTokens()
+        {
+            foreach (CardPrototype curPrototype in Prototypes.Values)
+            {
+                if (!curPrototype.LinkedTokens.HasValue && curPrototype.ParsedTokens.HasValue)
+                {
+                    if (LinkedTokenMaker.TryGetLinkedTokenList(curPrototype.ParsedTokens.Value, out LinkedTokenList linkedTokens))
+                    {
+                        curPrototype.LinkedTokens = linkedTokens;
+                    }
+                }
+            }
         }
     }
 }

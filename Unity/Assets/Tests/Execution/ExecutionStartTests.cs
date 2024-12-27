@@ -147,9 +147,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         [TearDown]
         public void TearDown()
         {
-            // Clear all Scripting Tokens
-            ScriptingCommandReference.Clear();
-            RuleReference.ClearRules();
+            CommonTestUtility.TearDownDatabases();
         }
 
         /// <summary>
