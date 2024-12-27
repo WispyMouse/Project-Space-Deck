@@ -36,5 +36,11 @@ namespace SpaceDeck.Tokenization.Evaluatables
             value = this.Constant;
             return true;
         }
+
+        public bool TryEvaluate(IGameStateMutator mutator, out T value)
+        {
+            value = this.Constant;
+            return true;
+        }
     }
 }

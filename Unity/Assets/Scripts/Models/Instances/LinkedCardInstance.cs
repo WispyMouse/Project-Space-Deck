@@ -2,6 +2,7 @@ namespace SpaceDeck.Models.Instances
 {
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Prototypes;
 
     /// <summary>
@@ -9,11 +10,11 @@ namespace SpaceDeck.Models.Instances
     /// 
     /// The player's deck will contain CardInstances, rather than CardPrototypes.
     /// </summary>
-    public class CardInstance
+    public class LinkedCardInstance : CardInstance
     {
         public readonly CardPrototype Prototype;
 
-        public CardInstance(CardPrototype prototype)
+        public LinkedCardInstance(CardPrototype prototype)
         {
             this.Prototype = prototype;
         }

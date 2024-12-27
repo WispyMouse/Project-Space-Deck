@@ -21,9 +21,10 @@ namespace SpaceDeck.GameState.Execution
     /// </summary>
     public class GameState : IGameStateMutator
     {
-        public EncounterState CurrentEncounterState = new EncounterState();
+        public EncounterState CurrentEncounterState = null;
         public readonly List<Entity> PersistentEntities = new List<Entity>();
         public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
+        public readonly List<CardInstance> CardsInDeck = new List<CardInstance>();
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
@@ -128,7 +129,62 @@ namespace SpaceDeck.GameState.Execution
 
         public void MoveCard(CardInstance card, LowercaseString zone)
         {
-            throw new NotImplementedException();
+            this.CurrentEncounterState.MoveCard(card, zone);
+        }
+
+        public IReadOnlyList<CardInstance> GetCardsInZone(LowercaseString zone)
+        {
+            if (zone == WellknownZones.Campaign)
+            {
+                return this.CardsInDeck;
+            }
+
+            if (this.CurrentEncounterState != null && this.CurrentEncounterState.ZonesWithCards.ContainsKey(zone))
+            {
+                return this.CurrentEncounterState.ZonesWithCards[zone];
+            }
+
+            return Array.Empty<CardInstance>();
+        }
+
+        public void ShuffleDeck()
+        {
+            if (this.CurrentEncounterState == null)
+            {
+                return;
+            }
+
+            if (!this.CurrentEncounterState.ZonesWithCards.ContainsKey(WellknownZones.Deck))
+            {
+                return;
+            }
+
+            List<CardInstance> cardsToShuffle = this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck];
+            this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck].Clear();
+
+            while (cardsToShuffle.Count > 0)
+            {
+                int randomIndex = new Random().Next(cardsToShuffle.Count);
+                this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck].Add(cardsToShuffle[randomIndex]);
+                cardsToShuffle.RemoveAt(randomIndex);
+            }
+        }
+
+        public void AddCard(CardInstance card, LowercaseString zone)
+        {
+            if (this.CurrentEncounterState == null)
+            {
+                this.CardsInDeck.Add(card);
+                return;
+            }
+
+            if (!this.CurrentEncounterState.ZonesWithCards.ContainsKey(zone))
+            {
+                this.CurrentEncounterState.ZonesWithCards.Add(zone, new List<CardInstance>());
+            }
+
+            this.CurrentEncounterState.ZonesWithCards[zone].Add(card);
+            this.CurrentEncounterState.CardsInZones.Add(card, zone);
         }
     }
 }

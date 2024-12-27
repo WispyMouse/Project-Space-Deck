@@ -23,6 +23,8 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.GameState.Rules;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Models.Databases;
+    using SpaceDeck.Models.Instances;
 
     /// <summary>
     /// Tests relating to the turn-order ruleset, used in Slay the Spire games.
@@ -57,6 +59,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         public void TearDown()
         {
             RuleReference.ClearRules();
+            CardDatabase.ClearDatabase();
         }
 
 
@@ -199,6 +202,42 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.AreEqual(WellknownFactions.Player, gameState.FactionTurnTakerCalculator.GetCurrentFaction(), "It should be the player faction's turn.");
             Assert.True(gameState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(gameState, out Entity currentTurnEntity), "Should have an entity who is currently taking their turn.");
             Assert.AreEqual(factionOneEntity, currentTurnEntity, "It should be the player faction's entity's turn.");
+        }
+
+        /// <summary>
+        /// Sets up an encounter. The player should draw a starting hand of cards.
+        /// </summary>
+        [Test]
+        public void StartTurn_DrawHandOfCards()
+        {
+            // ARRANGE
+            RuleReference.RegisterRule(new EncounterStartCopyDeckRule());
+            RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
+            RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
+            decimal cardsToDraw = 7;
+            RuleReference.RegisterRule(new PlayerTurnStartDrawCardsRule(new ConstantNumericValue(cardsToDraw)));
+            GameState gameState = new GameState();
+
+            for (int ii = 0; ii < cardsToDraw; ii ++)
+            {
+                gameState.CardsInDeck.Add(new CardInstance());
+            }
+
+            EncounterState encounter = new EncounterState();
+
+            Entity playerEntity = new Entity();
+            playerEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
+            encounter.EncounterEnemies.Add(playerEntity);
+
+            // ACT
+            gameState.StartEncounter(encounter);
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.AreEqual(cardsToDraw, gameState.GetCardsInZone(WellknownZones.Hand).Count, "Expecting exactly seven cards in hand.");
+            Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Deck).Count, "Because the deck contained exactly seven cards, it should now be empty.");
+            Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Exile).Count, "The exile zone should not have any cards in it.");
+            Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Discard).Count, "The discard zone should not have any cards in it.");
         }
     }
 }

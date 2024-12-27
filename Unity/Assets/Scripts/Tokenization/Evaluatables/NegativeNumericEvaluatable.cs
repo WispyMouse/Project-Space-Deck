@@ -36,5 +36,16 @@ namespace SpaceDeck.Tokenization.Evaluatables
             value = value * -1M;
             return true;
         }
+
+        public bool TryEvaluate(IGameStateMutator mutator, out decimal value)
+        {
+            if (!this.ToNegate.TryEvaluate(mutator, out value))
+            {
+                return false;
+            }
+
+            value = value * -1M;
+            return true;
+        }
     }
 }

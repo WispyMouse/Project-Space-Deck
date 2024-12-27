@@ -12,11 +12,18 @@ namespace SpaceDeck.Utility.Minimum
     /// </summary>
     public struct LowercaseString : IEquatable<string>, IEquatable<LowercaseString>
     {
-        public string Value;
+        public readonly string Value;
 
         public LowercaseString(string value)
         {
-            this.Value = value.ToLower();
+            if (string.IsNullOrEmpty(value))
+            {
+                this.Value = string.Empty;
+            }
+            else
+            {
+                this.Value = value.ToLower();
+            }
         }
 
         public override string ToString()
@@ -49,6 +56,45 @@ namespace SpaceDeck.Utility.Minimum
         public bool Equals(LowercaseString other)
         {
             return this.Value.Equals(other.Value);
+        }
+
+        public static bool operator ==(LowercaseString a, LowercaseString b)
+        {
+            if (ReferenceEquals(a, null))
+            {
+                return ReferenceEquals(b, null);
+            }
+            else if (ReferenceEquals(b, null))
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(LowercaseString a, LowercaseString b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object o)
+        {
+            if (o == null)
+            {
+                return false;
+            }
+
+            if (o is LowercaseString lowercaseString)
+            {
+                return this == lowercaseString;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Value.GetHashCode();
         }
     }
 }

@@ -19,7 +19,8 @@
         "GameState.Context",
         "GameState.Rules",
         "Utility.Minimum",
-        "Utility.Wellknown"
+        "Utility.Wellknown",
+        "Models.Databases"
     ],
     "includePlatforms": [
         "Editor"

@@ -15,9 +15,9 @@ namespace SpaceDeck.Models.Databases
             Prototypes.Add(prototype.Id, prototype);
         }
 
-        public static CardInstance GetInstance(LowercaseString id)
+        public static LinkedCardInstance GetInstance(LowercaseString id)
         {
-            return new CardInstance(Prototypes[id]);
+            return new LinkedCardInstance(Prototypes[id]);
         }
 
         public static void ClearDatabase()

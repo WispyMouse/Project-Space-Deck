@@ -3,7 +3,6 @@ namespace SpaceDeck.GameState.Minimum
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
-    using SpaceDeck.Models.Instances;
 
     /// <summary>
     /// Describes the state of a encounter.
@@ -23,5 +22,28 @@ namespace SpaceDeck.GameState.Minimum
         public Entity CurrentTurnTaker;
         public Dictionary<CardInstance, LowercaseString> CardsInZones = new Dictionary<CardInstance, LowercaseString>();
         public Dictionary<LowercaseString, List<CardInstance>> ZonesWithCards = new Dictionary<LowercaseString, List<CardInstance>>();
+        
+        public void MoveCard(CardInstance card, LowercaseString zone)
+        {
+            if (!this.ZonesWithCards.ContainsKey(zone))
+            {
+                this.ZonesWithCards.Add(zone, new List<CardInstance>());
+            }
+
+            if (this.CardsInZones.ContainsKey(card))
+            {
+                // This is already tracked, so we should remove it from its previous zone
+                LowercaseString previousZone = this.CardsInZones[card];
+                this.ZonesWithCards[previousZone].Remove(card);
+                this.CardsInZones[card] = zone;
+                this.ZonesWithCards[zone].Add(card);
+            }
+            else
+            {
+                // This isn't tracked, so we need to consider adding it to lists
+                this.CardsInZones.Add(card, zone);
+                this.ZonesWithCards[zone].Add(card);
+            }
+        }
     }
 }

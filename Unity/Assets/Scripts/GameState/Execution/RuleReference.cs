@@ -57,6 +57,9 @@ namespace SpaceDeck.GameState.Execution
                 rulesToConsider.AddRange(EventsToRules[trigger.EventId]);
             }
 
+            // Sort it such that "higher priority" is later in the list
+            rulesToConsider.Sort((Rule a, Rule b) => { return a.RulePriorityOrder.CompareTo(b.RulePriorityOrder); });
+
             foreach (Rule curRule in rulesToConsider)
             {
                 if (curRule.TryApplyRule(trigger, mutator, out List<GameStateChange> thisRuleApplications))

@@ -28,5 +28,10 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
                 return new List<IChangeTarget>() { answeringContext.DefaultTarget };
             }
         }
+
+        public override IReadOnlyList<IChangeTarget> GetProvidedTargets(IGameStateMutator mutator)
+        {
+            return null;
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace SpaceDeck.Tokenization.Evaluatables
     public interface IEvaluatableValue<T> : IEvaluatableValue
     {
         public bool TryEvaluate(ScriptingExecutionContext context, out T value);
+        public bool TryEvaluate(IGameStateMutator mutator, out T value);
     }
 }

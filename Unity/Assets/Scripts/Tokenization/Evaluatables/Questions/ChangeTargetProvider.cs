@@ -10,5 +10,6 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     public abstract class ChangeTargetProvider
     {
         public abstract IReadOnlyList<IChangeTarget> GetProvidedTargets(QuestionAnsweringContext answeringContext);
+        public abstract IReadOnlyList<IChangeTarget> GetProvidedTargets(IGameStateMutator mutator);
     }
 }

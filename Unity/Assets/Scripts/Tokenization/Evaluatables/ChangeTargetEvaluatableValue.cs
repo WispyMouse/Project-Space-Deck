@@ -36,5 +36,17 @@ namespace SpaceDeck.Tokenization.Evaluatables
             value = answer.Answer;
             return true;
         }
+
+        public bool TryEvaluate(IGameStateMutator mutator, out IChangeTarget value)
+        {
+            IReadOnlyList<IChangeTarget> targets = this.Provider.GetProvidedTargets(mutator);
+            if (targets == null || targets.Count == 0)
+            {
+                value = null;
+                return false;
+            }
+            value = targets[0];
+            return true;
+        }
     }
 }

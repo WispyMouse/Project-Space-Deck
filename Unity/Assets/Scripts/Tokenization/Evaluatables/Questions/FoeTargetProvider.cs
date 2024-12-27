@@ -7,6 +7,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class FoeTargetProvider : ChangeTargetProvider
     {
@@ -19,7 +20,50 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         public override IReadOnlyList<IChangeTarget> GetProvidedTargets(QuestionAnsweringContext answeringContext)
         {
-            return answeringContext.StartingGameState.GetAllEntities();
+            List<IChangeTarget> foes = new List<IChangeTarget>();
+            foreach (IChangeTarget target in answeringContext.StartingGameState.GetAllEntities())
+            {
+                bool includeTarget = true;
+
+                foreach (Entity representedEntity in target.GetRepresentedEntities(answeringContext.StartingGameState))
+                {
+                    if (answeringContext.StartingGameState.GetQuality(representedEntity, WellknownQualities.Faction) != WellknownFactions.Foe)
+                    {
+                        includeTarget = false;
+                        break;
+                    }
+                }
+
+                if (includeTarget)
+                {
+                    foes.Add(target);
+                }
+            }
+            return foes;
+        }
+
+        public override IReadOnlyList<IChangeTarget> GetProvidedTargets(IGameStateMutator mutator)
+        {
+            List<IChangeTarget> foes = new List<IChangeTarget>();
+            foreach (IChangeTarget target in mutator.GetAllEntities())
+            {
+                bool includeTarget = true;
+
+                foreach (Entity representedEntity in target.GetRepresentedEntities(mutator))
+                {
+                    if (mutator.GetQuality(representedEntity, WellknownQualities.Faction) != WellknownFactions.Foe)
+                    {
+                        includeTarget = false;
+                        break;
+                    }
+                }
+
+                if (includeTarget)
+                {
+                    foes.Add(target);
+                }
+            }
+            return foes;
         }
     }
 

@@ -12,6 +12,8 @@ namespace SpaceDeck.GameState.Execution
     /// </summary>
     public class GameStateDelta : IGameStateMutator
     {
+        public readonly List<GameStateChange> Changes = new List<GameStateChange>();
+
         public enum EntityDestination
         {
             Removed,
@@ -23,11 +25,11 @@ namespace SpaceDeck.GameState.Execution
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get => BaseGameState.FactionTurnTakerCalculator; set => BaseGameState.FactionTurnTakerCalculator = value; }
 
         public readonly IGameStateMutator BaseGameState;
-        public readonly List<GameStateChange> Changes = new List<GameStateChange>();
         public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
 
         public readonly Dictionary<Entity, Dictionary<LowercaseString, decimal>> DeltaValues = new Dictionary<Entity, Dictionary<LowercaseString, decimal>>();
         public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
+        public readonly Dictionary<CardInstance, LowercaseString> CardDestinationChanges = new Dictionary<CardInstance, LowercaseString>();
 
         public decimal? NewFactionTurn = null;
         public Entity NewEntityTurn = null;
@@ -176,6 +178,50 @@ namespace SpaceDeck.GameState.Execution
             {
                 this.PendingResolves.Push(change);
             }
+        }
+
+        public void MoveCard(CardInstance card, LowercaseString zone)
+        {
+            if (this.CardDestinationChanges.ContainsKey(card))
+            {
+                this.CardDestinationChanges[card] = zone;
+            }
+            else
+            {
+                this.CardDestinationChanges.Add(card, zone);
+            }
+        }
+
+        public IReadOnlyList<CardInstance> GetCardsInZone(LowercaseString zone)
+        {
+            List<CardInstance> cardsInZone = new List<CardInstance>(this.BaseGameState.GetCardsInZone(zone));
+
+            foreach (CardInstance movedCard in this.CardDestinationChanges.Keys)
+            {
+                if (this.CardDestinationChanges[movedCard] == zone)
+                {
+                    if (!cardsInZone.Contains(movedCard))
+                    {
+                        cardsInZone.Add(movedCard);
+                    }
+                }
+                else
+                {
+                    cardsInZone.Remove(movedCard);
+                }
+            }
+
+            return cardsInZone;
+        }
+
+        public void ShuffleDeck()
+        {
+            // TODO: Shuffle
+        }
+
+        public void AddCard(CardInstance card, LowercaseString zone)
+        {
+            this.CardDestinationChanges.Add(card, zone);
         }
     }
 }

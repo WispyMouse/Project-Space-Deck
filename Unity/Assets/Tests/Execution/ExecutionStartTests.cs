@@ -276,9 +276,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(linkedTokenSet.Scopes.Count == 1 && linkedTokenSet.Scopes[0].Tokens.Count == 1 && linkedTokenSet.Scopes[0].Tokens[0] is DamageLinkedToken damageToken, $"Expecting linking to result in a single token of the {nameof(DamageLinkedToken)} type.");
 
             GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.SetQuality(WellknownQualities.Health, 100);
-            gameState.CurrentEncounterState.EncounterEnemies.Add(targetingEntity);
+            encounter.EncounterEnemies.Add(targetingEntity);
+            gameState.StartEncounter(encounter);
 
             ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");

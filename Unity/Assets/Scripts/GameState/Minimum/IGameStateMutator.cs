@@ -4,7 +4,6 @@ namespace SpaceDeck.GameState.Minimum
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
-    using SpaceDeck.Models.Instances
 
     public interface IGameStateMutator
     {
@@ -29,5 +28,8 @@ namespace SpaceDeck.GameState.Minimum
         bool TryGetNextResolve(out IResolve currentResolve);
 
         void MoveCard(CardInstance card, LowercaseString zone);
+        IReadOnlyList<CardInstance> GetCardsInZone(LowercaseString zone);
+        void ShuffleDeck();
+        void AddCard(CardInstance card, LowercaseString zone);
     }
 }

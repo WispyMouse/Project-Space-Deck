@@ -13,18 +13,19 @@ namespace SpaceDeck.GameState.Execution
         /// If this list is empty, then the rule applies *constantly*, whenever *anything* happens.
         /// </summary>
         public readonly HashSet<LowercaseString> TriggerOnEventIds = new HashSet<LowercaseString>();
+        public readonly int RulePriorityOrder = 0;
 
-        public Rule()
+        public Rule(int priorityOrder)
         {
-
+            this.RulePriorityOrder = priorityOrder;
         }
 
-        public Rule(HashSet<LowercaseString> triggerOnEventIds)
+        public Rule(HashSet<LowercaseString> triggerOnEventIds, int priorityOrder = 0) : this(priorityOrder)
         {
             this.TriggerOnEventIds = triggerOnEventIds;
         }
 
-        public Rule(LowercaseString triggerOneventId) : this(new HashSet<LowercaseString>() { triggerOneventId })
+        public Rule(LowercaseString triggerOneventId, int priorityOrder = 0) : this(new HashSet<LowercaseString>() { triggerOneventId }, priorityOrder)
         {
 
         }
