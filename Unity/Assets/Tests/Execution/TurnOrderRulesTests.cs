@@ -239,5 +239,45 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Exile).Count, "The exile zone should not have any cards in it.");
             Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Discard).Count, "The discard zone should not have any cards in it.");
         }
+
+        /// <summary>
+        /// This test builds on <see cref="StartTurn_DrawHandOfCards"/>, continuing it by
+        /// discarding the cards in hand at the end of turn.
+        /// </summary>
+        [Test]
+        public void EndTurn_DiscardHandOfCards()
+        {
+            // ARRANGE
+            RuleReference.RegisterRule(new EncounterStartCopyDeckRule());
+            RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
+            RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
+            decimal cardsToDraw = 7;
+            RuleReference.RegisterRule(new PlayerTurnStartDrawCardsRule(new ConstantNumericValue(cardsToDraw)));
+            RuleReference.RegisterRule(new PlayerTurnEndDiscardRule());
+            GameState gameState = new GameState();
+
+            for (int ii = 0; ii < cardsToDraw; ii++)
+            {
+                gameState.AddCard(new CardInstance(), WellknownZones.Campaign);
+            }
+
+            EncounterState encounter = new EncounterState();
+
+            Entity playerEntity = new Entity();
+            playerEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
+            encounter.EncounterEntities.Add(playerEntity);
+
+            // ACT
+            gameState.StartEncounter(encounter);
+            PendingResolveExecutor.ResolveAll(gameState);
+            gameState.EndCurrentEntityTurn();
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Hand).Count, "The player should have discarded their hand, so it should be empty.");
+            Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Deck).Count, "Because the deck contained exactly seven cards, it should now be empty.");
+            Assert.AreEqual(0, gameState.GetCardsInZone(WellknownZones.Exile).Count, "The exile zone should not have any cards in it.");
+            Assert.AreEqual(cardsToDraw, gameState.GetCardsInZone(WellknownZones.Discard).Count, "The discarded hand should be entirely in the discard.");
+        }
     }
 }
