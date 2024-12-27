@@ -163,7 +163,7 @@ namespace SpaceDeck.GameState.Execution
                 return;
             }
 
-            List<CardInstance> cardsToShuffle = this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck];
+            List<CardInstance> cardsToShuffle = new List<CardInstance>(this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck]);
             this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck].Clear();
 
             while (cardsToShuffle.Count > 0)
@@ -178,7 +178,11 @@ namespace SpaceDeck.GameState.Execution
         {
             if (this.CurrentEncounterState == null)
             {
-                this.CardsInDeck.Add(card);
+                if (zone == WellknownZones.Campaign)
+                {
+                    this.CardsInDeck.Add(card);
+                }
+
                 return;
             }
 

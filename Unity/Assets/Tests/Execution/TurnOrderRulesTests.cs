@@ -220,7 +220,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             for (int ii = 0; ii < cardsToDraw; ii ++)
             {
-                gameState.CardsInDeck.Add(new CardInstance());
+                gameState.AddCard(new CardInstance(), WellknownZones.Campaign);
             }
 
             EncounterState encounter = new EncounterState();
