@@ -26,7 +26,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using System.Linq;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
-    using SpaceDeck.Tests.EditMode.TestFixtures;
+    using SpaceDeck.Tests.EditMode.Common.TestFixtures;
 
     /// <summary>
     /// These tests cover the experience of a player attempting to play a card.

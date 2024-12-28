@@ -18,6 +18,7 @@ namespace SpaceDeck.GameState.Minimum
         void RemoveEntity(Entity entity);
         bool EntityIsAlive(Entity entity);
         IReadOnlyList<Entity> GetAllEntities();
+        IReadOnlyList<AppliedStatusEffect> GetAllStatusEffects();
 
         void StartFactionTurn(decimal factionId);
         void EndCurrentFactionTurn();
@@ -27,6 +28,7 @@ namespace SpaceDeck.GameState.Minimum
 
         void TriggerAndStack(GameStateEventTrigger trigger);
         bool TryGetNextResolve(out IResolve currentResolve);
+        void PushResolve(IResolve toResolve);
 
         void MoveCard(CardInstance card, LowercaseString zone);
         IReadOnlyList<CardInstance> GetCardsInZone(LowercaseString zone);

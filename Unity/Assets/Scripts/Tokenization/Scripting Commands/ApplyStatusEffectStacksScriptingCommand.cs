@@ -33,7 +33,11 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                     return false;
                 }
 
-                linkedToken = new DamageLinkedToken(parsedToken, new ChangeTargetEvaluatableValue(DefaultTargetProvider.Instance), evaluatable);
+                linkedToken = new ApplyStatusEffectStacksLinkedToken(
+                    new ChangeTargetEvaluatableValue(DefaultTargetProvider.Instance),
+                    parsedToken,
+                    parsedToken.Arguments[0],
+                    evaluatable);
                 return true;
             }
             else

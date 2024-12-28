@@ -113,11 +113,32 @@ namespace SpaceDeck.GameState.Execution
 
         public void TriggerAndStack(GameStateEventTrigger trigger)
         {
+            // First put on to the stack an instruction to resolve each status effect
+            // We can grab all status effects with matching ids for trigger events
+            // and then as they're resolving, can determine if anything should actually happen,
+            // including whether or not the triggered ability actually triggers
+            List<AppliedStatusEffect> possiblyTriggeredStatusEffects = new List<AppliedStatusEffect>();
+            foreach (AppliedStatusEffect effect in this.GetAllStatusEffects())
+            {
+                if (effect.TriggerOnEventIds.Contains(trigger.EventId))
+                {
+                    possiblyTriggeredStatusEffects.Add(effect);
+                }
+            }
+            possiblyTriggeredStatusEffects.Sort((a, b) => a.StatusEffectPriorityOrder.CompareTo(b.StatusEffectPriorityOrder));
+            foreach (AppliedStatusEffect effect in possiblyTriggeredStatusEffects)
+            {
+                this.PendingResolves.Push(new ResolveTriggeredEvent(effect, trigger));
+            }
+
+            // Then put on top of the stack each rule in order of application
+            // This way, rules always resolve before the triggered abilities consider triggering
             List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, trigger);
             foreach (GameStateChange change in appliedRules)
             {
                 this.PendingResolves.Push(change);
             }
+            
         }
 
         public bool TryGetNextResolve(out IResolve currentResolve)
@@ -280,6 +301,26 @@ namespace SpaceDeck.GameState.Execution
         public bool TryExecuteCurrentCard()
         {
             return TryExecuteCurrentCard(null);
+        }
+
+        public IReadOnlyList<AppliedStatusEffect> GetAllStatusEffects()
+        {
+            List<AppliedStatusEffect> statusEffects = new List<AppliedStatusEffect>();
+
+            foreach (Entity curEntity in this.GetAllEntities())
+            {
+                foreach (AppliedStatusEffect effect in curEntity.AppliedStatusEffects.Values)
+                {
+                    statusEffects.Add(effect);
+                }
+            }
+
+            return statusEffects;
+        }
+
+        public void PushResolve(IResolve toResolve)
+        {
+            this.PendingResolves.Push(toResolve);
         }
     }
 }

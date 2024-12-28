@@ -1,4 +1,4 @@
-namespace SpaceDeck.Tests.EditMode.TestFixtures
+namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
 {
     using NUnit.Framework;
     using System;

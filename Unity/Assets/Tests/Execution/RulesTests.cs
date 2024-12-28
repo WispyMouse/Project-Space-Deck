@@ -24,7 +24,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System.Linq;
-    using SpaceDeck.Tests.EditMode.TestFixtures;
+    using SpaceDeck.Tests.EditMode.Common.TestFixtures;
 
     /// <summary>
     /// This class holds tests that were made as part of a

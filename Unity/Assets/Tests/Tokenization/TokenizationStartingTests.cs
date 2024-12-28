@@ -11,7 +11,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Utility.Minimum;
-    using SpaceDeck.Tests.EditMode.TestFixtures;
+    using SpaceDeck.Tests.EditMode.Common.TestFixtures;
 
     /// <summary>
     /// This class holds tests that were made as part of a

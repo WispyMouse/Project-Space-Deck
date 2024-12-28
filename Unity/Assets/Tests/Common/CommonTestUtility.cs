@@ -11,6 +11,7 @@ namespace SpaceDeck.Tests.EditMode
             ScriptingCommandReference.Clear();
             RuleReference.ClearRules();
             CardDatabase.ClearDatabase();
+            StatusEffectDatabase.ClearDatabase();
         }
     }
 }

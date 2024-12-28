@@ -218,5 +218,15 @@ namespace SpaceDeck.GameState.Execution
         {
             this.CardDestinationChanges.Add(card, zone);
         }
+
+        public IReadOnlyList<AppliedStatusEffect> GetAllStatusEffects()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void PushResolve(IResolve toResolve)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -3,8 +3,10 @@ namespace SpaceDeck.GameState.Changes
     using System;
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Databases;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class ModifyStatusEffectStacks : GameStateChange
     {
@@ -23,13 +25,13 @@ namespace SpaceDeck.GameState.Changes
             {
                 if (!curEntity.AppliedStatusEffects.TryGetValue(this.StatusEffect, out AppliedStatusEffect existingEffect))
                 {
-                    existingEffect = new AppliedStatusEffect(this.StatusEffect);
+                    existingEffect = StatusEffectDatabase.GetInstance(this.StatusEffect);
                     curEntity.AppliedStatusEffects.Add(this.StatusEffect, existingEffect);
                 }
 
-                decimal currentStacks = toApplyTo.GetNumericQuality(existingEffect, this.StatusEffect, 0);
+                decimal currentStacks = toApplyTo.GetNumericQuality(existingEffect, WellknownQualities.Stacks, 0);
                 decimal newTotal = currentStacks + this.ModifyValue;
-                toApplyTo.SetNumericQuality(existingEffect, this.StatusEffect, newTotal);
+                toApplyTo.SetNumericQuality(existingEffect, WellknownQualities.Stacks, newTotal);
             }
         }
     }
