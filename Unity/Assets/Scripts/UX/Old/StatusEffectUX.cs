@@ -6,6 +6,7 @@ namespace SFDDCards.UX
     using UnityEngine;
     using UnityEngine.UI;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.UX;
 
     public class StatusEffectUX : MonoBehaviour, IMouseHoverListener
     {
@@ -41,8 +42,12 @@ namespace SFDDCards.UX
         public void _SetFromEffect(AppliedStatusEffect toSet, Action<AppliedStatusEffect> onClickEvent = null)
         {
             this._RepresentsEffect = toSet;
-            // TODO: SPRITE
             this._OnStatusEffectPressed = onClickEvent;
+
+            if (SpriteLookup.TryGetSprite(toSet.Id, out Sprite displaySprite))
+            {
+                this.Renderer.sprite = displaySprite;
+            }
         }
 
         public void SetStacks(int toStack)
