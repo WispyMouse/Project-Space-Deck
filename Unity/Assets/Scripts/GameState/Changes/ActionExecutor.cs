@@ -19,5 +19,10 @@ namespace SpaceDeck.GameState.Changes
         {
             this.ToExecute(toApplyTo);
         }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

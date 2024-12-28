@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Changes
 {
+    using System;
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
 
@@ -18,6 +19,11 @@ namespace SpaceDeck.GameState.Changes
             {
                 curEntity.Qualities.SetNumericQuality(this.QualityToChange, this.NewValue);
             }
+        }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
         }
     }
 }

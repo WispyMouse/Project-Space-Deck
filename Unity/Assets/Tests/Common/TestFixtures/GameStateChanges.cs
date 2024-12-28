@@ -36,5 +36,10 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         {
             Debug.Log(this.ToLog);
         }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

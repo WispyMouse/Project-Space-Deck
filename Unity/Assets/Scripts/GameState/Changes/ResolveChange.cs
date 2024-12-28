@@ -4,6 +4,7 @@ namespace SpaceDeck.GameState.Changes
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Changes.Targets;
+    using System;
 
     public class ResolveChange : GameStateChange
     {
@@ -17,6 +18,11 @@ namespace SpaceDeck.GameState.Changes
         public override void Apply(IGameStateMutator toApplyTo)
         {
             this.Resolve.Apply(toApplyTo);
+        }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -22,6 +22,8 @@ namespace SpaceDeck.GameState.Minimum
         /// </summary>
         private readonly List<Entity> selfList;
 
+        public Intent CurrentIntent { get; set; }
+
         public Entity()
         {
             this.selfList = new List<Entity>() { this };

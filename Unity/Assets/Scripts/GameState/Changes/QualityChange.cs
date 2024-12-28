@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Changes
 {
+    using System;
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Minimum;
@@ -11,6 +12,11 @@ namespace SpaceDeck.GameState.Changes
         public QualityChange(IChangeTarget changeTarget, LowercaseString qualityToChange) : base(changeTarget)
         {
             this.QualityToChange = qualityToChange;
+        }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
         }
     }
 }

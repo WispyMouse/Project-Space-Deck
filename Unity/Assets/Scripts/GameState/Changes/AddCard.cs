@@ -24,5 +24,10 @@ namespace SpaceDeck.GameState.Changes
         {
             toApplyTo.AddCard(this.CardInstance, this.Zone);
         }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -48,5 +48,10 @@ namespace SpaceDeck.GameState.Changes
                 toApplyTo.MoveCard(cardsInDeck[0], WellknownZones.Hand);
             }
         }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

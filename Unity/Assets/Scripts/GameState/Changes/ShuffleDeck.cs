@@ -20,5 +20,10 @@ namespace SpaceDeck.GameState.Changes
         {
             toApplyTo.ShuffleDeck();
         }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

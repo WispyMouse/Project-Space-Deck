@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Changes
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
@@ -16,6 +17,11 @@ namespace SpaceDeck.GameState.Changes
             {
                 toApplyTo.RemoveEntity(curEntity);
             }
+        }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
         }
     }
 }

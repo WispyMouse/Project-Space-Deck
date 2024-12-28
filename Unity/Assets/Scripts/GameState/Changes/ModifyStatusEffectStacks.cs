@@ -34,5 +34,10 @@ namespace SpaceDeck.GameState.Changes
                 toApplyTo.SetNumericQuality(existingEffect, WellknownQualities.Stacks, newTotal);
             }
         }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
