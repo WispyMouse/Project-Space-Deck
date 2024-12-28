@@ -9,6 +9,7 @@ namespace SFDDCards.UX
     using System.Text;
     using System.Threading;
     using UnityEngine;
+    using SpaceDeck.GameState.Minimum;
 
     public class EncounterRepresenterUX : MonoBehaviour
     {
@@ -30,12 +31,25 @@ namespace SFDDCards.UX
         private EncounterDialogueButtonUX DialogueButtonPF;
 
         private string currentEncounterIndex = "intro";
-        private EvaluatedEncounter representingModel = null;
 
+        [Obsolete("Should transition to " + nameof(_representingModel))]
+        private EvaluatedEncounter representingModel = null;
+        private EncounterState _representingModel = null;
+
+        [Obsolete("Should transition to " + nameof(_RepresentEncounter))]
         public void RepresentEncounter(EvaluatedEncounter toRepresent)
         {
             this.representingModel = toRepresent;
             this.NameLabel.text = toRepresent.BasedOn.Name;
+
+            this.SetEncounterIndex("intro");
+            this.UXParent.SetActive(true);
+        }
+
+        public void _RepresentEncounter(EncounterState toRepresent)
+        {
+            this._representingModel = toRepresent;
+            this.NameLabel.text = toRepresent.EncounterName;
 
             this.SetEncounterIndex("intro");
             this.UXParent.SetActive(true);
