@@ -55,14 +55,14 @@ namespace SpaceDeck.GameState.Execution
 
         }
 
-        public void SetQuality(Entity entity, LowercaseString index, decimal toValue)
+        public void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue)
         {
-            entity.SetNumericQuality(index, toValue);
+            entity.Qualities.SetNumericQuality(index, toValue);
         }
 
-        public decimal GetQuality(Entity entity, LowercaseString index, decimal defaultValue = 0)
+        public decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0)
         {
-            return entity.GetNumericQuality(index, defaultValue);
+            return entity.Qualities.GetNumericQuality(index, defaultValue);
         }
 
         public void RemoveEntity(Entity entity)

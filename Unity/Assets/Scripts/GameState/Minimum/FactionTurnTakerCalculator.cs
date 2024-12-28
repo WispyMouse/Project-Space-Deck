@@ -17,7 +17,7 @@ namespace SpaceDeck.GameState.Minimum
 
             foreach (Entity curEntity in gameState.GetAllEntities())
             {
-                factions.Add(curEntity.GetNumericQuality(WellknownQualities.Faction, WellknownFactions.UnknownFaction));
+                factions.Add(curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction, WellknownFactions.UnknownFaction));
             }
 
             List<decimal> factionsToTakeTurn = new List<decimal>(factions);

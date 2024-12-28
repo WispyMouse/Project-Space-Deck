@@ -63,7 +63,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            targetingEntity.SetNumericQuality(WellknownQualities.Health, healthAmount);
+            targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, healthAmount);
             encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 

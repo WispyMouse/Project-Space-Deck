@@ -27,7 +27,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
                 foreach (Entity representedEntity in target.GetRepresentedEntities(answeringContext.StartingGameState))
                 {
-                    if (answeringContext.StartingGameState.GetQuality(representedEntity, WellknownQualities.Faction) != WellknownFactions.Foe)
+                    if (answeringContext.StartingGameState.GetNumericQuality(representedEntity, WellknownQualities.Faction) != WellknownFactions.Foe)
                     {
                         includeTarget = false;
                         break;
@@ -51,7 +51,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
                 foreach (Entity representedEntity in target.GetRepresentedEntities(mutator))
                 {
-                    if (mutator.GetQuality(representedEntity, WellknownQualities.Faction) != WellknownFactions.Foe)
+                    if (mutator.GetNumericQuality(representedEntity, WellknownQualities.Faction) != WellknownFactions.Foe)
                     {
                         includeTarget = false;
                         break;

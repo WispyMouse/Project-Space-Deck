@@ -27,7 +27,8 @@ namespace SpaceDeck.GameState.Execution
         public readonly IGameStateMutator BaseGameState;
         public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
 
-        public readonly Dictionary<Entity, Dictionary<LowercaseString, decimal>> DeltaValues = new Dictionary<Entity, Dictionary<LowercaseString, decimal>>();
+        public readonly Dictionary<IHaveQualities, QualitiesHolder> DeltaValues = new Dictionary<IHaveQualities, QualitiesHolder>();
+
         public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
         public readonly Dictionary<CardInstance, LowercaseString> CardDestinationChanges = new Dictionary<CardInstance, LowercaseString>();
 
@@ -39,32 +40,26 @@ namespace SpaceDeck.GameState.Execution
             this.BaseGameState = baseGameState;
         }
 
-        public void SetQuality(Entity entity, LowercaseString index, decimal toValue)
+        public void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue)
         {
-            if (!this.DeltaValues.TryGetValue(entity, out Dictionary<LowercaseString, decimal> entityAttributes))
+            if (!this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
             {
-                entityAttributes = new Dictionary<LowercaseString, decimal>();
-                this.DeltaValues.Add(entity, entityAttributes);
+                overrideAttributes = new QualitiesHolder();
+                this.DeltaValues.Add(entity, new QualitiesHolder());
             }
 
-            if (!entityAttributes.ContainsKey(index))
-            {
-                entityAttributes.Add(index, toValue);
-            }
-            else
-            {
-                entityAttributes[index] = toValue;
-            }
+            overrideAttributes.SetNumericQuality(index, toValue);
         }
 
-        public decimal GetQuality(Entity entity, LowercaseString index, decimal defaultValue = 0)
+        public decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0)
         {
-            if (this.DeltaValues.TryGetValue(entity, out Dictionary<LowercaseString, decimal> entityAttributes) && entityAttributes.TryGetValue(index, out decimal existingValue))
+            if (!this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
             {
-                return existingValue;
+                overrideAttributes = new QualitiesHolder();
+                this.DeltaValues.Add(entity, new QualitiesHolder());
             }
 
-            return entity.GetNumericQuality(index, defaultValue);
+            return overrideAttributes.GetNumericQuality(index, defaultValue);
         }
 
         public void RemoveEntity(Entity entity)

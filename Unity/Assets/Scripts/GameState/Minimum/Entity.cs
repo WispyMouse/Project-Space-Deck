@@ -9,10 +9,12 @@ namespace SpaceDeck.GameState.Minimum
     /// Enemies are generally only Entities that are
     /// stored while in an Encounter.
     /// </summary>
-    public class Entity : IChangeTarget
+    public class Entity : IChangeTarget, IHaveQualities
     {
-        private readonly Dictionary<LowercaseString, decimal> NumericQualities = new Dictionary<LowercaseString, decimal>();
-        private readonly Dictionary<LowercaseString, string> StringQualities = new Dictionary<LowercaseString, string>();
+        public QualitiesHolder Qualities => this._Qualities;
+        private readonly QualitiesHolder _Qualities = new QualitiesHolder();
+
+        public readonly Dictionary<LowercaseString, AppliedStatusEffect> AppliedStatusEffects = new Dictionary<LowercaseString, AppliedStatusEffect>();
 
         /// <summary>
         /// Holds a list to answer the question of <see cref="GetRepresentedEntities"/>.
@@ -25,55 +27,9 @@ namespace SpaceDeck.GameState.Minimum
             this.selfList = new List<Entity>() { this };
         }
 
-        public decimal GetNumericQuality(LowercaseString index, decimal defaultValue = 0)
-        {
-            if (this.NumericQualities.TryGetValue(index, out decimal qualityValue))
-            {
-                return qualityValue;
-            }
-
-            this.NumericQualities.Add(index, defaultValue);
-            return defaultValue;
-        }
-
-        public string GetStringQuality(LowercaseString index, string defaultValue = "")
-        {
-            if (this.StringQualities.TryGetValue(index, out string qualityValue))
-            {
-                return qualityValue;
-            }
-
-            this.StringQualities.Add(index, defaultValue);
-            return defaultValue;
-        }
-
         public IEnumerable<Entity> GetRepresentedEntities(IGameStateMutator gameState)
         {
             return this.selfList;
-        }
-
-        public void SetNumericQuality(LowercaseString index, decimal newValue)
-        {
-            if (this.NumericQualities.ContainsKey(index))
-            {
-                this.NumericQualities[index] = newValue;
-            }
-            else
-            {
-                this.NumericQualities.Add(index, newValue);
-            }
-        }
-
-        public void SetStringQuality(LowercaseString index, string newValue)
-        {
-            if (this.StringQualities.ContainsKey(index))
-            {
-                this.StringQualities[index] = newValue;
-            }
-            else
-            {
-                this.StringQualities.Add(index, newValue);
-            }
         }
     }
 }

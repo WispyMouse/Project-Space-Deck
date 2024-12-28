@@ -91,7 +91,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 );
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
             Entity foeEntity = new Entity();
-            foeEntity.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            foeEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(foeEntity);
             gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);

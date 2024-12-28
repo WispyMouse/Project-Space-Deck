@@ -10,8 +10,9 @@ namespace SpaceDeck.GameState.Minimum
         EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
 
-        void SetQuality(Entity entity, LowercaseString index, decimal toValue);
-        decimal GetQuality(Entity entity, LowercaseString index, decimal defaultValue = 0);
+        void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue);
+        decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0);
+
         void AddEncounterEntity(Entity toAdd);
         void AddPersistentEntity(Entity toAdd);
         void RemoveEntity(Entity entity);

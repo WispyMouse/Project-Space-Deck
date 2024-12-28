@@ -16,7 +16,7 @@ namespace SpaceDeck.GameState.Changes
         {
             foreach (Entity curEntity in this.Target.GetRepresentedEntities(toApplyTo))
             {
-                curEntity.SetNumericQuality(this.QualityToChange, this.NewValue);
+                curEntity.Qualities.SetNumericQuality(this.QualityToChange, this.NewValue);
             }
         }
     }

@@ -67,8 +67,8 @@ namespace SFDDCards.UX
 
         public void _UpdateUX(CentralGameStateController centralGameStateController)
         {
-            this.Name.text = this._RepresentedEnemy.GetStringQuality(WellknownQualities.Name);
-            this.Health.text = $"{this._RepresentedEnemy.GetNumericQuality(WellknownQualities.Health)} / {this._RepresentedEnemy.GetNumericQuality(WellknownQualities.MaximumHealth)}";
+            this.Name.text = this._RepresentedEnemy.Qualities.GetStringQuality(WellknownQualities.Name);
+            this.Health.text = $"{this._RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.Health)} / {this._RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)}";
             this.UpdateIntent(centralGameStateController);
 
             this.OwnStatusEffectHolder.SetStatusEffects(this.RepresentedEnemy.AppliedStatusEffects);
