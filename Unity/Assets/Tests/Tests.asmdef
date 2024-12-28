@@ -20,7 +20,8 @@
         "GameState.Rules",
         "Utility.Minimum",
         "Utility.Wellknown",
-        "Models.Databases"
+        "Models.Databases",
+        "UX.AssetLookup"
     ],
     "includePlatforms": [
         "Editor"

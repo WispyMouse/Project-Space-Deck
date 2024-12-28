@@ -2,6 +2,8 @@ namespace SFDDCards.Tests.EditMode
 {
     using NUnit.Framework;
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Execution;
+    using SpaceDeck.Tests.EditMode;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -70,6 +72,8 @@ namespace SFDDCards.Tests.EditMode
             CurrencyDatabase.ClearDatabase();
             GlobalUpdateUX.PlayerMustMakeChoice.RemoveAllListeners();
             GlobalUpdateUX.PendingPlayerChoice = false;
+
+            CommonTestUtility.TearDownDatabases();
         }
     }
 }

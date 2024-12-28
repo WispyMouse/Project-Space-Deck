@@ -1,5 +1,6 @@
 namespace SFDDCards.ImportModels
 {
+    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -16,6 +17,7 @@ namespace SFDDCards.ImportModels
         public List<ResourceGainImport> ElementGain = new List<ResourceGainImport>();
 
         [System.NonSerialized]
+        [Obsolete("Should fetch from " + nameof(SpriteLookup))]
         public Sprite CardArt;
 
         public bool MeetsAllTags(IEnumerable<string> tags)
@@ -42,7 +44,10 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(spriteFile))
             {
+                // TODO: PHASE OUT
                 this.CardArt = await ImportHelper.GetSpriteAsync(spriteFile, 144, 80, mainThreadContext).ConfigureAwait(false);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.CardArt);
             }
         }
 
@@ -52,7 +57,10 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(spriteFile))
             {
+                // TODO: PHASE OUT
                 this.CardArt = ImportHelper.GetSprite(spriteFile, 144, 80);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.CardArt);
             }
         }
     }

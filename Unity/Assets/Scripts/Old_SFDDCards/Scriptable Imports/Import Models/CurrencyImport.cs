@@ -1,5 +1,6 @@
 namespace SFDDCards.ImportModels
 {
+    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -13,6 +14,7 @@ namespace SFDDCards.ImportModels
         public string Name;
 
         [System.NonSerialized]
+        [Obsolete("Should fetch from " + nameof(SpriteLookup))]
         public Sprite CurrencyArt;
 
         [System.NonSerialized]
@@ -44,7 +46,10 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(spriteFile))
             {
+                // TODO: PHASE OUT
                 this.CurrencyArt = await ImportHelper.GetSpriteAsync(spriteFile, 64, 64, mainThreadContext).ConfigureAwait(false);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.CurrencyArt);
             }
         }
 
@@ -54,7 +59,10 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(spriteFile))
             {
+                // TODO: PHASE OUT
                 this.CurrencyArt = ImportHelper.GetSprite(spriteFile, 64, 64);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.CurrencyArt);
             }
         }
     }

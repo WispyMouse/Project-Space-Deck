@@ -21,8 +21,8 @@ namespace SpaceDeck.Tests.EditMode.UX
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
     using System.Linq;
-    using SpaceDeck.UX;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.UX.AssetLookup;
 
     public class SpriteLookupTests
     {

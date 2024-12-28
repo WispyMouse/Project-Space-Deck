@@ -7,6 +7,7 @@ namespace SFDDCards.UX
     using UnityEngine.UI;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
+    using SpaceDeck.UX.AssetLookup;
 
     public class StatusEffectUX : MonoBehaviour, IMouseHoverListener
     {

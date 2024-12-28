@@ -1,20 +1,18 @@
-namespace SpaceDeck.UX
+namespace SpaceDeck.UX.AssetLookup
 {
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using Utility.Wellknown;
-    using Utility.Minimum;
+    using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public static class SpriteLookup
     {
-        public readonly static LowercaseString Default = nameof(Default);
-
         private static readonly Dictionary<LowercaseString, ObjectSpriteLookup> ObjectToSpriteLookup = new Dictionary<LowercaseString, ObjectSpriteLookup>();
 
         public static bool TryGetSprite(LowercaseString forObject, out Sprite forSprite)
         {
-            return TryGetSprite(forObject, out forSprite, Default);
+            return TryGetSprite(forObject, out forSprite, WellknownSprites.Default);
         }
 
         public static bool TryGetSprite(LowercaseString forObject, out Sprite forSprite, LowercaseString index)
@@ -30,7 +28,7 @@ namespace SpaceDeck.UX
 
         public static void SetSprite(LowercaseString forObject, Sprite forSprite)
         {
-            SetSprite(forObject, forSprite, Default);
+            SetSprite(forObject, forSprite, WellknownSprites.Default);
         }
 
         public static void SetSprite(LowercaseString forObject, Sprite forSprite, LowercaseString index)

@@ -6,6 +6,7 @@ namespace SFDDCards.ImportModels
     using System.Threading.Tasks;
     using System.Threading;
     using UnityEngine;
+    using SpaceDeck.UX.AssetLookup;
 
     [Serializable]
     public class StatusEffectImport : Importable
@@ -22,6 +23,7 @@ namespace SFDDCards.ImportModels
         public HashSet<string> Tags = new HashSet<string>();
 
         [NonSerialized]
+        [Obsolete("Should fetch from " + nameof(SpriteLookup))]
         public Sprite StatusEffectArt;
 
         public override async Task ProcessAdditionalFilesAsync(SynchronizationContext mainThreadContext)
@@ -30,7 +32,10 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(spriteFile))
             {
+                // TODO: PHASE OUT
                 this.StatusEffectArt = await ImportHelper.GetSpriteAsync(spriteFile, 64, 64, mainThreadContext).ConfigureAwait(false);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.StatusEffectArt);
             }
         }
 
@@ -40,7 +45,10 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(spriteFile))
             {
+                // TODO: PHASE OUT
                 this.StatusEffectArt = ImportHelper.GetSprite(spriteFile, 64, 64);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.StatusEffectArt);
             }
         }
     }

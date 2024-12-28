@@ -5,6 +5,8 @@ namespace SFDDCards.ImportModels
     using System.Threading.Tasks;
     using System.Threading;
     using UnityEngine;
+    using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.Utility.Wellknown;
 
     [Serializable]
     public class ElementImport : Importable
@@ -12,9 +14,11 @@ namespace SFDDCards.ImportModels
         public string Name;
 
         [NonSerialized]
+        [Obsolete("Should fetch from " + nameof(SpriteLookup))]
         public Sprite NormalArt;
 
         [NonSerialized]
+        [Obsolete("Should fetch from " + nameof(SpriteLookup))]
         public Sprite GreyscaleArt;
 
         public override async Task ProcessAdditionalFilesAsync(SynchronizationContext mainThreadContext)
@@ -23,14 +27,20 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(normalArtFile))
             {
+                // TODO: PHASE OUT
                 this.NormalArt = await ImportHelper.GetSpriteAsync(normalArtFile, 64, 64, mainThreadContext).ConfigureAwait(false);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.NormalArt);
             }
 
             string greyscaleFile = new FileInfo(this.FilePath).Extension.ToLower().Replace("elementimport", "greyscale.png");
 
             if (File.Exists(greyscaleFile))
             {
+                // TODO: PHASE OUT
                 this.GreyscaleArt = await ImportHelper.GetSpriteAsync(greyscaleFile, 64, 64, mainThreadContext).ConfigureAwait(false);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.GreyscaleArt, WellknownSprites.GreyScale);
             }
         }
 
@@ -40,14 +50,20 @@ namespace SFDDCards.ImportModels
 
             if (File.Exists(normalArtFile))
             {
+                // TODO: PHASE OUT
                 this.NormalArt = ImportHelper.GetSprite(normalArtFile, 64, 64);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.NormalArt);
             }
 
             string greyscaleFile = new FileInfo(this.FilePath).Extension.ToLower().Replace("elementimport", "greyscale.png");
 
             if (File.Exists(greyscaleFile))
             {
+                // TODO: PHASE OUT
                 this.GreyscaleArt = ImportHelper.GetSprite(greyscaleFile, 64, 64);
+                // PHASE IN
+                SpriteLookup.SetSprite(this.Id, this.GreyscaleArt, WellknownSprites.GreyScale);
             }
         }
     }
