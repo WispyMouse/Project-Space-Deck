@@ -68,7 +68,7 @@ namespace SpaceDeck.GameState.Execution
                 }
                 else
                 {
-                    nextToken = nextToken.LinkedScope.NextStatementAfterScope;
+                    // nextToken = nextToken.LinkedScope.NextStatementAfterScope;
                 }
             }
 

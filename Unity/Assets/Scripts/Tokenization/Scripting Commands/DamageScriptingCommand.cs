@@ -42,8 +42,8 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            linkedToken = null;
-            return false;
+            // linkedToken = null;
+            // return false;
         }
     }
 

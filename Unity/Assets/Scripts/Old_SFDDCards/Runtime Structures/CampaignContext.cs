@@ -4,6 +4,9 @@ namespace SFDDCards
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Wellknown;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
@@ -33,7 +36,11 @@ namespace SFDDCards
         public readonly Deck CampaignDeck;
         public CombatContext CurrentCombatContext { get; private set; } = null;
         public EvaluatedEncounter CurrentEncounter { get; private set; } = null;
+
+        [Obsolete($"Should transition to {nameof(_CampaignPlayer)}.")]
         public readonly Player CampaignPlayer;
+        public readonly Entity _CampaignPlayer;
+
         public CampaignRoute OnRoute { get; private set; } = null;
         public int CampaignRouteNodeIndex { get; private set; } = -1;
 
@@ -48,7 +55,15 @@ namespace SFDDCards
 
         public CampaignContext(CampaignRoute onRoute)
         {
+            // New
+            this._CampaignPlayer = new Entity();
+            this._CampaignPlayer.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
+            this._CampaignPlayer.SetQuality(WellknownQualities.MaximumHealth, onRoute.BasedOn.StartingMaximumHealth);
+            this._CampaignPlayer.SetQuality(WellknownQualities.Health, onRoute.BasedOn.StartingMaximumHealth);
+
+            // Old
             this.CampaignPlayer = new Player(onRoute.BasedOn.StartingMaximumHealth);
+
             this.OnRoute = onRoute;
 
             this.CampaignDeck = new Deck(this);

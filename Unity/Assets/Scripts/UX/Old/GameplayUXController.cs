@@ -2,6 +2,8 @@ namespace SFDDCards.UX
 {
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -115,6 +117,7 @@ namespace SFDDCards.UX
             }
         }
 
+        [Obsolete($"Should transition to {nameof(_PlacePlayerCharacter)}.")]
         public void PlacePlayerCharacter()
         {
             if (this.PlayerUXInstance != null)
@@ -127,6 +130,22 @@ namespace SFDDCards.UX
             this.PlayerUXInstance.SetFromPlayer(this.CurrentCampaignContext.CampaignPlayer);
 
             this.LifeValue.text = $"{this.CentralGameStateControllerInstance.CurrentCampaignContext.CampaignPlayer.CurrentHealth} / {this.CentralGameStateControllerInstance.CurrentCampaignContext.CampaignPlayer.MaxHealth}";
+        }
+
+        public void _PlacePlayerCharacter()
+        {
+            if (this.PlayerUXInstance != null)
+            {
+                Destroy(this.PlayerUXInstance.gameObject);
+                this.PlayerUXInstance = null;
+            }
+
+            this.PlayerUXInstance = Instantiate(this.PlayerRepresentationPF, this.PlayerRepresentationTransform);
+
+            Entity campaignEntity = this.CurrentCampaignContext._CampaignPlayer;
+            this.PlayerUXInstance._SetFromPlayer(campaignEntity);
+
+            this.LifeValue.text = $"{campaignEntity.GetQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.GetQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
         }
 
         public void CheckAndActIfGameCampaignNavigationStateChanged()

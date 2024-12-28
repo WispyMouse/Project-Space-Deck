@@ -98,7 +98,6 @@ namespace SFDDCards.Evaluation.Actual
                 return this.ConceptualIntensity;
             }
 
-            int evaluatedValue;
             if (!(BaseScriptingToken.TryGetIntegerEvaluatableFromStrings(new List<string>() { argument }, out IEvaluatableValue<int> output, out _, allowNameMatch: true)))
             {
                 GlobalUpdateUX.LogTextEvent.Invoke($"Failed to parse argument {argument}.", GlobalUpdateUX.LogType.RuntimeError);

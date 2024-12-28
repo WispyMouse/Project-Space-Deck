@@ -8,6 +8,7 @@ namespace SpaceDeck.Utility.Wellknown
     public static class WellknownQualities
     {
         public readonly static LowercaseString Health = nameof(Health);
+        public readonly static LowercaseString MaximumHealth = nameof(MaximumHealth);
         public readonly static LowercaseString Faction = nameof(Faction);
     }
 }
