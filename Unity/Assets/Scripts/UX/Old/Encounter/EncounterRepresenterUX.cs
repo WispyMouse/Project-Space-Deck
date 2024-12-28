@@ -10,6 +10,7 @@ namespace SFDDCards.UX
     using System.Threading;
     using UnityEngine;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Imports;
 
     public class EncounterRepresenterUX : MonoBehaviour
     {

@@ -1,8 +1,10 @@
 namespace SFDDCards.ImportModels
 {
+    using SpaceDeck.Models.Imports;
     using System;
     using System.Collections.Generic;
 
+    [Obsolete("Should transition to " + nameof(SpaceDeck.Models.Imports.EncounterImport))]
     [Serializable]
     public class EncounterImport : Importable
     {

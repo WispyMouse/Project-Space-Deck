@@ -1,12 +1,14 @@
 namespace SFDDCards
 {
     using SFDDCards.ImportModels;
+    using SpaceDeck.Models.Imports;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Text;
     using UnityEngine;
 
+    [Obsolete("Should transition to " + nameof(SpaceDeck.Models.Instances.EncounterInstance))]
     public class EncounterModel
     {
         public string Id;
@@ -25,7 +27,7 @@ namespace SFDDCards
         public Dictionary<string, EncounterScriptImport> EncounterScripts = new Dictionary<string, EncounterScriptImport>();
 
 
-        public EncounterModel(EncounterImport basedOn)
+        public EncounterModel(SFDDCards.ImportModels.EncounterImport basedOn)
         {
             HashSet<string> lowerCaseTags = new HashSet<string>();
             foreach (string tag in basedOn.Tags)
