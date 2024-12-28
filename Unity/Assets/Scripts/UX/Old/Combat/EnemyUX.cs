@@ -71,7 +71,7 @@ namespace SFDDCards.UX
             this.Health.text = $"{this._RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.Health)} / {this._RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)}";
             this.UpdateIntent(centralGameStateController);
 
-            this.OwnStatusEffectHolder.SetStatusEffects(this.RepresentedEnemy.AppliedStatusEffects);
+            this.OwnStatusEffectHolder._SetStatusEffects(this._RepresentedEnemy.AppliedStatusEffects.Values);
         }
 
         public void SetEffectText(string toText)
@@ -85,6 +85,7 @@ namespace SFDDCards.UX
             this.EffectText.gameObject.SetActive(false);
         }
 
+        [Obsolete("Should transition to " + nameof(_UpdateIntent))]
         void UpdateIntent(CentralGameStateController centralGameStateController)
         {
             string description = "";
@@ -107,6 +108,11 @@ namespace SFDDCards.UX
             {
                 this.ClearEffectText();
             }
+        }
+
+        void _UpdateIntent(CentralGameStateController centralGameStateController)
+        {
+            // TODO: This needs replacing!
         }
     }
 }

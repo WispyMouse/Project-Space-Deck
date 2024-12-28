@@ -5,10 +5,13 @@ namespace SFDDCards.UX
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
+    using SpaceDeck.GameState.Minimum;
 
     public class StatusEffectUX : MonoBehaviour, IMouseHoverListener
     {
-        public AppliedStatusEffect RepresentsEffect;
+        [Obsolete("Should transition to " + nameof(_RepresentsEffect))]
+        public SFDDCards.AppliedStatusEffect RepresentsEffect;
+        public AppliedStatusEffect _RepresentsEffect;
 
         [SerializeReference]
         private TMPro.TMP_Text StackText;
@@ -16,7 +19,9 @@ namespace SFDDCards.UX
         [SerializeReference]
         private Image Renderer;
 
-        private Action<AppliedStatusEffect> OnStatusEffectPressed;
+        [Obsolete("Should transition to " + nameof(_OnStatusEffectPressed))]
+        private Action<SFDDCards.AppliedStatusEffect> OnStatusEffectPressed;
+        private Action<AppliedStatusEffect> _OnStatusEffectPressed;
 
         public virtual bool ShouldShowBase { get; } = true;
 
@@ -25,11 +30,19 @@ namespace SFDDCards.UX
             return this.GetComponent<RectTransform>();
         }
 
-        public void SetFromEffect(AppliedStatusEffect toSet, Action<AppliedStatusEffect> onClickEvent = null)
+        [Obsolete("Should transition to " + nameof(_SetFromEffect))]
+        public void SetFromEffect(SFDDCards.AppliedStatusEffect toSet, Action<SFDDCards.AppliedStatusEffect> onClickEvent = null)
         {
             this.RepresentsEffect = toSet;
             this.Renderer.sprite = toSet.BasedOnStatusEffect.Sprite;
             this.OnStatusEffectPressed = onClickEvent;
+        }
+
+        public void _SetFromEffect(AppliedStatusEffect toSet, Action<AppliedStatusEffect> onClickEvent = null)
+        {
+            this._RepresentsEffect = toSet;
+            // TODO: SPRITE
+            this._OnStatusEffectPressed = onClickEvent;
         }
 
         public void SetStacks(int toStack)
