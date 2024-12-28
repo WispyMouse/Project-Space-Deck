@@ -64,7 +64,7 @@ namespace SpaceDeck.GameState.Execution
                 return existingValue;
             }
 
-            return entity.GetQuality(index, defaultValue);
+            return entity.GetNumericQuality(index, defaultValue);
         }
 
         public void RemoveEntity(Entity entity)

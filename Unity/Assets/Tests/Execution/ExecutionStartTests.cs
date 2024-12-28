@@ -101,7 +101,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            targetingEntity.SetQuality(WellknownQualities.Health, 100);
+            targetingEntity.SetNumericQuality(WellknownQualities.Health, 100);
             encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 
@@ -131,7 +131,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            targetingEntity.SetQuality(WellknownQualities.Health, 100);
+            targetingEntity.SetNumericQuality(WellknownQualities.Health, 100);
             encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 
@@ -169,7 +169,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            targetingEntity.SetQuality(WellknownQualities.Health, 100);
+            targetingEntity.SetNumericQuality(WellknownQualities.Health, 100);
             encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 
@@ -182,7 +182,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
-            Assert.AreEqual(99, gameState.GetAllEntities()[0].GetQuality(WellknownQualities.Health), "Expecting health to currently be 1 less than starting, so 99.");
+            Assert.AreEqual(99, gameState.GetAllEntities()[0].GetNumericQuality(WellknownQualities.Health), "Expecting health to currently be 1 less than starting, so 99.");
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            targetingEntity.SetQuality(WellknownQualities.Health, 100);
+            targetingEntity.SetNumericQuality(WellknownQualities.Health, 100);
             encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 
@@ -245,16 +245,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             // Add three enemies, so there's some ambiguity on who to target
             Entity entityOne = new Entity();
-            entityOne.SetQuality(WellknownQualities.Health, 100);
-            entityOne.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            entityOne.SetNumericQuality(WellknownQualities.Health, 100);
+            entityOne.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(entityOne);
             Entity entityTwoThisOneIsTheTarget = new Entity();
-            entityTwoThisOneIsTheTarget.SetQuality(WellknownQualities.Health, 100);
-            entityTwoThisOneIsTheTarget.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            entityTwoThisOneIsTheTarget.SetNumericQuality(WellknownQualities.Health, 100);
+            entityTwoThisOneIsTheTarget.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(entityTwoThisOneIsTheTarget);
             Entity entityThree = new Entity();
-            entityThree.SetQuality(WellknownQualities.Health, 100);
-            entityThree.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            entityThree.SetNumericQuality(WellknownQualities.Health, 100);
+            entityThree.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(entityThree);
             gameState.StartEncounter(encounter);
 
@@ -275,9 +275,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
 
-            Assert.AreEqual(100, entityOne.GetQuality(WellknownQualities.Health), "The first target should be unharmed.");
-            Assert.AreEqual(99, entityTwoThisOneIsTheTarget.GetQuality(WellknownQualities.Health), "The second target should be specifically harmed to 99 health.");
-            Assert.AreEqual(100, entityThree.GetQuality(WellknownQualities.Health), "The third target should be unharmed.");
+            Assert.AreEqual(100, entityOne.GetNumericQuality(WellknownQualities.Health), "The first target should be unharmed.");
+            Assert.AreEqual(99, entityTwoThisOneIsTheTarget.GetNumericQuality(WellknownQualities.Health), "The second target should be specifically harmed to 99 health.");
+            Assert.AreEqual(100, entityThree.GetNumericQuality(WellknownQualities.Health), "The third target should be unharmed.");
         }
     }
 }

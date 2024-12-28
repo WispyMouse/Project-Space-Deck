@@ -25,7 +25,7 @@ namespace SpaceDeck.GameState.Rules
                 return false;
             }
 
-            if (currentTurn.GetQuality(WellknownQualities.Faction) != WellknownFactions.Player)
+            if (currentTurn.GetNumericQuality(WellknownQualities.Faction) != WellknownFactions.Player)
             {
                 applications = null;
                 return false;

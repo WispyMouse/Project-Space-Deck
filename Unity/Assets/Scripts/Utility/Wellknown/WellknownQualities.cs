@@ -10,5 +10,7 @@ namespace SpaceDeck.Utility.Wellknown
         public readonly static LowercaseString Health = nameof(Health);
         public readonly static LowercaseString MaximumHealth = nameof(MaximumHealth);
         public readonly static LowercaseString Faction = nameof(Faction);
+
+        public readonly static LowercaseString Name = nameof(Name);
     }
 }

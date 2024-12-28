@@ -145,7 +145,7 @@ namespace SFDDCards.UX
             Entity campaignEntity = this.CurrentCampaignContext._CampaignPlayer;
             this.PlayerUXInstance._SetFromPlayer(campaignEntity);
 
-            this.LifeValue.text = $"{campaignEntity.GetQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.GetQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
+            this.LifeValue.text = $"{campaignEntity.GetNumericQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.GetNumericQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
         }
 
         public void CheckAndActIfGameCampaignNavigationStateChanged()

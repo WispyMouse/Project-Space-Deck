@@ -57,9 +57,9 @@ namespace SFDDCards
         {
             // New
             this._CampaignPlayer = new Entity();
-            this._CampaignPlayer.SetQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            this._CampaignPlayer.SetQuality(WellknownQualities.MaximumHealth, onRoute.BasedOn.StartingMaximumHealth);
-            this._CampaignPlayer.SetQuality(WellknownQualities.Health, onRoute.BasedOn.StartingMaximumHealth);
+            this._CampaignPlayer.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
+            this._CampaignPlayer.SetNumericQuality(WellknownQualities.MaximumHealth, onRoute.BasedOn.StartingMaximumHealth);
+            this._CampaignPlayer.SetNumericQuality(WellknownQualities.Health, onRoute.BasedOn.StartingMaximumHealth);
 
             // Old
             this.CampaignPlayer = new Player(onRoute.BasedOn.StartingMaximumHealth);
