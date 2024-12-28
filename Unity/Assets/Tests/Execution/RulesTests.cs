@@ -24,6 +24,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System.Linq;
+    using SpaceDeck.Tests.EditMode.TestFixtures;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -34,39 +35,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
     /// </summary>
     public class RulesTests
     {
-        private class TestSpecificTargetAnswerer : AnswererBase
-        {
-            private IChangeTarget Target;
-
-            public TestSpecificTargetAnswerer(IChangeTarget target)
-            {
-                this.Target = target;
-            }
-
-            public override void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
-            {
-                answerReceiver.Invoke(new EffectTargetExecutionAnswer(question, this.Target));
-            }
-        }
-
-        private class ExecuteOnTriggerRule : Rule
-        {
-            private Action<IGameStateMutator> ToExecute;
-
-            public ExecuteOnTriggerRule(LowercaseString trigger, Action<IGameStateMutator> toExecute) : base(trigger)
-            {
-                this.ToExecute = toExecute;
-            }
-
-            public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
-            {
-                Assert.IsTrue(this.TriggerOnEventIds.Contains(trigger.EventId), "Should only execute rule upon the correct rule event id triggering.");
-
-                applications = new List<GameStateChange>() { new ActionExecutor(this.ToExecute) };
-                return true;
-            }
-        }
-
         [TearDown]
         public void TearDown()
         {

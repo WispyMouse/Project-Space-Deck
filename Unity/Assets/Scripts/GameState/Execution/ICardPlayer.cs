@@ -13,6 +13,9 @@ namespace SpaceDeck.GameState.Execution
 
     public interface ICardPlayer
     {
-        void StartPlayCard(CardInstance toPlay);
+        QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay);
+        bool TryGetCurrentQuestions(out IReadOnlyList<ExecutionQuestion> questions);
+        bool TryExecuteCurrentCard(ExecutionAnswerSet answers);
+        bool TryExecuteCurrentCard();
     }
 }

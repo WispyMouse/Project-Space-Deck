@@ -26,6 +26,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using System.Linq;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Tests.EditMode.TestFixtures;
 
     /// <summary>
     /// These tests cover the experience of a player attempting to play a card.
@@ -33,34 +34,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
     /// </summary>
     public class PlayingCardsTests
     {
-        private class ExecuteScriptingCommand : ScriptingCommand
-        {
-            public static readonly LowercaseString IdentifierString = new LowercaseString("ExecuteScriptingCommand");
-            public override LowercaseString Identifier => IdentifierString;
-
-            public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
-            {
-                throw new System.NotImplementedException("You should not parse this token. Instead, directly create an ExecuteLinkedToken.");
-            }
-        }
-
-        private class ExecuteLinkedToken : LinkedToken<ExecuteScriptingCommand>
-        {
-            public readonly Action<IGameStateMutator> Action;
-
-            public ExecuteLinkedToken(Action<IGameStateMutator> action) : base()
-            {
-                this.Action = action;
-            }
-
-            public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
-            {
-                changes = new List<GameStateChange>();
-                changes.Add(new ActionExecutor(this.Action));
-                return true;
-            }
-        }
-
         [TearDown]
         public void TearDown()
         {
@@ -90,7 +63,49 @@ namespace SpaceDeck.Tests.EditMode.Execution
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
-            gameState.StartPlayCard(cardInstance);
+            gameState.StartConsideringPlayingCard(cardInstance);
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.IsTrue(debugValue, "The card should have successfully played, resulting in the action changing the debug value to true.");
+            Assert.IsTrue(encounter.CardsInZones[cardInstance] == WellknownZones.Discard, "The played card should now be in the discard pile.");
+        }
+
+        /// <summary>
+        /// Creates a card that changes a variable, which requires a single target.
+        /// This validates that playing the card does execute things.
+        /// This particular card has a question, but it can be played automatically.
+        /// </summary>
+        [Test]
+        public void PlayCard_OneQuestion_AutoExecutes()
+        {
+            // ARRANGE
+            bool debugValue = false;
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+            CardPrototype cardPrototype = new CardPrototype(
+                nameof(PlayCard_OneQuestion_AutoExecutes),
+                LinkedTokenMaker.CreateTokenListFromLinkedTokens(
+                    new ExecuteWithTargetLinkedToken(new ChangeTargetEvaluatableValue(FoeTargetProvider.Instance), (IGameStateMutator mutator) => { debugValue = true; }))
+                );
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            Entity foeEntity = new Entity();
+            foeEntity.SetQuality(WellknownQualities.Faction, WellknownFactions.Foe);
+            encounter.EncounterEntities.Add(foeEntity);
+            gameState.StartEncounter(encounter);
+            gameState.AddCard(cardInstance, WellknownZones.Hand);
+            IndexChoosingAnswerer answerer = new IndexChoosingAnswerer(0);
+
+            // ACT
+            QuestionAnsweringContext answeringContext = gameState.StartConsideringPlayingCard(cardInstance);
+            Assert.IsTrue(gameState.TryGetCurrentQuestions(out IReadOnlyList<ExecutionQuestion> questions), "The game state should have one current question, because this card requires a target.");
+            ExecutionAnswerSet answers = null;
+            answerer.HandleQuestions(answeringContext, questions, (ExecutionAnswerSet handledAnswer) =>
+            {
+                answers = handledAnswer;
+            });
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(answers), "With the question answered, the card should be ready to play.");
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT

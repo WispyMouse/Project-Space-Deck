@@ -22,6 +22,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Tests.EditMode.TestFixtures;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -32,118 +33,6 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     /// </summary>
     public class ExecutionStartTests
     {
-        private class LoggingGameStateChange : GameStateChange
-        {
-            public readonly string ToLog;
-
-            public LoggingGameStateChange(string toLog) : base(NobodyTarget.Instance)
-            {
-                this.ToLog = toLog;
-            }
-
-            public override void Apply(IGameStateMutator toApplyTo)
-            {
-                Debug.Log(this.ToLog);
-            }
-        }
-
-        private class ZeroArgumentDebugLogScriptingCommand : ScriptingCommand
-        {
-            public const string HelloString = "HELLO!";
-            public static readonly LowercaseString IdentifierString = new LowercaseString("ZEROARGUMENTDEBUG");
-            public override LowercaseString Identifier => IdentifierString;
-
-            public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
-            {
-                linkedToken = new ZeroArgumentDebugLogLinkedToken(parsedToken);
-                return true;
-            }
-        }
-
-        private class ZeroArgumentDebugLogLinkedToken : LinkedToken<ZeroArgumentDebugLogScriptingCommand>
-        {
-            public ZeroArgumentDebugLogLinkedToken(ParsedToken parsedToken) : base(parsedToken)
-            {
-            }
-
-            public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
-            {
-                changes = new List<GameStateChange>();
-                changes.Add(new LoggingGameStateChange(ZeroArgumentDebugLogScriptingCommand.HelloString));
-                return true;
-            }
-        }
-
-        private class OneArgumentDebugLogScriptingCommand : ScriptingCommand
-        {
-            public static readonly LowercaseString IdentifierString = new LowercaseString("ONEARGUMENTDEBUG");
-            public override LowercaseString Identifier => IdentifierString;
-
-            public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
-            {
-                linkedToken = new OneArgumentDebugLogLinkedToken(parsedToken);
-                return true;
-            }
-        }
-
-        private class OneArgumentDebugLogLinkedToken : LinkedToken<OneArgumentDebugLogScriptingCommand>
-        {
-            public OneArgumentDebugLogLinkedToken(ParsedToken parsedToken) : base(parsedToken)
-            {
-            }
-
-            public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
-            {
-                if (this.Arguments == null || this.Arguments.Count == 0)
-                {
-                    changes = null;
-                    return false;
-                }
-
-                changes = new List<GameStateChange>();
-                changes.Add(new LoggingGameStateChange(this.Arguments[0].ToString()));
-                return true;
-            }
-        }
-
-        private class TestSpecificTargetAnswerer : AnswererBase
-        {
-            private IChangeTarget Target;
-
-            public TestSpecificTargetAnswerer(IChangeTarget target)
-            {
-                this.Target = target;
-            }
-
-            public override void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
-            {
-                answerReceiver.Invoke(new EffectTargetExecutionAnswer(question, this.Target));
-            }
-        }
-
-        private class IndexChoosingAnswerer : AnswererBase
-        {
-            private int Index;
-
-            public IndexChoosingAnswerer(int index)
-            {
-                this.Index = index;
-            }
-
-            public override void HandleQuestion(QuestionAnsweringContext answeringContext, ExecutionQuestion question, ProvideQuestionAnswerDelegate answerReceiver)
-            {
-                if (question is EffectTargetExecutionQuestion targetQuestion)
-                {
-                    IChangeTarget target = targetQuestion.Options.GetProvidedTargets(answeringContext)[this.Index];
-                    answerReceiver.Invoke(new EffectTargetExecutionAnswer(question, target));
-                }
-                else
-                {
-                    Assert.Fail($"This answerer does not have the tools to handle this question.");
-                }
-            }
-        }
-
         [TearDown]
         public void TearDown()
         {

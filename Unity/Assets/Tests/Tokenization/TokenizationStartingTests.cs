@@ -11,6 +11,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Tests.EditMode.TestFixtures;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -21,18 +22,6 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     /// </summary>
     public class TokenizationStartingTests
     {
-        private class HelloWorldScriptingCommand : ScriptingCommand
-        {
-            public static readonly LowercaseString IdentifierString = new LowercaseString("HELLOWORLD");
-            public override LowercaseString Identifier => IdentifierString;
-        }
-
-        private class TwoArgumentScriptingCommand : ScriptingCommand
-        {
-            public static readonly LowercaseString IdentifierString = new LowercaseString("TWOARGUMENTS");
-            public override LowercaseString Identifier => IdentifierString;
-        }
-
         [TearDown]
         public void TearDown()
         {

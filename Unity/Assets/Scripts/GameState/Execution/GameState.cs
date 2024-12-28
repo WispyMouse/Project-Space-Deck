@@ -3,6 +3,8 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
+    using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System;
@@ -29,6 +31,8 @@ namespace SpaceDeck.GameState.Execution
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
+
+        public CardInstance CurrentlyConsideredPlayedCard { get; set; }
 
         public List<Entity> AllEntities
         {
@@ -196,21 +200,86 @@ namespace SpaceDeck.GameState.Execution
             this.CurrentEncounterState.CardsInZones.Add(card, zone);
         }
 
-        public void StartPlayCard(CardInstance toPlay)
+        public QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay)
         {
+            this.CurrentlyConsideredPlayedCard = toPlay;
+            return new QuestionAnsweringContext(this);
+        }
+
+        public bool TryGetCurrentQuestions(out IReadOnlyList<ExecutionQuestion> questions)
+        {
+            if (this.CurrentlyConsideredPlayedCard != null)
+            {
+                if (this.CurrentlyConsideredPlayedCard is LinkedCardInstance linkedCard)
+                {
+                    if (linkedCard.Prototype == null || !linkedCard.Prototype.LinkedTokens.HasValue)
+                    {
+                        // TODO: This card isn't properly set up; should log here
+                        // But for now, can't get questions from nothing
+                        questions = null;
+                        return false;
+                    }
+
+                    questions = linkedCard.Prototype.LinkedTokens.Value.GetQuestions();
+                    return questions.Count > 0;
+                }
+            }
+
+            // TODO: Things on the resolve stack should be permitted to ask questions too
+            // There might be triggered actions that need resolving
+            questions = null;
+            return false;
+        }
+
+        public bool TryExecuteCurrentCard(ExecutionAnswerSet answers)
+        {
+            IReadOnlyList<ExecutionQuestion> questions;
+            if (!TryGetCurrentQuestions(out questions))
+            {
+                questions = new List<ExecutionQuestion>();
+            }
+
+            if (questions.Count > 0)
+            {
+                if (answers == null)
+                {
+                    // There are questions but no answers; cannot execute
+                    return false;
+                }
+
+                foreach (ExecutionQuestion curQuestion in questions)
+                {
+                    if (!answers.TryGetAnswerForQuestion(curQuestion, out _))
+                    {
+                        // There's a question without an answer; cannot execute
+                        return false;
+                    }
+                }
+            }
+
             // Put the movement to discard on the stack first
-            this.PendingResolves.Push(new MoveCard(toPlay, WellknownZones.Discard));
+            this.PendingResolves.Push(new MoveCard(this.CurrentlyConsideredPlayedCard, WellknownZones.Discard));
+
+            LinkedCardInstance linkedCard = this.CurrentlyConsideredPlayedCard as LinkedCardInstance;
+            this.CurrentlyConsideredPlayedCard = null;
 
             // If the token has the appropriate information, execute it
-            if (toPlay is LinkedCardInstance linkedCard)
+            if (linkedCard != null)
             {
-                if (linkedCard.Prototype.LinkedTokens.HasValue && GameStateDeltaMaker.TryCreateDelta(linkedCard.Prototype.LinkedTokens.Value, this, out GameStateDelta delta))
+                if (linkedCard.Prototype.LinkedTokens.HasValue && GameStateDeltaMaker.TryCreateDelta(linkedCard.Prototype.LinkedTokens.Value, answers, this, out GameStateDelta delta))
                 {
                     GameStateDeltaApplier.ApplyGameStateDelta(this, delta);
                 }
             }
-
+            
             PendingResolveExecutor.ResolveAll(this);
+
+            return true;
+        }
+
+        public bool TryExecuteCurrentCard()
+        {
+            return TryExecuteCurrentCard(null);
         }
     }
 }

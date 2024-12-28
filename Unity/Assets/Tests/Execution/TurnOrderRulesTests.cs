@@ -37,24 +37,6 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     /// </summary>
     public class TurnOrderRulesTests
     {
-        private class ExecuteOnTriggerRule : Rule
-        {
-            private Action<IGameStateMutator> ToExecute;
-
-            public ExecuteOnTriggerRule(LowercaseString trigger, Action<IGameStateMutator> toExecute) : base(trigger)
-            {
-                this.ToExecute = toExecute;
-            }
-
-            public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
-            {
-                Assert.IsTrue(this.TriggerOnEventIds.Contains(trigger.EventId), "Should only execute rule upon the correct rule event id triggering.");
-
-                applications = new List<GameStateChange>() { new ActionExecutor(this.ToExecute) };
-                return true;
-            }
-        }
-
         [TearDown]
         public void TearDown()
         {
