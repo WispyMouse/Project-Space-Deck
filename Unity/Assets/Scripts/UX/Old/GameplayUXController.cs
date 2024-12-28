@@ -117,7 +117,7 @@ namespace SFDDCards.UX
             }
         }
 
-        [Obsolete($"Should transition to {nameof(_PlacePlayerCharacter)}.")]
+        [Obsolete("Should transition to " + nameof(_PlacePlayerCharacter))]
         public void PlacePlayerCharacter()
         {
             if (this.PlayerUXInstance != null)

@@ -37,7 +37,6 @@ namespace SFDDCards
         public CombatContext CurrentCombatContext { get; private set; } = null;
         public EvaluatedEncounter CurrentEncounter { get; private set; } = null;
 
-        [Obsolete($"Should transition to {nameof(_CampaignPlayer)}.")]
         public readonly Player CampaignPlayer;
         public readonly Entity _CampaignPlayer;
 

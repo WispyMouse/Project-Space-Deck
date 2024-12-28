@@ -11,7 +11,7 @@ namespace SFDDCards.UX
 
     public class EnemyUX : MonoBehaviour, IAnimationPuppet
     {
-        [Obsolete($"Should transition to {nameof(_RepresentedEnemy)}.")]
+        [Obsolete("Should transition to " + nameof(_RepresentedEnemy))]
         public Enemy RepresentedEnemy { get; private set; } = null;
         public Entity _RepresentedEnemy { get; private set; } = null;
 
@@ -31,7 +31,7 @@ namespace SFDDCards.UX
         [SerializeReference]
         private EnemyStatusEffectUXHolder OwnStatusEffectHolder;
 
-        [Obsolete($"Should transition to {nameof(_SetFromEnemy)}.")]
+        [Obsolete("Should transition to " + nameof(_SetFromEnemy))]
         public void SetFromEnemy(Enemy toSet, CentralGameStateController centralGameStateController)
         {
             this.RepresentedEnemy = toSet;
@@ -56,7 +56,7 @@ namespace SFDDCards.UX
             this._UpdateUX(centralGameStateController);
         }
 
-        [Obsolete($"Should transition to {nameof(_UpdateUX)}.")]
+        [Obsolete("Should transition to " + nameof(_UpdateUX))]
         public void UpdateUX(CentralGameStateController centralGameStateController)
         {
             this.Health.text = $"{this.RepresentedEnemy.CurrentHealth} / {this.RepresentedEnemy.BaseModel.MaximumHealth}";

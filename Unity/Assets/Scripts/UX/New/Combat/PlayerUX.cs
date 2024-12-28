@@ -9,7 +9,7 @@ namespace SFDDCards.UX
 
     public class PlayerUX : MonoBehaviour, IAnimationPuppet
     {
-        [Obsolete($"Should transition to {nameof(_RepresentedPlayer)}.")]
+        [Obsolete("Should transition to " + nameof(_RepresentedPlayer))]
         public Player RepresentedPlayer { get; private set; }
 
         public Entity _RepresentedPlayer { get; private set; }
@@ -17,7 +17,7 @@ namespace SFDDCards.UX
         public Transform OwnTransform => this.transform;
         public bool IsNotDestroyed => this != null && this?.gameObject != null;
 
-        [Obsolete($"Should transition to {nameof(_SetFromPlayer)}.")]
+        [Obsolete("Should transition to " + nameof(_SetFromPlayer))]
         public void SetFromPlayer(Player toSet)
         {
             this.RepresentedPlayer = toSet;

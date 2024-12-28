@@ -74,7 +74,6 @@ namespace SpaceDeck.GameState.Minimum
             {
                 this.StringQualities.Add(index, newValue);
             }
-
         }
     }
 }
