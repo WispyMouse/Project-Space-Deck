@@ -6,6 +6,7 @@ namespace SFDDCards.UX
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;

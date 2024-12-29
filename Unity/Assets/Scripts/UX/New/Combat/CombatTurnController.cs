@@ -1,5 +1,9 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
+    using SFDDCards.UX;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.UX;
     using System;
     using System.Collections;
@@ -23,7 +27,11 @@ namespace SFDDCards.UX
         [SerializeReference]
         private EnemyRepresenterUX EnemyRepresenterUX;
 
+        [Obsolete("Transition to " + nameof(_Context))]
         private CombatContext Context => this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext;
+        private EncounterState _Context => this.CentralGameStateControllerInstance?.CurrentCampaignContext?._CurrentEncounter;
+
+        private QuestionAnsweringContext CurrentQuestionAnsweringContext { get; set; }
         
         public bool CurrentlyActive { get; private set; } = false;
 
@@ -43,6 +51,7 @@ namespace SFDDCards.UX
             GlobalSequenceEventHolder.OnStopAllSequences.AddListener(StopSequenceAnimation);
         }
 
+        [Obsolete("Transition to " + nameof(_BeginHandlingCombat))]
         public void BeginHandlingCombat()
         {
             this.CurrentlyActive = true;
@@ -52,6 +61,12 @@ namespace SFDDCards.UX
                 new GameplaySequenceEvent(this.SpawnInitialEnemies, null),
                 new GameplaySequenceEvent(() => this.Context.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn), null)
                 );
+        }
+
+        public void _BeginHandlingCombat()
+        {
+            this.CurrentlyActive = true;
+            this._SpawnInitialEnemies();
         }
 
         public void EndHandlingCombat()
@@ -111,25 +126,68 @@ namespace SFDDCards.UX
         #endregion
 
         #region Specific Gameplay Turn Concepts
-
+        
+        [Obsolete("Transition to " + nameof(_SpawnInitialEnemies))]
         private void SpawnInitialEnemies()
         {
             this.EnemyRepresenterUX.AddEnemies(this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext.Enemies);
         }
 
+        [Obsolete("Transition to " + nameof(_SpawnEnemy))]
         private void SpawnEnemy(Enemy toSpawn)
         {
             this.EnemyRepresenterUX.AddEnemy(toSpawn);
         }
 
+        [Obsolete("Transition to " + nameof(_EndPlayerTurn))]
         public void EndPlayerTurn()
         {
             this.Context.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.EnemyTurn);
         }
 
+        [Obsolete("Transition to " + nameof(_StartPlayCard))]
         public void PlayCard(Card toPlay, ICombatantTarget toPlayOn)
         {
             this.Context.PlayCard(toPlay, toPlayOn);
+        }
+
+        private void _SpawnInitialEnemies()
+        {
+            this.EnemyRepresenterUX._AddEnemies(this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter.EncounterEntities);
+        }
+
+        private void _SpawnEnemy(Entity toSpawn)
+        {
+            this.EnemyRepresenterUX._AddEnemy(toSpawn);
+        }
+
+        public void _EndPlayerTurn()
+        {
+            this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.EndCurrentEntityTurn();
+        }
+
+        public void _StartPlayCard(CardInstance toPlay)
+        {
+            QuestionAnsweringContext questionContext = this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.StartConsideringPlayingCard(toPlay);
+            this.CurrentQuestionAnsweringContext = questionContext;
+            if (this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.TryExecuteCurrentCard())
+            {
+                // The card has been played, hooray
+                this.CurrentQuestionAnsweringContext = null;
+                return;
+            }
+            // The card has questions to answer!
+            // TODO: Answer these questions, then execute card
+        }
+
+        public void _ExecuteCurrentCard()
+        {
+            if (!this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.TryExecuteCurrentCard())
+            {
+                // TODO LOG
+                // Should not fail to play cards if this is directly called
+                return;
+            }
         }
 
         #endregion
