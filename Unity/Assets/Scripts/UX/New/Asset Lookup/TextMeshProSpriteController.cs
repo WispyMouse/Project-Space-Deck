@@ -1,4 +1,4 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX.AssetLookup
 {
     using System;
     using System.Collections;

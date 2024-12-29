@@ -1,5 +1,7 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
+    using SFDDCards.UX;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
     using System;
@@ -10,7 +12,9 @@ namespace SFDDCards.UX
 
     public class DisplayedCardUX : MonoBehaviour, IMouseHoverListener
     {
+        [Obsolete("Transition to " + nameof(_RepresentedCard))]
         public Card RepresentedCard { get; private set; } = null;
+        public CardInstance _RepresentedCard { get; private set; } = null;
         
         [SerializeReference]
         private RenderedCard RenderedCard;
@@ -48,12 +52,21 @@ namespace SFDDCards.UX
         {
         }
 
+        [Obsolete("Transition to " + nameof(_SetFromCard))]
         public void SetFromCard(Card toSet, Action<DisplayedCardUX> inCardSelectedAction = null, ReactionWindowContext? reactionWindowContext = null)
         {
             this.RepresentedCard = toSet;
             this.cardSelectedAction = inCardSelectedAction;
 
             this.RenderedCard.SetFromCard(toSet, reactionWindowContext);
+        }
+
+        public void _SetFromCard(CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null, ReactionWindowContext? reactionWindowContext = null)
+        {
+            this._RepresentedCard = toSet;
+            this.cardSelectedAction = inCardSelectedAction;
+
+            this.RenderedCard._SetFromCard(toSet, reactionWindowContext);
         }
 
         public Transform GetTransform()
@@ -89,15 +102,16 @@ namespace SFDDCards.UX
             return false;
         }
 
-        public void UnHoverOnDisable()
-        {
-            MouseHoverShowerController.MouseEndHoveredEvent.Invoke(this);
-        }
-
         public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
         {
             toShow = null;
             return false;
         }
+
+        public void UnHoverOnDisable()
+        {
+            MouseHoverShowerController.MouseEndHoveredEvent.Invoke(this);
+        }
+
     }
 }
