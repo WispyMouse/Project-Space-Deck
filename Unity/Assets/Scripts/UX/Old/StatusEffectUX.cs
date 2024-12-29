@@ -69,9 +69,16 @@ namespace SFDDCards.UX
             return false;
         }
 
+        [Obsolete("Transition to " + nameof(_TryGetStatusEffect))]
         public bool TryGetStatusEffect(out IStatusEffect toShow)
         {
             toShow = this.RepresentsEffect;
+            return true;
+        }
+
+        public bool _TryGetStatusEffect(out AppliedStatusEffect toShow)
+        {
+            toShow = this._RepresentsEffect;
             return true;
         }
 
@@ -99,5 +106,6 @@ namespace SFDDCards.UX
         {
             MouseHoverShowerController.MouseEndHoveredEvent.Invoke(this);
         }
+
     }
 }

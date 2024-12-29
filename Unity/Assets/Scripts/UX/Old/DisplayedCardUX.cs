@@ -85,5 +85,11 @@ namespace SFDDCards.UX
         {
             MouseHoverShowerController.MouseEndHoveredEvent.Invoke(this);
         }
+
+        public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
+        {
+            toShow = null;
+            return false;
+        }
     }
 }

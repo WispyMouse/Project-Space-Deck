@@ -9,7 +9,7 @@ namespace SpaceDeck.Models.Instances
     {
         public readonly StatusEffectPrototype Prototype;
 
-        public LinkedAppliedStatusEffect(StatusEffectPrototype prototype) : base(prototype.Id)
+        public LinkedAppliedStatusEffect(StatusEffectPrototype prototype) : base(prototype.Id, prototype.Name)
         {
             if (prototype.Reactors != null)
             {

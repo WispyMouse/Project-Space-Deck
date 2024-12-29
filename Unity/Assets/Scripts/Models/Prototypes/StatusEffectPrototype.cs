@@ -15,13 +15,15 @@ namespace SpaceDeck.Models.Prototypes
     {
         public readonly LowercaseString Id;
         public readonly List<Reactor> Reactors = new List<Reactor>();
+        public readonly string Name;
 
-        public StatusEffectPrototype(LowercaseString id)
+        public StatusEffectPrototype(LowercaseString id, string name)
         {
             this.Id = id;
+            this.Name = name;
         }
 
-        public StatusEffectPrototype(LowercaseString id, List<Reactor> reactors) : this(id)
+        public StatusEffectPrototype(LowercaseString id, string name, List<Reactor> reactors) : this(id, name)
         {
             this.Reactors = reactors;
         }

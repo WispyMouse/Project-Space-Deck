@@ -42,7 +42,9 @@ namespace SFDDCards
         public readonly Deck CampaignDeck;
         public IReadOnlyList<CardInstance> _CampaignDeck => this.GameplayState.CardsInDeck;
         public CombatContext CurrentCombatContext { get; private set; } = null;
+        [Obsolete("Transition to " + nameof(_CurrentEncounter))]
         public EvaluatedEncounter CurrentEncounter { get; private set; } = null;
+        public EncounterState _CurrentEncounter => this.GameplayState.CurrentEncounterState;
 
         public readonly Player CampaignPlayer;
         public readonly Entity _CampaignPlayer;
@@ -104,7 +106,6 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 
-        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void LeaveCurrentEncounter()
         {
             if (this.CurrentCombatContext != null && this.CurrentCombatContext.BasedOnEncounter != null)
@@ -114,6 +115,7 @@ namespace SFDDCards
 
             this.CurrentCombatContext = null;
             this.CurrentEncounter = null;
+            this.GameplayState.CurrentEncounterState = null;
 
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }

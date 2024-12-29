@@ -1,4 +1,4 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
@@ -13,6 +13,9 @@ namespace SFDDCards.UX
     using SpaceDeck.Models.Imports;
     using SpaceDeck.UX;
     using SpaceDeck.Utility.Minimum;
+    using SFDDCards.UX;
+    using SFDDCards;
+    using SpaceDeck.Utility.Wellknown;
 
     public class EncounterRepresenterUX : MonoBehaviour
     {
@@ -56,11 +59,11 @@ namespace SFDDCards.UX
             this._representingModel = toRepresent;
             this.NameLabel.text = toRepresent.EncounterName;
 
-            this._SetEncounterIndex("intro", mutator);
+            this.SetEncounterIndex(WellknownEncounters.Intro, mutator);
             this.UXParent.SetActive(true);
         }
 
-        [Obsolete("Should transition to " + nameof(SetEncounterIndex))]
+        [Obsolete("Should transition to the version of " + nameof(SetEncounterIndex) + " with mutator")]
         public void SetEncounterIndex(string index)
         {
             this.currentEncounterIndex = index;
@@ -82,7 +85,7 @@ namespace SFDDCards.UX
             }
         }
 
-        public void _SetEncounterIndex(LowercaseString index, IGameStateMutator mutator)
+        public void SetEncounterIndex(LowercaseString index, IGameStateMutator mutator)
         {
             this._currentEncounterIndex = index;
 
@@ -179,7 +182,7 @@ namespace SFDDCards.UX
                 GlobalSequenceEventHolder.PushSequenceToTop(new GameplaySequenceEvent(
                 () =>
                 {
-                    this.GameplayUXControllerInstance.EncounterDialogueComplete(this.representingModel);
+                    this.GameplayUXControllerInstance.EncounterDialogueComplete(this._representingModel);
                 }));
                 return;
             }
@@ -220,12 +223,12 @@ namespace SFDDCards.UX
                 {
                     if (string.IsNullOrEmpty(destination))
                     {
-                        this.GameplayUXControllerInstance.EncounterDialogueComplete(representingModel);
+                        this.GameplayUXControllerInstance.EncounterDialogueComplete(_representingModel);
                     }
                     else
                     {
                         this.UXParent.SetActive(true);
-                        this.SetEncounterIndex(destination);
+                        this.SetEncounterIndex(destination, this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState);
                     }
                 }));
         }

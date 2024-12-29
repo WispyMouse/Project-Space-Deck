@@ -26,7 +26,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
 
     public class ExecuteAppliedStatusEffectPrototype : StatusEffectPrototype
     {
-        public ExecuteAppliedStatusEffectPrototype(LowercaseString id) : base(id)
+        public ExecuteAppliedStatusEffectPrototype(LowercaseString id, string name) : base(id, name)
         {
         }
     }
@@ -35,7 +35,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
     {
         public readonly Action<IGameStateMutator> ToExecute;
 
-        public ExecuteAppliedStatusEffectInstance(Action<IGameStateMutator> toExecute, IEnumerable<LowercaseString> triggerOnEventIds, LowercaseString id) : base(id, triggerOnEventIds)
+        public ExecuteAppliedStatusEffectInstance(Action<IGameStateMutator> toExecute, IEnumerable<LowercaseString> triggerOnEventIds, string name, LowercaseString id) : base(id, name, triggerOnEventIds)
         {
             this.ToExecute = toExecute;
         }

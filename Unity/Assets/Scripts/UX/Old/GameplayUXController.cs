@@ -833,10 +833,20 @@ namespace SFDDCards.UX
                 this.PlayerHandRepresenter.ReactionWindowForSelectedCard = null;
             }
         }
-
+        
+        [Obsolete("Transition to the version of " + nameof(EncounterDialogueComplete) + " that uses EncounterState")]
         public void EncounterDialogueComplete(EvaluatedEncounter completed)
         {
             if (completed == this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentEncounter)
+            {
+                this.EncounterRepresenterUXInstance.Close();
+                this.ProceedToNextRoom();
+            }
+        }
+
+        public void EncounterDialogueComplete(EncounterState completed)
+        {
+            if (completed == this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter)
             {
                 this.EncounterRepresenterUXInstance.Close();
                 this.ProceedToNextRoom();

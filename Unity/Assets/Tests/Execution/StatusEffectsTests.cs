@@ -50,7 +50,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             var applyStatusEffectStacksScriptingCommand = new ApplyStatusEffectStacksScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(applyStatusEffectStacksScriptingCommand);
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
-            StatusEffectDatabase.RegisterStatusEffectPrototype(new StatusEffectPrototype(debugStatusId));
+            StatusEffectDatabase.RegisterStatusEffectPrototype(new StatusEffectPrototype(debugStatusId, debugStatusId.ToString()));
 
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
@@ -90,7 +90,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
             RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
             RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
-            ExecuteAppliedStatusEffectPrototype prototype = new ExecuteAppliedStatusEffectPrototype(debugStatusId);
+            ExecuteAppliedStatusEffectPrototype prototype = new ExecuteAppliedStatusEffectPrototype(debugStatusId, debugStatusId.ToString());
             StatusEffectDatabase.RegisterStatusEffectPrototype(prototype);
             StatusEffectDatabase.RegisterStatusEffectPrototypeFactory(prototype,
                 (StatusEffectPrototype Prototype) =>
@@ -98,6 +98,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                     return new ExecuteAppliedStatusEffectInstance(
                         (IGameStateMutator Mutator) => { debugValue = true; },
                         new List<LowercaseString>() { WellknownGameStateEvents.EntityTurnStarted },
+                        debugStatusId.ToString(),
                         debugStatusId);
                 });
 
