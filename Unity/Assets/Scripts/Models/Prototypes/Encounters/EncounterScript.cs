@@ -5,11 +5,11 @@ namespace SpaceDeck.Models.Prototypes
     using System.Collections;
     using System.Collections.Generic;
 
-    public class EncounterPrototype
+    public class EncounterScript
     {
         public readonly LowercaseString Id;
 
-        public EncounterPrototype(LowercaseString id)
+        public EncounterScript(LowercaseString id)
         {
             this.Id = id;
         }
