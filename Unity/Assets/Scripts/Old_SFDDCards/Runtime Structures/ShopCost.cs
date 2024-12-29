@@ -2,6 +2,8 @@ namespace SFDDCards
 {
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Instances;
+    using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
@@ -10,6 +12,8 @@ namespace SFDDCards
     {
         public IEvaluatableValue<int> Amount;
 
-        public CurrencyImport Currency;
+        [Obsolete("Should transition to " + nameof(_CurrencyType))]
+        public SFDDCards.ImportModels.CurrencyImport CurrencyType;
+        public Currency _CurrencyType;
     }
 }

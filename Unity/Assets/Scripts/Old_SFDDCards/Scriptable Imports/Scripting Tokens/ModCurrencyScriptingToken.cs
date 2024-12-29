@@ -3,6 +3,7 @@ namespace SFDDCards.ScriptingTokens
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.Evaluation.Conceptual;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Databases;
     using System.Collections.Generic;
 
     public class ModCurrencyScriptingToken : BaseScriptingToken
@@ -16,7 +17,7 @@ namespace SFDDCards.ScriptingTokens
         {
             tokenBuilder.IntensityKindType = TokenEvaluatorBuilder.IntensityKind.CurrencyMod;
             tokenBuilder.Intensity = Amount;
-            tokenBuilder.Currency = CurrencyDatabase.GetModel(CurrencyToMod);
+            tokenBuilder._Currency = CurrencyDatabase.Get(CurrencyToMod);
         }
 
         protected override bool TryGetTokenWithArguments(List<string> arguments, out IScriptingToken scriptingToken)

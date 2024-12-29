@@ -3,6 +3,7 @@ namespace SFDDCards
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Utility.Minimum;
     using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace SFDDCards
                     }
                     else if (curIdentity.IdentityKind == RewardIdentity.RewardIdentityKind.Currency)
                     {
-                        slot.GainedCurrency = CurrencyDatabase.GetModel(curIdentity.RewardIdentifier);
+                        slot.GainedCurrency = CurrencyDatabase.Get(curIdentity.RewardIdentifier);
                     }
 
                     IEvaluatableValue<int> amountToAward = null;

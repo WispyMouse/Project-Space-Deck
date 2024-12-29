@@ -1,6 +1,8 @@
 using System.Text.RegularExpressions;
 using SFDDCards.Evaluation.Actual;
 using SFDDCards.ImportModels;
+using SpaceDeck.Models.Databases;
+using SpaceDeck.Models.Instances;
 
 namespace SFDDCards.ScriptingTokens.EvaluatableValues
 {
@@ -22,14 +24,14 @@ namespace SFDDCards.ScriptingTokens.EvaluatableValues
                 return false;
             }
 
-            if (!CurrencyDatabase.TryGetModel(this.CurrencyToCount, out CurrencyImport foundModel))
+            if (!CurrencyDatabase.TryGet(this.CurrencyToCount, out Currency foundCurrency))
             {
                 GlobalUpdateUX.LogTextEvent.Invoke($"Failed to find currency model named '{this.CurrencyToCount}'.", GlobalUpdateUX.LogType.RuntimeError);
                 evaluatedValue = 0;
                 return false;
             }
 
-            evaluatedValue = campaignContext.GetCurrencyCount(CurrencyDatabase.GetModel(this.CurrencyToCount));
+            evaluatedValue = campaignContext._GetCurrencyCount(foundCurrency);
             return true;
         }
 
@@ -65,9 +67,9 @@ namespace SFDDCards.ScriptingTokens.EvaluatableValues
                 return true;
             }
 
-            if (allowNameMatch && CurrencyDatabase.TryGetModel(argument, out CurrencyImport currency))
+            if (allowNameMatch && CurrencyDatabase.TryGet(argument, out Currency currency))
             {
-                output = new CountCurrencyEvaluatableValue(currency.Id);
+                output = new CountCurrencyEvaluatableValue(currency.Id.ToString());
                 return true;
             }
 
@@ -82,7 +84,7 @@ namespace SFDDCards.ScriptingTokens.EvaluatableValues
 
         public string DescribeEvaluation(IEvaluatableValue<int> topValue)
         {
-            CurrencyImport currency = CurrencyDatabase.GetModel(this.CurrencyToCount);
+            Currency currency = CurrencyDatabase.Get(this.CurrencyToCount);
 
             if (topValue == this)
             {

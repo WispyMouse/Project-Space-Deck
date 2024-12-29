@@ -4,6 +4,7 @@ namespace SFDDCards.Evaluation.Conceptual
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Instances;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -31,6 +32,11 @@ namespace SFDDCards.Evaluation.Conceptual
 
         public StatusEffect StatusEffect;
         public CurrencyImport Currency;
+
+        /// <summary>
+        /// TODO: This is crossing the streams. We don't want to carry over this token builder, so this is just here to make stuff compile with a breadcrumb trail.
+        /// </summary>
+        public Currency _Currency;
 
         public ConceptualTokenEvaluatorBuilder PreviousBuilder;
         public List<Action<DeltaEntry>> ActionsToExecute = new List<Action<DeltaEntry>>();

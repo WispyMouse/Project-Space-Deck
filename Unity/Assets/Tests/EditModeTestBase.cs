@@ -3,6 +3,7 @@ namespace SFDDCards.Tests.EditMode
     using NUnit.Framework;
     using SFDDCards.ImportModels;
     using SpaceDeck.GameState.Execution;
+    using SpaceDeck.Models.Databases;
     using SpaceDeck.Tests.EditMode;
     using System;
     using System.Collections;
@@ -34,8 +35,8 @@ namespace SFDDCards.Tests.EditMode
                 Effects = new List<EffectOnProcImport>(),
                 Name = nameof(DebugStatus)
             };
-            StatusEffectDatabase.AddStatusEffectToDatabase(debugStatusEffect);
-            DebugStatus = StatusEffectDatabase.GetModel(nameof(DebugStatus));
+            SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(debugStatusEffect);
+            DebugStatus = SFDDCards.StatusEffectDatabase.GetModel(nameof(DebugStatus));
 
             ElementImport debugOneElementImport = new ElementImport()
             {
@@ -65,14 +66,12 @@ namespace SFDDCards.Tests.EditMode
         public static void ResetAll()
         {
             GlobalSequenceEventHolder.StopAllSequences();
-            CardDatabase.ClearDatabase();
+            SFDDCards.CardDatabase.ClearDatabase();
             EnemyDatabase.ClearDatabase();
             ElementDatabase.ClearDatabase();
-            StatusEffectDatabase.ClearDatabase();
-            CurrencyDatabase.ClearDatabase();
             GlobalUpdateUX.PlayerMustMakeChoice.RemoveAllListeners();
             GlobalUpdateUX.PendingPlayerChoice = false;
-
+            SFDDCards.StatusEffectDatabase.ClearDatabase();
             CommonTestUtility.TearDownDatabases();
         }
     }

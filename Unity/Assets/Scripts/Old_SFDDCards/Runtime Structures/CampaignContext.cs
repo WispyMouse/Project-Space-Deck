@@ -5,6 +5,8 @@ namespace SFDDCards
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Databases;
+    using SpaceDeck.Models.Instances;
     using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
@@ -318,6 +320,12 @@ namespace SFDDCards
             GlobalSequenceEventHolder.StopAllSequences();
         }
 
+        public int _GetCurrencyCount(Currency toGet)
+        {
+            throw new NotImplementedException("_GetCurrencyCount is not yet implemented with the new Currency datatype.");
+        }
+
+        [Obsolete("Should transition to " + nameof(_GetCurrencyCount))]
         public int GetCurrencyCount(CurrencyImport toGet)
         {
             if (this.CurrencyCounts.TryGetValue(toGet, out int value))
@@ -328,7 +336,14 @@ namespace SFDDCards
             return 0;
         }
 
-        public void ModCurrency(CurrencyImport toAward, int amount)
+        public void _ModCurrency(SpaceDeck.Models.Instances.Currency toAward, int amount)
+        {
+            // TODO
+            throw new NotImplementedException("_ModCurrency is not yet implemented with the new Currency datatype.");
+        }
+
+        [Obsolete("Should transition to " + nameof(_ModCurrency))]
+        public void ModCurrency(SFDDCards.ImportModels.CurrencyImport toAward, int amount)
         {
             if (this.CurrencyCounts.TryGetValue(toAward, out int existingValue))
             {
@@ -342,6 +357,13 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }
 
+        public void _SetCurrency(SpaceDeck.Models.Instances.Currency toSet, int amount)
+        {
+            // TODO
+            throw new NotImplementedException("_SetCurrency is not yet implemented with the new Currency datatype.");
+        }
+
+        [Obsolete("Should transition to " + nameof(_SetCurrency))]
         public void SetCurrency(CurrencyImport toSet, int amount)
         {
             if (this.CurrencyCounts.TryGetValue(toSet, out int existingValue))
@@ -375,7 +397,7 @@ namespace SFDDCards
                     GlobalUpdateUX.LogTextEvent.Invoke($"The cost of a shop item could not be evaluated.", GlobalUpdateUX.LogType.RuntimeError);
                 }
 
-                this.ModCurrency(cost.Currency, -shopCostAmount);
+                this.ModCurrency(cost.CurrencyType, -shopCostAmount);
             }
         }
 
@@ -388,7 +410,7 @@ namespace SFDDCards
                     return false;
                 }
 
-                int amountInPossession = GetCurrencyCount(cost.Currency);
+                int amountInPossession = GetCurrencyCount(cost.CurrencyType);
 
                 if (amountInPossession < costAmount)
                 {
@@ -433,7 +455,7 @@ namespace SFDDCards
             }
             else if (toGain.GainedCurrency != null)
             {
-                this.ModCurrency(toGain.GainedCurrency, gainedAmount);
+                this._ModCurrency(toGain.GainedCurrency, gainedAmount);
             }
 
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
@@ -441,7 +463,7 @@ namespace SFDDCards
 
         public List<ShopCost> GetPriceForItem(IGainable toShopFor)
         {
-            Dictionary<CurrencyImport, IEvaluatableValue<int>> costs = new Dictionary<CurrencyImport, IEvaluatableValue<int>>();
+            Dictionary<Currency, IEvaluatableValue<int>> costs = new Dictionary<Currency, IEvaluatableValue<int>>();
 
             foreach (CostEvaluationModifier modifier in this.OnRoute.BasedOn.CostModifiers)
             {
@@ -450,7 +472,7 @@ namespace SFDDCards
                     continue;
                 }
 
-                CurrencyImport referencedCurrency = CurrencyDatabase.GetModel(modifier.Currency);
+                Currency referencedCurrency = CurrencyDatabase.Get(modifier.Currency);
                 int valueToReplace = 0;
 
                 if (costs.TryGetValue(referencedCurrency, out IEvaluatableValue<int> currentValue))
@@ -480,9 +502,9 @@ namespace SFDDCards
             }
 
             List<ShopCost> costsAsShopCost = new List<ShopCost>();
-            foreach (CurrencyImport key in costs.Keys)
+            foreach (Currency key in costs.Keys)
             {
-                costsAsShopCost.Add(new ShopCost() { Amount = costs[key], Currency = key });
+                costsAsShopCost.Add(new ShopCost() { Amount = costs[key], _CurrencyType = key });
             }
 
             return costsAsShopCost;

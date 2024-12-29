@@ -11,7 +11,7 @@ namespace SFDDCards.ImportModels
 
     public class StartingCurrency
     {
-        public string CurrencyName;
+        public string CurrencyId;
         public int StartingAmount;
     }
 }

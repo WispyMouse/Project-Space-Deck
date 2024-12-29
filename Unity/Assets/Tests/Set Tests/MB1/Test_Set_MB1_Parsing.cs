@@ -12,6 +12,8 @@
     using SFDDCards.ImportModels;
     using static SFDDCards.Tests.EditMode.EditModeTestCommon;
     using UnityEngine.TestTools;
+    using SpaceDeck.Models.Imports;
+    using SpaceDeck.Models.Databases;
 
     public class Test_Set_MB1_Parsing
     {
@@ -83,16 +85,16 @@
                 switch (dependentFile.ParseKind)
                 {
                     case ParseKind.Card:
-                        CardDatabase.AddCardToDatabase(ImportHelper.GetFile<CardImport>(dependentFile.TypelessFilepath + ".cardimport"));
+                        SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<CardImport>(dependentFile.TypelessFilepath + ".cardimport"));
                         break;
                     case ParseKind.StatusEffect:
-                        StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(dependentFile.TypelessFilepath + ".statusimport"));
+                        SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(dependentFile.TypelessFilepath + ".statusimport"));
                         break;
                     case ParseKind.Element:
                         ElementDatabase.AddElement(ImportHelper.GetFile<ElementImport>(dependentFile.TypelessFilepath + ".elementimport"));
                         break;
                     case ParseKind.Currency:
-                        CurrencyDatabase.AddCurrencyToDatabase(ImportHelper.GetFile<CurrencyImport>(dependentFile.TypelessFilepath + ".currencyimport"));
+                        CurrencyDatabase.AddCurrencyToDatabase(ImportHelper.GetFile<SpaceDeck.Models.Imports.CurrencyImport>(dependentFile.TypelessFilepath + ".currencyimport"));
                         break;
                 }
 
@@ -109,10 +111,10 @@
                 switch (parseTestCandidate.ParseKind)
                 {
                     case ParseKind.Card:
-                        CardDatabase.AddCardToDatabase(ImportHelper.GetFile<CardImport>(RootPath + "card/" + parseTestCandidate.Id + ".cardimport"));
+                        SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<CardImport>(RootPath + "card/" + parseTestCandidate.Id + ".cardimport"));
                         break;
                     case ParseKind.StatusEffect:
-                        StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(RootPath + "statuseffect/" + parseTestCandidate.Id + ".statusimport"));
+                        SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(RootPath + "statuseffect/" + parseTestCandidate.Id + ".statusimport"));
                         break;
                 }
 
@@ -138,10 +140,10 @@
             switch (testData.ParseKind)
             {
                 case ParseKind.Card:
-                    EditModeTestCommon.AssertCardParsing(CardDatabase.GetModel(testData.Id), testData.ExpectedParsedValue, ReactionWindowContext.LookingNotPlayingContext);
+                    EditModeTestCommon.AssertCardParsing(SFDDCards.CardDatabase.GetModel(testData.Id), testData.ExpectedParsedValue, ReactionWindowContext.LookingNotPlayingContext);
                     break;
                 case ParseKind.StatusEffect:
-                    EditModeTestCommon.AssertStatusEffectParsing(StatusEffectDatabase.GetModel(testData.Id), testData.ExpectedParsedValue);
+                    EditModeTestCommon.AssertStatusEffectParsing(SFDDCards.StatusEffectDatabase.GetModel(testData.Id), testData.ExpectedParsedValue);
                     break;
             }
         }
@@ -159,7 +161,7 @@
             combatContext.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
-            Card resonate = CardDatabase.GetModel("mb1_card_starter_resonate");
+            Card resonate = SFDDCards.CardDatabase.GetModel("mb1_card_starter_resonate");
             combatContext.PlayerCombatDeck.CardsCurrentlyInHand.Add(resonate);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
@@ -182,7 +184,7 @@
             combatContext.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
-            Card resonate = CardDatabase.GetModel("mb1_card_starter_resonate");
+            Card resonate = SFDDCards.CardDatabase.GetModel("mb1_card_starter_resonate");
             combatContext.PlayerCombatDeck.CardsCurrentlyInHand.Add(resonate);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
@@ -205,7 +207,7 @@
             combatContext.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
-            Card fueldByPassion = CardDatabase.GetModel("mb1_card_common_fueledbypassion");
+            Card fueldByPassion = SFDDCards.CardDatabase.GetModel("mb1_card_common_fueledbypassion");
             combatContext.PlayerCombatDeck.CardsCurrentlyInHand.Add(fueldByPassion);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
@@ -228,7 +230,7 @@
             combatContext.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
-            Card strike = CardDatabase.GetModel("mb1_card_starter_strike");
+            Card strike = SFDDCards.CardDatabase.GetModel("mb1_card_starter_strike");
             combatContext.PlayerCombatDeck.CardsCurrentlyInHand.Add(strike);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
@@ -251,7 +253,7 @@
             combatContext.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
-            Card strike = CardDatabase.GetModel("mb1_card_starter_strike");
+            Card strike = SFDDCards.CardDatabase.GetModel("mb1_card_starter_strike");
             combatContext.PlayerCombatDeck.CardsCurrentlyInHand.Add(strike);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
@@ -277,7 +279,7 @@
             combatContext.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 
-            Card burnARecord = CardDatabase.GetModel("mb1_card_common_burnarecord");
+            Card burnARecord = SFDDCards.CardDatabase.GetModel("mb1_card_common_burnarecord");
             combatContext.PlayerCombatDeck.CardsCurrentlyInHand.Add(burnARecord);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);
 

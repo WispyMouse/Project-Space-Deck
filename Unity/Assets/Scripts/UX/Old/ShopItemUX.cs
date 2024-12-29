@@ -57,7 +57,7 @@ namespace SFDDCards.UX
             else if (toRepresent.GainedCurrency != null)
             {
                 RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                rewardCurrency.SetFromCurrency(toRepresent.GainedCurrency, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
+                rewardCurrency._SetFromCurrency(toRepresent.GainedCurrency, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
             }
         }
 
@@ -84,7 +84,7 @@ namespace SFDDCards.UX
                     continue;
                 }
 
-                compositeCurrencies.Append($"{startingSeparator}{costAmount.ToString()}\u00A0{cost.Currency.GetNameAndMaybeIcon()}");
+                compositeCurrencies.Append($"{startingSeparator}{costAmount.ToString()}\u00A0{cost.CurrencyType.GetNameAndMaybeIcon()}");
                 startingSeparator = ", ";
             }
             this.CostsLabel.text = compositeCurrencies.ToString();

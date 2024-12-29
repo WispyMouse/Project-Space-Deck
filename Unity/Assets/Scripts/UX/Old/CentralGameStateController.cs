@@ -3,7 +3,9 @@ namespace SFDDCards.UX
     using SFDDCards.ImportModels;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Imports;
+    using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -56,12 +58,12 @@ namespace SFDDCards.UX
         {
             SynchronizationContext currentContext = SynchronizationContext.Current;
 
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<CurrencyImport>(Application.streamingAssetsPath, "currencyImport", CurrencyDatabase.AddCurrencyToDatabase, currentContext));
-            foreach (CurrencyImport currency in CurrencyDatabase.CurrencyData.Values)
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.CurrencyImport>(Application.streamingAssetsPath, "currencyImport", CurrencyDatabase.AddCurrencyToDatabase, currentContext));
+            foreach (Currency currency in CurrencyDatabase.CurrencyData.Values)
             {
-                if (currency.CurrencyArt != null)
+                if (SpriteLookup.TryGetSprite(currency.Id, out Sprite foundSprite))
                 {
-                    int spriteIndex = this.TextMeshProSpriteControllerInstance.AddSprite(currency.CurrencyArt);
+                    int spriteIndex = this.TextMeshProSpriteControllerInstance.AddSprite(foundSprite);
                     currency.SpriteIndex = spriteIndex;
                 }
             }
@@ -99,7 +101,7 @@ namespace SFDDCards.UX
 
             foreach (StartingCurrency startingCurrency in route.StartingCurrencies)
             {
-                this.CurrentCampaignContext.ModCurrency(CurrencyDatabase.GetModel(startingCurrency.CurrencyName), startingCurrency.StartingAmount);
+                this.CurrentCampaignContext._ModCurrency(CurrencyDatabase.Get(startingCurrency.CurrencyId), startingCurrency.StartingAmount);
             }
 
             this.UXController.PlacePlayerCharacter();

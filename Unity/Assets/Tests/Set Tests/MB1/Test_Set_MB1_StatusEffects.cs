@@ -4,6 +4,7 @@ namespace SFDDCards.Tests.EditMode
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Imports;
     using System;
     using System.Collections;
     using System.Collections.Generic;

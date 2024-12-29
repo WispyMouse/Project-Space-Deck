@@ -1,14 +1,13 @@
-namespace SFDDCards
+namespace SpaceDeck.Models.Imports
 {
-    using SFDDCards.ImportModels;
-    using SpaceDeck.Models.Imports;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
+    using System.Threading;
+    using SpaceDeck.Models.Imports;
+    using System.Collections;
     using UnityEngine;
+    using System.IO;
 
     public static class ImportHelper
     {

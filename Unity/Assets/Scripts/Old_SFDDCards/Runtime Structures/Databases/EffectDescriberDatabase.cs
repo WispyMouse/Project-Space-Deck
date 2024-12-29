@@ -5,6 +5,8 @@ namespace SFDDCards
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Databases;
+    using SpaceDeck.Models.Instances;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -262,7 +264,7 @@ namespace SFDDCards
                     break;
                 }
 
-                if (CurrencyDatabase.TryGetModel(nextMatch.Groups[1].Value, out CurrencyImport foundCurrency))
+                if (CurrencyDatabase.TryGet(nextMatch.Groups[1].Value, out Currency foundCurrency))
                 {
                     resultingString = resultingString.Replace(nextMatch.Value, foundCurrency.GetNameAndMaybeIcon());
                 }

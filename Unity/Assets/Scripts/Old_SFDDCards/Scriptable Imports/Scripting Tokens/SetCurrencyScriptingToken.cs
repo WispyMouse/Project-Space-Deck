@@ -3,6 +3,7 @@ namespace SFDDCards.ScriptingTokens
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.Evaluation.Conceptual;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Databases;
     using System.Collections.Generic;
 
     public class SetCurrencyScriptingToken : BaseScriptingToken, IRealizedOperationScriptingToken
@@ -17,7 +18,7 @@ namespace SFDDCards.ScriptingTokens
             int amount;
             this.Amount.TryEvaluateValue(applyingDuringEntry.FromCampaign, applyingDuringEntry.MadeFromBuilder, out amount);
 
-            applyingDuringEntry.FromCampaign.SetCurrency(CurrencyDatabase.GetModel(this.CurrencyToMod), amount);
+            applyingDuringEntry.FromCampaign._SetCurrency(CurrencyDatabase.Get(this.CurrencyToMod), amount);
             stackedDeltas = null;
         }
 
@@ -28,12 +29,12 @@ namespace SFDDCards.ScriptingTokens
 
         public string DescribeOperationAsEffect(ConceptualDeltaEntry delta, string reactionWindowId)
         {
-            return $"Sets {CurrencyDatabase.GetModel(this.CurrencyToMod).GetNameAndMaybeIcon()} to {this.Amount.DescribeEvaluation()}";
+            return $"Sets {CurrencyDatabase.Get(this.CurrencyToMod).GetNameAndMaybeIcon()} to {this.Amount.DescribeEvaluation()}";
         }
 
         public string DescribeOperationAsEffect(TokenEvaluatorBuilder builder)
         {
-            return $"Sets {CurrencyDatabase.GetModel(this.CurrencyToMod).GetNameAndMaybeIcon()} to {this.Amount.DescribeEvaluation()}";
+            return $"Sets {CurrencyDatabase.Get(this.CurrencyToMod).GetNameAndMaybeIcon()} to {this.Amount.DescribeEvaluation()}";
         }
 
         protected override bool TryGetTokenWithArguments(List<string> arguments, out IScriptingToken scriptingToken)

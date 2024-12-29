@@ -2,6 +2,7 @@ namespace SFDDCards
 {
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Instances;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
@@ -10,7 +11,7 @@ namespace SFDDCards
     {
         public StatusEffect GainedEffect { get; set; }
         public Card GainedCard { get; set; }
-        public CurrencyImport GainedCurrency { get; set; }
+        public Currency GainedCurrency { get; set; }
 
         public IEvaluatableValue<int> GainedAmount { get; set; }
 

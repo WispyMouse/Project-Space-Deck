@@ -9,6 +9,7 @@ namespace SFDDCards.ImportModels
     using System.Threading.Tasks;
     using UnityEngine;
 
+    [Obsolete("Should transition to " + nameof(SpaceDeck.Models.Imports.CurrencyImport))]
     [Serializable]
     public class CurrencyImport : Importable
     {

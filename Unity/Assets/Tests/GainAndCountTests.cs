@@ -3,6 +3,8 @@ namespace SFDDCards.Tests.EditMode
     using NUnit.Framework;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
+    using SpaceDeck.Models.Databases;
+    using SpaceDeck.Models.Instances;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -37,8 +39,8 @@ namespace SFDDCards.Tests.EditMode
                 EffectScript = $"[SETTARGET: FOE][DAMAGE: COUNTELEMENT_{DebugElementOne.Id}]"
             };
 
-            CardDatabase.AddCardToDatabase(import);
-            Card testGainCard = CardDatabase.GetModel(import.Id);
+            SFDDCards.CardDatabase.AddCardToDatabase(import);
+            Card testGainCard = SFDDCards.CardDatabase.GetModel(import.Id);
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
             CampaignContext campaignContext = EditModeTestCommon.GetBlankCampaignContext();
@@ -69,8 +71,8 @@ namespace SFDDCards.Tests.EditMode
                 EffectScript = $"[LOGINT: COUNTCURRENCY_CURRENCY_DOESNOTEXIST]"
             };
 
-            CardDatabase.AddCardToDatabase(import);
-            Card testGainCard = CardDatabase.GetModel(import.Id);
+            SFDDCards.CardDatabase.AddCardToDatabase(import);
+            Card testGainCard = SFDDCards.CardDatabase.GetModel(import.Id);
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
             CampaignContext campaignContext = EditModeTestCommon.GetBlankCampaignContext();
@@ -93,7 +95,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void CountCurrency_Ten()
         {
-            CurrencyDatabase.AddCurrencyToDatabase(new CurrencyImport() { Id = "TESTCURRENCY", Name = "TESTCURRENCY" });
+            CurrencyDatabase.AddCurrencyToDatabase(new Currency("TESTCURRENCY", "TESTCURRENCY"));
 
             CardImport import = new CardImport()
             {
@@ -102,14 +104,14 @@ namespace SFDDCards.Tests.EditMode
                 EffectScript = $"[LOGINT: COUNTCURRENCY_TESTCURRENCY]"
             };
 
-            CardDatabase.AddCardToDatabase(import);
-            Card testGainCard = CardDatabase.GetModel(import.Id);
+            SFDDCards.CardDatabase.AddCardToDatabase(import);
+            Card testGainCard = SFDDCards.CardDatabase.GetModel(import.Id);
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
             CampaignContext campaignContext = EditModeTestCommon.GetBlankCampaignContext();
             campaignContext.StartNextRoomFromEncounter(new EvaluatedEncounter(testEncounter));
 
-            campaignContext.SetCurrency(CurrencyDatabase.GetModel("TESTCURRENCY"), 10);
+            campaignContext._SetCurrency(CurrencyDatabase.Get("TESTCURRENCY"), 10);
 
             CombatContext combatContext = campaignContext.CurrentCombatContext;
             combatContext.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn);
@@ -127,7 +129,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void ModCurrency_Ten()
         {
-            CurrencyDatabase.AddCurrencyToDatabase(new CurrencyImport() { Id = "TESTCURRENCY", Name = "TESTCURRENCY" });
+            CurrencyDatabase.AddCurrencyToDatabase(new Currency("TESTCURRENCY", "TESTCURRENCY"));
 
             CardImport import = new CardImport()
             {
@@ -143,11 +145,11 @@ namespace SFDDCards.Tests.EditMode
                 EffectScript = "[MODCURRENCY: 10 TESTCURRENCY]"
             };
 
-            CardDatabase.AddCardToDatabase(import);
-            Card testGainCard = CardDatabase.GetModel(import.Id);
+            SFDDCards.CardDatabase.AddCardToDatabase(import);
+            Card testGainCard = SFDDCards.CardDatabase.GetModel(import.Id);
 
-            CardDatabase.AddCardToDatabase(modCurrencyImport);
-            Card modCurrencyCard = CardDatabase.GetModel(modCurrencyImport.Id);
+            SFDDCards.CardDatabase.AddCardToDatabase(modCurrencyImport);
+            Card modCurrencyCard = SFDDCards.CardDatabase.GetModel(modCurrencyImport.Id);
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
             CampaignContext campaignContext = EditModeTestCommon.GetBlankCampaignContext();
@@ -172,7 +174,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void SetCurrency_Ten()
         {
-            CurrencyDatabase.AddCurrencyToDatabase(new CurrencyImport() { Id = "TESTCURRENCY", Name = "TESTCURRENCY" });
+            CurrencyDatabase.AddCurrencyToDatabase(new Currency("TESTCURRENCY", "TESTCURRENCY"));
 
             CardImport import = new CardImport()
             {
@@ -188,11 +190,11 @@ namespace SFDDCards.Tests.EditMode
                 EffectScript = "[SETCURRENCY: 10 TESTCURRENCY]"
             };
 
-            CardDatabase.AddCardToDatabase(import);
-            Card testGainCard = CardDatabase.GetModel(import.Id);
+            SFDDCards.CardDatabase.AddCardToDatabase(import);
+            Card testGainCard = SFDDCards.CardDatabase.GetModel(import.Id);
 
-            CardDatabase.AddCardToDatabase(modCurrencyImport);
-            Card modCurrencyCard = CardDatabase.GetModel(modCurrencyImport.Id);
+            SFDDCards.CardDatabase.AddCardToDatabase(modCurrencyImport);
+            Card modCurrencyCard = SFDDCards.CardDatabase.GetModel(modCurrencyImport.Id);
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
             CampaignContext campaignContext = EditModeTestCommon.GetBlankCampaignContext();

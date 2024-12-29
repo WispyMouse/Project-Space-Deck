@@ -69,7 +69,7 @@ namespace SFDDCards.UX
                 else if (slot.GainedCurrency != null)
                 {
                     RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                    rewardCurrency.SetFromCurrency(slot.GainedCurrency, (RewardCurrencyUX currency) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
+                    rewardCurrency._SetFromCurrency(slot.GainedCurrency, (RewardCurrencyUX currency) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
                 }
             }
         }
