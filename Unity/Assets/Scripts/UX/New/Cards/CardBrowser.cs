@@ -138,7 +138,7 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            if (!toHandle._CardsToShow.TryEvaluate(mutator, out List<CardInstance> evaluatedCards))
+            if (!toHandle._CardsToShow.TryEvaluate(mutator, out IReadOnlyList<CardInstance> evaluatedCards))
             {
                 GlobalUpdateUX.LogTextEvent.Invoke($"Failed to evaluate card zone for browser choice.", GlobalUpdateUX.LogType.RuntimeError);
                 return;

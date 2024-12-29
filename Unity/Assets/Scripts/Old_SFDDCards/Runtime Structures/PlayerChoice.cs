@@ -18,13 +18,20 @@ namespace SFDDCards
         [Obsolete("Transition to " + nameof(_DescribeChoice))]
         public abstract string DescribeChoice(CampaignContext campaignContext, TokenEvaluatorBuilder currentEvaluator);
         public abstract string _DescribeChoice(IGameStateMutator mutator);
+        [Obsolete("Transition to " + nameof(_TryFinalizeWithoutPlayerInput))]
         public abstract bool TryFinalizeWithoutPlayerInput(DeltaEntry toApplyTo);
+        public abstract bool _TryFinalizeWithoutPlayerInput(IGameStateMutator mutator);
     }
 
     public abstract class PlayerChoice<T> : PlayerChoice
     {
         public T ChosenResult { get; private set; }
         public virtual void SetChoice(DeltaEntry toApplyTo, T result)
+        {
+            this.ChosenResult = result;
+            this.ResultIsChosen = true;
+        }
+        public virtual void _SetChoice(IGameStateMutator mutator, T result)
         {
             this.ChosenResult = result;
             this.ResultIsChosen = true;

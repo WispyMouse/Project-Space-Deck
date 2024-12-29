@@ -1,6 +1,8 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
     using SFDDCards.Evaluation.Actual;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
     using System;
     using System.Collections;
@@ -25,6 +27,7 @@ namespace SFDDCards.UX
             GlobalUpdateUX.PlayerMustMakeChoice.RemoveListener(HandlePlayerChoice);
         }
 
+        [Obsolete("Transition to " + nameof(_HandlePlayerChoice))]
         void HandlePlayerChoice(DeltaEntry fromDelta, PlayerChoice toHandle, Action continuationAction)
         {
             if (toHandle is PlayerChooseFromCardBrowser cardBrowser)
@@ -32,9 +35,26 @@ namespace SFDDCards.UX
                 this.CardBrowserUX.SetFromCardBrowserChoice(fromDelta, cardBrowser, 
                     (List<Card> chosenCards) =>
                 {
-                    cardBrowser.SetChoice(fromDelta, chosenCards);
+                    // TODO: Dismantle
+                    // cardBrowser.SetChoice(fromDelta, chosenCards);
                     continuationAction?.Invoke();
                 });
+                return;
+            }
+
+            GlobalUpdateUX.LogTextEvent.Invoke($"Failed to parse player choice using the controller.", GlobalUpdateUX.LogType.RuntimeError);
+        }
+
+        void _HandlePlayerChoice(IGameStateMutator mutator, PlayerChoice toHandle, Action continuationAction)
+        {
+            if (toHandle is PlayerChooseFromCardBrowser cardBrowser)
+            {
+                this.CardBrowserUX._SetFromCardBrowserChoice(mutator, cardBrowser,
+                    (List<CardInstance> chosenCards) =>
+                    {
+                        cardBrowser._SetChoice(mutator, chosenCards);
+                        continuationAction?.Invoke();
+                    });
                 return;
             }
 

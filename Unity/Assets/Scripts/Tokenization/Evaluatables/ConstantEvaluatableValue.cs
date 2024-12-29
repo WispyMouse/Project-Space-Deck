@@ -20,13 +20,14 @@ namespace SpaceDeck.Tokenization.Evaluatables
     /// <see cref="Constant"/> might be null, though.
     /// </summary>
     /// <typeparam name="T">The type this represents.</typeparam>
-    public class ConstantEvaluatableValue<T> : IEvaluatableValue<T>
+    public class ConstantEvaluatableValue<T> : IConstantEvaluatableValue<T>
     {
-        public readonly T Constant;
+        public T Constant => this._Constant;
+        private readonly T _Constant;
 
         public ConstantEvaluatableValue(T constant)
         {
-            this.Constant = constant;
+            this._Constant = constant;
         }
 
         public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken) => Array.Empty<ExecutionQuestion>();

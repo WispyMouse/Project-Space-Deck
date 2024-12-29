@@ -51,7 +51,8 @@ namespace SFDDCards.Tests.EditMode
                     Assert.Contains(playerHandCard, cardsShown, "Expected that all cards in the player's hand are present in the displayed browser.");
                 }
 
-                castChoice.SetChoice(applyTo, new List<Card>() { cardsShown[0] });
+                // TODO: Dismantle
+                // castChoice.SetChoice(applyTo, new List<Card>() { cardsShown[0] });
                 continuationAction.Invoke();
             };
 

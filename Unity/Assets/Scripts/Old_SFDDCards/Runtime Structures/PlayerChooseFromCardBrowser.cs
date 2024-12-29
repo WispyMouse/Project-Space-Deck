@@ -12,22 +12,23 @@ namespace SFDDCards
     using System.Text;
     using UnityEngine;
 
-    public class PlayerChooseFromCardBrowser : PlayerChoice<List<Card>>
+    public class PlayerChooseFromCardBrowser : PlayerChoice<List<CardInstance>>
     {
         [Obsolete("Transition to " + nameof(_CardsToShow))]
         public PromisedCardsEvaluatableValue CardsToShow;
-        public SpaceDeck.Tokenization.Evaluatables.IEvaluatableValue<List<CardInstance>> _CardsToShow;
+        public SpaceDeck.Tokenization.Evaluatables.CardsEvaluatableValue _CardsToShow;
         [Obsolete("Transition to " + nameof(_NumberOfCardsToChoose))]
         public IEvaluatableValue<int> NumberOfCardsToChoose;
         public SpaceDeck.Tokenization.Evaluatables.INumericEvaluatableValue _NumberOfCardsToChoose;
 
+        [Obsolete("Transition to constructor using SpaceDeck namespace.")]
         public PlayerChooseFromCardBrowser(PromisedCardsEvaluatableValue cardsToShow, IEvaluatableValue<int> numberOfCards)
         {
             this.CardsToShow = cardsToShow;
             this.NumberOfCardsToChoose = numberOfCards;
         }
 
-        public PlayerChooseFromCardBrowser(SpaceDeck.Tokenization.Evaluatables.IEvaluatableValue<List<CardInstance>> cardsToShow, SpaceDeck.Tokenization.Evaluatables.INumericEvaluatableValue numberOfCards)
+        public PlayerChooseFromCardBrowser(SpaceDeck.Tokenization.Evaluatables.CardsEvaluatableValue cardsToShow, SpaceDeck.Tokenization.Evaluatables.INumericEvaluatableValue numberOfCards)
         {
             this._CardsToShow = cardsToShow;
             this._NumberOfCardsToChoose = numberOfCards;
@@ -56,10 +57,16 @@ namespace SFDDCards
             return $"Choose {numberOfCards} cards from {_CardsToShow.Describe()}";
         }
 
-        public override void SetChoice(DeltaEntry toApplyTo, List<Card> result)
+        [Obsolete("Transition to the SetChoice with the new namespace")]
+        public override void SetChoice(DeltaEntry toApplyTo, List<CardInstance> result)
         {
-            base.SetChoice(toApplyTo, result);
-            this.CardsToShow.InnerValue = new SpecificCardsEvaluatableValue(result);
+            throw new Exception("Cannot use this version of the choice anymore.");
+        }
+
+        public override void _SetChoice(IGameStateMutator mutator, List<CardInstance> result)
+        {
+            base._SetChoice(mutator, result);
+            this._CardsToShow = new SpaceDeck.Tokenization.Evaluatables.ConstantCardsEvaluatableValue(result);
         }
 
         public override bool TryFinalizeWithoutPlayerInput(DeltaEntry toApplyTo)
@@ -72,17 +79,30 @@ namespace SFDDCards
             if (this.CardsToShow.InnerValue == null && this.CardsToShow.SampledPool != null && numberOfCards >= this.CardsToShow.SampledPool.RepresentingNumberOfCards(toApplyTo) && this.CardsToShow.SampledPool.TryEvaluateValue(toApplyTo.FromCampaign, toApplyTo.MadeFromBuilder, out List<Card> chosenCards))
             {
                 this.CardsToShow.InnerValue = new SpecificCardsEvaluatableValue(chosenCards);
-                this.SetChoice(toApplyTo, chosenCards);
+                // TODO: DISMANTLE
+                // this.SetChoice(toApplyTo, chosenCards);
                 return true;
             }
 
             if (this.CardsToShow.InnerValue != null && numberOfCards >= this.CardsToShow.InnerValue.RepresentingNumberOfCards(toApplyTo) && this.CardsToShow.InnerValue.TryEvaluateValue(toApplyTo.FromCampaign, toApplyTo.MadeFromBuilder, out chosenCards))
             {
                 this.CardsToShow.InnerValue = new SpecificCardsEvaluatableValue(chosenCards);
-                this.SetChoice(toApplyTo, chosenCards);
+                // TODO: DISMANTLE
+                // this.SetChoice(toApplyTo, chosenCards);
                 return true;
             }
 
+            return false;
+        }
+
+        public override bool _TryFinalizeWithoutPlayerInput(IGameStateMutator mutator)
+        {
+            if (!this._NumberOfCardsToChoose.TryEvaluate(mutator, out decimal numberOfCards))
+            {
+                return false;
+            }
+
+            // TODO: Determine if the number of picks remaining equals or exceeds the number of cards, then auto pick them all
             return false;
         }
     }
