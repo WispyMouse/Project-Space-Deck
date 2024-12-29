@@ -1210,11 +1210,11 @@ namespace SFDDCards
             builder.Intensity.TryEvaluateValue(builder.Campaign, builder, out mod);
             if (mod > 0)
             {
-                return $"Gain {mod} {builder.Currency.GetNameAndMaybeIcon()}";
+                return $"Gain {mod} {SpriteLookup.GetNameAndMaybeIcon(builder._Currency)}";
             }
             else
             {
-                return $"Lose {mod} {builder.Currency.GetNameAndMaybeIcon()}";
+                return $"Lose {mod} {SpriteLookup.GetNameAndMaybeIcon(builder._Currency)}";
             }
         }
 
@@ -1224,11 +1224,11 @@ namespace SFDDCards
             delta.ConceptualIntensity.TryEvaluateValue(delta.FromCampaign, delta.MadeFromBuilder, out mod);
             if (mod > 0)
             {
-                return $"Gained {mod} {delta.MadeFromBuilder.Currency.GetNameAndMaybeIcon()}";
+                return $"Gained {mod} {SpriteLookup.GetNameAndMaybeIcon(delta.MadeFromBuilder._Currency)}";
             }
             else
             {
-                return $"Lost {mod} {delta.MadeFromBuilder.Currency.GetNameAndMaybeIcon()}";
+                return $"Lost {mod} {SpriteLookup.GetNameAndMaybeIcon(delta.MadeFromBuilder._Currency)}";
             }
         }
 

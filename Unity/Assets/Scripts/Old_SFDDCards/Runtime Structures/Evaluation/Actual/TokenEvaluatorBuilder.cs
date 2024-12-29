@@ -4,6 +4,7 @@ namespace SFDDCards.Evaluation.Actual
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -49,7 +50,12 @@ namespace SFDDCards.Evaluation.Actual
         public List<IRequirement> Requirements => this.BasedOnConcept.Requirements;
 
         public StatusEffect StatusEffect => this.BasedOnConcept.StatusEffect;
+
+        /// <summary>
+        /// TODO: This is crossing the streams. We don't want to carry over this token builder, so this is just here to make stuff compile with a breadcrumb trail.
+        /// </summary>
         public CurrencyImport Currency => this.BasedOnConcept.Currency;
+        public Currency _Currency => this.BasedOnConcept._Currency;
 
         public List<Action<DeltaEntry>> ActionsToExecute => this.BasedOnConcept.ActionsToExecute;
         public TokenEvaluatorBuilder PreviousTokenBuilder = null;

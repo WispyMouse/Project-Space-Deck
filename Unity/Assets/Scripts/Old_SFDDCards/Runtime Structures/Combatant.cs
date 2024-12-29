@@ -118,7 +118,7 @@ namespace SFDDCards
             }
             else if (deltaEntry.IntensityKindType == TokenEvaluatorBuilder.IntensityKind.CurrencyMod)
             {
-                campaignContext.ModCurrency(deltaEntry.MadeFromBuilder.Currency, evaluatedIntensity);
+                campaignContext._ModCurrency(deltaEntry.MadeFromBuilder._Currency, evaluatedIntensity);
             }
 
             GlobalUpdateUX.UpdateUXEvent.Invoke(campaignContext);

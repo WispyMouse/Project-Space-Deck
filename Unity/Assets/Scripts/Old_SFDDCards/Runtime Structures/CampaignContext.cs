@@ -51,7 +51,9 @@ namespace SFDDCards
         private readonly Dictionary<IReactionWindowReactor, HashSet<ReactionWindowSubscription>> ReactorsToSubscriptions = new Dictionary<IReactionWindowReactor, HashSet<ReactionWindowSubscription>>();
         private readonly Dictionary<string, List<ReactionWindowSubscription>> WindowsToReactors = new Dictionary<string, List<ReactionWindowSubscription>>();
 
+        [Obsolete("Should transition to " + nameof(_CurrencyCounts))]
         public Dictionary<CurrencyImport, int> CurrencyCounts = new Dictionary<CurrencyImport, int>();
+        public Dictionary<Currency, int> _CurrencyCounts = new Dictionary<Currency, int>();
         public Reward PendingRewards { get; set; } = null;
 
         public CampaignContext(CampaignRoute onRoute)
@@ -322,7 +324,12 @@ namespace SFDDCards
 
         public int _GetCurrencyCount(Currency toGet)
         {
-            throw new NotImplementedException("_GetCurrencyCount is not yet implemented with the new Currency datatype.");
+            if (this._CurrencyCounts.TryGetValue(toGet, out int value))
+            {
+                return value;
+            }
+
+            return 0;
         }
 
         [Obsolete("Should transition to " + nameof(_GetCurrencyCount))]
@@ -338,8 +345,16 @@ namespace SFDDCards
 
         public void _ModCurrency(Currency toAward, int amount)
         {
-            // TODO
-            throw new NotImplementedException("_ModCurrency is not yet implemented with the new Currency datatype.");
+            if (this._CurrencyCounts.TryGetValue(toAward, out int existingValue))
+            {
+                this._CurrencyCounts[toAward] = Mathf.Max(0, existingValue + amount);
+            }
+            else
+            {
+                this._CurrencyCounts.Add(toAward, Mathf.Max(0, amount));
+            }
+
+            GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }
 
         [Obsolete("Should transition to " + nameof(_ModCurrency))]
@@ -359,8 +374,16 @@ namespace SFDDCards
 
         public void _SetCurrency(Currency toSet, int amount)
         {
-            // TODO
-            throw new NotImplementedException("_SetCurrency is not yet implemented with the new Currency datatype.");
+            if (this._CurrencyCounts.TryGetValue(toSet, out int existingValue))
+            {
+                this._CurrencyCounts[toSet] = Mathf.Max(0, amount);
+            }
+            else
+            {
+                this._CurrencyCounts.Add(toSet, Mathf.Max(0, amount));
+            }
+
+            GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }
 
         [Obsolete("Should transition to " + nameof(_SetCurrency))]
