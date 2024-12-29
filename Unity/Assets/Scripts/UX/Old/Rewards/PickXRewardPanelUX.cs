@@ -1,5 +1,6 @@
 namespace SFDDCards.UX
 {
+    using SpaceDeck.Models.Imports;
     using System;
     using System.Collections;
     using System.Collections.Generic;

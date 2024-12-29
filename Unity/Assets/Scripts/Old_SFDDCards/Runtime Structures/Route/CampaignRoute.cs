@@ -1,5 +1,7 @@
 namespace SFDDCards
 {
+    using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -13,7 +15,7 @@ namespace SFDDCards
         public CampaignRoute(RunConfiguration runConfiguration, RouteImport basedOn)
         {
             this.BasedOn = basedOn;
-            RandomDecider<EncounterModel> decider = new DoNotRepeatRandomDecider<EncounterModel>();
+            RandomDecider<EncounterPrototype> decider = new DoNotRepeatRandomDecider<EncounterPrototype>();
 
             foreach (ChoiceNodeImport node in basedOn.RouteNodes)
             {

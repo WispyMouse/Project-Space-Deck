@@ -3,13 +3,15 @@ namespace SFDDCards
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.Models.Imports;
+    using SpaceDeck.Utility.Minimum;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
 
     public static class RewardDatabase
     {
-        public static Dictionary<string, RewardImport> RewardModels = new Dictionary<string, RewardImport>();
+        public static Dictionary<LowercaseString, RewardImport> RewardModels = new Dictionary<LowercaseString, RewardImport>();
 
         public static void AddRewardToDatabase(RewardImport toAdd)
         {

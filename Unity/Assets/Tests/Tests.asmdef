@@ -21,7 +21,8 @@
         "Utility.Minimum",
         "Utility.Wellknown",
         "Models.Databases",
-        "UX.AssetLookup"
+        "UX.AssetLookup",
+        "Models.Imports"
     ],
     "includePlatforms": [
         "Editor"

@@ -2,6 +2,7 @@ namespace SFDDCards
 {
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
+    using SpaceDeck.Utility.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;

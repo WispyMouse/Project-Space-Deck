@@ -1,10 +1,11 @@
 namespace SFDDCards
 {
     using SFDDCards.ImportModels;
+    using SpaceDeck.Models.Imports;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
-    using static SFDDCards.PickRewardImport;
+    using static SpaceDeck.Models.Imports.PickRewardImport;
 
     public class PickSomeReward
     {

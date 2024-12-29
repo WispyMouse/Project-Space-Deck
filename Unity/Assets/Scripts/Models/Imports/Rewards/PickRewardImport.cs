@@ -1,6 +1,5 @@
-namespace SFDDCards
+namespace SpaceDeck.Models.Imports
 {
-    using SFDDCards.ImportModels;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;

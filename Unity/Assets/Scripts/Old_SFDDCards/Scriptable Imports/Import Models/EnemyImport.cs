@@ -1,5 +1,6 @@
 namespace SFDDCards.ImportModels
 {
+    using SpaceDeck.Models.Imports;
     using System;
     using System.Collections.Generic;
 

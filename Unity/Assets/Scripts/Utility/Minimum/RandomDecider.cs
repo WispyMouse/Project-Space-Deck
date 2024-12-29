@@ -1,11 +1,8 @@
-namespace SFDDCards
+namespace SpaceDeck.Utility.Minimum
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using UnityEngine;
 
     public class RandomDecider<T>
     {
@@ -13,7 +10,7 @@ namespace SFDDCards
         {
             if (toChooseFrom.Count == 0)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"Cannot choose randomly from a list with no elements.", GlobalUpdateUX.LogType.RuntimeError);
+                // TODO: LOG
                 return default(T);
             }
 
@@ -21,7 +18,7 @@ namespace SFDDCards
 
             if (toChooseFrom.Count == 0)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"Elimination protocol eliminated all possibilities. Implementors should not do that.", GlobalUpdateUX.LogType.RuntimeError);
+                // TODO: LOG
                 return default(T);
             }
 
@@ -37,7 +34,7 @@ namespace SFDDCards
 
         protected virtual T ChooseOneRandomly(List<T> fromList)
         {
-            int randomIndex = UnityEngine.Random.Range(0, fromList.Count);
+            int randomIndex = new Random().Next(0, fromList.Count);
             return fromList[randomIndex];
         }
 

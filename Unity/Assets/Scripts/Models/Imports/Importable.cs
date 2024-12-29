@@ -1,10 +1,10 @@
-namespace SFDDCards.ImportModels
+namespace SpaceDeck.Models.Imports
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Threading;
-    using static SFDDCards.ImportModels.IImportable;
+    using SpaceDeck.Models.Imports;
 
     [System.Serializable]
     public abstract class Importable : IImportable

@@ -7,6 +7,7 @@ namespace SFDDCards.ImportModels
     using UnityEngine;
     using SpaceDeck.UX.AssetLookup;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Models.Imports;
 
     [Serializable]
     public class ElementImport : Importable

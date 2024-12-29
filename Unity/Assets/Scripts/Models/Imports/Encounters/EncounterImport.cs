@@ -7,9 +7,8 @@ namespace SpaceDeck.Models.Imports
     using SpaceDeck.Utility.Minimum;
 
     [System.Serializable]
-    public class EncounterImport
+    public class EncounterImport : Importable
     {
-        public string Id;
         public string Name;
         public string Description;
         public string[] Tags = Array.Empty<string>();

@@ -7,6 +7,7 @@ namespace SFDDCards.ImportModels
     using System.Threading;
     using UnityEngine;
     using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.Models.Imports;
 
     [Serializable]
     public class StatusEffectImport : Importable

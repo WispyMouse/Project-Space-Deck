@@ -1,5 +1,7 @@
 namespace SFDDCards
 {
+    using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -9,7 +11,7 @@ namespace SFDDCards
         public readonly ChoiceNodeImport BasedOn;
         public readonly List<ChoiceNodeOption> Options = new List<ChoiceNodeOption>();
 
-        public ChoiceNode(ChoiceNodeImport basedOn, RandomDecider<EncounterModel> decider)
+        public ChoiceNode(ChoiceNodeImport basedOn, RandomDecider<EncounterPrototype> decider)
         {
             this.BasedOn = basedOn;
 

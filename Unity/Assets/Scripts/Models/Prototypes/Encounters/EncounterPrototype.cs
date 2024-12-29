@@ -42,5 +42,10 @@ namespace SpaceDeck.Models.Prototypes
                 this.EncounterScripts.Add(script.Id, script);
             }
         }
+
+        public bool MeetsAllTags(HashSet<LowercaseString> tags)
+        {
+            return this.EncounterTags.Overlaps(tags);
+        }
     }
 }

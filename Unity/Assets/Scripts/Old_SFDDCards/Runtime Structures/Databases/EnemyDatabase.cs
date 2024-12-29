@@ -1,6 +1,7 @@
 namespace SFDDCards
 {
     using SFDDCards.ImportModels;
+    using SpaceDeck.Utility.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
