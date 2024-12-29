@@ -1,5 +1,7 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
+    using SFDDCards.UX;
     using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;

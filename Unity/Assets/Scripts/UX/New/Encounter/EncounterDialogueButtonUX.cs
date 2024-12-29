@@ -1,4 +1,4 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
     using SFDDCards.Evaluation.Actual;
     using System;

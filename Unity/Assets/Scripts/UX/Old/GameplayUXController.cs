@@ -4,6 +4,7 @@ namespace SFDDCards.UX
     using SFDDCards.ImportModels;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;

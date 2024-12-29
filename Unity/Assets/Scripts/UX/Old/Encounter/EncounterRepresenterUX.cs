@@ -11,6 +11,7 @@ namespace SFDDCards.UX
     using UnityEngine;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Imports;
+    using SpaceDeck.UX;
 
     public class EncounterRepresenterUX : MonoBehaviour
     {
