@@ -28,6 +28,7 @@ namespace SpaceDeck.GameState.Execution
         public readonly List<Entity> PersistentEntities = new List<Entity>();
         public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
         public readonly List<CardInstance> CardsInDeck = new List<CardInstance>();
+        public readonly Dictionary<Currency, int> Currencies = new Dictionary<Currency, int>();
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
@@ -63,6 +64,29 @@ namespace SpaceDeck.GameState.Execution
         public decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0)
         {
             return entity.Qualities.GetNumericQuality(index, defaultValue);
+        }
+
+        public void ModCurrency(Currency toMod, int modAmount)
+        {
+            if (this.Currencies.TryGetValue(toMod, out int currentValue))
+            {
+                this.Currencies[toMod] = currentValue + modAmount;
+            }
+            else
+            {
+                this.Currencies.Add(toMod, modAmount);
+            }
+        }
+
+        public int GetCurrency(Currency toGet)
+        {
+            if (this.Currencies.TryGetValue(toGet, out int currentValue))
+            {
+                return currentValue;
+            }
+
+            this.Currencies.Add(toGet, 0);
+            return this.GetCurrency(toGet);
         }
 
         public void RemoveEntity(Entity entity)

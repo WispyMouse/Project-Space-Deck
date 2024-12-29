@@ -35,6 +35,8 @@ namespace SpaceDeck.GameState.Execution
         public decimal? NewFactionTurn = null;
         public Entity NewEntityTurn = null;
 
+        public readonly Dictionary<Currency, int> CurrencyChanges = new Dictionary<Currency, int>();
+
         public GameStateDelta(IGameStateMutator baseGameState)
         {
             this.BaseGameState = baseGameState;
@@ -68,6 +70,28 @@ namespace SpaceDeck.GameState.Execution
             }
 
             return overrideAttributes.GetNumericQuality(index, defaultValue);
+        }
+
+        public void ModCurrency(Currency toMod, int amount)
+        {
+            if (this.CurrencyChanges.TryGetValue(toMod, out int currentAmount))
+            {
+                this.CurrencyChanges[toMod] = currentAmount + amount;
+            }
+            else
+            {
+                this.CurrencyChanges.Add(toMod, amount);
+            }
+        }
+
+        public int GetCurrency(Currency toMod)
+        {
+            int amount = this.BaseGameState.GetCurrency(toMod);
+            if (this.CurrencyChanges.TryGetValue(toMod, out int mod))
+            {
+                amount += mod;
+            }
+            return amount;
         }
 
         public void RemoveEntity(Entity entity)

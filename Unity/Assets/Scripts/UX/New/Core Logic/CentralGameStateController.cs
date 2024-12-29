@@ -84,9 +84,8 @@ namespace SpaceDeck.UX
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<CardImport>(Application.streamingAssetsPath, "cardImport", SFDDCards.CardDatabase.AddCardToDatabase, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<StatusEffectImport>(Application.streamingAssetsPath, "statusImport", SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<EnemyImport>(Application.streamingAssetsPath, "enemyImport", EnemyDatabase.AddEnemyToDatabase, currentContext));
-
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.CurrencyImport>(Application.streamingAssetsPath, "currencyImport", CurrencyDatabase.AddCurrencyToDatabase, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<RewardImport>(Application.streamingAssetsPath, "rewardImport", RewardDatabase.AddRewardToDatabase, currentContext));
-            // yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<EncounterImport>(Application.streamingAssetsPath, "encounterImport", EncounterDatabase.AddEncounter, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.EncounterImport>(Application.streamingAssetsPath, "encounterImport", EncounterDatabase.AddEncounter, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<RouteImport>(Application.streamingAssetsPath, "routeImport", RouteDatabase.AddRouteToDatabase, currentContext));
 
@@ -98,6 +97,7 @@ namespace SpaceDeck.UX
             this.SetupAndStartNewGame();
         }
 
+        [Obsolete("Transition to " + nameof(_RouteChosen))]
         public void RouteChosen(RouteImport route)
         {
             this.CurrentCampaignContext = new CampaignContext(new CampaignRoute(this.CurrentRunConfiguration, route));
@@ -108,6 +108,22 @@ namespace SpaceDeck.UX
             }
 
             this.UXController.PlacePlayerCharacter();
+
+            this.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
+
+            GlobalUpdateUX.UpdateUXEvent?.Invoke(this.CurrentCampaignContext);
+        }
+
+        public void _RouteChosen(RouteImport route)
+        {
+            this.CurrentCampaignContext = new CampaignContext(new CampaignRoute(this.CurrentRunConfiguration, route));
+
+            foreach (StartingCurrency startingCurrency in route.StartingCurrencies)
+            {
+                this.CurrentCampaignContext.GameplayState.ModCurrency(CurrencyDatabase.Get(startingCurrency.CurrencyId), startingCurrency.StartingAmount);
+            }
+
+            this.UXController._PlacePlayerCharacter();
 
             this.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
 

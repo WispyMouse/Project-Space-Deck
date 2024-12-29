@@ -12,6 +12,8 @@ namespace SpaceDeck.GameState.Minimum
 
         void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue);
         decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0);
+        int GetCurrency(Currency currency);
+        void ModCurrency(Currency currency, int modAmount);
 
         void AddEncounterEntity(Entity toAdd);
         void AddPersistentEntity(Entity toAdd);
