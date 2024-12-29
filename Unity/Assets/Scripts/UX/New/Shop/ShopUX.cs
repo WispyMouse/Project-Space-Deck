@@ -1,5 +1,7 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
+    using SFDDCards.UX;
     using SpaceDeck.UX;
     using System;
     using System.Collections;
@@ -47,6 +49,7 @@ namespace SFDDCards.UX
             Destroy(selectedItem.gameObject);
         }
 
+        [Obsolete("Transition to " + nameof(_SetShopItems))]
         public void SetShopItems(params ShopEntry[] shopEntries)
         {
             this.DestroyItems();
@@ -59,5 +62,16 @@ namespace SFDDCards.UX
             }
         }
 
+        public void _SetShopItems(params ShopEntry[] shopEntries)
+        {
+            this.DestroyItems();
+
+            foreach (ShopEntry curEntry in shopEntries)
+            {
+                ShopItemUX shopEntry = Instantiate(this.ShopItemUXPF, this.ShopItemUXHolderTransform);
+                shopEntry._SetFromEntry(this.CentralGameStateControllerInstance.CurrentCampaignContext, curEntry, ShopItemSelected);
+                this.ActiveShopItemUXs.Add(shopEntry);
+            }
+        }
     }
 }

@@ -1,6 +1,9 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
     using SFDDCards.Evaluation.Actual;
+    using SFDDCards.UX;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
     using System;
     using System.Collections;
@@ -18,11 +21,14 @@ namespace SFDDCards.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
+        [Obsolete("Transition to " + nameof(_SpawnedEnemiesLookup))]
         public Dictionary<Enemy, EnemyUX> SpawnedEnemiesLookup { get; set; } = new Dictionary<Enemy, EnemyUX>();
+        public readonly Dictionary<Entity, EnemyUX> _SpawnedEnemiesLookup = new Dictionary<Entity, EnemyUX>();
         public List<EnemyUX> OrderedEnemyList { get; set; } = new List<EnemyUX>();
 
         Coroutine EnemyPositionAdjustmentCoroutine { get; set; } = null;
 
+        [Obsolete("Transition to " + nameof(_AddEnemies))]
         public void AddEnemies(IEnumerable<Enemy> toAdd)
         {
             foreach (Enemy curEnemy in toAdd)
@@ -33,6 +39,17 @@ namespace SFDDCards.UX
             this.SituateEnemyPositions();
         }
 
+        public void _AddEnemies(IEnumerable<Entity> toAdd)
+        {
+            foreach (Entity curEnemy in toAdd)
+            {
+                this._AddEnemy(curEnemy);
+            }
+
+            this.SituateEnemyPositions();
+        }
+
+        [Obsolete("Transition to " + nameof(_AddEnemy))]
         public void AddEnemy(Enemy toAdd, bool skipSituating = false)
         {
             EnemyUX newEnemy = Instantiate(this.EnemyRepresentationPF, this.EnemyRepresentationTransform);
@@ -47,12 +64,38 @@ namespace SFDDCards.UX
             }
         }
 
+        public void _AddEnemy(Entity toAdd, bool skipSituating = false)
+        {
+            EnemyUX newEnemy = Instantiate(this.EnemyRepresentationPF, this.EnemyRepresentationTransform);
+            newEnemy._SetFromEnemy(toAdd, this.CentralGameStateControllerInstance);
+
+            this._SpawnedEnemiesLookup.Add(toAdd, newEnemy);
+            this.OrderedEnemyList.Add(newEnemy);
+
+            if (!skipSituating)
+            {
+                this.SituateEnemyPositions();
+            }
+        }
+
+        [Obsolete("Transition to " + nameof(_RemoveEnemy))]
         public void RemoveEnemy(Enemy toRemove)
         {
             if (this.SpawnedEnemiesLookup.TryGetValue(toRemove, out EnemyUX ux))
             {
                 EnemyUX representation = this.SpawnedEnemiesLookup[toRemove];
                 this.SpawnedEnemiesLookup.Remove(toRemove);
+                this.OrderedEnemyList.Remove(representation);
+                Destroy(representation.gameObject);
+            }
+        }
+
+        public void _RemoveEnemy(Entity toRemove)
+        {
+            if (this._SpawnedEnemiesLookup.TryGetValue(toRemove, out EnemyUX ux))
+            {
+                EnemyUX representation = this._SpawnedEnemiesLookup[toRemove];
+                this._SpawnedEnemiesLookup.Remove(toRemove);
                 this.OrderedEnemyList.Remove(representation);
                 Destroy(representation.gameObject);
             }
@@ -66,6 +109,7 @@ namespace SFDDCards.UX
             }
 
             this.SpawnedEnemiesLookup.Clear();
+            this._SpawnedEnemiesLookup.Clear();
             this.OrderedEnemyList.Clear();
 
             if (this.EnemyPositionAdjustmentCoroutine != null)
