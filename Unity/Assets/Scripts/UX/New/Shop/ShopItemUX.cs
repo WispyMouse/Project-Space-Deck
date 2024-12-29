@@ -1,5 +1,6 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
     using SpaceDeck.UX;
     using System;
     using System.Collections;
@@ -32,6 +33,7 @@ namespace SFDDCards.UX
         [SerializeReference]
         private GameObject CanNotAffordOverlay;
 
+        [Obsolete("Transition to " + nameof(_SetFromEntry))]
         public void SetFromEntry(CampaignContext forCampaign, ShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
         {
             if (!toRepresent.GainedAmount.TryEvaluateValue(forCampaign, null, out int gainedAmount))
@@ -54,6 +56,36 @@ namespace SFDDCards.UX
             {
                 RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
                 rewardArtifact.SetFromArtifact(toRepresent.GainedEffect, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
+            }
+            else if (toRepresent.GainedCurrency != null)
+            {
+                RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
+                rewardCurrency._SetFromCurrency(toRepresent.GainedCurrency, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
+            }
+        }
+
+        public void _SetFromEntry(CampaignContext forCampaign, ShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
+        {
+            if (!toRepresent.GainedAmount.TryEvaluateValue(forCampaign, null, out int gainedAmount))
+            {
+                GlobalUpdateUX.LogTextEvent.Invoke($"Could not evaluate gain amount.", GlobalUpdateUX.LogType.RuntimeError);
+                return;
+            }
+
+            this.RepresentingEntry = toRepresent;
+            this.OnClickDelegate = onClickDelegate;
+            this.RepresentCosts(toRepresent.Costs, forCampaign);
+
+            if (toRepresent.GainedCard != null)
+            {
+                RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
+                thisCard._SetFromCard(toRepresent._GainedCard, (DisplayedCardUX card) => { this.OnClick(); });
+                thisCard.SetQuantity(gainedAmount);
+            }
+            else if (toRepresent.GainedEffect != null)
+            {
+                RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
+                rewardArtifact.SetFromArtifact(toRepresent._GainedEffect, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
             }
             else if (toRepresent.GainedCurrency != null)
             {

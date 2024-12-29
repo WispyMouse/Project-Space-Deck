@@ -86,6 +86,8 @@ namespace SpaceDeck.UX
             this.NameText.text = "";
             this.CardImage.sprite = null;
             this.EffectText.text = "";
+            this.RepresentedCard = null;
+            this._RepresentedCard = null;
 
             for (int ii = this.ElementResourceIconHolder.childCount - 1; ii >= 0; ii--)
             {

@@ -18,8 +18,12 @@ namespace SFDDCards
     /// </summary>
     public interface IGainable
     {
+        [Obsolete("Transition to " + nameof(_GainedEffect))]
         StatusEffect GainedEffect { get; }
+        SpaceDeck.GameState.Minimum.AppliedStatusEffect _GainedEffect { get; }
+        [Obsolete("Transition to " + nameof(_GainedCard))]
         Card GainedCard { get; }
+        CardInstance _GainedCard { get; }
         Currency GainedCurrency { get; }
 
         IEvaluatableValue<int> GainedAmount { get; }

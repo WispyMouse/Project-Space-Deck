@@ -11,7 +11,9 @@ namespace SFDDCards
     public class ShopEntry : IGainable
     {
         public StatusEffect GainedEffect { get; set; }
+        public SpaceDeck.GameState.Minimum.AppliedStatusEffect _GainedEffect { get; set; }
         public Card GainedCard { get; set; }
+        public CardInstance _GainedCard { get; set; }
         public Currency GainedCurrency { get; set; }
 
         public IEvaluatableValue<int> GainedAmount { get; set; }
