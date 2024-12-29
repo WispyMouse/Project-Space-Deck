@@ -4,6 +4,7 @@ namespace SFDDCards
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
@@ -35,7 +36,11 @@ namespace SFDDCards
             NotAllowedToLeave = 2
         }
 
+        public readonly GameState GameplayState = new GameState();
+
+        [Obsolete("Should transition to " + nameof(_CampaignDeck))]
         public readonly Deck CampaignDeck;
+        public IReadOnlyList<CardInstance> _CampaignDeck => this.GameplayState.CardsInDeck;
         public CombatContext CurrentCombatContext { get; private set; } = null;
         public EvaluatedEncounter CurrentEncounter { get; private set; } = null;
 
@@ -63,6 +68,7 @@ namespace SFDDCards
             this._CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
             this._CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.MaximumHealth, onRoute.BasedOn.StartingMaximumHealth);
             this._CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Health, onRoute.BasedOn.StartingMaximumHealth);
+            this.GameplayState.AddPersistentEntity(this._CampaignPlayer);
 
             // Old
             this.CampaignPlayer = new Player(onRoute.BasedOn.StartingMaximumHealth);
@@ -73,9 +79,11 @@ namespace SFDDCards
             foreach (string startingCard in onRoute.BasedOn.StartingDeck)
             {
                 this.CampaignDeck.AddCardToDeck(CardDatabase.GetModel(startingCard));
+                this.GameplayState.AddCard(SpaceDeck.Models.Databases.CardDatabase.GetInstance(startingCard), WellknownZones.Campaign);
             }
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void AddCardToDeck(Card toAdd)
         {
             this.CampaignDeck.AddCardToDeck(toAdd);
@@ -83,6 +91,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void RemoveCardFromDeck(Card toRemove)
         {
             this.CampaignDeck.RemoveCardFromDeck(toRemove);
@@ -95,6 +104,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void LeaveCurrentEncounter()
         {
             if (this.CurrentCombatContext != null && this.CurrentCombatContext.BasedOnEncounter != null)
@@ -108,6 +118,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void StartNextRoomFromEncounter(EvaluatedEncounter basedOn)
         {
             this.LeaveCurrentEncounter();
@@ -231,6 +242,7 @@ namespace SFDDCards
             return true;
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void SubscribeToReactionWindow(IReactionWindowReactor reactor, ReactionWindowSubscription subscription)
         {
             if (!this.WindowsToReactors.TryGetValue(subscription.ReactionWindowId.ToLower(), out List<ReactionWindowSubscription> reactorsList))
@@ -250,6 +262,7 @@ namespace SFDDCards
             subscriptions.Add(subscription);
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void UnsubscribeReactor(IReactionWindowReactor reactor)
         {
             if (this.ReactorsToSubscriptions.TryGetValue(reactor, out HashSet<ReactionWindowSubscription> reactions))
@@ -262,6 +275,7 @@ namespace SFDDCards
             }
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void StatusEffectHappeningProc(StatusEffectHappening happening)
         {
             ICombatantTarget originalTarget = happening.Context.CombatantTarget;
@@ -273,11 +287,13 @@ namespace SFDDCards
             this.CheckAllStateEffectsAndKnockouts();
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void IngestStatusEffectHappening(ReactionWindowContext reactionWindow, WindowResponse response)
         {
             GlobalSequenceEventHolder.PushSequencesToTop(reactionWindow.CampaignContext, response);
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void CheckAllStateEffectsAndKnockouts()
         {
             if (this.CampaignPlayer.CurrentHealth <= 0)
@@ -308,6 +324,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         private void PlayerDefeat()
         {
             foreach (AppliedStatusEffect effect in this.CampaignPlayer.AppliedStatusEffects)
@@ -322,6 +339,7 @@ namespace SFDDCards
             GlobalSequenceEventHolder.StopAllSequences();
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public int _GetCurrencyCount(Currency toGet)
         {
             if (this._CurrencyCounts.TryGetValue(toGet, out int value))
@@ -343,6 +361,7 @@ namespace SFDDCards
             return 0;
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void _ModCurrency(Currency toAward, int amount)
         {
             if (this._CurrencyCounts.TryGetValue(toAward, out int existingValue))
@@ -372,6 +391,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }
 
+        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
         public void _SetCurrency(Currency toSet, int amount)
         {
             if (this._CurrencyCounts.TryGetValue(toSet, out int existingValue))

@@ -1,7 +1,9 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ScriptingTokens;
+    using SFDDCards.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;

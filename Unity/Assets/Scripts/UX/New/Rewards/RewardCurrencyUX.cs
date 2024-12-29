@@ -1,6 +1,8 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
     using SFDDCards.ImportModels;
+    using SFDDCards.UX;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.UX.AssetLookup;
