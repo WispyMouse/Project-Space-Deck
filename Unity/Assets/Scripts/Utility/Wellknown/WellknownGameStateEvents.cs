@@ -8,6 +8,7 @@ namespace SpaceDeck.Utility.Wellknown
     public static class WellknownGameStateEvents
     {
         public readonly static LowercaseString RuleApplication = nameof(RuleApplication);
+        public readonly static LowercaseString Activated = nameof(Activated);
 
         public readonly static LowercaseString EncounterStart = nameof(EncounterStart);
         public readonly static LowercaseString FactionTurnStarted = nameof(FactionTurnStarted);

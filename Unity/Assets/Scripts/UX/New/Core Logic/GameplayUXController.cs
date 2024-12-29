@@ -1,7 +1,10 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
+    using SFDDCards.UX;
+    using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX;
@@ -85,12 +88,17 @@ namespace SFDDCards.UX
         public bool PlayerIsCurrentlyAnimating { get; private set; } = false;
 
         private CampaignContext.GameplayCampaignState previousCampaignState { get; set; } = CampaignContext.GameplayCampaignState.NotStarted;
-        private CombatContext.TurnStatus previousCombatTurnState { get; set; } = CombatContext.TurnStatus.NotInCombat;
         private CampaignContext.NonCombatEncounterStatus previousNonCombatEncounterState { get; set; } = CampaignContext.NonCombatEncounterStatus.NotInNonCombatEncounter;
+
+        [Obsolete("Should transition to extrapolating this information from " + nameof(previousCombatTurnTaker))]
+        private CombatContext.TurnStatus previousCombatTurnState { get; set; } = CombatContext.TurnStatus.NotInCombat;
+        private Entity previousCombatTurnTaker { get; set; } = null;
 
         public CampaignContext CurrentCampaignContext => this.CentralGameStateControllerInstance?.CurrentCampaignContext;
 
+        [Obsolete("Transition to " + nameof(_HoveredCombatant))]
         public ICombatantTarget HoveredCombatant { get; set; } = null;
+        public IChangeTarget _HoveredCombatant { get; set; } = null;
 
         private void Awake()
         {
@@ -149,6 +157,7 @@ namespace SFDDCards.UX
             this.LifeValue.text = $"{campaignEntity.Qualities.GetNumericQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
         }
 
+        [Obsolete("Transition to " + nameof(_CheckAndActIfGameCampaignNavigationStateChanged))]
         public void CheckAndActIfGameCampaignNavigationStateChanged()
         {
             if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null)
@@ -271,6 +280,132 @@ namespace SFDDCards.UX
             }
         }
 
+
+        public void _CheckAndActIfGameCampaignNavigationStateChanged()
+        {
+            if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null)
+            {
+                this.GoNextRoomButton.SetActive(false);
+                this.EndTurnButton.SetActive(false);
+                this.EncounterRepresenterUXInstance.Close();
+                MouseHoverShowerPanel.CurrentContext = null;
+                return;
+            }
+
+            this.CampaignChooserUXInstance.HideChooser();
+
+            CampaignContext.GameplayCampaignState newCampaignState = this.CurrentCampaignContext.CurrentGameplayCampaignState;
+            CampaignContext.NonCombatEncounterStatus newNonCombatState = this.CurrentCampaignContext.CurrentNonCombatEncounterStatus;
+            Entity currentTurnTaker = null;
+            if (!(this.CurrentCampaignContext._CurrentEncounter != null && this.CurrentCampaignContext.GameplayState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CurrentCampaignContext.GameplayState, out currentTurnTaker)))
+            {
+                currentTurnTaker = null;
+            }
+
+            if (this.CurrentCampaignContext?.PendingRewards != null && this.RewardsPanelUXInstance.Rewards != this.CurrentCampaignContext?.PendingRewards)
+            {
+                this.PresentAwards(this.CurrentCampaignContext.PendingRewards);
+            }
+
+            CampaignContext.GameplayCampaignState wasPreviousCampaignState = this.previousCampaignState;
+            CampaignContext.NonCombatEncounterStatus wasPreviousNonCombatState = this.previousNonCombatEncounterState;
+
+            if (wasPreviousCampaignState == newCampaignState
+                && wasPreviousNonCombatState == newNonCombatState
+                && this.previousCombatTurnTaker == currentTurnTaker)
+            {
+                return;
+            }
+
+            this.previousCampaignState = newCampaignState;
+            this.previousNonCombatEncounterState = newNonCombatState;
+            this.previousCombatTurnTaker = currentTurnTaker;
+
+            if (newCampaignState == CampaignContext.GameplayCampaignState.ClearedRoom
+                || (newCampaignState == CampaignContext.GameplayCampaignState.NonCombatEncounter && newNonCombatState == CampaignContext.NonCombatEncounterStatus.AllowedToLeave))
+            {
+                this.GoNextRoomButton.SetActive(true);
+            }
+            else
+            {
+                this.RewardsPanelUXInstance.gameObject.SetActive(false);
+                this.ShopPanelUXInstance.gameObject.SetActive(false);
+                this.GoNextRoomButton.SetActive(false);
+            }
+
+            if (newCampaignState == CampaignContext.GameplayCampaignState.NonCombatEncounter)
+            {
+                if (wasPreviousCampaignState != CampaignContext.GameplayCampaignState.NonCombatEncounter &&
+                    this.CurrentCampaignContext != null &&
+                    this.CurrentCampaignContext._CurrentEncounter != null
+                    )
+                {
+                    if (this.CurrentCampaignContext._CurrentEncounter.HasEncounterDialogue)
+                    {
+                        this.ShopPanelUXInstance.gameObject.SetActive(false);
+                        this.EncounterRepresenterUXInstance._RepresentEncounter(this.CurrentCampaignContext._CurrentEncounter, this.CurrentCampaignContext.GameplayState);
+                    }
+                    else if (this.CurrentCampaignContext._CurrentEncounter.IsShopEncounter)
+                    {
+                        this.EncounterRepresenterUXInstance.Close();
+                        // TODO: Shop Panel for new codebase
+                        this.ShowShopPanel(this.CurrentCampaignContext.CurrentEncounter.GetShop(this.CurrentCampaignContext).ToArray());
+                    }
+                }
+            }
+            else
+            {
+                this.ShopPanelUXInstance.gameObject.SetActive(false);
+                this.EncounterRepresenterUXInstance.Close();
+            }
+
+            if (newCampaignState == CampaignContext.GameplayCampaignState.InCombat)
+            {
+                this.CombatUXFolder.SetActive(true);
+                this.RewardsPanelUXInstance.gameObject.SetActive(false);
+                this.ShopPanelUXInstance.gameObject.SetActive(false);
+
+                if (wasPreviousCampaignState != CampaignContext.GameplayCampaignState.InCombat)
+                {
+                    this.CombatTurnCounterInstance._BeginHandlingCombat();
+                }
+
+                if (currentTurnTaker.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
+                {
+                    this.EndTurnButton.SetActive(true);
+                }
+                else
+                {
+                    this.EndTurnButton.SetActive(false);
+                }
+            }
+            else
+            {
+                if (wasPreviousCampaignState == CampaignContext.GameplayCampaignState.InCombat)
+                {
+                    this.CombatTurnCounterInstance.EndHandlingCombat();
+                }
+
+                this.EndTurnButton.SetActive(false);
+                this.CombatUXFolder.SetActive(false);
+            }
+
+            if (newCampaignState == CampaignContext.GameplayCampaignState.MakingRouteChoice)
+            {
+                this.PresentNextRouteChoice();
+            }
+            else
+            {
+                this.ClearRouteUX();
+            }
+
+            if (newCampaignState == CampaignContext.GameplayCampaignState.Victory)
+            {
+                GlobalUpdateUX.LogTextEvent?.Invoke($"Victory!! There are no more nodes in this route! Reset game to continue from beginning.", GlobalUpdateUX.LogType.GameEvent);
+            }
+        }
+
+        [Obsolete("Transition to " + nameof(_UpdateUX))]
         public void UpdateUX(CampaignContext forCampaign)
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
@@ -283,6 +418,26 @@ namespace SFDDCards.UX
             }
 
             this.CheckAndActIfGameCampaignNavigationStateChanged();
+            this.RemoveDefeatedEntities();
+            this.SetElementValueLabel();
+            this.SetCurrenciesValueLabel();
+            this.UpdateEnemyUX();
+            this.UpdatePlayerLabelValues();
+            this.RepresentTargetables();
+        }
+
+        public void _UpdateUX(CampaignContext forCampaign)
+        {
+            if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
+            {
+                this.AllCardsBrowserButton.SetActive(false);
+            }
+            else
+            {
+                this.AllCardsBrowserButton.SetActive(true);
+            }
+
+            this._CheckAndActIfGameCampaignNavigationStateChanged();
             this.RemoveDefeatedEntities();
             this.SetElementValueLabel();
             this.SetCurrenciesValueLabel();
@@ -694,6 +849,7 @@ namespace SFDDCards.UX
             this.CampaignChooserUXInstance.ShowChooser();
         }
 
+        [Obsolete("Transition to " + nameof(_RemoveDefeatedEntities))]
         private void RemoveDefeatedEntities()
         {
             if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
@@ -715,6 +871,28 @@ namespace SFDDCards.UX
             }
         }
 
+        private void _RemoveDefeatedEntities()
+        {
+            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
+            {
+                foreach (Entity key in new List<Entity>(this.EnemyRepresenterUX._SpawnedEnemiesLookup.Keys))
+                {
+                    this.EnemyRepresenterUX._RemoveEnemy(key);
+                }
+
+                return;
+            }
+
+            foreach (Entity curEnemy in new List<Entity>(this.EnemyRepresenterUX._SpawnedEnemiesLookup.Keys))
+            {
+                if (!this.CurrentCampaignContext._CurrentEncounter.EncounterEntities.Contains(curEnemy))
+                {
+                    this.EnemyRepresenterUX._RemoveEnemy(curEnemy);
+                }
+            }
+        }
+
+        [Obsolete("Transition to " + nameof(_StatusEffectClicked))]
         public void StatusEffectClicked(SFDDCards.AppliedStatusEffect representingEffect)
         {
             if (representingEffect.BasedOnStatusEffect.WindowResponders.ContainsKey(KnownReactionWindows.Activated))
@@ -735,6 +913,20 @@ namespace SFDDCards.UX
             }
         }
 
+        public void _StatusEffectClicked(SpaceDeck.GameState.Minimum.AppliedStatusEffect representingEffect)
+        {
+            if (representingEffect.TriggerOnEventIds.Contains(WellknownGameStateEvents.Activated))
+            {
+                GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.Activated);
+                if (representingEffect.TryApplyStatusEffect(trigger, this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, out List<GameStateChange> changes))
+                {
+                    SpaceDeck.GameState.Execution.GameStateDelta delta = new SpaceDeck.GameState.Execution.GameStateDelta(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, changes);
+                    GameStateDeltaApplier.ApplyGameStateDelta(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, delta);
+                }
+            }
+        }
+
+        [Obsolete("Transition to " + nameof(_OpenAllCardsBrowser))]
         public void OpenAllCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
@@ -748,6 +940,20 @@ namespace SFDDCards.UX
             this.CardBrowserUXInstance.SetFromCards(CardDatabase.GetOneOfEachCard());
         }
 
+        public void _OpenAllCardsBrowser()
+        {
+            if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
+            {
+                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
+                return;
+            }
+
+            this.CardBrowserUXInstance.gameObject.SetActive(true);
+            this.CardBrowserUXInstance.SetLabelText("Now Viewing: All Cards");
+            this.CardBrowserUXInstance._SetFromCards(SpaceDeck.Models.Databases.CardDatabase.GetOneOfEveryCard());
+        }
+
+        [Obsolete("Transition to " + nameof(_OpenDiscardCardsBrowser))]
         public void OpenDiscardCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
@@ -766,6 +972,25 @@ namespace SFDDCards.UX
             this.CardBrowserUXInstance.SetFromCards(this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext.PlayerCombatDeck.CardsCurrentlyInDiscard);
         }
 
+        public void _OpenDiscardCardsBrowser()
+        {
+            if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
+            {
+                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
+                return;
+            }
+
+            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
+            {
+                return;
+            }
+
+            this.CardBrowserUXInstance.gameObject.SetActive(true);
+            this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Discard");
+            this.CardBrowserUXInstance._SetFromCards(this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter.GetZoneCards(WellknownZones.Discard));
+        }
+
+        [Obsolete("Transition to " + nameof(_OpenAllCardsBrowser))]
         public void OpenDeckCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
@@ -793,6 +1018,34 @@ namespace SFDDCards.UX
             this.CardBrowserUXInstance.SetFromCards(cardsInDeck);
         }
 
+        public void _OpenDeckCardsBrowser()
+        {
+            if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
+            {
+                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
+                return;
+            }
+
+            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext == null)
+            {
+                return;
+            }
+
+            List<CardInstance> cardsInDeck = new List<CardInstance>(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.CardsInDeck);
+
+            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?._CurrentEncounter != null)
+            {
+                cardsInDeck = new List<CardInstance>(this.CurrentCampaignContext._CurrentEncounter.GetZoneCards(WellknownZones.Deck));
+            }
+
+            cardsInDeck.Sort((CardInstance a, CardInstance b) => a.Name.CompareTo(b.Name));
+
+            this.CardBrowserUXInstance.gameObject.SetActive(true);
+            this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Deck");
+            this.CardBrowserUXInstance._SetFromCards(cardsInDeck);
+        }
+
+        [Obsolete("Transition to " + nameof(_OpenExileCardsBrowser))]
         public void OpenExileCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
@@ -814,6 +1067,28 @@ namespace SFDDCards.UX
             this.CardBrowserUXInstance.SetFromCards(cardsInExile);
         }
 
+        public void _OpenExileCardsBrowser()
+        {
+            if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
+            {
+                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
+                return;
+            }
+
+            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
+            {
+                return;
+            }
+
+            List<CardInstance> cardsInExile = new List<CardInstance>(this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter.GetZoneCards(WellknownZones.Exile));
+            cardsInExile.Sort((CardInstance a, CardInstance b) => a.Name.CompareTo(b.Name));
+
+            this.CardBrowserUXInstance.gameObject.SetActive(true);
+            this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Exile");
+            this.CardBrowserUXInstance._SetFromCards(cardsInExile);
+        }
+
+        [Obsolete("Transition to " + nameof(_BeginHoverTarget))]
         public void BeginHoverTarget(ICombatantTarget target)
         {
             this.HoveredCombatant = target;
@@ -825,6 +1100,12 @@ namespace SFDDCards.UX
                 "hand");
         }
 
+        public void _BeginHoverTarget(IChangeTarget target)
+        {
+            this._HoveredCombatant = target;
+        }
+
+        [Obsolete("Transition to " + nameof(_EndHoverTarget))]
         public void EndHoverTarget(ICombatantTarget target)
         {
             if (this.HoveredCombatant == target)
@@ -833,7 +1114,15 @@ namespace SFDDCards.UX
                 this.PlayerHandRepresenter.ReactionWindowForSelectedCard = null;
             }
         }
-        
+
+        public void _EndHoverTarget(ICombatantTarget target)
+        {
+            if (this._HoveredCombatant == target)
+            {
+                this._HoveredCombatant = null;
+            }
+        }
+
         [Obsolete("Transition to the version of " + nameof(EncounterDialogueComplete) + " that uses EncounterState")]
         public void EncounterDialogueComplete(EvaluatedEncounter completed)
         {

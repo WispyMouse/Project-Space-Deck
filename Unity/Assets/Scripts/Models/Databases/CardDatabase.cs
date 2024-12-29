@@ -7,6 +7,7 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.GameState.Minimum;
 
     public static class CardDatabase
     {
@@ -39,6 +40,18 @@ namespace SpaceDeck.Models.Databases
                     }
                 }
             }
+        }
+
+        public static IReadOnlyList<LinkedCardInstance> GetOneOfEveryCard()
+        {
+            List<LinkedCardInstance> cards = new List<LinkedCardInstance>();
+
+            foreach (CardPrototype card in Prototypes.Values)
+            {
+                cards.Add(GetInstance(card.Id));
+            }
+
+            return cards;
         }
     }
 }

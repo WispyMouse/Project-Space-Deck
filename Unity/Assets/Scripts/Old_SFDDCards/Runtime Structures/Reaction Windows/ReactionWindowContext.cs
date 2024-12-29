@@ -4,7 +4,9 @@ namespace SFDDCards
     using System.Collections.Generic;
     using UnityEngine;
     using SFDDCards.Evaluation.Actual;
+    using System;
 
+    [Obsolete("ReactionWindowContext concept outdated in new code base.")]
     public struct ReactionWindowContext
     {
         public string TimingWindowId;

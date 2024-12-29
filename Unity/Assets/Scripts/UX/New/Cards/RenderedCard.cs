@@ -58,7 +58,7 @@ namespace SpaceDeck.UX
             this.MyRarityIndicator.SetFromRarity(representedCard.Rarity);
         }
 
-        public void _SetFromCard(CardInstance representedCard, ReactionWindowContext? reactionWindowContext = null)
+        public void _SetFromCard(CardInstance representedCard)
         {
             this.Annihilate();
 

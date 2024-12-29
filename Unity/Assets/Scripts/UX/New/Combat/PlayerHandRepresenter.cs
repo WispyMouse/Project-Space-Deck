@@ -29,7 +29,6 @@ namespace SFDDCards.UX
         private Dictionary<Card, CombatCardUX> CardsToRepresentations = new Dictionary<Card, CombatCardUX>();
         private readonly Dictionary<CardInstance, CombatCardUX> _CardsToRepresentations = new Dictionary<CardInstance, CombatCardUX>();
 
-        [Obsolete("Transition to " + nameof(_ReactionWindowForSelectedCard))]
         public ReactionWindowContext? ReactionWindowForSelectedCard
         {
             get
@@ -43,23 +42,6 @@ namespace SFDDCards.UX
                 if (this.SelectedCard != null)
                 {
                     this.SelectedCard.SetFromCard(this.SelectedCard.RepresentedCard, SelectCurrentCard, this.ReactionWindowForSelectedCard);
-                }
-            }
-        }
-
-        public ReactionWindowContext? _ReactionWindowForSelectedCard
-        {
-            get
-            {
-                return this.reactionWindowForSelectedCard;
-            }
-            set
-            {
-                this.reactionWindowForSelectedCard = value;
-
-                if (this.SelectedCard != null)
-                {
-                    this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, SelectCurrentCard, this._ReactionWindowForSelectedCard);
                 }
             }
         }
@@ -275,7 +257,7 @@ namespace SFDDCards.UX
         public void _SelectCurrentCard(DisplayedCardUX selectedCard)
         {
             this.SelectedCard = selectedCard;
-            this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard, GetReactionWindowContextForCard(selectedCard));
+            this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard);
             this.UXController.SelectCurrentCard(selectedCard);
             this._RepresentPlayerHand(this.CentralGameStateControllerInstance.CurrentCampaignContext);
         }
@@ -295,7 +277,7 @@ namespace SFDDCards.UX
         {
             if (this.SelectedCard != null)
             {
-                this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard, null);
+                this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard);
                 this.SelectedCard = null;
                 this._RepresentPlayerHand(this.CentralGameStateControllerInstance.CurrentCampaignContext);
             }
@@ -340,14 +322,14 @@ namespace SFDDCards.UX
             if (!this._CardsToRepresentations.TryGetValue(forCard, out CombatCardUX representingCard))
             {
                 representingCard = Instantiate(this.CardRepresentationPF, this.PlayerHandTransform);
-                representingCard._SetFromCard(forCard, _SelectCurrentCard, null);
+                representingCard._SetFromCard(forCard, _SelectCurrentCard);
                 this._CardsToRepresentations.Add(forCard, representingCard);
                 wasNotVisibleOrJustCreated = true;
             }
             else if (!this._CardsToRepresentations[forCard].isActiveAndEnabled)
             {
                 representingCard.gameObject.SetActive(true);
-                representingCard._SetFromCard(forCard, _SelectCurrentCard, null);
+                representingCard._SetFromCard(forCard, _SelectCurrentCard);
                 wasNotVisibleOrJustCreated = true;
             }
 
@@ -358,12 +340,13 @@ namespace SFDDCards.UX
 
             if (ReferenceEquals(this.SelectedCard, representingCard))
             {
-                this.SelectedCard._SetFromCard(forCard, _SelectCurrentCard, this._ReactionWindowForSelectedCard);
+                this.SelectedCard._SetFromCard(forCard, _SelectCurrentCard);
             }
 
             return representingCard;
         }
 
+        [Obsolete("ReactionWindowContext is from the old namespaces and codebase. Should be replaced with parity.")]
         public ReactionWindowContext? GetReactionWindowContextForCard(DisplayedCardUX ux)
         {
             if (this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext == null)

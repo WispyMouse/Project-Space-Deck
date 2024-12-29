@@ -40,6 +40,14 @@ namespace SpaceDeck.GameState.Execution
             this.BaseGameState = baseGameState;
         }
 
+        public GameStateDelta(IGameStateMutator baseGameState, IEnumerable<GameStateChange> changes) : this (baseGameState)
+        {
+            foreach (GameStateChange change in changes)
+            {
+                change.Apply(this);
+            }
+        }
+
         public void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue)
         {
             if (!this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))

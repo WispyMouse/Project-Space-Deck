@@ -6,6 +6,7 @@ namespace SFDDCards
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    [Obsolete("Transition to SpaceDeck CardInstance")]
     public class Card : IAttackTokenHolder, IEffectOwner
     {
         public enum KnownRarities

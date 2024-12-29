@@ -71,7 +71,7 @@ namespace SpaceDeck.UX
             foreach (CardInstance curCard in cardsToShow)
             {
                 RenderedCard newCard = Instantiate(this.RenderedCardPF, this.CardHolder);
-                newCard._SetFromCard(curCard, null);
+                newCard._SetFromCard(curCard);
                 newCard.OnClickAction = this._CardClicked;
             }
         }

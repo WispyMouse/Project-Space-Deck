@@ -61,12 +61,12 @@ namespace SpaceDeck.UX
             this.RenderedCard.SetFromCard(toSet, reactionWindowContext);
         }
 
-        public void _SetFromCard(CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null, ReactionWindowContext? reactionWindowContext = null)
+        public void _SetFromCard(CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null)
         {
             this._RepresentedCard = toSet;
             this.cardSelectedAction = inCardSelectedAction;
 
-            this.RenderedCard._SetFromCard(toSet, reactionWindowContext);
+            this.RenderedCard._SetFromCard(toSet);
         }
 
         public Transform GetTransform()
