@@ -336,7 +336,7 @@ namespace SFDDCards
             return 0;
         }
 
-        public void _ModCurrency(SpaceDeck.Models.Instances.Currency toAward, int amount)
+        public void _ModCurrency(Currency toAward, int amount)
         {
             // TODO
             throw new NotImplementedException("_ModCurrency is not yet implemented with the new Currency datatype.");
@@ -357,7 +357,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }
 
-        public void _SetCurrency(SpaceDeck.Models.Instances.Currency toSet, int amount)
+        public void _SetCurrency(Currency toSet, int amount)
         {
             // TODO
             throw new NotImplementedException("_SetCurrency is not yet implemented with the new Currency datatype.");

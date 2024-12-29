@@ -3,6 +3,7 @@ namespace SFDDCards.Tests.EditMode
     using NUnit.Framework;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
     using System;

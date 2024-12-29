@@ -5,10 +5,12 @@ namespace SpaceDeck.UX.AssetLookup
     using UnityEngine;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.GameState.Minimum;
 
     public static class SpriteLookup
     {
-        private static readonly Dictionary<LowercaseString, ObjectSpriteLookup> ObjectToSpriteLookup = new Dictionary<LowercaseString, ObjectSpriteLookup>();
+        private static readonly Dictionary<LowercaseString, ObjectLookup<Sprite>> ObjectToSpriteLookup = new Dictionary<LowercaseString, ObjectLookup<Sprite>>();
+        private static readonly ObjectLookup<int> ObjectToSpriteIndexLookup = new ObjectLookup<int>();
 
         public static bool TryGetSprite(LowercaseString forObject, out Sprite forSprite)
         {
@@ -17,13 +19,18 @@ namespace SpaceDeck.UX.AssetLookup
 
         public static bool TryGetSprite(LowercaseString forObject, out Sprite forSprite, LowercaseString index)
         {
-            if (!ObjectToSpriteLookup.TryGetValue(forObject, out ObjectSpriteLookup lookupTable))
+            if (!ObjectToSpriteLookup.TryGetValue(forObject, out ObjectLookup<Sprite> lookupTable))
             {
                 forSprite = null;
                 return false;
             }
 
-            return lookupTable.TryGetSprite(index, out forSprite);
+            return lookupTable.TryGet(index, out forSprite);
+        }
+
+        public static bool TryGetSpriteIndex(LowercaseString forObject, out int spriteIndex)
+        {
+            return ObjectToSpriteIndexLookup.TryGet(forObject, out spriteIndex);
         }
 
         public static void SetSprite(LowercaseString forObject, Sprite forSprite)
@@ -33,33 +40,60 @@ namespace SpaceDeck.UX.AssetLookup
 
         public static void SetSprite(LowercaseString forObject, Sprite forSprite, LowercaseString index)
         {
-            if (ObjectToSpriteLookup.TryGetValue(forObject, out ObjectSpriteLookup lookup))
+            if (ObjectToSpriteLookup.TryGetValue(forObject, out ObjectLookup<Sprite> lookup))
             {
-                lookup.SetSprite(index, forSprite);
+                lookup.Set(index, forSprite);
             }
             else
             {
-                ObjectToSpriteLookup.Add(forObject, new ObjectSpriteLookup());
+                ObjectToSpriteLookup.Add(forObject, new ObjectLookup<Sprite>());
                 SetSprite(forObject, forSprite, index);
             }
+        }
+
+        public static void SetSpriteIndex(LowercaseString forObject, int toIndex)
+        {
+            ObjectToSpriteIndexLookup.Set(forObject, toIndex);
         }
 
         public static void Clear()
         {
             ObjectToSpriteLookup.Clear();
         }
+
+
+
+        public static string GetNameOrIcon(Currency currency)
+        {
+            if (TryGetSpriteIndex(currency.Id, out int index))
+            {
+                return $"<sprite index={index}>";
+            }
+
+            return currency.Name;
+        }
+
+        public static string GetNameAndMaybeIcon(Currency currency)
+        {
+            if (TryGetSpriteIndex(currency.Id, out int index))
+            {
+                return $"<sprite index={index}>{currency.Name}";
+            }
+
+            return currency.Name;
+        }
     }
 
-    public class ObjectSpriteLookup
+    public class ObjectLookup<T>
     {
-        private readonly Dictionary<LowercaseString, Sprite> IndexToSprites = new Dictionary<LowercaseString, Sprite>();
+        private readonly Dictionary<LowercaseString, T> IndexToSprites = new Dictionary<LowercaseString, T>();
 
-        public bool TryGetSprite(LowercaseString index, out Sprite sprite)
+        public bool TryGet(LowercaseString index, out T sprite)
         {
             return this.IndexToSprites.TryGetValue(index, out sprite);
         }
 
-        public void SetSprite(LowercaseString index, Sprite sprite)
+        public void Set(LowercaseString index, T sprite)
         {
             this.IndexToSprites.Add(index, sprite);
         }

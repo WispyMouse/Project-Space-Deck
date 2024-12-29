@@ -5,8 +5,10 @@ namespace SFDDCards
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
+    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -266,7 +268,7 @@ namespace SFDDCards
 
                 if (CurrencyDatabase.TryGet(nextMatch.Groups[1].Value, out Currency foundCurrency))
                 {
-                    resultingString = resultingString.Replace(nextMatch.Value, foundCurrency.GetNameAndMaybeIcon());
+                    resultingString = resultingString.Replace(nextMatch.Value, SpriteLookup.GetNameAndMaybeIcon(foundCurrency));
                 }
                 else
                 {

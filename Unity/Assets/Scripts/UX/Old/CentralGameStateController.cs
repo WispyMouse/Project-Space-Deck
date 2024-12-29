@@ -1,6 +1,7 @@
 namespace SFDDCards.UX
 {
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
@@ -64,7 +65,7 @@ namespace SFDDCards.UX
                 if (SpriteLookup.TryGetSprite(currency.Id, out Sprite foundSprite))
                 {
                     int spriteIndex = this.TextMeshProSpriteControllerInstance.AddSprite(foundSprite);
-                    currency.SpriteIndex = spriteIndex;
+                    SpriteLookup.SetSpriteIndex(currency.Id, spriteIndex);
                 }
             }
 

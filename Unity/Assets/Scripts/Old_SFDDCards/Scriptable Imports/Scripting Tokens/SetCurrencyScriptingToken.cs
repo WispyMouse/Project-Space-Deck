@@ -4,6 +4,7 @@ namespace SFDDCards.ScriptingTokens
     using SFDDCards.Evaluation.Conceptual;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
     using SpaceDeck.Models.Databases;
+    using SpaceDeck.UX.AssetLookup;
     using System.Collections.Generic;
 
     public class SetCurrencyScriptingToken : BaseScriptingToken, IRealizedOperationScriptingToken
@@ -29,12 +30,12 @@ namespace SFDDCards.ScriptingTokens
 
         public string DescribeOperationAsEffect(ConceptualDeltaEntry delta, string reactionWindowId)
         {
-            return $"Sets {CurrencyDatabase.Get(this.CurrencyToMod).GetNameAndMaybeIcon()} to {this.Amount.DescribeEvaluation()}";
+            return $"Sets {SpriteLookup.GetNameAndMaybeIcon(CurrencyDatabase.Get(this.CurrencyToMod))} to {this.Amount.DescribeEvaluation()}";
         }
 
         public string DescribeOperationAsEffect(TokenEvaluatorBuilder builder)
         {
-            return $"Sets {CurrencyDatabase.Get(this.CurrencyToMod).GetNameAndMaybeIcon()} to {this.Amount.DescribeEvaluation()}";
+            return $"Sets {SpriteLookup.GetNameAndMaybeIcon(CurrencyDatabase.Get(this.CurrencyToMod))} to {this.Amount.DescribeEvaluation()}";
         }
 
         protected override bool TryGetTokenWithArguments(List<string> arguments, out IScriptingToken scriptingToken)

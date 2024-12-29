@@ -6,6 +6,7 @@ namespace SpaceDeck.Models.Imports
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Utility.Minimum;

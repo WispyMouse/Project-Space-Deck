@@ -1,6 +1,7 @@
 namespace SFDDCards.UX
 {
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.UX.AssetLookup;
     using System;
@@ -44,7 +45,7 @@ namespace SFDDCards.UX
 
             this.Name.text = basedOn.Name;
             this.RewardAmount = amount;
-            this.Label.text = $"x{RewardAmount.ToString()} {basedOn.GetNameAndMaybeIcon()}";
+            this.Label.text = $"x{RewardAmount.ToString()} {SpriteLookup.GetNameAndMaybeIcon(basedOn)}";
             this.OnClicked = onClick;
         }
 

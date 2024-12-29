@@ -4,6 +4,7 @@ namespace SFDDCards.Evaluation.Conceptual
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
     using System;
     using System.Collections;

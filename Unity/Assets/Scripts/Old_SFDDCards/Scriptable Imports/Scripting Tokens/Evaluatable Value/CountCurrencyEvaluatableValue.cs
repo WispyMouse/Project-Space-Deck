@@ -1,8 +1,10 @@
 using System.Text.RegularExpressions;
 using SFDDCards.Evaluation.Actual;
 using SFDDCards.ImportModels;
+using SpaceDeck.GameState.Minimum;
 using SpaceDeck.Models.Databases;
 using SpaceDeck.Models.Instances;
+using SpaceDeck.UX.AssetLookup;
 
 namespace SFDDCards.ScriptingTokens.EvaluatableValues
 {
@@ -88,10 +90,10 @@ namespace SFDDCards.ScriptingTokens.EvaluatableValues
 
             if (topValue == this)
             {
-                return $"1 x {currency.GetNameAndMaybeIcon()}";
+                return $"1 x {SpriteLookup.GetNameAndMaybeIcon(currency)}";
             }
 
-            return $"{currency.GetNameAndMaybeIcon()}";
+            return $"{SpriteLookup.GetNameAndMaybeIcon(currency)}";
         }
     }
 }

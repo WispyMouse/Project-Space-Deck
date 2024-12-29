@@ -2,6 +2,7 @@ namespace SFDDCards
 {
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
     using System;
     using System.Collections.Generic;
