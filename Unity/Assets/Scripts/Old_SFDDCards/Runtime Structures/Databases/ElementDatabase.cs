@@ -1,6 +1,8 @@
 namespace SFDDCards
 {
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -44,6 +46,11 @@ namespace SFDDCards
         public static void ClearDatabase()
         {
             ElementData.Clear();
+        }
+
+        public static int GetElementGain(Element forElement, CardInstance forCard)
+        {
+            return (int)forCard.Qualities.GetNumericQuality(WellknownElements.GetElementGain(forElement.Id));
         }
     }
 }

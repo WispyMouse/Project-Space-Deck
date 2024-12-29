@@ -77,6 +77,11 @@ namespace SpaceDeck.Utility.Minimum
             return !(a == b);
         }
 
+        public static LowercaseString operator +(LowercaseString a, LowercaseString b)
+        {
+            return a.Value + b.Value;
+        }
+
         public override bool Equals(object o)
         {
             if (o == null)

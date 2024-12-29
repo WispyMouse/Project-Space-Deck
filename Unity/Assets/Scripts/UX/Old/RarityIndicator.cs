@@ -1,6 +1,7 @@
 namespace SFDDCards.UX
 {
-
+    using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -27,6 +28,7 @@ namespace SFDDCards.UX
         private Sprite GeneratedRarityIcon;
 
 
+        [System.Obsolete("Transition to " + nameof(_SetFromRarity))]
         public void SetFromRarity(Card.KnownRarities rarity)
         {
             switch (rarity)
@@ -54,6 +56,36 @@ namespace SFDDCards.UX
                     this.IconShower.gameObject.SetActive(true);
                     this.IconShower.sprite = this.GeneratedRarityIcon;
                     break;
+            }
+        }
+
+        public void _SetFromRarity(LowercaseString rarity)
+        {
+            if (rarity == WellknownRarities.Starter)
+            {
+                this.IconShower.gameObject.SetActive(true);
+                this.IconShower.sprite = this.StarterRarityIcon;
+
+            }
+            else if (rarity == WellknownRarities.Generated)
+            {
+                this.IconShower.gameObject.SetActive(true);
+                this.IconShower.sprite = this.GeneratedRarityIcon;
+            }
+            else if (rarity == WellknownRarities.Common)
+            {
+                this.IconShower.gameObject.SetActive(true);
+                this.IconShower.sprite = this.CommonRarityIcon;
+            }
+            else if (rarity == WellknownRarities.Uncommon)
+            {
+                this.IconShower.gameObject.SetActive(true);
+                this.IconShower.sprite = this.UncommonRarityIcon;
+            }
+            else if (rarity == WellknownRarities.Rare)
+            {
+                this.IconShower.gameObject.SetActive(true);
+                this.IconShower.sprite = this.RareRarityIcon;
             }
         }
     }

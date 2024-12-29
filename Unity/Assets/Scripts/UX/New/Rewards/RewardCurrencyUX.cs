@@ -90,6 +90,12 @@ namespace SpaceDeck.UX
             return false;
         }
 
+        public bool _TryGetCard(out CardInstance toShow)
+        {
+            toShow = null;
+            return false;
+        }
+
         public bool TryGetStatusEffect(out IStatusEffect toShow)
         {
             toShow = null;

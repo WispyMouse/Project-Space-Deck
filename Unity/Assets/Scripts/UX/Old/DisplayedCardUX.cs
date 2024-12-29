@@ -1,5 +1,7 @@
 namespace SFDDCards.UX
 {
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -62,6 +64,12 @@ namespace SFDDCards.UX
         public bool TryGetCard(out Card toShow)
         {
             toShow = this.RenderedCard?.RepresentedCard;
+            return toShow != null;
+        }
+
+        public bool _TryGetCard(out CardInstance toShow)
+        {
+            toShow = this.RenderedCard?._RepresentedCard;
             return toShow != null;
         }
 

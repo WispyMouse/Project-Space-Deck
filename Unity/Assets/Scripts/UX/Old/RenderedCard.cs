@@ -1,5 +1,8 @@
 namespace SFDDCards.UX
 {
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -9,7 +12,9 @@ namespace SFDDCards.UX
 
     public class RenderedCard : MonoBehaviour
     {
+        [Obsolete("Should transition to " + nameof(_RepresentedCard))]
         public Card RepresentedCard;
+        public CardInstance _RepresentedCard;
 
         [SerializeReference]
         private TMPro.TMP_Text NameText;
@@ -31,6 +36,7 @@ namespace SFDDCards.UX
 
         public Action<RenderedCard> OnClickAction { get; set; } = null;
 
+        [Obsolete("Transition to " + nameof(_SetFromCard))]
         public void SetFromCard(Card representedCard, ReactionWindowContext? reactionWindowContext = null)
         {
             this.Annihilate();
@@ -48,6 +54,29 @@ namespace SFDDCards.UX
             }
 
             this.MyRarityIndicator.SetFromRarity(representedCard.Rarity);
+        }
+
+        public void _SetFromCard(CardInstance representedCard, ReactionWindowContext? reactionWindowContext = null)
+        {
+            this.Annihilate();
+
+            this._RepresentedCard = representedCard;
+
+            this.NameText.text = representedCard.Name;
+            this.EffectText.text = representedCard.Describe();
+
+            if (SpriteLookup.TryGetSprite(representedCard.Id, out Sprite cardArt))
+            {
+                this.CardImage.sprite = cardArt;
+            }
+
+            foreach (Element curElement in ElementDatabase.ElementData.Values)
+            {
+                ElementResourceIconUX icon = Instantiate(this.ElementResourceIconUXPF, this.ElementResourceIconHolder);
+                icon.SetFromElement(curElement, ElementDatabase.GetElementGain(curElement, representedCard));
+            }
+
+            this.MyRarityIndicator._SetFromRarity(representedCard.Qualities.GetStringQuality(WellknownQualities.Rarity));
         }
 
         public void Annihilate()

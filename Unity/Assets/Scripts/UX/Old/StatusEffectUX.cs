@@ -69,6 +69,12 @@ namespace SFDDCards.UX
             return false;
         }
 
+        public bool _TryGetCard(out CardInstance toShow)
+        {
+            toShow = null;
+            return false;
+        }
+
         [Obsolete("Transition to " + nameof(_TryGetStatusEffect))]
         public bool TryGetStatusEffect(out IStatusEffect toShow)
         {

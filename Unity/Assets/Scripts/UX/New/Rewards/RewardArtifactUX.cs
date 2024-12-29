@@ -2,6 +2,7 @@ namespace SpaceDeck.UX
 {
     using SFDDCards;
     using SFDDCards.UX;
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
@@ -83,6 +84,11 @@ namespace SpaceDeck.UX
             toShow = null;
             return false;
         }
+        public bool _TryGetCard(out CardInstance toShow)
+        {
+            toShow = null;
+            return false;
+        }
 
         public bool TryGetStatusEffect(out IStatusEffect toShow)
         {
@@ -110,5 +116,6 @@ namespace SpaceDeck.UX
         {
             this.UnHoverOnDisable();
         }
+
     }
 }
