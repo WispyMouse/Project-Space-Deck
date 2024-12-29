@@ -1,5 +1,7 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
+    using SFDDCards;
+    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -19,13 +21,16 @@ namespace SFDDCards.UX
         private void OnEnable()
         {
             GlobalUpdateUX.UpdateUXEvent.AddListener(RepresentDeck);
+            GlobalUpdateUX.UpdateUXEvent.AddListener(_RepresentDeck);
         }
 
         private void OnDisable()
         {
             GlobalUpdateUX.UpdateUXEvent.RemoveListener(RepresentDeck);
+            GlobalUpdateUX.UpdateUXEvent.RemoveListener(_RepresentDeck);
         }
 
+        [Obsolete("Transition to " + nameof(_RepresentDeck))]
         public void RepresentDeck(CampaignContext forContext)
         {
             if (forContext == null)
@@ -48,6 +53,30 @@ namespace SFDDCards.UX
             this.CardsInDeckValue.text = forContext.CurrentCombatContext.PlayerCombatDeck.CardsCurrentlyInDeck.Count.ToString();
             this.CardsInDiscardValue.text = forContext.CurrentCombatContext.PlayerCombatDeck.CardsCurrentlyInDiscard.Count.ToString();
             this.CardsInExileValue.text = forContext.CurrentCombatContext.PlayerCombatDeck.CardsCurrentlyInExile.Count.ToString();
+        }
+
+        public void _RepresentDeck(CampaignContext forContext)
+        {
+            if (forContext == null)
+            {
+                this.CardsInDeckValue.text = "0";
+                this.CardsInDiscardValue.text = "0";
+                this.CardsInExileValue.text = "0";
+
+                return;
+            }
+
+            if (forContext._CurrentEncounter == null)
+            {
+                this.CardsInDeckValue.text = forContext._CampaignDeck.Count.ToString();
+                this.CardsInDiscardValue.text = "0";
+                this.CardsInExileValue.text = "0";
+                return;
+            }
+
+            this.CardsInDeckValue.text = forContext._CurrentEncounter.GetZoneCards(WellknownZones.Deck).Count.ToString();
+            this.CardsInDiscardValue.text = forContext._CurrentEncounter.GetZoneCards(WellknownZones.Discard).Count.ToString();
+            this.CardsInExileValue.text = forContext._CurrentEncounter.GetZoneCards(WellknownZones.Exile).Count.ToString();
         }
     }
 }

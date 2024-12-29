@@ -47,6 +47,16 @@ namespace SpaceDeck.GameState.Minimum
             }
         }
 
+        public IReadOnlyList<CardInstance> GetZoneCards(LowercaseString zone)
+        {
+            if (this.ZonesWithCards.TryGetValue(zone, out List<CardInstance> cards))
+            {
+                return cards;
+            }
+            this.ZonesWithCards.Add(zone, new List<CardInstance>());
+            return this.GetZoneCards(zone);
+        }
+
         public virtual string BuildEncounterDialogue(LowercaseString index, IGameStateMutator mutator)
         {
             return string.Empty;

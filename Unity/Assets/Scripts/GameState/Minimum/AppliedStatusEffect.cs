@@ -4,7 +4,7 @@ namespace SpaceDeck.GameState.Minimum
     using System;
     using System.Collections.Generic;
 
-    public class AppliedStatusEffect : IHaveQualities, IDescribable
+    public class AppliedStatusEffect : IHaveQualities, IDescribable, IEffectIDescribable
     {
         public readonly LowercaseString Id;
         public readonly int StatusEffectPriorityOrder = 0;
@@ -33,6 +33,11 @@ namespace SpaceDeck.GameState.Minimum
         }
 
         public string Describe()
+        {
+            throw new NotImplementedException();
+        }
+
+        public EffectDescription GetDescription()
         {
             throw new NotImplementedException();
         }
