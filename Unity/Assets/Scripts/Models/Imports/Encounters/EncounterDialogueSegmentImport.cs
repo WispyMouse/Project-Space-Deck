@@ -1,5 +1,6 @@
 namespace SpaceDeck.Models.Imports
 {
+    using SpaceDeck.Models.Prototypes;
     using System;
     using System.Collections.Generic;
 
@@ -9,5 +10,10 @@ namespace SpaceDeck.Models.Imports
     {
         public string RequirementScript;
         public string Dialogue;
+
+        public EncounterDialogueSegment GetSegment()
+        {
+            return new EncounterDialogueSegment(this.RequirementScript, this.Dialogue);
+        }
     }
 }

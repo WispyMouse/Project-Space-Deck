@@ -8,14 +8,14 @@ namespace SpaceDeck.Models.Prototypes
     public class EncounterPrototype
     {
         public readonly LowercaseString Id;
-        public string Name;
-        public string Description;
+        public readonly string Name;
+        public readonly string Description;
         public readonly HashSet<LowercaseString> EncounterTags = new HashSet<LowercaseString>();
         public readonly IReadOnlyList<LowercaseString> EnemiesInEncounterById = new List<LowercaseString>();
-        public bool IsShopEncounter;
-        public IReadOnlyList<string> Arguments = new List<string>();
+        public readonly bool IsShopEncounter;
+        public readonly IReadOnlyList<string> Arguments = new List<string>();
         // TODO RewardImport
-        public Dictionary<LowercaseString, EncounterScript> EncounterScripts = new Dictionary<LowercaseString, EncounterScript>();
+        public readonly Dictionary<LowercaseString, EncounterScript> EncounterScripts = new Dictionary<LowercaseString, EncounterScript>();
 
         public EncounterPrototype(
             LowercaseString id,

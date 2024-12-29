@@ -1,5 +1,6 @@
 namespace SpaceDeck.GameState.Minimum
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
@@ -44,6 +45,16 @@ namespace SpaceDeck.GameState.Minimum
                 this.CardsInZones.Add(card, zone);
                 this.ZonesWithCards[zone].Add(card);
             }
+        }
+
+        public virtual string BuildEncounterDialogue(LowercaseString index, IGameStateMutator mutator)
+        {
+            return string.Empty;
+        }
+
+        public virtual IReadOnlyList<EncounterOption> GetOptions(LowercaseString index, IGameStateMutator mutator)
+        {
+            return Array.Empty<EncounterOption>();
         }
     }
 }
