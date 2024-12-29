@@ -4,6 +4,7 @@ namespace SFDDCards
     using SFDDCards.Evaluation.Conceptual;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -14,7 +15,9 @@ namespace SFDDCards
     public abstract class PlayerChoice
     {
         public bool ResultIsChosen { get; protected set; } = false;
+        [Obsolete("Transition to " + nameof(_DescribeChoice))]
         public abstract string DescribeChoice(CampaignContext campaignContext, TokenEvaluatorBuilder currentEvaluator);
+        public abstract string _DescribeChoice(IGameStateMutator mutator);
         public abstract bool TryFinalizeWithoutPlayerInput(DeltaEntry toApplyTo);
     }
 

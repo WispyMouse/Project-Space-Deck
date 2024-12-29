@@ -6,8 +6,9 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using SpaceDeck.Tokenization.Minimum.Questions;
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Utility.Minimum;
 
-    public interface IEvaluatableValue
+    public interface IEvaluatableValue : IDescribable
     {
         public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken);
     }

@@ -42,5 +42,10 @@ namespace SpaceDeck.Tokenization.Evaluatables
             value = this.Constant;
             return true;
         }
+
+        public virtual string Describe()
+        {
+            return this.Constant.ToString();
+        }
     }
 }

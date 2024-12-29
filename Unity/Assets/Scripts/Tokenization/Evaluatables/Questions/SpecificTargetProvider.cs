@@ -31,5 +31,10 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
         {
             return this.Options;
         }
+
+        public override string Describe()
+        {
+            return string.Empty;
+        }
     }
 }

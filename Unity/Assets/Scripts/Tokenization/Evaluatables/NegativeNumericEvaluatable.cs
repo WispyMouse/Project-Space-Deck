@@ -47,5 +47,10 @@ namespace SpaceDeck.Tokenization.Evaluatables
             value = value * -1M;
             return true;
         }
+
+        public virtual string Describe()
+        {
+            return "-" + this.ToNegate.Describe();
+        }
     }
 }

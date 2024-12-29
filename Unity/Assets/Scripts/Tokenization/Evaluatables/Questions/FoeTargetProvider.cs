@@ -65,6 +65,11 @@ namespace SpaceDeck.Tokenization.Evaluatables
             }
             return foes;
         }
+
+        public override string Describe()
+        {
+            return "Foe";
+        }
     }
 
     public class FoeTargetEvaluatableParser : EvaluatableParser<ChangeTargetEvaluatableValue, IChangeTarget>

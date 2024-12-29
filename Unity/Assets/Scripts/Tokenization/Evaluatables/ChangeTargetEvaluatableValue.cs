@@ -48,5 +48,10 @@ namespace SpaceDeck.Tokenization.Evaluatables
             value = targets[0];
             return true;
         }
+
+        public virtual string Describe()
+        {
+            return this.Provider.Describe();
+        }
     }
 }
