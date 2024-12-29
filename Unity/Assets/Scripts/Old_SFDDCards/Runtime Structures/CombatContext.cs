@@ -2,10 +2,12 @@ namespace SFDDCards
 {
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.Evaluation.Conceptual;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
 
+    [Obsolete("Everything should transition to using EncounterState.")]
     public class CombatContext
     {
         public enum TurnStatus
