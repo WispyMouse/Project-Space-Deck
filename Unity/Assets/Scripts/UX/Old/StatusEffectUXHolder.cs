@@ -7,6 +7,7 @@ namespace SFDDCards.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.UX;
 
     public abstract class StatusEffectUXHolder : MonoBehaviour
     {

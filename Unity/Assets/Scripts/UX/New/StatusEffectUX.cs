@@ -1,4 +1,4 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
     using System;
     using System.Collections;
@@ -8,12 +8,14 @@ namespace SFDDCards.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
+    using SFDDCards;
+    using SFDDCards.UX;
 
     public class StatusEffectUX : MonoBehaviour, IMouseHoverListener
     {
         [Obsolete("Should transition to " + nameof(_RepresentsEffect))]
         public SFDDCards.AppliedStatusEffect RepresentsEffect;
-        public AppliedStatusEffect _RepresentsEffect;
+        public SpaceDeck.GameState.Minimum.AppliedStatusEffect _RepresentsEffect;
 
         [SerializeReference]
         private TMPro.TMP_Text StackText;
@@ -23,7 +25,7 @@ namespace SFDDCards.UX
 
         [Obsolete("Should transition to " + nameof(_OnStatusEffectPressed))]
         private Action<SFDDCards.AppliedStatusEffect> OnStatusEffectPressed;
-        private Action<AppliedStatusEffect> _OnStatusEffectPressed;
+        private Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> _OnStatusEffectPressed;
 
         public virtual bool ShouldShowBase { get; } = true;
 
@@ -40,7 +42,7 @@ namespace SFDDCards.UX
             this.OnStatusEffectPressed = onClickEvent;
         }
 
-        public void _SetFromEffect(AppliedStatusEffect toSet, Action<AppliedStatusEffect> onClickEvent = null)
+        public void _SetFromEffect(SpaceDeck.GameState.Minimum.AppliedStatusEffect toSet, Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> onClickEvent = null)
         {
             this._RepresentsEffect = toSet;
             this._OnStatusEffectPressed = onClickEvent;
@@ -82,7 +84,7 @@ namespace SFDDCards.UX
             return true;
         }
 
-        public bool _TryGetStatusEffect(out AppliedStatusEffect toShow)
+        public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
         {
             toShow = this._RepresentsEffect;
             return true;
@@ -103,9 +105,15 @@ namespace SFDDCards.UX
             this.UnHoverOnDisable();
         }
 
+        [Obsolete("Should transition to " + nameof(_Clicked))]
         public void Clicked()
         {
             this.OnStatusEffectPressed?.Invoke(this.RepresentsEffect);
+        }
+
+        public void _Clicked()
+        {
+            this._OnStatusEffectPressed?.Invoke(this._RepresentsEffect);
         }
 
         public void UnHoverOnDisable()
