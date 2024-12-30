@@ -1,4 +1,4 @@
-namespace SpaceDeck.GameState.Execution
+namespace SpaceDeck.Models.Databases
 {
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;

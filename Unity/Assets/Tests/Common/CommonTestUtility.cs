@@ -9,14 +9,7 @@ namespace SpaceDeck.Tests.EditMode
     {
         public static void TearDownDatabases()
         {
-            ScriptingCommandReference.Clear();
-            SpriteLookup.Clear();
-
-            RuleReference.ClearRules();
-
-            CardDatabase.ClearDatabase();
-            StatusEffectDatabase.ClearDatabase();
-            CurrencyDatabase.ClearDatabase();
+            AllDatabases.ClearAllDatabases();
         }
     }
 }

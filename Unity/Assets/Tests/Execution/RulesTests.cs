@@ -25,6 +25,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Utility.Wellknown;
     using System.Linq;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
+    using SpaceDeck.Models.Databases;
 
     /// <summary>
     /// This class holds tests that were made as part of a

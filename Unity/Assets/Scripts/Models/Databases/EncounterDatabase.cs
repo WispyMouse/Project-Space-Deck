@@ -84,5 +84,10 @@ namespace SpaceDeck.Models.Databases
         {
             return new EncounterInstance(model);
         }
+
+        public static void ClearDatabase()
+        {
+            EncounterData.Clear();
+        }
     }
 }
