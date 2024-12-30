@@ -66,7 +66,7 @@ namespace SFDDCards
 
         [Obsolete("Should transition to " + nameof(_PendingRewards))]
         public Reward PendingRewards { get; set; } = null;
-        public SpaceDeck.Models.Instances.RewardInstance _PendingRewards { get; set; } = null;
+        public List<SpaceDeck.GameState.Minimum.PickReward> _PendingRewards { get; set; } = null;
 
         public CampaignContext(CampaignRoute onRoute)
         {

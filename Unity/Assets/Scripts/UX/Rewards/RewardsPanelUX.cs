@@ -20,16 +20,25 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
-        public SpaceDeck.GameState.Minimum.Reward _Rewards;
+        public List<SpaceDeck.GameState.Minimum.PickReward> _Rewards;
 
         private void Awake()
         {
             this.Annihilate();
         }
 
-        public void _SetReward(SpaceDeck.GameState.Minimum.Reward toReward)
+        public void _SetReward(List<SpaceDeck.GameState.Minimum.PickReward> rewards)
         {
-            throw new System.NotImplementedException();
+            this.gameObject.SetActive(true);
+            this.Annihilate();
+
+            this._Rewards = rewards;
+
+            foreach (SpaceDeck.GameState.Minimum.PickReward pickReward in this._Rewards)
+            {
+                PickXRewardPanelUX pickRewardPanel = Instantiate(this.PickRewardUXPF, this.RewardPanelsHolder);
+                pickRewardPanel._RepresentPick(CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, this, pickReward);
+            }
         }
 
         void Annihilate()

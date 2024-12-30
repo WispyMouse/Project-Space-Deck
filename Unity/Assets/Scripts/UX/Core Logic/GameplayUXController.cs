@@ -402,10 +402,10 @@ namespace SpaceDeck.UX
             this.StartCoroutine(AnimateEnemyTurnsInternal(continuationAction));
         }
 
-        public void _ShowRewardsPanel(SpaceDeck.GameState.Minimum.Reward cardsToReward)
+        public void _ShowRewardsPanel(List<PickReward> toReward)
         {
             this.RewardsPanelUXInstance.gameObject.SetActive(true);
-            this.RewardsPanelUXInstance._SetReward(cardsToReward);
+            this.RewardsPanelUXInstance._SetReward(toReward);
             this._UpdateUX(this.CurrentCampaignContext);
         }
 
@@ -684,7 +684,7 @@ namespace SpaceDeck.UX
             this.CombatTurnCounterInstance._EndPlayerTurn();
         }
 
-        public void _PresentAwards(SpaceDeck.GameState.Minimum.Reward toPresent)
+        public void _PresentAwards(List<PickReward> toPresent)
         {
             this.CurrentCampaignContext._PendingRewards = null;
             this.CancelAllSelections();
