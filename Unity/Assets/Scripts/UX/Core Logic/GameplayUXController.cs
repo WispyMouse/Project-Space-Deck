@@ -175,10 +175,11 @@ namespace SpaceDeck.UX
             CampaignContext.NonCombatEncounterStatus newNonCombatState = this.CurrentCampaignContext.CurrentNonCombatEncounterStatus;
             CombatContext.TurnStatus newTurnState = this.CurrentCampaignContext.CurrentCombatContext == null ? CombatContext.TurnStatus.NotInCombat : this.CurrentCampaignContext.CurrentCombatContext.CurrentTurnStatus;
 
-            if (this.CurrentCampaignContext?.PendingRewards != null && this.RewardsPanelUXInstance.Rewards != this.CurrentCampaignContext?.PendingRewards)
-            {
-                this.PresentAwards(this.CurrentCampaignContext.PendingRewards);
-            }
+            // TODO: DISMANTLE
+            // if (this.CurrentCampaignContext?.PendingRewards != null && this.RewardsPanelUXInstance.Rewards != this.CurrentCampaignContext?.PendingRewards)
+            // {
+            //     this.PresentAwards(this.CurrentCampaignContext.PendingRewards);
+            // }
 
             CampaignContext.GameplayCampaignState wasPreviousCampaignState = this.previousCampaignState;
             CampaignContext.NonCombatEncounterStatus wasPreviousNonCombatState = this.previousNonCombatEncounterState;
@@ -528,14 +529,6 @@ namespace SpaceDeck.UX
             this.StartCoroutine(AnimateEnemyTurnsInternal(continuationAction));
         }
 
-        [Obsolete("Should transition to " + nameof(_ShowRewardsPanel))]
-        public void ShowRewardsPanel(SFDDCards.Reward cardsToReward)
-        {
-            this.RewardsPanelUXInstance.gameObject.SetActive(true);
-            this.RewardsPanelUXInstance.SetReward(cardsToReward);
-            this.UpdateUX(this.CurrentCampaignContext);
-        }
-
         public void _ShowRewardsPanel(SpaceDeck.GameState.Minimum.Reward cardsToReward)
         {
             this.RewardsPanelUXInstance.gameObject.SetActive(true);
@@ -816,14 +809,6 @@ namespace SpaceDeck.UX
             }
 
             this.CombatTurnCounterInstance._EndPlayerTurn();
-        }
-
-        [Obsolete("Transition to " + nameof(_PresentAwards))]
-        public void PresentAwards(SFDDCards.Reward toPresent)
-        {
-            this.CurrentCampaignContext.PendingRewards = null;
-            this.CancelAllSelections();
-            this.ShowRewardsPanel(toPresent);
         }
 
         public void _PresentAwards(SpaceDeck.GameState.Minimum.Reward toPresent)

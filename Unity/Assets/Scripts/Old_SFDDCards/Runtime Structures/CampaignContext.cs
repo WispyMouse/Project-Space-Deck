@@ -154,13 +154,15 @@ namespace SFDDCards
                 this.SetCampaignState(GameplayCampaignState.NonCombatEncounter, NonCombatEncounterStatus.AllowedToLeave);
                 return;
             }
+            // TODO ENCOUNTER SCRIPTS
+            /*
             else if (basedOn.BasedOn.EncounterScripts != null && basedOn.BasedOn.EncounterScripts.Count > 0)
             {
                 this.SetCampaignState(GameplayCampaignState.NonCombatEncounter, NonCombatEncounterStatus.NotAllowedToLeave);
                 return;
             }
+            */
 
-            this.CurrentCombatContext = new CombatContext(this, basedOn);
             this.SetCampaignState(GameplayCampaignState.InCombat);
         }
 
@@ -192,7 +194,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 
-        [Obsolete("Transition to " + nameof(_MakeChoiceNodeDecision)]
+        [Obsolete("Transition to " + nameof(_MakeChoiceNodeDecision))]
         public void MakeChoiceNodeDecision(ChoiceNodeOption chosen)
         {
             chosen.WasSelected = true;
@@ -561,6 +563,11 @@ namespace SFDDCards
         }
 
         public void Gain(IShopEntry toGain)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Gain(SpaceDeck.GameState.Minimum.Reward toGain)
         {
             throw new System.NotImplementedException();
         }

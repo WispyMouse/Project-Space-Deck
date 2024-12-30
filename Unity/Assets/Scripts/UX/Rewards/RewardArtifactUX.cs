@@ -1,20 +1,16 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.UX;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.UX.AssetLookup;
 
     public class RewardArtifactUX : MonoBehaviour, IMouseHoverListener
     {
-        [Obsolete("Should transition to " + nameof(_RepresentedArtifact))]
-        public StatusEffect RepresentedArtifact { get; set; }
         public SpaceDeck.GameState.Minimum.AppliedStatusEffect _RepresentedArtifact { get; private set; }
 
         [SerializeReference]
@@ -32,17 +28,6 @@ namespace SpaceDeck.UX
         public virtual bool ShouldShowBase { get; } = false;
 
         private Action<RewardArtifactUX> OnClicked {get; set;} 
-
-        [Obsolete("Transition to " + nameof(SetFromArtifact))]
-        public void SetFromArtifact(StatusEffect artifact, Action<RewardArtifactUX> onClick, int amount)
-        {
-            this.RepresentedArtifact = artifact;
-
-            this.ImageRepresentation.sprite = artifact.Sprite;
-            this.Name.text = artifact.Name;
-            this.Label.text = (amount != 0 ? $"x{amount}" : "") + artifact.DescribeStatusEffect().BreakDescriptionsIntoString();
-            this.OnClicked = onClick;
-        }
 
         public void SetFromArtifact(SpaceDeck.GameState.Minimum.AppliedStatusEffect artifact, Action<RewardArtifactUX> onClick, int amount)
         {
@@ -79,22 +64,12 @@ namespace SpaceDeck.UX
             return this.transform;
         }
 
-        public bool TryGetCard(out Card toShow)
-        {
-            toShow = null;
-            return false;
-        }
         public bool _TryGetCard(out CardInstance toShow)
         {
             toShow = null;
             return false;
         }
 
-        public bool TryGetStatusEffect(out IStatusEffect toShow)
-        {
-            toShow = this.RepresentedArtifact;
-            return true;
-        }
 
         public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
         {

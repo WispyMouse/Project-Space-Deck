@@ -8,6 +8,7 @@ namespace SpaceDeck.UX
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
+    using static SpaceDeck.GameState.Minimum.PickReward;
     using static SpaceDeck.GameState.Minimum.Reward;
 
     public class PickXRewardPanelUX : MonoBehaviour
@@ -67,7 +68,7 @@ namespace SpaceDeck.UX
                 else if (slot.GainedEffect != null)
                 {
                     RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                    rewardArtifact.SetFromArtifact(slot.GainedEffect, (RewardArtifactUX artifact) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
+                    rewardArtifact.SetFromArtifact(slot._GainedEffect, (RewardArtifactUX artifact) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
                 }
                 else if (slot.GainedCurrency != null)
                 {
@@ -90,9 +91,23 @@ namespace SpaceDeck.UX
             }
         }
 
+        [Obsolete("Transition to " + nameof(_RewardSlotChosen))]
         public void RewardSlotChosen(PickSomeRewardSlot slotChosen)
         {
-            this.RewardsPanel.GainReward(slotChosen);
+            // TODO: DISMANTLE
+            // this.RewardsPanel.GainReward(slotChosen);
+            this.PicksRemaining--;
+
+            if (this.PicksRemaining <= 0)
+            {
+                this.Annihilate();
+                this.RewardsPanel.ClosePanel(this);
+            }
+        }
+
+        public void _RewardSlotChosen(SpaceDeck.GameState.Minimum.Reward rewards)
+        {
+            this.RewardsPanel._GainReward(rewards);
             this.PicksRemaining--;
 
             if (this.PicksRemaining <= 0)

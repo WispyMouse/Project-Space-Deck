@@ -1,17 +1,14 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.ImportModels;
-    using SFDDCards.UX;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Models.Instances;
-    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Instances;
+    using SpaceDeck.UX.AssetLookup;
 
     public class RewardCurrencyUX : MonoBehaviour, IMouseHoverListener
     {
@@ -27,8 +24,6 @@ namespace SpaceDeck.UX
         [SerializeReference]
         public LayoutElement OwnLayoutElement;
 
-        [Obsolete("Should transition to " + nameof(_RepresentedCurrency))]
-        public CurrencyImport RepresentedCurrency;
         public Currency _RepresentedCurrency;
         public int RewardAmount;
 
@@ -48,18 +43,6 @@ namespace SpaceDeck.UX
             this.Name.text = basedOn.Name;
             this.RewardAmount = amount;
             this.Label.text = $"x{RewardAmount.ToString()} {SpriteLookup.GetNameAndMaybeIcon(basedOn)}";
-            this.OnClicked = onClick;
-        }
-
-        [Obsolete("Should transition to " + nameof(_SetFromCurrency))]
-        public void SetFromCurrency(CurrencyImport basedOn, Action<RewardCurrencyUX> onClick, int amount)
-        {
-            this.RepresentedCurrency = basedOn;
-
-            this.ImageRepresentation.sprite = basedOn.CurrencyArt;
-            this.Name.text = basedOn.Name;
-            this.RewardAmount = amount;
-            this.Label.text = $"x{RewardAmount.ToString()} {basedOn.GetNameAndMaybeIcon()}";
             this.OnClicked = onClick;
         }
 
@@ -84,23 +67,12 @@ namespace SpaceDeck.UX
             return this.transform;
         }
 
-        public bool TryGetCard(out Card toShow)
-        {
-            toShow = null;
-            return false;
-        }
-
         public bool _TryGetCard(out CardInstance toShow)
         {
             toShow = null;
             return false;
         }
 
-        public bool TryGetStatusEffect(out IStatusEffect toShow)
-        {
-            toShow = null;
-            return false;
-        }
         public bool _TryGetStatusEffect(out GameState.Minimum.AppliedStatusEffect toShow)
         {
             toShow = null;

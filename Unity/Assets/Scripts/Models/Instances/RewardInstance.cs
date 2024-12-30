@@ -8,7 +8,7 @@ namespace SpaceDeck.Models.Instances
 
     public class RewardInstance : Reward
     {
-        public RewardInstance(RewardPrototype prototype) : base(prototype.Id)
+        public RewardInstance(RewardPrototype prototype) : base(prototype.Id, prototype.IdentityKind)
         {
         }
     }

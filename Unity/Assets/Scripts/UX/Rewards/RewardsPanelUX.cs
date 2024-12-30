@@ -20,28 +20,11 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
-        [Obsolete("Transition to " + nameof(_Rewards))]
-        public Reward Rewards;
         public SpaceDeck.GameState.Minimum.Reward _Rewards;
 
         private void Awake()
         {
             this.Annihilate();
-        }
-
-        [Obsolete("Transition to " + nameof(_SetReward))]
-        public void SetReward(Reward toReward)
-        {
-            this.gameObject.SetActive(true);
-            this.Annihilate();
-
-            this.Rewards = toReward;
-
-            foreach (PickSomeReward pickReward in toReward.PickRewards)
-            {
-                PickXRewardPanelUX pickRewardPanel = Instantiate(this.PickRewardUXPF, this.RewardPanelsHolder);
-                pickRewardPanel.RepresentPick(CentralGameStateControllerInstance.CurrentCampaignContext, this, pickReward);
-            }
         }
 
         public void _SetReward(SpaceDeck.GameState.Minimum.Reward toReward)
@@ -56,12 +39,12 @@ namespace SpaceDeck.UX
                 Destroy(this.RewardPanelsHolder.GetChild(ii).gameObject);
             }
 
-            this.Rewards = null;
+            this._Rewards = null;
         }
 
-        public void GainReward(PickSomeRewardSlot slotChosen)
+        public void _GainReward(SpaceDeck.GameState.Minimum.Reward reward)
         {
-            this.CentralGameStateControllerInstance.CurrentCampaignContext.Gain(slotChosen);
+            this.CentralGameStateControllerInstance.CurrentCampaignContext.Gain(reward);
         }
 
         public void ClosePanel(PickXRewardPanelUX toClose)

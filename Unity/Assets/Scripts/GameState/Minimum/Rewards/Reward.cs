@@ -6,16 +6,25 @@ namespace SpaceDeck.GameState.Minimum
 
     public class Reward
     {
-        public enum PickRewardProtocol
+        public enum RewardIdentityKind
         {
-            ChooseX
+            Card = 0,
+            Artifact = 1,
+            Currency = 2
         }
 
         public readonly LowercaseString Id;
+        public readonly RewardIdentityKind IdentityKind;
 
-        public Reward(LowercaseString id)
+        public Reward(LowercaseString id, RewardIdentityKind identityKind)
         {
             this.Id = id;
+            this.IdentityKind = identityKind;
+        }
+
+        public virtual int GetAmount(IGameStateMutator mutator)
+        {
+            return 1;
         }
     }
 }
