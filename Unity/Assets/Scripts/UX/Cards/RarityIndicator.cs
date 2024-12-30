@@ -1,12 +1,11 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SpaceDeck.Utility.Minimum;
-    using SpaceDeck.Utility.Wellknown;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
+    using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class RarityIndicator : MonoBehaviour
     {
@@ -27,38 +26,6 @@ namespace SpaceDeck.UX
 
         [SerializeReference]
         private Sprite GeneratedRarityIcon;
-
-
-        [System.Obsolete("Transition to " + nameof(_SetFromRarity))]
-        public void SetFromRarity(Card.KnownRarities rarity)
-        {
-            switch (rarity)
-            {
-                case Card.KnownRarities.Unknown:
-                    this.IconShower.gameObject.SetActive(false);
-                    break;
-                case Card.KnownRarities.Starter:
-                    this.IconShower.gameObject.SetActive(true);
-                    this.IconShower.sprite = this.StarterRarityIcon;
-                    break;
-                case Card.KnownRarities.Common:
-                    this.IconShower.gameObject.SetActive(true);
-                    this.IconShower.sprite = this.CommonRarityIcon;
-                    break;
-                case Card.KnownRarities.Uncommon:
-                    this.IconShower.gameObject.SetActive(true);
-                    this.IconShower.sprite = this.UncommonRarityIcon;
-                    break;
-                case Card.KnownRarities.Rare:
-                    this.IconShower.gameObject.SetActive(true);
-                    this.IconShower.sprite = this.RareRarityIcon;
-                    break;
-                case Card.KnownRarities.Generated:
-                    this.IconShower.gameObject.SetActive(true);
-                    this.IconShower.sprite = this.GeneratedRarityIcon;
-                    break;
-            }
-        }
 
         public void _SetFromRarity(LowercaseString rarity)
         {

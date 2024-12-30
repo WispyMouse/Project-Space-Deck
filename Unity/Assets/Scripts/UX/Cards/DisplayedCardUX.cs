@@ -51,15 +51,6 @@ namespace SpaceDeck.UX
         {
         }
 
-        [Obsolete("Transition to " + nameof(_SetFromCard))]
-        public void SetFromCard(Card toSet, Action<DisplayedCardUX> inCardSelectedAction = null, ReactionWindowContext? reactionWindowContext = null)
-        {
-            this.RepresentedCard = toSet;
-            this.cardSelectedAction = inCardSelectedAction;
-
-            this.RenderedCard.SetFromCard(toSet, reactionWindowContext);
-        }
-
         public void _SetFromCard(CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null)
         {
             this._RepresentedCard = toSet;
@@ -71,12 +62,6 @@ namespace SpaceDeck.UX
         public Transform GetTransform()
         {
             return this.transform;
-        }
-
-        public bool TryGetCard(out Card toShow)
-        {
-            toShow = this.RenderedCard?.RepresentedCard;
-            return toShow != null;
         }
 
         public bool _TryGetCard(out CardInstance toShow)
@@ -93,12 +78,6 @@ namespace SpaceDeck.UX
         private void OnDestroy()
         {
             this.UnHoverOnDisable();
-        }
-
-        public bool TryGetStatusEffect(out IStatusEffect toShow)
-        {
-            toShow = null;
-            return false;
         }
 
         public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)

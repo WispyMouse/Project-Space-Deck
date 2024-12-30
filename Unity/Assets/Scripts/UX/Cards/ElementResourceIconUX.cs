@@ -1,8 +1,5 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SpaceDeck.Utility.Wellknown;
-    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -10,6 +7,8 @@ namespace SpaceDeck.UX
     using System.Text;
     using UnityEngine;
     using UnityEngine.UI;
+    using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.UX.AssetLookup;
 
     public class ElementResourceIconUX : MonoBehaviour
     {
