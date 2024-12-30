@@ -123,13 +123,33 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
         }
 
-        [Obsolete("Mutation of game state should be done through a " + nameof(IGameStateMutator))]
+        [Obsolete("Transition to " + nameof(_StartNextRoomFromEncounter))]
         public void StartNextRoomFromEncounter(EvaluatedEncounter basedOn)
         {
             this.LeaveCurrentEncounter();
             this.CurrentEncounter = basedOn;
 
             if (basedOn.BasedOn.IsShopEncounter)
+            {
+                this.SetCampaignState(GameplayCampaignState.NonCombatEncounter, NonCombatEncounterStatus.AllowedToLeave);
+                return;
+            }
+            else if (basedOn.BasedOn.EncounterScripts != null && basedOn.BasedOn.EncounterScripts.Count > 0)
+            {
+                this.SetCampaignState(GameplayCampaignState.NonCombatEncounter, NonCombatEncounterStatus.NotAllowedToLeave);
+                return;
+            }
+
+            this.CurrentCombatContext = new CombatContext(this, basedOn);
+            this.SetCampaignState(GameplayCampaignState.InCombat);
+        }
+
+        public void _StartNextRoomFromEncounter(EncounterState basedOn)
+        {
+            this.LeaveCurrentEncounter();
+            this.GameplayState.StartEncounter(basedOn);
+
+            if (basedOn.IsShopEncounter)
             {
                 this.SetCampaignState(GameplayCampaignState.NonCombatEncounter, NonCombatEncounterStatus.AllowedToLeave);
                 return;
@@ -172,11 +192,19 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 
+        [Obsolete("Transition to " + nameof(_MakeChoiceNodeDecision)]
         public void MakeChoiceNodeDecision(ChoiceNodeOption chosen)
         {
             chosen.WasSelected = true;
             this.CurrentEncounter = chosen.WillEncounter;
             this.StartNextRoomFromEncounter(chosen.WillEncounter);
+            GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
+        }
+
+        public void _MakeChoiceNodeDecision(SpaceDeck.GameState.Minimum.ChoiceNodeOption chosen)
+        {
+            chosen.WasSelected = true;
+            this._StartNextRoomFromEncounter(chosen.WillEncounter);
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 

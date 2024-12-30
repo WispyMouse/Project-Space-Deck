@@ -9,7 +9,9 @@ namespace SpaceDeck.UX
 
     public class ChoiceNodeSelectorUX : MonoBehaviour
     {
+        [System.Obsolete("Transition to " + nameof(_CurrentlyRepresenting))]
         public ChoiceNode CurrentlyRepresenting;
+        public SpaceDeck.GameState.Minimum.ChoiceNode _CurrentlyRepresenting;
 
         [SerializeReference]
         private ChoiceNodeOptionUX OptionPrefab;
@@ -22,6 +24,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private GameplayUXController UXController;
 
+        [System.Obsolete("Transition to " + nameof(_RepresentNode))]
         public void RepresentNode(ChoiceNode toRepresent)
         {
             this.ClearNodes();
@@ -35,6 +38,19 @@ namespace SpaceDeck.UX
             }
         }
 
+        public void _RepresentNode(SpaceDeck.GameState.Minimum.ChoiceNode toRepresent)
+        {
+            this.ClearNodes();
+            this._CurrentlyRepresenting = toRepresent;
+
+            foreach (SpaceDeck.GameState.Minimum.ChoiceNodeOption option in toRepresent.Options)
+            {
+                ChoiceNodeOptionUX optionUx = Instantiate(this.OptionPrefab, this.TransformParent);
+                optionUx._RepresentOption(this, option);
+                this.ActiveOptions.Add(optionUx);
+            }
+        }
+
         public void ClearNodes()
         {
             for (int ii = this.ActiveOptions.Count - 1; ii >= 0; ii--)
@@ -44,9 +60,16 @@ namespace SpaceDeck.UX
             this.ActiveOptions.Clear();
         }
 
+        [System.Obsolete("Transition to " + nameof(_NodeIsChosen))]
         public void NodeIsChosen(ChoiceNodeOptionUX ux)
         {
             UXController.NodeIsChosen(ux.Representing);
+            this.ClearNodes();
+        }
+
+        public void _NodeIsChosen(ChoiceNodeOptionUX ux)
+        {
+            UXController._NodeIsChosen(ux._Representing);
             this.ClearNodes();
         }
     }

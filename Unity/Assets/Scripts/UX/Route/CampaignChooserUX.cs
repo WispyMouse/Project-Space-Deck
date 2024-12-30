@@ -1,12 +1,10 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.UX;
-    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using SpaceDeck.GameState.Minimum;
 
     public class CampaignChooserUX : MonoBehaviour
     {
@@ -24,12 +22,6 @@ namespace SpaceDeck.UX
         private void Start()
         {
             
-        }
-
-        [Obsolete("Transition to " + nameof(_RouteChosen))]
-        public void RouteChosen(RouteImport chosenRoute)
-        {
-            this.UXController.RouteChosen(chosenRoute);
         }
 
         public void _RouteChosen(Route chosenRoute)

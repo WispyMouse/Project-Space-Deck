@@ -8,6 +8,7 @@ namespace SpaceDeck.GameState.Minimum
         public string NodeName => this.WillEncounter?.EncounterName;
         public EncounterState WillEncounter { get; private set; }
         public readonly LowercaseString WillEncounterId;
+        public bool WasSelected { get; set; } = false;
 
         public ChoiceNodeOption(LowercaseString encounter)
         {

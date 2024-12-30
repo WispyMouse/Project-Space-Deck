@@ -855,10 +855,17 @@ namespace SpaceDeck.UX
             this.ChoiceUXFolder.SetActive(false);
         }
 
+        [Obsolete("Transition to " + nameof(_NodeIsChosen))]
         public void NodeIsChosen(SFDDCards.ChoiceNodeOption option)
         {
             this.CancelAllSelections();
             this.CentralGameStateControllerInstance.CurrentCampaignContext.MakeChoiceNodeDecision(option);
+        }
+
+        public void _NodeIsChosen(SpaceDeck.GameState.Minimum.ChoiceNodeOption option)
+        {
+            this.CancelAllSelections();
+            this.CentralGameStateControllerInstance.CurrentCampaignContext._MakeChoiceNodeDecision(option);
         }
 
         public void ProceedToNextRoom()
