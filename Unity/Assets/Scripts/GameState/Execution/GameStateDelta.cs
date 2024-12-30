@@ -286,5 +286,10 @@ namespace SpaceDeck.GameState.Execution
         {
             throw new System.NotImplementedException();
         }
+
+        public LowercaseString GetCardZone(CardInstance card)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

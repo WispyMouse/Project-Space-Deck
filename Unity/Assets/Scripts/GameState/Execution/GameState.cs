@@ -352,5 +352,22 @@ namespace SpaceDeck.GameState.Execution
         {
             throw new NotImplementedException();
         }
+
+        public LowercaseString GetCardZone(CardInstance card)
+        {
+            if (this.CurrentEncounterState == null)
+            {
+                if (this.CardsInDeck.Contains(card))
+                {
+                    return WellknownZones.Campaign;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+
+            return this.CurrentEncounterState.GetCardZone(card);
+        }
     }
 }

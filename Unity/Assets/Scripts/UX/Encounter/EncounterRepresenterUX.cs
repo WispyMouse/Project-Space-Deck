@@ -13,7 +13,6 @@ namespace SpaceDeck.UX
     using SpaceDeck.Models.Imports;
     using SpaceDeck.UX;
     using SpaceDeck.Utility.Minimum;
-    using SFDDCards.UX;
     using SFDDCards;
     using SpaceDeck.Utility.Wellknown;
 

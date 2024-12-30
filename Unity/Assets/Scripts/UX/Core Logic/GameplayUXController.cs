@@ -3,7 +3,6 @@ namespace SpaceDeck.UX
     using SFDDCards;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
-    using SFDDCards.UX;
     using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
@@ -387,7 +386,7 @@ namespace SpaceDeck.UX
             this.CurrentSelectedCard?.DisableSelectionGlow();
             this.CurrentSelectedCard = null;
 
-            this.PlayerHandRepresenter.DeselectSelectedCard();
+            this.PlayerHandRepresenter._DeselectSelectedCard();
 
             if (this.CardBrowserUXInstance.RemainingCardsToChoose > 0)
             {
@@ -906,18 +905,6 @@ namespace SpaceDeck.UX
             this.CardBrowserUXInstance._SetFromCards(cardsInExile);
         }
 
-        [Obsolete("Transition to " + nameof(_BeginHoverTarget))]
-        public void BeginHoverTarget(ICombatantTarget target)
-        {
-            this.HoveredCombatant = target;
-            this.PlayerHandRepresenter.ReactionWindowForSelectedCard = new ReactionWindowContext(
-                this.CentralGameStateControllerInstance.CurrentCampaignContext,
-                KnownReactionWindows.ConsideringPlayingFromHand,
-                this.CentralGameStateControllerInstance.CurrentCampaignContext.CampaignPlayer,
-                target,
-                "hand");
-        }
-
         public void _BeginHoverTarget(IChangeTarget target)
         {
             this._HoveredCombatant = target;
@@ -929,7 +916,6 @@ namespace SpaceDeck.UX
             if (this.HoveredCombatant == target)
             {
                 this.HoveredCombatant = null;
-                this.PlayerHandRepresenter.ReactionWindowForSelectedCard = null;
             }
         }
 

@@ -34,6 +34,7 @@ namespace SpaceDeck.GameState.Minimum
 
         void MoveCard(CardInstance card, LowercaseString zone);
         IReadOnlyList<CardInstance> GetCardsInZone(LowercaseString zone);
+        LowercaseString GetCardZone(CardInstance card);
         void ShuffleDeck();
         void AddCard(CardInstance card, LowercaseString zone);
 
