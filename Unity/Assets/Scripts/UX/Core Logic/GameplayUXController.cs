@@ -837,7 +837,7 @@ namespace SpaceDeck.UX
         {
             this.CancelAllSelections();
 
-            ChoiceNode campaignNode = this.CurrentCampaignContext.GetCampaignCurrentNode();
+            SFDDCards.ChoiceNode campaignNode = this.CurrentCampaignContext.GetCampaignCurrentNode();
 
             if (campaignNode == null)
             {
@@ -855,7 +855,7 @@ namespace SpaceDeck.UX
             this.ChoiceUXFolder.SetActive(false);
         }
 
-        public void NodeIsChosen(ChoiceNodeOption option)
+        public void NodeIsChosen(SFDDCards.ChoiceNodeOption option)
         {
             this.CancelAllSelections();
             this.CentralGameStateControllerInstance.CurrentCampaignContext.MakeChoiceNodeDecision(option);
