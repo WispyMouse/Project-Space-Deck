@@ -7,11 +7,13 @@ namespace SpaceDeck.GameState.Minimum
 
     public class Route
     {
-        public string Name;
+        public readonly string Name;
+        public readonly List<ChoiceNode> Choices = new List<ChoiceNode>();
 
-        public Route(string name)
+        public Route(string name, List<ChoiceNode> choices)
         {
             this.Name = name;
+            this.Choices = choices;
         }
     }
 }

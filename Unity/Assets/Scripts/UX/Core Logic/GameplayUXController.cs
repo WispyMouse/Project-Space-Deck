@@ -157,132 +157,6 @@ namespace SpaceDeck.UX
             this.LifeValue.text = $"{campaignEntity.Qualities.GetNumericQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
         }
 
-        [Obsolete("Transition to " + nameof(_CheckAndActIfGameCampaignNavigationStateChanged))]
-        public void CheckAndActIfGameCampaignNavigationStateChanged()
-        {
-            if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null)
-            {
-                this.GoNextRoomButton.SetActive(false);
-                this.EndTurnButton.SetActive(false);
-                this.EncounterRepresenterUXInstance.Close();
-                // MouseHoverShowerPanel.CurrentContext = null;
-                return;
-            }
-
-            this.CampaignChooserUXInstance.HideChooser();
-
-            CampaignContext.GameplayCampaignState newCampaignState = this.CurrentCampaignContext.CurrentGameplayCampaignState;
-            CampaignContext.NonCombatEncounterStatus newNonCombatState = this.CurrentCampaignContext.CurrentNonCombatEncounterStatus;
-            CombatContext.TurnStatus newTurnState = this.CurrentCampaignContext.CurrentCombatContext == null ? CombatContext.TurnStatus.NotInCombat : this.CurrentCampaignContext.CurrentCombatContext.CurrentTurnStatus;
-
-            // TODO: DISMANTLE
-            // if (this.CurrentCampaignContext?.PendingRewards != null && this.RewardsPanelUXInstance.Rewards != this.CurrentCampaignContext?.PendingRewards)
-            // {
-            //     this.PresentAwards(this.CurrentCampaignContext.PendingRewards);
-            // }
-
-            CampaignContext.GameplayCampaignState wasPreviousCampaignState = this.previousCampaignState;
-            CampaignContext.NonCombatEncounterStatus wasPreviousNonCombatState = this.previousNonCombatEncounterState;
-            CombatContext.TurnStatus wasPreviousTurnState = this.previousCombatTurnState;
-
-            if (wasPreviousCampaignState == newCampaignState
-                && wasPreviousNonCombatState == newNonCombatState
-                && wasPreviousTurnState == newTurnState)
-            {
-                return;
-            }
-
-            this.previousCampaignState = newCampaignState;
-            this.previousNonCombatEncounterState = newNonCombatState;
-            this.previousCombatTurnState = newTurnState;
-
-            if (newCampaignState == CampaignContext.GameplayCampaignState.ClearedRoom
-                || (newCampaignState == CampaignContext.GameplayCampaignState.NonCombatEncounter && newNonCombatState == CampaignContext.NonCombatEncounterStatus.AllowedToLeave))
-            {
-                this.GoNextRoomButton.SetActive(true);
-            }
-            else
-            {
-                this.RewardsPanelUXInstance.gameObject.SetActive(false);
-                this.ShopPanelUXInstance.gameObject.SetActive(false);
-                this.GoNextRoomButton.SetActive(false);
-            }
-
-            if (newCampaignState == CampaignContext.GameplayCampaignState.NonCombatEncounter)
-            {
-                if (wasPreviousCampaignState != CampaignContext.GameplayCampaignState.NonCombatEncounter &&
-                    this.CurrentCampaignContext != null &&
-                    this.CurrentCampaignContext.CurrentEncounter != null
-                    )
-                {
-                    if (this.CurrentCampaignContext.CurrentEncounter.BasedOn.EncounterScripts != null && this.CurrentCampaignContext.CurrentEncounter.BasedOn.EncounterScripts.Count > 0)
-                    {
-                        this.ShopPanelUXInstance.gameObject.SetActive(false);
-                        this.EncounterRepresenterUXInstance.RepresentEncounter(this.CurrentCampaignContext.CurrentEncounter);
-                    }
-                    else if (this.CurrentCampaignContext.CurrentEncounter.BasedOn.IsShopEncounter)
-                    {
-                        this.EncounterRepresenterUXInstance.Close();
-                        // TODO: DISMANTLE
-                        // this.ShowShopPanel(this.CurrentCampaignContext.CurrentEncounter.GetShop(this.CurrentCampaignContext).ToArray());
-                    }
-                }
-            }
-            else
-            {
-                this.ShopPanelUXInstance.gameObject.SetActive(false);
-                this.EncounterRepresenterUXInstance.Close();
-            }
-            
-            if (newCampaignState == CampaignContext.GameplayCampaignState.InCombat)
-            {
-                this.CombatUXFolder.SetActive(true);
-                this.RewardsPanelUXInstance.gameObject.SetActive(false);
-                this.ShopPanelUXInstance.gameObject.SetActive(false);
-
-                if (wasPreviousCampaignState != CampaignContext.GameplayCampaignState.InCombat)
-                {
-                    this.CombatTurnCounterInstance.BeginHandlingCombat();
-                }
-
-                if (newTurnState == CombatContext.TurnStatus.PlayerTurn)
-                {
-                    this.EndTurnButton.SetActive(true);
-                }
-                else
-                {
-                    this.EndTurnButton.SetActive(false);
-                }
-
-                // MouseHoverShowerPanel.CurrentContext = new ReactionWindowContext(this.CurrentCampaignContext, KnownReactionWindows.ConsideringPlayingFromHand, this.CurrentCampaignContext.CurrentCombatContext.CombatPlayer, combatantTarget: null, playedFromZone: "hand");
-            }
-            else
-            {
-                if (wasPreviousCampaignState == CampaignContext.GameplayCampaignState.InCombat)
-                {
-                    this.CombatTurnCounterInstance.EndHandlingCombat();
-                }
-
-                this.EndTurnButton.SetActive(false);
-                this.CombatUXFolder.SetActive(false);
-            }
-
-            if (newCampaignState == CampaignContext.GameplayCampaignState.MakingRouteChoice)
-            {
-                this.PresentNextRouteChoice();
-            }
-            else
-            {
-                this.ClearRouteUX();
-            }
-
-            if (newCampaignState == CampaignContext.GameplayCampaignState.Victory)
-            {
-                GlobalUpdateUX.LogTextEvent?.Invoke($"Victory!! There are no more nodes in this route! Reset game to continue from beginning.", GlobalUpdateUX.LogType.GameEvent);
-            }
-        }
-
-
         public void _CheckAndActIfGameCampaignNavigationStateChanged()
         {
             if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null)
@@ -350,7 +224,6 @@ namespace SpaceDeck.UX
                     else if (this.CurrentCampaignContext._CurrentEncounter.IsShopEncounter)
                     {
                         this.EncounterRepresenterUXInstance.Close();
-                        // TODO: Shop Panel for new codebase
                         this._ShowShopPanel(this.CurrentCampaignContext._CurrentEncounter.GetShop());
                     }
                 }
@@ -394,7 +267,7 @@ namespace SpaceDeck.UX
 
             if (newCampaignState == CampaignContext.GameplayCampaignState.MakingRouteChoice)
             {
-                this.PresentNextRouteChoice();
+                this._PresentNextRouteChoice();
             }
             else
             {
@@ -419,7 +292,7 @@ namespace SpaceDeck.UX
                 this.AllCardsBrowserButton.SetActive(true);
             }
 
-            this.CheckAndActIfGameCampaignNavigationStateChanged();
+            // TODO DISMANTLE: this.CheckAndActIfGameCampaignNavigationStateChanged();
             this.RemoveDefeatedEntities();
             this.SetElementValueLabel();
             this.SetCurrenciesValueLabel();
@@ -818,11 +691,11 @@ namespace SpaceDeck.UX
             this._ShowRewardsPanel(toPresent);
         }
 
-        void PresentNextRouteChoice()
+        void _PresentNextRouteChoice()
         {
             this.CancelAllSelections();
 
-            SFDDCards.ChoiceNode campaignNode = this.CurrentCampaignContext.GetCampaignCurrentNode();
+            SpaceDeck.GameState.Minimum.ChoiceNode campaignNode = this.CurrentCampaignContext._GetCampaignCurrentNode();
 
             if (campaignNode == null)
             {
@@ -831,7 +704,7 @@ namespace SpaceDeck.UX
             }
 
             this.ChoiceUXFolder.SetActive(true);
-            this.ChoiceSelectorUX.RepresentNode(campaignNode);
+            this.ChoiceSelectorUX._RepresentNode(campaignNode);
         }
 
         void ClearRouteUX()

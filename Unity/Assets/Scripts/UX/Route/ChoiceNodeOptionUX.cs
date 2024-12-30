@@ -37,9 +37,9 @@ namespace SpaceDeck.UX
             this.DescriptionLabel.text = toRepresent.GetDescription();
         }
 
-        public void ChooseThis()
+        public void _ChooseThis()
         {
-            this.SelectorUx.NodeIsChosen(this);
+            this.SelectorUx._NodeIsChosen(this);
         }
     }
 }

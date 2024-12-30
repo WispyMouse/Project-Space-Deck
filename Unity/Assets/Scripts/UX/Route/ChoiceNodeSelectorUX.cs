@@ -1,16 +1,12 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.UX;
-    using SpaceDeck.UX;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using SpaceDeck.UX;
 
     public class ChoiceNodeSelectorUX : MonoBehaviour
     {
-        [System.Obsolete("Transition to " + nameof(_CurrentlyRepresenting))]
-        public ChoiceNode CurrentlyRepresenting;
         public SpaceDeck.GameState.Minimum.ChoiceNode _CurrentlyRepresenting;
 
         [SerializeReference]
@@ -23,20 +19,6 @@ namespace SpaceDeck.UX
 
         [SerializeReference]
         private GameplayUXController UXController;
-
-        [System.Obsolete("Transition to " + nameof(_RepresentNode))]
-        public void RepresentNode(ChoiceNode toRepresent)
-        {
-            this.ClearNodes();
-            this.CurrentlyRepresenting = toRepresent;
-
-            foreach (ChoiceNodeOption option in toRepresent.Options)
-            {
-                ChoiceNodeOptionUX optionUx = Instantiate(this.OptionPrefab, this.TransformParent);
-                optionUx.RepresentOption(this, option);
-                this.ActiveOptions.Add(optionUx);
-            }
-        }
 
         public void _RepresentNode(SpaceDeck.GameState.Minimum.ChoiceNode toRepresent)
         {
@@ -58,13 +40,6 @@ namespace SpaceDeck.UX
                 Destroy(this.ActiveOptions[ii].gameObject);
             }
             this.ActiveOptions.Clear();
-        }
-
-        [System.Obsolete("Transition to " + nameof(_NodeIsChosen))]
-        public void NodeIsChosen(ChoiceNodeOptionUX ux)
-        {
-            UXController.NodeIsChosen(ux.Representing);
-            this.ClearNodes();
         }
 
         public void _NodeIsChosen(ChoiceNodeOptionUX ux)

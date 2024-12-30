@@ -49,7 +49,9 @@ namespace SFDDCards
         public readonly Player CampaignPlayer;
         public readonly Entity _CampaignPlayer;
 
+        [Obsolete("Transition to " + nameof(_OnRoute))]
         public CampaignRoute OnRoute { get; private set; } = null;
+        public Route _OnRoute { get; private set; } = null;
         public int CampaignRouteNodeIndex { get; private set; } = -1;
 
         public GameplayCampaignState CurrentGameplayCampaignState { get; private set; } = GameplayCampaignState.NotStarted;
@@ -210,6 +212,7 @@ namespace SFDDCards
             GlobalUpdateUX.UpdateUXEvent?.Invoke(this);
         }
 
+        [Obsolete("Transition to " + nameof(_GetCampaignCurrentNode))]
         public ChoiceNode GetCampaignCurrentNode()
         {
             if (this.OnRoute == null || this.OnRoute.Nodes.Count <= this.CampaignRouteNodeIndex)
@@ -218,6 +221,16 @@ namespace SFDDCards
             }
 
             return this.OnRoute.Nodes[this.CampaignRouteNodeIndex];
+        }
+
+        public SpaceDeck.GameState.Minimum.ChoiceNode _GetCampaignCurrentNode()
+        {
+            if (this._OnRoute == null || this._OnRoute.Choices.Count <= this.CampaignRouteNodeIndex)
+            {
+                return null;
+            }
+
+            return this._OnRoute.Choices[this.CampaignRouteNodeIndex];
         }
 
         public void ClearCombatPersistenceStatuses()

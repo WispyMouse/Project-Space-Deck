@@ -11,10 +11,17 @@ namespace SpaceDeck.Models.Imports
     public class RouteImport : Importable
     {
         public string Name;
+        public List<ChoiceNodeImport> Choices;
 
         public Route GetRoute()
         {
-            return new Route(this.Name);
+            List<ChoiceNode> nodes = new List<ChoiceNode>();
+            foreach (ChoiceNodeImport import in this.Choices)
+            {
+                nodes.Add(import.GetNode());
+            }
+
+            return new Route(this.Name, nodes);
         }
     }
 }
