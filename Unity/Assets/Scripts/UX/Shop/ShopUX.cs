@@ -1,13 +1,12 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.UX;
-    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
+    using SpaceDeck.UX;
+    using SpaceDeck.GameState.Minimum;
 
     public class ShopUX : MonoBehaviour
     {
@@ -38,38 +37,25 @@ namespace SpaceDeck.UX
 
         public void ShopItemSelected(ShopItemUX selectedItem)
         {
-            if (!this.CentralGameStateControllerInstance.CurrentCampaignContext.CanAfford(selectedItem.RepresentingEntry.Costs))
+            if (!this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.CanAfford(selectedItem.RepresentingEntry.Costs))
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"Cannot afford this item!", GlobalUpdateUX.LogType.Info);
+                // TODO LOG
                 return;
             }
 
-            this.CentralGameStateControllerInstance.CurrentCampaignContext.PurchaseShopItem(selectedItem.RepresentingEntry);
+            this.CentralGameStateControllerInstance.CurrentCampaignContext._PurchaseShopItem(selectedItem.RepresentingEntry);
             this.ActiveShopItemUXs.Remove(selectedItem);
             Destroy(selectedItem.gameObject);
         }
 
-        [Obsolete("Transition to " + nameof(_SetShopItems))]
-        public void SetShopItems(params ShopEntry[] shopEntries)
+        public void _SetShopItems(IReadOnlyList<IShopEntry> shopEntries)
         {
             this.DestroyItems();
 
-            foreach (ShopEntry curEntry in shopEntries)
+            foreach (IShopEntry curEntry in shopEntries)
             {
                 ShopItemUX shopEntry = Instantiate(this.ShopItemUXPF, this.ShopItemUXHolderTransform);
-                shopEntry.SetFromEntry(this.CentralGameStateControllerInstance.CurrentCampaignContext, curEntry, ShopItemSelected);
-                this.ActiveShopItemUXs.Add(shopEntry);
-            }
-        }
-
-        public void _SetShopItems(params ShopEntry[] shopEntries)
-        {
-            this.DestroyItems();
-
-            foreach (ShopEntry curEntry in shopEntries)
-            {
-                ShopItemUX shopEntry = Instantiate(this.ShopItemUXPF, this.ShopItemUXHolderTransform);
-                shopEntry._SetFromEntry(this.CentralGameStateControllerInstance.CurrentCampaignContext, curEntry, ShopItemSelected);
+                shopEntry._SetFromEntry(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, curEntry, ShopItemSelected);
                 this.ActiveShopItemUXs.Add(shopEntry);
             }
         }

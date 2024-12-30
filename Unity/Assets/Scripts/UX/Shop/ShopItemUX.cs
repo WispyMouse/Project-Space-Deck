@@ -1,17 +1,18 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Text;
     using UnityEngine;
     using UnityEngine.EventSystems;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.UX;
+    using SpaceDeck.UX.AssetLookup;
 
     public class ShopItemUX : MonoBehaviour
     {
-        public ShopEntry RepresentingEntry { get; set; }
+        public IShopEntry RepresentingEntry { get; set; }
 
         [SerializeReference]
         private RewardCardUX RewardCardPF;
@@ -33,59 +34,24 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private GameObject CanNotAffordOverlay;
 
-        [Obsolete("Transition to " + nameof(_SetFromEntry))]
-        public void SetFromEntry(CampaignContext forCampaign, ShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
+        public void _SetFromEntry(IGameStateMutator mutator, IShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
         {
-            if (!toRepresent.GainedAmount.TryEvaluateValue(forCampaign, null, out int gainedAmount))
-            {
-                GlobalUpdateUX.LogTextEvent.Invoke($"Could not evaluate gain amount.", GlobalUpdateUX.LogType.RuntimeError);
-                return;
-            }
+            int gainedAmount = toRepresent.GetGainedAmount(mutator);
 
             this.RepresentingEntry = toRepresent;
             this.OnClickDelegate = onClickDelegate;
-            this.RepresentCosts(toRepresent.Costs, forCampaign);
+            this._RepresentCosts(toRepresent.Costs, mutator);
 
             if (toRepresent.GainedCard != null)
             {
                 RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                thisCard.SetFromCard(toRepresent.GainedCard, (DisplayedCardUX card) => { this.OnClick(); });
+                thisCard._SetFromCard(toRepresent.GainedCard, (DisplayedCardUX card) => { this.OnClick(); });
                 thisCard.SetQuantity(gainedAmount);
             }
-            else if (toRepresent.GainedEffect != null)
+            else if (toRepresent.GainedArtifact != null)
             {
                 RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                rewardArtifact.SetFromArtifact(toRepresent.GainedEffect, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
-            }
-            else if (toRepresent.GainedCurrency != null)
-            {
-                RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                rewardCurrency._SetFromCurrency(toRepresent.GainedCurrency, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
-            }
-        }
-
-        public void _SetFromEntry(CampaignContext forCampaign, ShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
-        {
-            if (!toRepresent.GainedAmount.TryEvaluateValue(forCampaign, null, out int gainedAmount))
-            {
-                GlobalUpdateUX.LogTextEvent.Invoke($"Could not evaluate gain amount.", GlobalUpdateUX.LogType.RuntimeError);
-                return;
-            }
-
-            this.RepresentingEntry = toRepresent;
-            this.OnClickDelegate = onClickDelegate;
-            this.RepresentCosts(toRepresent.Costs, forCampaign);
-
-            if (toRepresent.GainedCard != null)
-            {
-                RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                thisCard._SetFromCard(toRepresent._GainedCard, (DisplayedCardUX card) => { this.OnClick(); });
-                thisCard.SetQuantity(gainedAmount);
-            }
-            else if (toRepresent.GainedEffect != null)
-            {
-                RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                rewardArtifact.SetFromArtifact(toRepresent._GainedEffect, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
+                rewardArtifact.SetFromArtifact(toRepresent.GainedArtifact, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
             }
             else if (toRepresent.GainedCurrency != null)
             {
@@ -99,7 +65,7 @@ namespace SpaceDeck.UX
             this.OnClickDelegate.Invoke(this);
         }
 
-        void RepresentCosts(List<ShopCost> costs, CampaignContext forCampaign)
+        void _RepresentCosts(List<IShopCost> costs, IGameStateMutator mutator)
         {
             if (costs.Count == 0)
             {
@@ -109,15 +75,10 @@ namespace SpaceDeck.UX
 
             string startingSeparator = "";
             StringBuilder compositeCurrencies = new StringBuilder();
-            foreach (ShopCost cost in costs)
+            foreach (IShopCost cost in costs)
             {
-                if (!cost.Amount.TryEvaluateValue(forCampaign, null, out int costAmount))
-                {
-                    GlobalUpdateUX.LogTextEvent.Invoke($"Could not parse shop cost.", GlobalUpdateUX.LogType.RuntimeError);
-                    continue;
-                }
-
-                compositeCurrencies.Append($"{startingSeparator}{costAmount.ToString()}\u00A0{cost.CurrencyType.GetNameAndMaybeIcon()}");
+                int costAmount = cost.GetCost(mutator);
+                compositeCurrencies.Append($"{startingSeparator}{costAmount.ToString()}\u00A0{SpriteLookup.GetNameAndMaybeIcon(cost.CurrencyType)}");
                 startingSeparator = ", ";
             }
             this.CostsLabel.text = compositeCurrencies.ToString();
@@ -125,17 +86,17 @@ namespace SpaceDeck.UX
 
         private void OnEnable()
         {
-            GlobalUpdateUX.UpdateUXEvent.AddListener(this.UpdateAffordability);
+            // TODO: UPDATE UX
         }
 
         private void OnDisable()
         {
-            GlobalUpdateUX.UpdateUXEvent.RemoveListener(this.UpdateAffordability);
+            // TODO: UPDATE UX
         }
 
-        public void UpdateAffordability(CampaignContext campaignContext)
+        public void UpdateAffordability(IGameStateMutator mutator)
         {
-            if (!campaignContext.CanAfford(this.RepresentingEntry.Costs))
+            if (!mutator.CanAfford(this.RepresentingEntry.Costs))
             {
                 this.CanNotAffordOverlay.gameObject.SetActive(true);
                 return;

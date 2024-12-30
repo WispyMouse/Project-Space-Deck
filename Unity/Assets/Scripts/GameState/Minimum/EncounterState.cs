@@ -79,5 +79,10 @@ namespace SpaceDeck.GameState.Minimum
         {
             return Array.Empty<EncounterOption>();
         }
+
+        public virtual IReadOnlyList<IShopEntry> GetShop()
+        {
+            return Array.Empty<IShopEntry>();
+        }
     }
 }

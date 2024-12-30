@@ -222,7 +222,8 @@ namespace SpaceDeck.UX
                     else if (this.CurrentCampaignContext.CurrentEncounter.BasedOn.IsShopEncounter)
                     {
                         this.EncounterRepresenterUXInstance.Close();
-                        this.ShowShopPanel(this.CurrentCampaignContext.CurrentEncounter.GetShop(this.CurrentCampaignContext).ToArray());
+                        // TODO: DISMANTLE
+                        // this.ShowShopPanel(this.CurrentCampaignContext.CurrentEncounter.GetShop(this.CurrentCampaignContext).ToArray());
                     }
                 }
             }
@@ -349,7 +350,7 @@ namespace SpaceDeck.UX
                     {
                         this.EncounterRepresenterUXInstance.Close();
                         // TODO: Shop Panel for new codebase
-                        this.ShowShopPanel(this.CurrentCampaignContext.CurrentEncounter.GetShop(this.CurrentCampaignContext).ToArray());
+                        this._ShowShopPanel(this.CurrentCampaignContext._CurrentEncounter.GetShop());
                     }
                 }
             }
@@ -542,14 +543,7 @@ namespace SpaceDeck.UX
             this._UpdateUX(this.CurrentCampaignContext);
         }
 
-        [Obsolete("Should transition to " + nameof(_ShowShopPanel))]
-        public void ShowShopPanel(params ShopEntry[] itemsInShop)
-        {
-            this.ShopPanelUXInstance.gameObject.SetActive(true);
-            this.ShopPanelUXInstance.SetShopItems(itemsInShop);
-        }
-
-        public void _ShowShopPanel(params ShopEntry[] itemsInShop)
+        public void _ShowShopPanel(IReadOnlyList<IShopEntry> itemsInShop)
         {
             this.ShopPanelUXInstance.gameObject.SetActive(true);
             this.ShopPanelUXInstance._SetShopItems(itemsInShop);

@@ -347,5 +347,10 @@ namespace SpaceDeck.GameState.Execution
         {
             this.PendingResolves.Push(toResolve);
         }
+
+        public bool CanAfford(IEnumerable<IShopCost> costs)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

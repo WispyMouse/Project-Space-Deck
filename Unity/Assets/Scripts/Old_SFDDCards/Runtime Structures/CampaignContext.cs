@@ -449,6 +449,29 @@ namespace SFDDCards
             }
         }
 
+        public void _PurchaseShopItem(IShopEntry toBuy)
+        {
+            bool canAfford = this.GameplayState.CanAfford(toBuy.Costs);
+
+            if (!canAfford)
+            {
+                GlobalUpdateUX.LogTextEvent.Invoke($"Cannot afford the cost of this item, or could not evaluate all its costs.", GlobalUpdateUX.LogType.UserError);
+                return;
+            }
+
+            this.Gain(toBuy);
+
+            foreach (ShopCost cost in toBuy.Costs)
+            {
+                if (!cost.Amount.TryEvaluateValue(this, null, out int shopCostAmount))
+                {
+                    GlobalUpdateUX.LogTextEvent.Invoke($"The cost of a shop item could not be evaluated.", GlobalUpdateUX.LogType.RuntimeError);
+                }
+
+                this.ModCurrency(cost.CurrencyType, -shopCostAmount);
+            }
+        }
+
         public bool CanAfford(List<ShopCost> costs)
         {
             foreach (ShopCost cost in costs)
@@ -507,6 +530,11 @@ namespace SFDDCards
             }
 
             GlobalUpdateUX.UpdateUXEvent.Invoke(this);
+        }
+
+        public void Gain(IShopEntry toGain)
+        {
+            throw new System.NotImplementedException();
         }
 
         public List<ShopCost> GetPriceForItem(IGainable toShopFor)

@@ -281,5 +281,10 @@ namespace SpaceDeck.GameState.Execution
         {
             throw new System.NotImplementedException();
         }
+
+        public bool CanAfford(IEnumerable<IShopCost> costs)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
