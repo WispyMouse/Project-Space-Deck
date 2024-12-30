@@ -3,6 +3,7 @@ namespace SFDDCards.ScriptingTokens
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.Evaluation.Conceptual;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Execution;
     using System.Collections.Generic;
 
     public class ChooseCardScriptingToken : BaseScriptingToken, ILaterZoneListenerScriptingToken, IRealizedOperationScriptingToken
@@ -32,13 +33,7 @@ namespace SFDDCards.ScriptingTokens
 
         public override void ApplyToken(ConceptualTokenEvaluatorBuilder tokenBuilder)
         {
-            tokenBuilder.ChoiceToMake = new PlayerChooseFromCardBrowser(this.PromisedCards, this.NumberOfCards);
-            this.PromisedCards.SampledPool = tokenBuilder.RelevantCards;
-            tokenBuilder.RelevantCards = this.PromisedCards;
-            this.FromBuilder = tokenBuilder;
-            tokenBuilder.RealizedOperationScriptingToken = this;
-
-            this.UpdateDescriptionForPromise();
+            throw new System.Exception("OBSOLETE");
         }
 
         protected override bool TryGetTokenWithArguments(List<string> arguments, out IScriptingToken scriptingToken)

@@ -3,6 +3,7 @@ namespace SFDDCards.Evaluation.Actual
     using SFDDCards.Evaluation.Conceptual;
     using SFDDCards.ScriptingTokens;
     using SFDDCards.ScriptingTokens.EvaluatableValues;
+    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -114,13 +115,13 @@ namespace SFDDCards.Evaluation.Actual
                 return null;
             }
 
-            if (ElementDatabase.TryGetElement(argument, out Element mappedElement))
+            if (SFDDCards.ElementDatabase.TryGetElement(argument, out SFDDCards.Element mappedElement))
             {
                 DeltaEntry elementSet = new DeltaEntry(this);
                 elementSet.ElementResourceChanges.Add(new ElementResourceChange(mappedElement, null, new ConstantNumericEvaluatableValue(newValue)));
                 return elementSet;
             }
-            else if (StatusEffectDatabase.TryGetStatusEffectById(argument, out StatusEffect mappedStatus))
+            else if (SFDDCards.StatusEffectDatabase.TryGetStatusEffectById(argument, out StatusEffect mappedStatus))
             {
                 DeltaEntry statusSet = new DeltaEntry(this);
                 statusSet.StatusEffect = mappedStatus;

@@ -58,7 +58,7 @@ namespace SpaceDeck.UX
 
             GlobalSequenceEventHolder.PushSequencesToTop(
                 CentralGameStateControllerInstance.CurrentCampaignContext,
-                new GameplaySequenceEvent(this.SpawnInitialEnemies, null),
+                new GameplaySequenceEvent(this._SpawnInitialEnemies, null),
                 new GameplaySequenceEvent(() => this.Context.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn), null)
                 );
         }
@@ -127,30 +127,6 @@ namespace SpaceDeck.UX
 
         #region Specific Gameplay Turn Concepts
         
-        [Obsolete("Transition to " + nameof(_SpawnInitialEnemies))]
-        private void SpawnInitialEnemies()
-        {
-            this.EnemyRepresenterUX.AddEnemies(this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext.Enemies);
-        }
-
-        [Obsolete("Transition to " + nameof(_SpawnEnemy))]
-        private void SpawnEnemy(Enemy toSpawn)
-        {
-            this.EnemyRepresenterUX.AddEnemy(toSpawn);
-        }
-
-        [Obsolete("Transition to " + nameof(_EndPlayerTurn))]
-        public void EndPlayerTurn()
-        {
-            this.Context.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.EnemyTurn);
-        }
-
-        [Obsolete("Transition to " + nameof(_StartPlayCard))]
-        public void PlayCard(Card toPlay, ICombatantTarget toPlayOn)
-        {
-            this.Context.PlayCard(toPlay, toPlayOn);
-        }
-
         private void _SpawnInitialEnemies()
         {
             this.EnemyRepresenterUX._AddEnemies(this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter.EncounterEntities);

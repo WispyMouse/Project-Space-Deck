@@ -33,19 +33,6 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private EnemyStatusEffectUXHolder OwnStatusEffectHolder;
 
-        [Obsolete("Should transition to " + nameof(_SetFromEnemy))]
-        public void SetFromEnemy(Enemy toSet, CentralGameStateController centralGameStateController)
-        {
-            this.RepresentedEnemy = toSet;
-            this.Name.text = toSet.BaseModel.Name;
-            this.RepresentedEnemy.UXPositionalTransform = this.transform;
-
-            this.ClearEffectText();
-            this.OwnStatusEffectHolder.Annihilate();
-
-            this.UpdateUX(centralGameStateController);
-        }
-
         public void _SetFromEnemy(Entity toSet, CentralGameStateController centralGameStateController)
         {
             this._RepresentedEnemy = toSet;
@@ -56,15 +43,6 @@ namespace SpaceDeck.UX
             this.OwnStatusEffectHolder.Annihilate();
 
             this._UpdateUX(centralGameStateController);
-        }
-
-        [Obsolete("Should transition to " + nameof(_UpdateUX))]
-        public void UpdateUX(CentralGameStateController centralGameStateController)
-        {
-            this.Health.text = $"{this.RepresentedEnemy.CurrentHealth} / {this.RepresentedEnemy.BaseModel.MaximumHealth}";
-            this.UpdateIntent(centralGameStateController);
-
-            this.OwnStatusEffectHolder.SetStatusEffects(this.RepresentedEnemy.AppliedStatusEffects);
         }
 
         public void _UpdateUX(CentralGameStateController centralGameStateController)

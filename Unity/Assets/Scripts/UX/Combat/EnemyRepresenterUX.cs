@@ -28,17 +28,6 @@ namespace SpaceDeck.UX
 
         Coroutine EnemyPositionAdjustmentCoroutine { get; set; } = null;
 
-        [Obsolete("Transition to " + nameof(_AddEnemies))]
-        public void AddEnemies(IEnumerable<Enemy> toAdd)
-        {
-            foreach (Enemy curEnemy in toAdd)
-            {
-                this.AddEnemy(curEnemy, skipSituating: true);
-            }
-
-            this.SituateEnemyPositions();
-        }
-
         public void _AddEnemies(IEnumerable<Entity> toAdd)
         {
             foreach (Entity curEnemy in toAdd)
@@ -47,21 +36,6 @@ namespace SpaceDeck.UX
             }
 
             this.SituateEnemyPositions();
-        }
-
-        [Obsolete("Transition to " + nameof(_AddEnemy))]
-        public void AddEnemy(Enemy toAdd, bool skipSituating = false)
-        {
-            EnemyUX newEnemy = Instantiate(this.EnemyRepresentationPF, this.EnemyRepresentationTransform);
-            newEnemy.SetFromEnemy(toAdd, this.CentralGameStateControllerInstance);
-
-            this.SpawnedEnemiesLookup.Add(toAdd, newEnemy);
-            this.OrderedEnemyList.Add(newEnemy);
-
-            if (!skipSituating)
-            {
-                this.SituateEnemyPositions();
-            }
         }
 
         public void _AddEnemy(Entity toAdd, bool skipSituating = false)

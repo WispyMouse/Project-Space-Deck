@@ -8,13 +8,9 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
-    using SFDDCards;
-    using SFDDCards.UX;
 
     public class StatusEffectUX : MonoBehaviour, IMouseHoverListener
     {
-        [Obsolete("Should transition to " + nameof(_RepresentsEffect))]
-        public SFDDCards.AppliedStatusEffect RepresentsEffect;
         public SpaceDeck.GameState.Minimum.AppliedStatusEffect _RepresentsEffect;
 
         [SerializeReference]
@@ -23,8 +19,6 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private Image Renderer;
 
-        [Obsolete("Should transition to " + nameof(_OnStatusEffectPressed))]
-        private Action<SFDDCards.AppliedStatusEffect> OnStatusEffectPressed;
         private Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> _OnStatusEffectPressed;
 
         public virtual bool ShouldShowBase { get; } = true;
@@ -32,14 +26,6 @@ namespace SpaceDeck.UX
         public Transform GetTransform()
         {
             return this.GetComponent<RectTransform>();
-        }
-
-        [Obsolete("Should transition to " + nameof(_SetFromEffect))]
-        public void SetFromEffect(SFDDCards.AppliedStatusEffect toSet, Action<SFDDCards.AppliedStatusEffect> onClickEvent = null)
-        {
-            this.RepresentsEffect = toSet;
-            this.Renderer.sprite = toSet.BasedOnStatusEffect.Sprite;
-            this.OnStatusEffectPressed = onClickEvent;
         }
 
         public void _SetFromEffect(SpaceDeck.GameState.Minimum.AppliedStatusEffect toSet, Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> onClickEvent = null)
@@ -65,23 +51,10 @@ namespace SpaceDeck.UX
             this.StackText.text = toStack.ToString();
         }
 
-        public bool TryGetCard(out Card toShow)
-        {
-            toShow = null;
-            return false;
-        }
-
         public bool _TryGetCard(out CardInstance toShow)
         {
             toShow = null;
             return false;
-        }
-
-        [Obsolete("Transition to " + nameof(_TryGetStatusEffect))]
-        public bool TryGetStatusEffect(out IStatusEffect toShow)
-        {
-            toShow = this.RepresentsEffect;
-            return true;
         }
 
         public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
@@ -103,12 +76,6 @@ namespace SpaceDeck.UX
         private void OnDisable()
         {
             this.UnHoverOnDisable();
-        }
-
-        [Obsolete("Should transition to " + nameof(_Clicked))]
-        public void Clicked()
-        {
-            this.OnStatusEffectPressed?.Invoke(this.RepresentsEffect);
         }
 
         public void _Clicked()

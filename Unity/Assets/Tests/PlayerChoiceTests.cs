@@ -3,6 +3,8 @@ namespace SFDDCards.Tests.EditMode
     using NUnit.Framework;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Execution;
+    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -43,7 +45,8 @@ namespace SFDDCards.Tests.EditMode
                 PlayerChooseFromCardBrowser castChoice = choice as PlayerChooseFromCardBrowser;
                 Assert.NotNull(castChoice, "The choice should be type of PlayerChooseFromCardBrowser.");
 
-                Assert.True(castChoice.CardsToShow.TryEvaluateValue(applyTo.FromCampaign, applyTo.MadeFromBuilder, out cardsShown), "Should be able to evaluate cards to show.");
+                // TODO: DISMANTLE
+                // Assert.True(castChoice.CardsToShow.TryEvaluateValue(applyTo.FromCampaign, applyTo.MadeFromBuilder, out cardsShown), "Should be able to evaluate cards to show.");
 
                 Assert.AreEqual(cardsShown.Count, combatContext.PlayerCombatDeck.CardsCurrentlyInHand.Count, "The cards to choose from should equal the number of cards in hand.");
                 foreach (Card playerHandCard in combatContext.PlayerCombatDeck.CardsCurrentlyInHand)
@@ -56,7 +59,8 @@ namespace SFDDCards.Tests.EditMode
                 continuationAction.Invoke();
             };
 
-            GlobalUpdateUX.PlayerMustMakeChoice.AddListener(choiceHandler);
+            // TODO: DISMANTLE
+            // GlobalUpdateUX.PlayerMustMakeChoice.AddListener(choiceHandler);
 
             combatContext.PlayCard(derivedCard, combatContext.CombatPlayer);
             GlobalSequenceEventHolder.SynchronouslyResolveAllEvents(campaignContext);

@@ -1,6 +1,5 @@
-namespace SFDDCards.UX
+namespace SpaceDeck.UX
 {
-    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -8,6 +7,7 @@ namespace SFDDCards.UX
     using UnityEngine.Events;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
+    using SpaceDeck.UX;
 
     public class MouseHoverShowerController : MonoBehaviour
     {
@@ -55,7 +55,7 @@ namespace SFDDCards.UX
             this.CurrentListener = listener;
 
             this.CanvasSpaceHoverUX.gameObject.SetActive(true);
-            this.CanvasSpaceHoverUX.SetFromHoverListener(listener);
+            this.CanvasSpaceHoverUX._SetFromHoverListener(listener);
 
             Vector3 screenPosition = Vector3.zero;
             Transform listenerTransform = listener.GetTransform();

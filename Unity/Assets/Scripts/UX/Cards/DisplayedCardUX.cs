@@ -30,7 +30,7 @@ namespace SpaceDeck.UX
 
         public virtual void MouseEnterStartHover()
         {
-            MouseHoverShowerPanel.CurrentContext = null;
+            // MouseHoverShowerPanel.CurrentContext = null;
             MouseHoverShowerController.MouseStartHoveredEvent.Invoke(this);
         }
 

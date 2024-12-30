@@ -36,13 +36,7 @@ namespace SFDDCards.Evaluation.Actual
             // Choices mark when they've been chosen, so this will continue from where it currently is next
             if (curEntry.ChoiceToMake != null && !curEntry.ChoiceToMake.ResultIsChosen)
             {
-                // Attempt to resolve the choice without the player's input, depending on how the choice kind resolves itself
-                if (!curEntry.ChoiceToMake.TryFinalizeWithoutPlayerInput(curEntry))
-                {
-                    GlobalUpdateUX.PendingPlayerChoice = true;
-                    GlobalUpdateUX.PlayerMustMakeChoice.Invoke(curEntry, curEntry.ChoiceToMake, () => this.ContinueApplyingDelta(campaignContext, index));
-                    return;
-                }
+                throw new System.Exception("OBSOLETE");
             }
             GlobalUpdateUX.PendingPlayerChoice = false;
 

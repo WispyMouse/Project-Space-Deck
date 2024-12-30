@@ -1,9 +1,5 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.Evaluation.Actual;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -11,6 +7,9 @@ namespace SpaceDeck.UX
     using UnityEngine;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.UX;
+    using SpaceDeck.GameState.Execution;
 
     public class PlayerChoiceController : MonoBehaviour
     {
@@ -19,30 +18,12 @@ namespace SpaceDeck.UX
 
         void OnEnable()
         {
-            GlobalUpdateUX.PlayerMustMakeChoice.AddListener(HandlePlayerChoice);
+            //  TODO REGISTER LISTENER GlobalUpdateUX.PlayerMustMakeChoice.AddListener(_HandlePlayerChoice);
         }
 
         void OnDisable()
         {
-            GlobalUpdateUX.PlayerMustMakeChoice.RemoveListener(HandlePlayerChoice);
-        }
-
-        [Obsolete("Transition to " + nameof(_HandlePlayerChoice))]
-        void HandlePlayerChoice(DeltaEntry fromDelta, PlayerChoice toHandle, Action continuationAction)
-        {
-            if (toHandle is PlayerChooseFromCardBrowser cardBrowser)
-            {
-                this.CardBrowserUX.SetFromCardBrowserChoice(fromDelta, cardBrowser, 
-                    (List<Card> chosenCards) =>
-                {
-                    // TODO: Dismantle
-                    // cardBrowser.SetChoice(fromDelta, chosenCards);
-                    continuationAction?.Invoke();
-                });
-                return;
-            }
-
-            GlobalUpdateUX.LogTextEvent.Invoke($"Failed to parse player choice using the controller.", GlobalUpdateUX.LogType.RuntimeError);
+            //  TODO REGISTER LISTENER GlobalUpdateUX.PlayerMustMakeChoice.RemoveListener(_HandlePlayerChoice);
         }
 
         void _HandlePlayerChoice(IGameStateMutator mutator, PlayerChoice toHandle, Action continuationAction)
@@ -58,7 +39,7 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            GlobalUpdateUX.LogTextEvent.Invoke($"Failed to parse player choice using the controller.", GlobalUpdateUX.LogType.RuntimeError);
+            // TODO LOG
         }
     }
 }

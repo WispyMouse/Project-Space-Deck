@@ -13,42 +13,7 @@ namespace SpaceDeck.UX
     {
         [SerializeReference]
         private StatusEffectUX StatusEffectUXPrefab;
-
-        [Obsolete("Should transition to " + nameof(_StatusEffectLookup))]
-        private Dictionary<SFDDCards.AppliedStatusEffect, StatusEffectUX> StatusEffectLookup { get; set; } = new Dictionary<SFDDCards.AppliedStatusEffect, StatusEffectUX>();
         private Dictionary<AppliedStatusEffect, StatusEffectUX> _StatusEffectLookup { get; set; } = new Dictionary<AppliedStatusEffect, StatusEffectUX>();
-
-        [Obsolete("Should transition to " + nameof(_SetStatusEffects))]
-        public void SetStatusEffects(List<SFDDCards.AppliedStatusEffect> appliedEffects, Action<SFDDCards.AppliedStatusEffect> onClickedEvent = null)
-        {
-            List<SFDDCards.AppliedStatusEffect> noLongerApplicableEffects = new List<SFDDCards.AppliedStatusEffect>(this.StatusEffectLookup.Keys);
-
-            foreach (SFDDCards.AppliedStatusEffect effect in appliedEffects)
-            {
-                if (this.StatusEffectLookup.TryGetValue(effect, out StatusEffectUX existingUX))
-                {
-                    existingUX.SetStacks(effect.Stacks);
-                }
-                else
-                {
-                    StatusEffectUX newUX = Instantiate(this.StatusEffectUXPrefab, this.transform);
-                    this.StatusEffectLookup.Add(effect, newUX);
-                    newUX.SetFromEffect(effect, onClickedEvent);
-                    newUX.SetStacks(effect.Stacks);
-                }
-
-                noLongerApplicableEffects.Remove(effect);
-            }
-
-            if (noLongerApplicableEffects.Count > 0)
-            {
-                for (int ii = noLongerApplicableEffects.Count - 1; ii >= 0; ii--)
-                {
-                    Destroy(this.StatusEffectLookup[noLongerApplicableEffects[ii]].gameObject);
-                    this.StatusEffectLookup.Remove(noLongerApplicableEffects[ii]);
-                }
-            }
-        }
 
         public void _SetStatusEffects(IEnumerable<AppliedStatusEffect> appliedEffects, Action<AppliedStatusEffect> onClickedEvent = null)
         {
@@ -83,7 +48,6 @@ namespace SpaceDeck.UX
 
         public void Annihilate()
         {
-            this.StatusEffectLookup.Clear();
             this._StatusEffectLookup.Clear();
 
             for (int ii = this.transform.childCount - 1; ii >= 0; ii--)
