@@ -16,24 +16,7 @@ namespace SFDDCards
 
         public EvaluatedEncounter(EncounterModel basedOn)
         {
-            this.BasedOn = basedOn;
-
-            if (basedOn.RewardsModel != null)
-            {
-                this.Rewards = RewardDatabase.SaturateReward(basedOn.RewardsModel);
-            }
-
-            foreach (string enemyId in basedOn.EnemiesInEncounterById)
-            {
-                EnemyModel model = EnemyDatabase.GetModel(enemyId);
-
-                if (model == null)
-                {
-                    GlobalUpdateUX.LogTextEvent.Invoke($"Failed to get enemy based on id. {enemyId}", GlobalUpdateUX.LogType.RuntimeError);
-                }
-
-                this.Enemies.Add(new Enemy(model));
-            }
+            throw new System.Exception("OBSOLETE");
         }
 
         public string GetName()

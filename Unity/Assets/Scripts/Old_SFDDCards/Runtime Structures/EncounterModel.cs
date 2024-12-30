@@ -30,42 +30,7 @@ namespace SFDDCards
 
         public EncounterModel(SFDDCards.ImportModels.EncounterImport basedOn)
         {
-            HashSet<string> lowerCaseTags = new HashSet<string>();
-            foreach (string tag in basedOn.Tags)
-            {
-                lowerCaseTags.Add(tag.ToLower());
-            }
-
-            List<string> lowerCaseEnemyIds = new List<string>();
-            foreach (string enemyId in basedOn.EnemyIds)
-            {
-                lowerCaseEnemyIds.Add(enemyId.ToLower());
-            }
-
-            this.Id = basedOn.Id.ToLower();
-            this.Name = basedOn.Name;
-            this.EncounterTags = lowerCaseTags;
-            this.Description = basedOn.Description;
-            this.EnemiesInEncounterById = lowerCaseEnemyIds;
-            this.IsShopEncounter = basedOn.IsShopEncounter;
-            this.Arguments = basedOn.Arguments;
-
-            if (basedOn.EncounterScripts != null)
-            {
-                foreach (EncounterScriptImport import in basedOn.EncounterScripts)
-                {
-                    this.EncounterScripts.Add(import.Id, import);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(basedOn.StandardRewardId) && RewardDatabase.TryGetReward(basedOn.StandardRewardId, out RewardImport model))
-            {
-                this.RewardsModel = model;
-            }
-            else
-            {
-                this.RewardsModel = basedOn.CustomReward;
-            }
+            throw new System.Exception("OBSOLETE");
         }
 
         public List<EnemyModel> GetEnemyModels()
