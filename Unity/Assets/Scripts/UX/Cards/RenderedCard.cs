@@ -49,10 +49,11 @@ namespace SpaceDeck.UX
             this.CardImage.sprite = representedCard.Sprite;
             this.EffectText.text = representedCard.GetDescription(reactionWindowContext).BreakDescriptionsIntoString();
 
-            foreach (Element curElement in ElementDatabase.ElementData.Values)
+            foreach (SFDDCards.Element curElement in ElementDatabase.ElementData.Values)
             {
                 ElementResourceIconUX icon = Instantiate(this.ElementResourceIconUXPF, this.ElementResourceIconHolder);
-                icon.SetFromElement(curElement, representedCard.GetElementGain(curElement));
+                // TODO DISSASEMBLE
+                // icon.SetFromElement(curElement, representedCard.GetElementGain(curElement));
             }
 
             this.MyRarityIndicator.SetFromRarity(representedCard.Rarity);
@@ -72,10 +73,10 @@ namespace SpaceDeck.UX
                 this.CardImage.sprite = cardArt;
             }
 
-            foreach (Element curElement in ElementDatabase.ElementData.Values)
+            foreach (SpaceDeck.GameState.Minimum.Element curElement in SpaceDeck.Models.Databases.ElementDatabase.ElementData.Values)
             {
                 ElementResourceIconUX icon = Instantiate(this.ElementResourceIconUXPF, this.ElementResourceIconHolder);
-                icon.SetFromElement(curElement, ElementDatabase.GetElementGain(curElement, representedCard));
+                icon.SetFromElement(curElement, SpaceDeck.Models.Databases.ElementDatabase.GetElementGain(curElement, representedCard));
             }
 
             this.MyRarityIndicator._SetFromRarity(representedCard.Qualities.GetStringQuality(WellknownQualities.Rarity));

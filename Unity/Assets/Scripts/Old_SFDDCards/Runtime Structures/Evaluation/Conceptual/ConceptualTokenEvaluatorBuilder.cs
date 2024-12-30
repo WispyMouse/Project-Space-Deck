@@ -20,7 +20,7 @@ namespace SFDDCards.Evaluation.Conceptual
         public List<IScriptingToken> AppliedTokens = new List<IScriptingToken>();
 
         public List<IRequirement> Requirements = new List<IRequirement>();
-        public Dictionary<Element, IEvaluatableValue<int>> ElementRequirements = new Dictionary<Element, IEvaluatableValue<int>>();
+        public Dictionary<SFDDCards.Element, IEvaluatableValue<int>> ElementRequirements = new Dictionary<SFDDCards.Element, IEvaluatableValue<int>>();
 
         public CombatantTargetEvaluatableValue Target;
         public CombatantTargetEvaluatableValue OriginalTarget;
@@ -55,7 +55,7 @@ namespace SFDDCards.Evaluation.Conceptual
 
             if (PreviousBuilder != null)
             {
-                this.ElementRequirements = new Dictionary<Element, IEvaluatableValue<int>>(previousBuilder.ElementRequirements);
+                this.ElementRequirements = new Dictionary<SFDDCards.Element, IEvaluatableValue<int>>(previousBuilder.ElementRequirements);
                 this.OriginalTarget = previousBuilder.OriginalTarget;
                 this.Target = previousBuilder.Target;
                 this.Owner = previousBuilder.Owner;
@@ -94,7 +94,7 @@ namespace SFDDCards.Evaluation.Conceptual
                 return false;
             }
 
-            foreach (Element elementKey in this.ElementRequirements.Keys)
+            foreach (SFDDCards.Element elementKey in this.ElementRequirements.Keys)
             {
                 if (!this.PreviousBuilder.ElementRequirements.TryGetValue(elementKey, out IEvaluatableValue<int> value))
                 {

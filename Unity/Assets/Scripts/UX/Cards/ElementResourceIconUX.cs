@@ -1,6 +1,8 @@
 namespace SpaceDeck.UX
 {
     using SFDDCards;
+    using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -17,20 +19,26 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private Image SpriteSpot;
 
-        public Element RepresentingElement { get; private set; }
+        public SpaceDeck.GameState.Minimum.Element RepresentingElement { get; private set; }
 
-        public void SetFromElement(Element representingElement, int count)
+        public void SetFromElement(SpaceDeck.GameState.Minimum.Element representingElement, int count)
         {
             this.RepresentingElement = representingElement;
             this.NumbericIndicator.text = count.ToString();
 
             if (count > 0)
             {
-                this.SpriteSpot.sprite = representingElement.Sprite;
+                if (SpriteLookup.TryGetSprite(representingElement.Id, out Sprite sprite))
+                {
+                    this.SpriteSpot.sprite = sprite;
+                }
             }
             else
             {
-                this.SpriteSpot.sprite = representingElement.GreyscaleSprite;
+                if (SpriteLookup.TryGetSprite(representingElement.Id, out Sprite sprite, WellknownSprites.GreyScale))
+                {
+                    this.SpriteSpot.sprite = sprite;
+                }
             }
         }
     }

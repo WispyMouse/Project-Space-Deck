@@ -623,7 +623,7 @@ namespace SpaceDeck.UX
 
             string startingSeparator = "";
             StringBuilder compositeElements = new StringBuilder();
-            foreach (Element element in this.CurrentCampaignContext.CurrentCombatContext.ElementResourceCounts.Keys)
+            foreach (SFDDCards.Element element in this.CurrentCampaignContext.CurrentCombatContext.ElementResourceCounts.Keys)
             {
                 compositeElements.Append($"{startingSeparator}{this.CurrentCampaignContext.CurrentCombatContext.ElementResourceCounts[element]}\u00A0{element.GetNameOrIcon()}");
                 startingSeparator = ", ";

@@ -46,7 +46,7 @@ namespace SFDDCards.Evaluation.Actual
         public NumberOfCardsRelation NumberOfCardsRelationType => this.BasedOnConcept.NumberOfCardsRelationType;
 
         public List<ElementResourceChange> ElementResourceChanges = new List<ElementResourceChange>();
-        public Dictionary<Element, int> ElementRequirements = new Dictionary<Element, int>();
+        public Dictionary<SFDDCards.Element, int> ElementRequirements = new Dictionary<SFDDCards.Element, int>();
         public List<IRequirement> Requirements => this.BasedOnConcept.Requirements;
 
         public StatusEffect StatusEffect => this.BasedOnConcept.StatusEffect;
@@ -182,7 +182,7 @@ namespace SFDDCards.Evaluation.Actual
 
         public bool MeetsElementRequirements(CombatContext combatContext)
         {
-            foreach (Element element in this.ElementRequirements.Keys)
+            foreach (SFDDCards.Element element in this.ElementRequirements.Keys)
             {
                 if (!this.ElementRequirements.TryGetValue(element, out int variable))
                 {

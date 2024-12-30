@@ -43,8 +43,8 @@ namespace SFDDCards.Tests.EditMode
                 Id = $"{nameof(DebugElementOne)}id".ToUpper(),
                 Name = $"{nameof(DebugElementOne)}name".ToUpper()
             };
-            ElementDatabase.AddElement(debugOneElementImport);
-            DebugElementOne = ElementDatabase.GetElement(debugOneElementImport.Id);
+            SFDDCards.ElementDatabase.AddElement(debugOneElementImport);
+            DebugElementOne = SFDDCards.ElementDatabase.GetElement(debugOneElementImport.Id);
             DebugElementOne.SpriteIndex = 0;
 
             ElementImport debugTwoElementImport = new ElementImport()
@@ -52,8 +52,8 @@ namespace SFDDCards.Tests.EditMode
                 Id = $"{nameof(DebugElementTwo)}id".ToUpper(),
                 Name = $"{nameof(DebugElementTwo)}name".ToUpper()
             };
-            ElementDatabase.AddElement(debugTwoElementImport);
-            DebugElementTwo = ElementDatabase.GetElement(debugTwoElementImport.Id);
+            SFDDCards.ElementDatabase.AddElement(debugTwoElementImport);
+            DebugElementTwo = SFDDCards.ElementDatabase.GetElement(debugTwoElementImport.Id);
             DebugElementTwo.SpriteIndex = 1;
         }
 

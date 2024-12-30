@@ -91,7 +91,7 @@
                         SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(dependentFile.TypelessFilepath + ".statusimport"));
                         break;
                     case ParseKind.Element:
-                        ElementDatabase.AddElement(ImportHelper.GetFile<ElementImport>(dependentFile.TypelessFilepath + ".elementimport"));
+                        SFDDCards.ElementDatabase.AddElement(ImportHelper.GetFile<SFDDCards.ImportModels.ElementImport>(dependentFile.TypelessFilepath + ".elementimport"));
                         break;
                     case ParseKind.Currency:
                         CurrencyDatabase.AddCurrencyToDatabase(ImportHelper.GetFile<SpaceDeck.Models.Imports.CurrencyImport>(dependentFile.TypelessFilepath + ".currencyimport"));
