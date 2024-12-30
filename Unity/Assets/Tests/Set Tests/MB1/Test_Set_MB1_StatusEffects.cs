@@ -112,7 +112,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void TestBurn_PlayerCard_Single()
         {
-            CardImport damageImport = new CardImport()
+            ImportModels.CardImport damageImport = new ImportModels.CardImport()
             {
                 Id = nameof(damageImport),
                 Name = nameof(damageImport),

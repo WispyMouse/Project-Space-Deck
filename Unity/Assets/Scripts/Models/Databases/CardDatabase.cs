@@ -8,10 +8,16 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Imports;
 
     public static class CardDatabase
     {
         private readonly static Dictionary<LowercaseString, CardPrototype> Prototypes = new Dictionary<LowercaseString, CardPrototype>();
+
+        public static void AddCardToDatabase(CardImport import)
+        {
+            Prototypes.Add(import.Id, import.GetPrototype());
+        }
 
         public static void RegisterCardPrototype(CardPrototype prototype)
         {

@@ -17,32 +17,10 @@ namespace SpaceDeck.Models.Imports
     public class CurrencyImport : Importable
     {
         public string Name;
-
+        
         public Currency GetCurrency()
         {
             return new Currency(this.Id, this.Name);
-        }
-
-        public override async Task ProcessAdditionalFilesAsync(SynchronizationContext mainThreadContext)
-        {
-            string spriteFile = this.FilePath.ToLower().Replace("currencyimport", "png");
-
-            if (File.Exists(spriteFile))
-            {
-                Sprite mySprite = await ImportHelper.GetSpriteAsync(spriteFile, 64, 64, mainThreadContext).ConfigureAwait(false);
-                SpriteLookup.SetSprite(this.Id, mySprite);
-            }
-        }
-
-        public override void ProcessAdditionalFiles()
-        {
-            string spriteFile = this.FilePath.ToLower().Replace("currencyimport", "png");
-
-            if (File.Exists(spriteFile))
-            {
-                Sprite mySprite = ImportHelper.GetSprite(spriteFile, 64, 64);
-                SpriteLookup.SetSprite(this.Id, mySprite);
-            }
         }
     }
 }

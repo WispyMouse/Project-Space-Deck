@@ -85,7 +85,7 @@
                 switch (dependentFile.ParseKind)
                 {
                     case ParseKind.Card:
-                        SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<CardImport>(dependentFile.TypelessFilepath + ".cardimport"));
+                        SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<SFDDCards.ImportModels.CardImport>(dependentFile.TypelessFilepath + ".cardimport"));
                         break;
                     case ParseKind.StatusEffect:
                         SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(dependentFile.TypelessFilepath + ".statusimport"));
@@ -111,7 +111,7 @@
                 switch (parseTestCandidate.ParseKind)
                 {
                     case ParseKind.Card:
-                        SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<CardImport>(RootPath + "card/" + parseTestCandidate.Id + ".cardimport"));
+                        SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<ImportModels.CardImport>(RootPath + "card/" + parseTestCandidate.Id + ".cardimport"));
                         break;
                     case ParseKind.StatusEffect:
                         SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(RootPath + "statuseffect/" + parseTestCandidate.Id + ".statusimport"));

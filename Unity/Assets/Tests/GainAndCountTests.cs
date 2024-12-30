@@ -5,6 +5,7 @@ namespace SFDDCards.Tests.EditMode
     using SFDDCards.ImportModels;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
+    using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using System;
     using System.Collections;
@@ -25,7 +26,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void TestGainAndCount()
         {
-            CardImport import = new CardImport()
+            ImportModels.CardImport import = new ImportModels.CardImport()
             {
                 Id = nameof(TestGainAndCount),
                 Name = nameof(TestGainAndCount),
@@ -65,7 +66,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void CountCurrency_ZeroCurrency()
         {
-            CardImport import = new CardImport()
+            ImportModels.CardImport import = new ImportModels.CardImport()
             {
                 Id = nameof(CountCurrency_ZeroCurrency),
                 Name = nameof(CountCurrency_ZeroCurrency),
@@ -98,7 +99,7 @@ namespace SFDDCards.Tests.EditMode
         {
             CurrencyDatabase.AddCurrencyToDatabase(new Currency("TESTCURRENCY", "TESTCURRENCY"));
 
-            CardImport import = new CardImport()
+            ImportModels.CardImport import = new ImportModels.CardImport()
             {
                 Id = nameof(CountCurrency_ZeroCurrency),
                 Name = nameof(CountCurrency_ZeroCurrency),
@@ -132,14 +133,14 @@ namespace SFDDCards.Tests.EditMode
         {
             CurrencyDatabase.AddCurrencyToDatabase(new Currency("TESTCURRENCY", "TESTCURRENCY"));
 
-            CardImport import = new CardImport()
+            ImportModels.CardImport import = new ImportModels.CardImport()
             {
                 Id = nameof(CountCurrency_ZeroCurrency),
                 Name = nameof(CountCurrency_ZeroCurrency),
                 EffectScript = $"[LOGINT: COUNTCURRENCY_TESTCURRENCY]"
             };
 
-            CardImport modCurrencyImport = new CardImport()
+            ImportModels.CardImport modCurrencyImport = new ImportModels.CardImport()
             {
                 Id = nameof(modCurrencyImport),
                 Name = nameof(modCurrencyImport),
@@ -177,14 +178,14 @@ namespace SFDDCards.Tests.EditMode
         {
             CurrencyDatabase.AddCurrencyToDatabase(new Currency("TESTCURRENCY", "TESTCURRENCY"));
 
-            CardImport import = new CardImport()
+            ImportModels.CardImport import = new ImportModels.CardImport()
             {
                 Id = nameof(CountCurrency_ZeroCurrency),
                 Name = nameof(CountCurrency_ZeroCurrency),
                 EffectScript = $"[LOGINT: COUNTCURRENCY_TESTCURRENCY]"
             };
 
-            CardImport modCurrencyImport = new CardImport()
+            ImportModels.CardImport modCurrencyImport = new ImportModels.CardImport()
             {
                 Id = nameof(modCurrencyImport),
                 Name = nameof(modCurrencyImport),

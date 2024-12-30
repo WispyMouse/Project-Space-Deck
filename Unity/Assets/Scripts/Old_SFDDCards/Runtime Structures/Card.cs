@@ -2,6 +2,7 @@ namespace SFDDCards
 {
     using SFDDCards.ImportModels;
     using SFDDCards.ScriptingTokens;
+    using SpaceDeck.Models.Imports;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -34,9 +35,9 @@ namespace SFDDCards
         public AttackTokenPile AttackTokenPile { get; set; }
 
         public IEffectOwner Owner => this;
-        public CardImport BasedOn;
+        public ImportModels.CardImport BasedOn;
 
-        public Card(CardImport basedOn)
+        public Card(ImportModels.CardImport basedOn)
         {
             this.BasedOn = basedOn;
             this.Id = basedOn.Id.ToLower();

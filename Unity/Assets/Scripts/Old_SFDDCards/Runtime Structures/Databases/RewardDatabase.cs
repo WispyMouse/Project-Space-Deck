@@ -33,7 +33,7 @@ namespace SFDDCards
         {
             Reward saturatedRewards = new Reward(basedOn);
 
-            RandomDecider<CardImport> cardDecider = new RandomDecider<CardImport>();
+            RandomDecider<SFDDCards.ImportModels.CardImport> cardDecider = new RandomDecider<SFDDCards.ImportModels.CardImport>();
             RandomDecider<StatusEffect> statusEffectDecider = new RandomDecider<StatusEffect>();
 
             foreach (PickRewardImport pickRewardImport in basedOn.PickRewards)
@@ -50,7 +50,7 @@ namespace SFDDCards
                     }
                     else if (curIdentity.IdentityKind == RewardIdentity.RewardIdentityKind.Card)
                     {
-                        slot.GainedCard = CardDatabase.GetModel(curIdentity.RewardIdentifier, cardDecider);
+                        slot.GainedCard = SFDDCards.CardDatabase.GetModel(curIdentity.RewardIdentifier, cardDecider);
                     }
                     else if (curIdentity.IdentityKind == RewardIdentity.RewardIdentityKind.Currency)
                     {
