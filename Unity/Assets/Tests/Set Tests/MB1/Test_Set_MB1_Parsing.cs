@@ -88,7 +88,7 @@
                         SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<SFDDCards.ImportModels.CardImport>(dependentFile.TypelessFilepath + ".cardimport"));
                         break;
                     case ParseKind.StatusEffect:
-                        SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(dependentFile.TypelessFilepath + ".statusimport"));
+                        SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<SFDDCards.ImportModels.StatusEffectImport>(dependentFile.TypelessFilepath + ".statusimport"));
                         break;
                     case ParseKind.Element:
                         SFDDCards.ElementDatabase.AddElement(ImportHelper.GetFile<SFDDCards.ImportModels.ElementImport>(dependentFile.TypelessFilepath + ".elementimport"));
@@ -114,7 +114,7 @@
                         SFDDCards.CardDatabase.AddCardToDatabase(ImportHelper.GetFile<ImportModels.CardImport>(RootPath + "card/" + parseTestCandidate.Id + ".cardimport"));
                         break;
                     case ParseKind.StatusEffect:
-                        SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<StatusEffectImport>(RootPath + "statuseffect/" + parseTestCandidate.Id + ".statusimport"));
+                        SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.GetFile<SFDDCards.ImportModels.StatusEffectImport>(RootPath + "statuseffect/" + parseTestCandidate.Id + ".statusimport"));
                         break;
                 }
 

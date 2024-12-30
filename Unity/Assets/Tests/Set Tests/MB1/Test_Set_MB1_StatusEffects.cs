@@ -19,7 +19,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void TestBurn_EnemyAction_Single()
         {
-            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
+            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<SFDDCards.ImportModels.StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
             StatusEffect burnStatus = StatusEffectDatabase.GetModel("mb1_statuseffect_burn");
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
@@ -50,7 +50,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void TestBurn_EnemyAction_MultipleHits()
         {
-            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
+            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<SFDDCards.ImportModels.StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
             StatusEffect burnStatus = StatusEffectDatabase.GetModel("mb1_statuseffect_burn");
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
@@ -81,7 +81,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void TestBurn_EnemyAction_NoDamage()
         {
-            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
+            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<SFDDCards.ImportModels.StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
             StatusEffect burnStatus = StatusEffectDatabase.GetModel("mb1_statuseffect_burn");
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);
@@ -121,7 +121,7 @@ namespace SFDDCards.Tests.EditMode
             CardDatabase.AddCardToDatabase(damageImport);
             Card derivedCard = CardDatabase.GetModel(damageImport.Id);
 
-            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
+            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<SFDDCards.ImportModels.StatusEffectImport>(Application.streamingAssetsPath + "/sets/mb1/statuseffect/mb1_statuseffect_burn.statusImport"));
             StatusEffect burnStatus = StatusEffectDatabase.GetModel("mb1_statuseffect_burn");
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(1, 100);

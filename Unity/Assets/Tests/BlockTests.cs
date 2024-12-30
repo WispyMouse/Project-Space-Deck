@@ -24,7 +24,7 @@ namespace SFDDCards.Tests.EditMode
         [Test]
         public void TestBlock()
         {
-            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<StatusEffectImport>(Application.streamingAssetsPath + "/sets/fundamentals/statuseffect/block.statusImport"));
+            StatusEffectDatabase.AddStatusEffectToDatabase(ImportHelper.ImportImportableFile<SFDDCards.ImportModels.StatusEffectImport>(Application.streamingAssetsPath + "/sets/fundamentals/statuseffect/block.statusImport"));
             StatusEffect blockStatus = StatusEffectDatabase.GetModel("block");
 
             EncounterModel testEncounter = EditModeTestCommon.GetEncounterWithPunchingBags(2, 100);

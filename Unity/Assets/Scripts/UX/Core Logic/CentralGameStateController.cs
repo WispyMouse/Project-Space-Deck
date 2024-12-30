@@ -82,7 +82,7 @@ namespace SpaceDeck.UX
             }
 
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.CardImport>(Application.streamingAssetsPath, "cardImport", SpaceDeck.Models.Databases.CardDatabase.AddCardToDatabase, currentContext));
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<StatusEffectImport>(Application.streamingAssetsPath, "statusImport", SFDDCards.StatusEffectDatabase.AddStatusEffectToDatabase, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.StatusEffectImport>(Application.streamingAssetsPath, "statusImport", SpaceDeck.Models.Databases.StatusEffectDatabase.RegisterStatusEffect, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.EnemyImport>(Application.streamingAssetsPath, "enemyImport", SpaceDeck.Models.Databases.EnemyDatabase.AddEnemy, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.RewardImport>(Application.streamingAssetsPath, "rewardImport", SpaceDeck.Models.Databases.RewardDatabase.AddReward, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.EncounterImport>(Application.streamingAssetsPath, "encounterImport", EncounterDatabase.AddEncounter, currentContext));

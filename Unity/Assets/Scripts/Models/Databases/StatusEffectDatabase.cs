@@ -8,6 +8,7 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Imports;
 
     public delegate AppliedStatusEffect GetLinkedAppliedStatusEffectFactoryMethod(StatusEffectPrototype prototype);
 
@@ -16,6 +17,11 @@ namespace SpaceDeck.Models.Databases
         private readonly static Dictionary<LowercaseString, StatusEffectPrototype> Prototypes = new Dictionary<LowercaseString, StatusEffectPrototype>();
 
         private readonly static Dictionary<StatusEffectPrototype, GetLinkedAppliedStatusEffectFactoryMethod> SpecialFactories = new Dictionary<StatusEffectPrototype, GetLinkedAppliedStatusEffectFactoryMethod>();
+
+        public static void RegisterStatusEffect(StatusEffectImport import)
+        {
+            RegisterStatusEffectPrototype(import.GetPrototype());
+        }
 
         public static void RegisterStatusEffectPrototype(StatusEffectPrototype prototype)
         {
