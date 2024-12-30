@@ -302,9 +302,9 @@ namespace SpaceDeck.UX
                 currentTurnTaker = null;
             }
 
-            if (this.CurrentCampaignContext?.PendingRewards != null && this.RewardsPanelUXInstance.Rewards != this.CurrentCampaignContext?.PendingRewards)
+            if (this.CurrentCampaignContext?._PendingRewards != null && this.RewardsPanelUXInstance._Rewards != this.CurrentCampaignContext?._PendingRewards)
             {
-                this.PresentAwards(this.CurrentCampaignContext.PendingRewards);
+                this._PresentAwards(this.CurrentCampaignContext._PendingRewards);
             }
 
             CampaignContext.GameplayCampaignState wasPreviousCampaignState = this.previousCampaignState;
@@ -530,19 +530,35 @@ namespace SpaceDeck.UX
             this.StartCoroutine(AnimateEnemyTurnsInternal(continuationAction));
         }
 
-        public void ShowRewardsPanel(Reward cardsToReward)
+        [Obsolete("Should transition to " + nameof(_ShowRewardsPanel))]
+        public void ShowRewardsPanel(SFDDCards.Reward cardsToReward)
         {
             this.RewardsPanelUXInstance.gameObject.SetActive(true);
             this.RewardsPanelUXInstance.SetReward(cardsToReward);
             this.UpdateUX(this.CurrentCampaignContext);
         }
 
+        public void _ShowRewardsPanel(SpaceDeck.GameState.Minimum.Reward cardsToReward)
+        {
+            this.RewardsPanelUXInstance.gameObject.SetActive(true);
+            this.RewardsPanelUXInstance._SetReward(cardsToReward);
+            this._UpdateUX(this.CurrentCampaignContext);
+        }
+
+        [Obsolete("Should transition to " + nameof(_ShowShopPanel))]
         public void ShowShopPanel(params ShopEntry[] itemsInShop)
         {
             this.ShopPanelUXInstance.gameObject.SetActive(true);
             this.ShopPanelUXInstance.SetShopItems(itemsInShop);
         }
 
+        public void _ShowShopPanel(params ShopEntry[] itemsInShop)
+        {
+            this.ShopPanelUXInstance.gameObject.SetActive(true);
+            this.ShopPanelUXInstance._SetShopItems(itemsInShop);
+        }
+
+        [Obsolete("Should transition to " + nameof(_AnimateEnemyTurnsInternal))]
         private IEnumerator AnimateEnemyTurnsInternal(Action continuationAction)
         {
             foreach (Enemy curEnemy in this.CurrentCampaignContext.CurrentCombatContext.Enemies)
@@ -551,6 +567,11 @@ namespace SpaceDeck.UX
             }
 
             continuationAction.Invoke();
+        }
+
+        private IEnumerator _AnimateEnemyTurnsInternal(Action continuationAction)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerator AnimateCardPlay(Card toPlay, ICombatantTarget target)
@@ -797,11 +818,19 @@ namespace SpaceDeck.UX
             this.CombatTurnCounterInstance.EndPlayerTurn();
         }
 
-        public void PresentAwards(Reward toPresent)
+        [Obsolete("Transition to " + nameof(_PresentAwards))]
+        public void PresentAwards(SFDDCards.Reward toPresent)
         {
             this.CurrentCampaignContext.PendingRewards = null;
             this.CancelAllSelections();
             this.ShowRewardsPanel(toPresent);
+        }
+
+        public void _PresentAwards(SpaceDeck.GameState.Minimum.Reward toPresent)
+        {
+            this.CurrentCampaignContext._PendingRewards = null;
+            this.CancelAllSelections();
+            this._ShowRewardsPanel(toPresent);
         }
 
         void PresentNextRouteChoice()

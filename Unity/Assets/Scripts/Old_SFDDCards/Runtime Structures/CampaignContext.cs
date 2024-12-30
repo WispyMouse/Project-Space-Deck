@@ -61,7 +61,10 @@ namespace SFDDCards
         [Obsolete("Should transition to " + nameof(_CurrencyCounts))]
         public Dictionary<CurrencyImport, int> CurrencyCounts = new Dictionary<CurrencyImport, int>();
         public Dictionary<Currency, int> _CurrencyCounts = new Dictionary<Currency, int>();
+
+        [Obsolete("Should transition to " + nameof(_PendingRewards))]
         public Reward PendingRewards { get; set; } = null;
+        public SpaceDeck.Models.Instances.RewardInstance _PendingRewards { get; set; } = null;
 
         public CampaignContext(CampaignRoute onRoute)
         {

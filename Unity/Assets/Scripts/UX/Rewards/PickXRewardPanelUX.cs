@@ -8,6 +8,7 @@ namespace SpaceDeck.UX
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
+    using static SpaceDeck.GameState.Minimum.Reward;
 
     public class PickXRewardPanelUX : MonoBehaviour
     {
@@ -41,7 +42,7 @@ namespace SpaceDeck.UX
 
             switch (toRepresent.Protocol)
             {
-                case PickRewardImport.PickRewardProtocol.ChooseX:
+                case PickRewardProtocol.ChooseX:
                     this.ExplanationLabel.text = $"Choose up to {this.BasedOnPick.BasedOn.ProtocolArgument}";
                     break;
             }

@@ -20,13 +20,16 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
+        [Obsolete("Transition to " + nameof(_Rewards))]
         public Reward Rewards;
+        public SpaceDeck.GameState.Minimum.Reward _Rewards;
 
         private void Awake()
         {
             this.Annihilate();
         }
 
+        [Obsolete("Transition to " + nameof(_SetReward))]
         public void SetReward(Reward toReward)
         {
             this.gameObject.SetActive(true);
@@ -39,6 +42,11 @@ namespace SpaceDeck.UX
                 PickXRewardPanelUX pickRewardPanel = Instantiate(this.PickRewardUXPF, this.RewardPanelsHolder);
                 pickRewardPanel.RepresentPick(CentralGameStateControllerInstance.CurrentCampaignContext, this, pickReward);
             }
+        }
+
+        public void _SetReward(SpaceDeck.GameState.Minimum.Reward toReward)
+        {
+            throw new System.NotImplementedException();
         }
 
         void Annihilate()

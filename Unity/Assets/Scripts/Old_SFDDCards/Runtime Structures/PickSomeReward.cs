@@ -5,6 +5,7 @@ namespace SFDDCards
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
+    using static SpaceDeck.GameState.Minimum.Reward;
     using static SpaceDeck.Models.Imports.PickRewardImport;
 
     public class PickSomeReward
