@@ -2,6 +2,8 @@ namespace SpaceDeck.UX
 {
     using SFDDCards;
     using SFDDCards.UX;
+    using SpaceDeck.GameState.Minimum;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -24,22 +26,28 @@ namespace SpaceDeck.UX
             
         }
 
+        [Obsolete("Transition to " + nameof(_RouteChosen))]
         public void RouteChosen(RouteImport chosenRoute)
         {
             this.UXController.RouteChosen(chosenRoute);
         }
 
-        public void ShowChooser()
+        public void _RouteChosen(Route chosenRoute)
+        {
+            this.UXController._RouteChosen(chosenRoute);
+        }
+
+        public void _ShowChooser()
         {
             this.gameObject.SetActive(true);
 
             if (!this.Initialized)
             {
                 this.Initialized = true;
-                foreach (RouteImport route in RouteDatabase.AllRoutes)
+                foreach (Route route in SpaceDeck.Models.Databases.RouteDatabase.AllRoutes)
                 {
                     PlayCampaignButton nextButton = Instantiate(this.SelectorPrefab, ChoiceHolder);
-                    nextButton.SetFromRoute(route, this);
+                    nextButton._SetFromRoute(route, this);
                 }
             }
         }

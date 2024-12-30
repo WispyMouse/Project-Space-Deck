@@ -867,15 +867,22 @@ namespace SpaceDeck.UX
             this.CentralGameStateControllerInstance.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
         }
 
+        [Obsolete("Transition to " + nameof(_RouteChosen))]
         public void RouteChosen(RouteImport chosenRoute)
         {
             this.CancelAllSelections();
             this.CentralGameStateControllerInstance.RouteChosen(chosenRoute);
         }
 
-        public void ShowCampaignChooser()
+        public void _RouteChosen(Route chosenRoute)
         {
-            this.CampaignChooserUXInstance.ShowChooser();
+            this.CancelAllSelections();
+            this.CentralGameStateControllerInstance._RouteChosen(chosenRoute);
+        }
+
+        public void _ShowCampaignChooser()
+        {
+            this.CampaignChooserUXInstance._ShowChooser();
         }
 
         [Obsolete("Transition to " + nameof(_RemoveDefeatedEntities))]

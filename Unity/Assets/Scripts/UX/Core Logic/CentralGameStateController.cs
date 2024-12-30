@@ -53,7 +53,7 @@ namespace SpaceDeck.UX
 
             this.UXController.Annihilate();
             this.CurrentCampaignContext = null;
-            this.UXController.ShowCampaignChooser();
+            this.UXController._ShowCampaignChooser();
             GlobalUpdateUX.UpdateUXEvent.Invoke(this.CurrentCampaignContext);
         }
 
