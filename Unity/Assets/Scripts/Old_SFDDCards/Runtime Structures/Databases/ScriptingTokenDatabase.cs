@@ -1,10 +1,12 @@
 namespace SFDDCards.ScriptingTokens
 {
     using SFDDCards.Evaluation.Conceptual;
+    using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
 
+    [Obsolete("Should use " + nameof(SpaceDeck.Tokenization.Processing.ScriptingCommandReference))]
     public static class ScriptingTokenDatabase
     {
         public static List<IScriptingToken> AllTokenPrototypes = new List<IScriptingToken>()

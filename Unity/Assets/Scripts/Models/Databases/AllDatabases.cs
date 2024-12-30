@@ -19,6 +19,8 @@ namespace SpaceDeck.Models.Databases
             ElementDatabase.ClearDatabase();
             EncounterDatabase.ClearDatabase();
             StatusEffectDatabase.ClearDatabase();
+            RouteDatabase.ClearDatabase();
+            RewardDatabase.ClearDatabase();
             ScriptingCommandReference.Clear();
             RuleReference.ClearRules();
         }

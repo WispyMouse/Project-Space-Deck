@@ -9,6 +9,8 @@ namespace SFDDCards
     using System.Text.RegularExpressions;
     using UnityEngine;
 
+
+    [Obsolete("Should use " + nameof(SpaceDeck.Models.Databases.CardDatabase))]
     public static class CardDatabase
     {
         public static Dictionary<string, CardImport> CardData { get; private set; } = new Dictionary<string, CardImport>();

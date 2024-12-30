@@ -17,6 +17,7 @@ namespace SFDDCards
     using System.Text.RegularExpressions;
     using UnityEngine;
 
+
     public static class EffectDescriberDatabase
     {
         public enum IsPlural { DontKnow, Yes, No };

@@ -6,10 +6,12 @@ namespace SFDDCards
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Utility.Minimum;
+    using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
 
+    [Obsolete("Should use " + nameof(SpaceDeck.Models.Databases.RewardDatabase))]
     public static class RewardDatabase
     {
         public static Dictionary<LowercaseString, RewardImport> RewardModels = new Dictionary<LowercaseString, RewardImport>();

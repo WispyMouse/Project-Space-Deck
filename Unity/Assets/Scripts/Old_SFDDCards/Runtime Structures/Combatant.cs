@@ -4,6 +4,8 @@ namespace SFDDCards
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+
+    [System.Obsolete("Transition to " + nameof(SpaceDeck.GameState.Minimum.Entity))]
     public abstract class Combatant : ICombatantTarget, IReactionWindowReactor
     {
         public abstract string Id { get; }

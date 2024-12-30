@@ -9,6 +9,7 @@ namespace SFDDCards
     using System.Text.RegularExpressions;
     using UnityEngine;
 
+    [Obsolete("Should use " + nameof(SpaceDeck.Models.Databases.StatusEffectDatabase))]
     public static class StatusEffectDatabase
     {
         public static Dictionary<string, StatusEffect> EffectData { get; private set; } = new Dictionary<string, StatusEffect>();

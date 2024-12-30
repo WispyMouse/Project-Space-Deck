@@ -65,10 +65,10 @@ namespace SFDDCards.Tests.EditMode
 
         public static void ResetAll()
         {
-            GlobalSequenceEventHolder.StopAllSequences();
+            SFDDCards.GlobalSequenceEventHolder.StopAllSequences();
             SFDDCards.CardDatabase.ClearDatabase();
-            EnemyDatabase.ClearDatabase();
-            ElementDatabase.ClearDatabase();
+            SFDDCards.EnemyDatabase.ClearDatabase();
+            SFDDCards.ElementDatabase.ClearDatabase();
             GlobalUpdateUX.PlayerMustMakeChoice.RemoveAllListeners();
             GlobalUpdateUX.PendingPlayerChoice = false;
             SFDDCards.StatusEffectDatabase.ClearDatabase();
