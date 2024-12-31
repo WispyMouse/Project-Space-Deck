@@ -16,6 +16,7 @@ namespace SFDDCards
     using System.Text.RegularExpressions;
     using UnityEngine;
 
+    [Obsolete("Should use SpaceDeck.GameState.Execution.GameState")]
     public class CampaignContext
     {
         public enum GameplayCampaignState
@@ -37,6 +38,7 @@ namespace SFDDCards
             NotAllowedToLeave = 2
         }
 
+        [Obsolete("Should get the game state from CentralGameStateController, rather than from Campaign Context. CampaignContext is obsolete.")]
         public readonly GameState GameplayState = new GameState();
 
         [Obsolete("Should transition to " + nameof(_CampaignDeck))]

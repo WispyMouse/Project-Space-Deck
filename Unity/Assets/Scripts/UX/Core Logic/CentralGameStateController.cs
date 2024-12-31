@@ -7,6 +7,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Minimum;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
     using System;
@@ -20,18 +21,16 @@ namespace SpaceDeck.UX
 
     public class CentralGameStateController : MonoBehaviour
     {
+        [Obsolete("Should transition to " + nameof(GameplayState))]
         public CampaignContext CurrentCampaignContext { get; private set; } = null;
+        public SpaceDeck.GameState.Execution.GameState GameplayState;
+        public Entity CampaignPlayer;
 
         [SerializeReference]
         private GameplayUXController UXController;
 
         [SerializeReference]
-        private CombatTurnController CombatTurnControllerInstance;
-
-        [SerializeReference]
         private TextMeshProSpriteController TextMeshProSpriteControllerInstance;
-
-        public RunConfiguration CurrentRunConfiguration { get; set; } = null;
 
         private void Awake()
         {
@@ -49,12 +48,9 @@ namespace SpaceDeck.UX
         /// </summary>
         public void SetupAndStartNewGame()
         {
-            GlobalUpdateUX.LogTextEvent.Invoke("Resetting game to new state", GlobalUpdateUX.LogType.GameEvent);
-
             this.UXController.Annihilate();
-            this.CurrentCampaignContext = null;
+            this.GameplayState = null;
             this.UXController._ShowCampaignChooser();
-            GlobalUpdateUX.UpdateUXEvent.Invoke(this.CurrentCampaignContext);
         }
 
         IEnumerator BootupSequence()
@@ -88,36 +84,18 @@ namespace SpaceDeck.UX
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.EncounterImport>(Application.streamingAssetsPath, "encounterImport", EncounterDatabase.AddEncounter, currentContext));
             yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.RouteImport>(Application.streamingAssetsPath, "routeImport", SpaceDeck.Models.Databases.RouteDatabase.AddRouteToDatabase, currentContext));
 
-            Task<RunConfiguration> fileTask  = ImportHelper.GetFileAsync<RunConfiguration>(Application.streamingAssetsPath + "/runconfiguration.runconfiguration");
-            yield return ImportHelper.YieldForTask(fileTask);
-            CurrentRunConfiguration = fileTask.Result;
-
-
             this.SetupAndStartNewGame();
-        }
-
-        [Obsolete("Transition to " + nameof(_RouteChosen))]
-        public void RouteChosen(SFDDCards.RouteImport route)
-        {
-            this.CurrentCampaignContext = new CampaignContext(new CampaignRoute(this.CurrentRunConfiguration, route));
-
-            foreach (StartingCurrency startingCurrency in route.StartingCurrencies)
-            {
-                this.CurrentCampaignContext._ModCurrency(CurrencyDatabase.Get(startingCurrency.CurrencyId), startingCurrency.StartingAmount);
-            }
-
-            this.UXController.PlacePlayerCharacter();
-
-            this.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
-
-            GlobalUpdateUX.UpdateUXEvent?.Invoke(this.CurrentCampaignContext);
         }
 
         public void _RouteChosen(SpaceDeck.GameState.Minimum.Route route)
         {
-            throw new System.NotImplementedException();
-
-            this.CurrentCampaignContext = new CampaignContext(route);
+            this.GameplayState = new GameState.Execution.GameState(route);
+            foreach (LowercaseString startingCurrency in route.StartingCurrency.Keys)
+            {
+                this.GameplayState.ModCurrency(CurrencyDatabase.Get(startingCurrency), route.StartingCurrency[startingCurrency]);
+            }
+            PlayerUX placedPlayer = this.UXController._PlacePlayerCharacter();
+            this.CampaignPlayer = placedPlayer._RepresentedPlayer;
         }
     }
 }

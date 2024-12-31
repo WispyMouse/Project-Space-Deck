@@ -8,6 +8,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX;
+    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -136,10 +137,10 @@ namespace SpaceDeck.UX
             this.PlayerUXInstance = Instantiate(this.PlayerRepresentationPF, this.PlayerRepresentationTransform);
             this.PlayerUXInstance.SetFromPlayer(this.CurrentCampaignContext.CampaignPlayer);
 
-            this.LifeValue.text = $"{this.CentralGameStateControllerInstance.CurrentCampaignContext.CampaignPlayer.CurrentHealth} / {this.CentralGameStateControllerInstance.CurrentCampaignContext.CampaignPlayer.MaxHealth}";
+            this.LifeValue.text = $"{this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.Health)} / {this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)}";
         }
 
-        public void _PlacePlayerCharacter()
+        public PlayerUX _PlacePlayerCharacter()
         {
             if (this.PlayerUXInstance != null)
             {
@@ -153,6 +154,7 @@ namespace SpaceDeck.UX
             this.PlayerUXInstance._SetFromPlayer(campaignEntity);
 
             this.LifeValue.text = $"{campaignEntity.Qualities.GetNumericQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
+            return this.PlayerUXInstance;
         }
 
         public void _CheckAndActIfGameCampaignNavigationStateChanged()
@@ -278,7 +280,7 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void _UpdateUX(CampaignContext forCampaign)
+        public void _UpdateUX()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
@@ -292,7 +294,7 @@ namespace SpaceDeck.UX
             this._CheckAndActIfGameCampaignNavigationStateChanged();
             this._RemoveDefeatedEntities();
             this.SetElementValueLabel();
-            this.SetCurrenciesValueLabel();
+            this._SetCurrenciesValueLabel();
             this.UpdateEnemyUX();
             this.UpdatePlayerLabelValues();
             this.RepresentTargetables();
@@ -378,7 +380,7 @@ namespace SpaceDeck.UX
         {
             this.RewardsPanelUXInstance.gameObject.SetActive(true);
             this.RewardsPanelUXInstance._SetReward(toReward);
-            this._UpdateUX(this.CurrentCampaignContext);
+            this._UpdateUX();
         }
 
         public void _ShowShopPanel(IReadOnlyList<IShopEntry> itemsInShop)
@@ -454,6 +456,7 @@ namespace SpaceDeck.UX
                 this._StatusEffectClicked);
         }
 
+        [Obsolete("Transition to " + nameof(_SetElementValueLabel))]
         private void SetElementValueLabel()
         {
             if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null ||
@@ -475,6 +478,26 @@ namespace SpaceDeck.UX
             this.ElementsValue.text = compositeElements.ToString();
         }
 
+        private void _SetElementValueLabel()
+        {
+            if (this.CentralGameStateControllerInstance.GameplayState == null)
+            {
+                this.ElementsValue.text = "None";
+                return;
+            }
+
+            string startingSeparator = "";
+            StringBuilder compositeElements = new StringBuilder();
+            foreach (SpaceDeck.GameState.Minimum.Element element in this.CentralGameStateControllerInstance.GameplayState.Elements.Keys)
+            {
+                compositeElements.Append($"{startingSeparator}{this.CentralGameStateControllerInstance.GameplayState.Elements[element]}\u00A0{SpriteLookup.GetNameAndMaybeIcon(element)}");
+                startingSeparator = ", ";
+            }
+
+            this.ElementsValue.text = compositeElements.ToString();
+        }
+
+        [Obsolete("Transition to " + nameof(_SetCurrenciesValueLabel))]
         private void SetCurrenciesValueLabel()
         {
             if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null || this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrencyCounts.Count == 0)
@@ -488,6 +511,25 @@ namespace SpaceDeck.UX
             foreach (CurrencyImport currency in this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrencyCounts.Keys)
             {
                 compositeCurrencies.Append($"{startingSeparator}{this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrencyCounts[currency]}\u00A0{currency.GetNameAndMaybeIcon()}");
+                startingSeparator = ", ";
+            }
+
+            this.CurrenciesValue.text = compositeCurrencies.ToString();
+        }
+
+        private void _SetCurrenciesValueLabel()
+        {
+            if (this.CentralGameStateControllerInstance.GameplayState == null || this.CentralGameStateControllerInstance.GameplayState.Currencies.Count == 0)
+            {
+                this.CurrenciesValue.text = "None";
+                return;
+            }
+
+            string startingSeparator = "";
+            StringBuilder compositeCurrencies = new StringBuilder();
+            foreach (Currency currency in this.CentralGameStateControllerInstance.GameplayState.Currencies.Keys)
+            {
+                compositeCurrencies.Append($"{startingSeparator}{this.CentralGameStateControllerInstance.GameplayState.Currencies[currency]}\u00A0{SpriteLookup.GetNameAndMaybeIcon(currency)}");
                 startingSeparator = ", ";
             }
 
@@ -694,17 +736,17 @@ namespace SpaceDeck.UX
             this.CentralGameStateControllerInstance.CurrentCampaignContext._MakeChoiceNodeDecision(option);
         }
 
+        [Obsolete("Transition to " + nameof(_RouteChosen))]
         public void ProceedToNextRoom()
         {
             this.CancelAllSelections();
             this.CentralGameStateControllerInstance.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
         }
 
-        [Obsolete("Transition to " + nameof(_RouteChosen))]
-        public void RouteChosen(RouteImport chosenRoute)
+        public void _ProceedToNextRoom()
         {
             this.CancelAllSelections();
-            this.CentralGameStateControllerInstance.RouteChosen(chosenRoute);
+            this.CentralGameStateControllerInstance.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
         }
 
         public void _RouteChosen(Route chosenRoute)
@@ -812,14 +854,14 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext == null)
+            if (this.CentralGameStateControllerInstance?.GameplayState == null)
             {
                 return;
             }
 
-            List<CardInstance> cardsInDeck = new List<CardInstance>(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.CardsInDeck);
+            List<CardInstance> cardsInDeck = new List<CardInstance>(this.CentralGameStateControllerInstance.GameplayState.CardsInDeck);
 
-            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?._CurrentEncounter != null)
+            if (this.CentralGameStateControllerInstance?.GameplayState.CurrentEncounterState != null)
             {
                 cardsInDeck = new List<CardInstance>(this.CurrentCampaignContext._CurrentEncounter.GetZoneCards(WellknownZones.Deck));
             }
@@ -839,12 +881,12 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
+            if (this.CentralGameStateControllerInstance?.GameplayState.CurrentEncounterState == null)
             {
                 return;
             }
 
-            List<CardInstance> cardsInExile = new List<CardInstance>(this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter.GetZoneCards(WellknownZones.Exile));
+            List<CardInstance> cardsInExile = new List<CardInstance>(this.CentralGameStateControllerInstance.GameplayState.GetCardsInZone(WellknownZones.Exile));
             cardsInExile.Sort((CardInstance a, CardInstance b) => a.Name.CompareTo(b.Name));
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
@@ -874,22 +916,12 @@ namespace SpaceDeck.UX
             }
         }
 
-        [Obsolete("Transition to the version of " + nameof(EncounterDialogueComplete) + " that uses EncounterState")]
-        public void EncounterDialogueComplete(EvaluatedEncounter completed)
-        {
-            if (completed == this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentEncounter)
-            {
-                this.EncounterRepresenterUXInstance.Close();
-                this.ProceedToNextRoom();
-            }
-        }
-
         public void EncounterDialogueComplete(EncounterState completed)
         {
-            if (completed == this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter)
+            if (completed == this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState)
             {
                 this.EncounterRepresenterUXInstance.Close();
-                this.ProceedToNextRoom();
+                this._ProceedToNextRoom();
             }
         }
     }

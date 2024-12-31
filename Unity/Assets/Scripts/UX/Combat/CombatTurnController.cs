@@ -19,16 +19,12 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
-        public CampaignContext ForCampaign => this.CentralGameStateControllerInstance?.CurrentCampaignContext;
-
         [SerializeReference]
         private GameplayUXController UXController;
         [SerializeReference]
         private EnemyRepresenterUX EnemyRepresenterUX;
 
-        [Obsolete("Transition to " + nameof(_Context))]
-        private CombatContext Context => this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext;
-        private EncounterState _Context => this.CentralGameStateControllerInstance?.CurrentCampaignContext?._CurrentEncounter;
+        private EncounterState _Context => this.CentralGameStateControllerInstance?.GameplayState?.CurrentEncounterState;
 
         private QuestionAnsweringContext CurrentQuestionAnsweringContext { get; set; }
         
@@ -36,6 +32,8 @@ namespace SpaceDeck.UX
 
         private static Coroutine AnimationCoroutine { get; set; } = null;
         private static bool AnimationCoroutineIsRunning { get; set; } = false;
+
+        public CampaignContext ForCampaign => throw new NotImplementedException();
 
         private void Awake()
         {
@@ -46,20 +44,6 @@ namespace SpaceDeck.UX
             }
 
             Instance = this;
-
-            GlobalSequenceEventHolder.OnStopAllSequences.AddListener(StopSequenceAnimation);
-        }
-
-        [Obsolete("Transition to " + nameof(_BeginHandlingCombat))]
-        public void BeginHandlingCombat()
-        {
-            this.CurrentlyActive = true;
-
-            GlobalSequenceEventHolder.PushSequencesToTop(
-                CentralGameStateControllerInstance.CurrentCampaignContext,
-                new GameplaySequenceEvent(this._SpawnInitialEnemies, null),
-                new GameplaySequenceEvent(() => this.Context.EndCurrentTurnAndChangeTurn(CombatContext.TurnStatus.PlayerTurn), null)
-                );
         }
 
         public void _BeginHandlingCombat()
@@ -71,7 +55,6 @@ namespace SpaceDeck.UX
         public void EndHandlingCombat()
         {
             this.CurrentlyActive = false;
-            GlobalSequenceEventHolder.StopAllSequences();
         }
 
         private void StopSequenceAnimation()
@@ -83,52 +66,11 @@ namespace SpaceDeck.UX
             }
         }
 
-        #region Sequence Resolution
-
-        private void Update()
-        {
-            do
-            {
-                if (GlobalSequenceEventHolder.StackedSequenceEvents.Count == 0 && GlobalSequenceEventHolder.CurrentSequenceEvent == null)
-                {
-                    return;
-                }
-
-                if (AnimationCoroutineIsRunning)
-                {
-                    return;
-                }
-
-                GlobalSequenceEventHolder.ApplyNextSequenceWithAnimationHandler(this);
-            }
-            while (GlobalSequenceEventHolder.StackedSequenceEvents.Count > 0 && !GlobalUpdateUX.PendingPlayerChoice);
-        }
-
-        public void HandleSequenceEventWithAnimation(GameplaySequenceEvent sequenceEvent)
-        {
-            AnimationCoroutine = this.StartCoroutine(AnimateHandleSequenceEventWithAnimation(sequenceEvent));
-        }
-
-        private IEnumerator AnimateHandleSequenceEventWithAnimation(GameplaySequenceEvent runningEvent)
-        {
-            AnimationCoroutineIsRunning = true;
-
-            yield return runningEvent.AnimationDelegate();
-            runningEvent.ConsequentialAction?.Invoke();
-
-            GlobalUpdateUX.UpdateUXEvent.Invoke(this.CentralGameStateControllerInstance.CurrentCampaignContext);
-
-            AnimationCoroutineIsRunning = false;
-            AnimationCoroutine = null;
-        }
-
-        #endregion
-
         #region Specific Gameplay Turn Concepts
         
         private void _SpawnInitialEnemies()
         {
-            this.EnemyRepresenterUX._AddEnemies(this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter.EncounterEntities);
+            this.EnemyRepresenterUX._AddEnemies(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.EncounterEntities);
         }
 
         private void _SpawnEnemy(Entity toSpawn)
@@ -138,14 +80,14 @@ namespace SpaceDeck.UX
 
         public void _EndPlayerTurn()
         {
-            this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.EndCurrentEntityTurn();
+            this.CentralGameStateControllerInstance.GameplayState.EndCurrentEntityTurn();
         }
 
         public void _StartPlayCard(CardInstance toPlay)
         {
-            QuestionAnsweringContext questionContext = this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.StartConsideringPlayingCard(toPlay);
+            QuestionAnsweringContext questionContext = this.CentralGameStateControllerInstance.GameplayState.StartConsideringPlayingCard(toPlay);
             this.CurrentQuestionAnsweringContext = questionContext;
-            if (this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.TryExecuteCurrentCard())
+            if (this.CentralGameStateControllerInstance.GameplayState.TryExecuteCurrentCard())
             {
                 // The card has been played, hooray
                 this.CurrentQuestionAnsweringContext = null;
@@ -157,12 +99,17 @@ namespace SpaceDeck.UX
 
         public void _ExecuteCurrentCard()
         {
-            if (!this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.TryExecuteCurrentCard())
+            if (!this.CentralGameStateControllerInstance.GameplayState.TryExecuteCurrentCard())
             {
                 // TODO LOG
                 // Should not fail to play cards if this is directly called
                 return;
             }
+        }
+
+        public void HandleSequenceEventWithAnimation(GameplaySequenceEvent sequenceEvent)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

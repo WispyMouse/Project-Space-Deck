@@ -37,13 +37,13 @@ namespace SpaceDeck.UX
 
         public void ShopItemSelected(ShopItemUX selectedItem)
         {
-            if (!this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.CanAfford(selectedItem.RepresentingEntry.Costs))
+            if (!this.CentralGameStateControllerInstance.GameplayState.CanAfford(selectedItem.RepresentingEntry.Costs))
             {
                 // TODO LOG
                 return;
             }
 
-            this.CentralGameStateControllerInstance.CurrentCampaignContext._PurchaseShopItem(selectedItem.RepresentingEntry);
+            this.CentralGameStateControllerInstance.GameplayState.PurchaseShopItem(selectedItem.RepresentingEntry);
             this.ActiveShopItemUXs.Remove(selectedItem);
             Destroy(selectedItem.gameObject);
         }
@@ -55,7 +55,7 @@ namespace SpaceDeck.UX
             foreach (IShopEntry curEntry in shopEntries)
             {
                 ShopItemUX shopEntry = Instantiate(this.ShopItemUXPF, this.ShopItemUXHolderTransform);
-                shopEntry._SetFromEntry(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, curEntry, ShopItemSelected);
+                shopEntry._SetFromEntry(this.CentralGameStateControllerInstance.GameplayState, curEntry, ShopItemSelected);
                 this.ActiveShopItemUXs.Add(shopEntry);
             }
         }

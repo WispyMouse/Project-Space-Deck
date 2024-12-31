@@ -49,7 +49,7 @@ namespace SpaceDeck.UX
 
         public void _GainReward(SpaceDeck.GameState.Minimum.Reward reward)
         {
-            this.CentralGameStateControllerInstance.CurrentCampaignContext.Gain(reward);
+            this.CentralGameStateControllerInstance.GameplayState.Gain(reward);
         }
 
         public void ClosePanel(PickXRewardPanelUX toClose)

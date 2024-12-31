@@ -30,6 +30,8 @@ namespace SpaceDeck.GameState.Execution
         public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
         public readonly List<CardInstance> CardsInDeck = new List<CardInstance>();
         public readonly Dictionary<Currency, int> Currencies = new Dictionary<Currency, int>();
+        public readonly Dictionary<Element, int> Elements = new Dictionary<Element, int>();
+        public readonly Route BasedOnRoute;
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
@@ -54,7 +56,12 @@ namespace SpaceDeck.GameState.Execution
 
         public GameState()
         {
+            this.BasedOnRoute = null;
+        }
 
+        public GameState(Route basedOnRoute)
+        {
+            this.BasedOnRoute = basedOnRoute;
         }
 
         public void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue)
@@ -368,6 +375,35 @@ namespace SpaceDeck.GameState.Execution
             }
 
             return this.CurrentEncounterState.GetCardZone(card);
+        }
+
+        public void PurchaseShopItem(IShopEntry toBuy)
+        {
+            bool canAfford = this.CanAfford(toBuy.Costs);
+
+            if (!canAfford)
+            {
+                // TODO: LOG
+                return;
+            }
+
+            this.Gain(toBuy);
+
+            foreach (IShopCost cost in toBuy.Costs)
+            {
+                int currencyAmount = cost.GetCost(this);
+                this.ModCurrency(cost.CurrencyType, -currencyAmount);
+            }
+        }
+
+        public void Gain(IShopEntry toGain)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Gain(Reward toGain)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

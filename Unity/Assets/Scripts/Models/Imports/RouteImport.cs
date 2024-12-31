@@ -15,6 +15,7 @@ namespace SpaceDeck.Models.Imports
         public List<StringQualityImport> StringQualities = new List<StringQualityImport>();
         public List<NumericQualityImport> NumberQualities = new List<NumericQualityImport>();
         public List<string> StartingCards = new List<string>();
+        public List<NumericQualityImport> StartingCurrencies = new List<NumericQualityImport>();
 
         public Route GetRoute()
         {
@@ -28,8 +29,13 @@ namespace SpaceDeck.Models.Imports
             {
                 startingCards.Add(startingCard);
             }
+            Dictionary<LowercaseString, int> startingCurrencies = new Dictionary<LowercaseString, int>();
+            foreach (NumericQualityImport startingCurrency in this.StartingCurrencies)
+            {
+                startingCurrencies.Add(startingCurrency.Key, (int)startingCurrency.Value);
+            }
 
-            return new Route(this.Name, nodes, GetQualities(this.StringQualities, this.NumberQualities), startingCards);
+            return new Route(this.Name, nodes, GetQualities(this.StringQualities, this.NumberQualities), startingCards, startingCurrencies);
         }
     }
 }

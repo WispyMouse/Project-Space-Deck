@@ -61,8 +61,6 @@ namespace SpaceDeck.UX.AssetLookup
             ObjectToSpriteLookup.Clear();
         }
 
-
-
         public static string GetNameOrIcon(Currency currency)
         {
             if (TryGetSpriteIndex(currency.Id, out int index))
@@ -81,6 +79,26 @@ namespace SpaceDeck.UX.AssetLookup
             }
 
             return currency.Name;
+        }
+
+        public static string GetNameOrIcon(Element element)
+        {
+            if (TryGetSpriteIndex(element.Id, out int index))
+            {
+                return $"<sprite index={index}>";
+            }
+
+            return element.Name;
+        }
+
+        public static string GetNameAndMaybeIcon(Element element)
+        {
+            if (TryGetSpriteIndex(element.Id, out int index))
+            {
+                return $"<sprite index={index}>{element.Name}";
+            }
+
+            return element.Name;
         }
     }
 
