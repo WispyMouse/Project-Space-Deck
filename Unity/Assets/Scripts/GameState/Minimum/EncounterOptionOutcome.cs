@@ -4,7 +4,7 @@ namespace SpaceDeck.GameState.Minimum
     using System.Collections;
     using System.Collections.Generic;
 
-    public class EncounterOptionOutcome
+    public class EncounterOptionOutcome : IResolve
     {
         public readonly LowercaseString RequirementScript;
         public readonly string Dialogue;
@@ -15,6 +15,16 @@ namespace SpaceDeck.GameState.Minimum
             this.RequirementScript = requirementScript;
             this.Dialogue = dialogue;
             this.ExecutionScript = executionScript;
+        }
+
+        public void Apply(IGameStateMutator mutator)
+        {
+            this.Apply(mutator, out _);
+        }
+
+        public void Apply(IGameStateMutator mutator, out LowercaseString destination)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

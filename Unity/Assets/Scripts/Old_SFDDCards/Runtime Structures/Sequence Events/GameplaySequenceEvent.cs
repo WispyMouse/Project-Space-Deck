@@ -7,6 +7,7 @@ namespace SFDDCards
     using System.Text;
     using UnityEngine;
 
+    [Obsolete("All game state mutations should be stacked through a " + nameof(SpaceDeck.GameState.Minimum.IGameStateMutator))]
     public class GameplaySequenceEvent
     {
         /// <summary>

@@ -8,6 +8,7 @@ namespace SFDDCards
     using System.Collections.Generic;
     using UnityEngine;
 
+    [Obsolete("Transition to " + nameof(SpaceDeck.GameState.Minimum.EncounterState))]
     public class EvaluatedEncounter
     {
         public readonly EncounterModel BasedOn;
