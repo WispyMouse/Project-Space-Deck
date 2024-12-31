@@ -6,6 +6,7 @@ namespace SFDDCards
     using System.Collections.Generic;
     using UnityEngine;
 
+    [System.Obsolete("Transition to SpaceDeck.GameState.Minimum.Route")]
     public class CampaignRoute
     {
         public string RouteName => this.BasedOn.RouteName;

@@ -11,7 +11,10 @@ namespace SpaceDeck.Models.Imports
     public class RouteImport : Importable
     {
         public string Name;
-        public List<ChoiceNodeImport> Choices;
+        public List<ChoiceNodeImport> Choices = new List<ChoiceNodeImport>();
+        public List<StringQualityImport> StringQualities = new List<StringQualityImport>();
+        public List<NumericQualityImport> NumberQualities = new List<NumericQualityImport>();
+        public List<string> StartingCards = new List<string>();
 
         public Route GetRoute()
         {
@@ -20,8 +23,13 @@ namespace SpaceDeck.Models.Imports
             {
                 nodes.Add(import.GetNode());
             }
+            List<LowercaseString> startingCards = new List<LowercaseString>();
+            foreach (string startingCard in this.StartingCards)
+            {
+                startingCards.Add(startingCard);
+            }
 
-            return new Route(this.Name, nodes);
+            return new Route(this.Name, nodes, GetQualities(this.StringQualities, this.NumberQualities), startingCards);
         }
     }
 }

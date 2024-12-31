@@ -1,13 +1,13 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Text;
     using System.Text.RegularExpressions;
     using UnityEngine;
+    using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.GameState.Minimum;
 
     public class DeckRepresenter : MonoBehaviour
     {
@@ -18,20 +18,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private TMPro.TMP_Text CardsInExileValue;
 
-        private void OnEnable()
-        {
-            GlobalUpdateUX.UpdateUXEvent.AddListener(RepresentDeck);
-            GlobalUpdateUX.UpdateUXEvent.AddListener(_RepresentDeck);
-        }
-
-        private void OnDisable()
-        {
-            GlobalUpdateUX.UpdateUXEvent.RemoveListener(RepresentDeck);
-            GlobalUpdateUX.UpdateUXEvent.RemoveListener(_RepresentDeck);
-        }
-
-        [Obsolete("Transition to " + nameof(_RepresentDeck))]
-        public void RepresentDeck(CampaignContext forContext)
+        public void _RepresentDeck(IGameStateMutator forContext)
         {
             if (forContext == null)
             {
@@ -42,41 +29,9 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            if (forContext.CurrentCombatContext == null)
-            {
-                this.CardsInDeckValue.text = forContext.CampaignDeck.AllCardsInDeck.Count.ToString();
-                this.CardsInDiscardValue.text = "0";
-                this.CardsInExileValue.text = "0";
-                return;
-            }
-
-            this.CardsInDeckValue.text = forContext.CurrentCombatContext.PlayerCombatDeck.CardsCurrentlyInDeck.Count.ToString();
-            this.CardsInDiscardValue.text = forContext.CurrentCombatContext.PlayerCombatDeck.CardsCurrentlyInDiscard.Count.ToString();
-            this.CardsInExileValue.text = forContext.CurrentCombatContext.PlayerCombatDeck.CardsCurrentlyInExile.Count.ToString();
-        }
-
-        public void _RepresentDeck(CampaignContext forContext)
-        {
-            if (forContext == null)
-            {
-                this.CardsInDeckValue.text = "0";
-                this.CardsInDiscardValue.text = "0";
-                this.CardsInExileValue.text = "0";
-
-                return;
-            }
-
-            if (forContext._CurrentEncounter == null)
-            {
-                this.CardsInDeckValue.text = forContext._CampaignDeck.Count.ToString();
-                this.CardsInDiscardValue.text = "0";
-                this.CardsInExileValue.text = "0";
-                return;
-            }
-
-            this.CardsInDeckValue.text = forContext._CurrentEncounter.GetZoneCards(WellknownZones.Deck).Count.ToString();
-            this.CardsInDiscardValue.text = forContext._CurrentEncounter.GetZoneCards(WellknownZones.Discard).Count.ToString();
-            this.CardsInExileValue.text = forContext._CurrentEncounter.GetZoneCards(WellknownZones.Exile).Count.ToString();
+            this.CardsInDeckValue.text = forContext.GetCardsInZone(WellknownZones.Deck).Count.ToString();
+            this.CardsInDiscardValue.text = forContext.GetCardsInZone(WellknownZones.Discard).Count.ToString();
+            this.CardsInExileValue.text = forContext.GetCardsInZone(WellknownZones.Exile).Count.ToString();
         }
     }
 }

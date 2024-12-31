@@ -8,6 +8,7 @@ namespace SFDDCards
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
+    using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
@@ -68,6 +69,7 @@ namespace SFDDCards
         public Reward PendingRewards { get; set; } = null;
         public List<SpaceDeck.GameState.Minimum.PickReward> _PendingRewards { get; set; } = null;
 
+        [Obsolete("Should use constructor with SpaceDeck.GameState.Minimum.Route")]
         public CampaignContext(CampaignRoute onRoute)
         {
             // New
@@ -86,6 +88,22 @@ namespace SFDDCards
             foreach (string startingCard in onRoute.BasedOn.StartingDeck)
             {
                 this.CampaignDeck.AddCardToDeck(CardDatabase.GetModel(startingCard));
+                this.GameplayState.AddCard(SpaceDeck.Models.Databases.CardDatabase.GetInstance(startingCard), WellknownZones.Campaign);
+            }
+        }
+
+        public CampaignContext(Route onRoute)
+        {
+            this._CampaignPlayer = new Entity();
+            this._CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
+            this._CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.MaximumHealth, onRoute.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth, 100));
+            this._CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Health, onRoute.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth, 100));
+            this.GameplayState.AddPersistentEntity(this._CampaignPlayer);
+
+            this._OnRoute = onRoute;
+
+            foreach (LowercaseString startingCard in onRoute.StartingCards)
+            {
                 this.GameplayState.AddCard(SpaceDeck.Models.Databases.CardDatabase.GetInstance(startingCard), WellknownZones.Campaign);
             }
         }

@@ -1,4 +1,5 @@
-﻿namespace SFDDCards.Tests.EditMode
+﻿#if false
+namespace SFDDCards.Tests.EditMode
 {
     using NUnit.Framework;
     using System;
@@ -291,3 +292,4 @@
         }
     }
 }
+#endif

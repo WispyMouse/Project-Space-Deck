@@ -116,6 +116,8 @@ namespace SpaceDeck.UX
         public void _RouteChosen(SpaceDeck.GameState.Minimum.Route route)
         {
             throw new System.NotImplementedException();
+
+            this.CurrentCampaignContext = new CampaignContext(route);
         }
     }
 }
