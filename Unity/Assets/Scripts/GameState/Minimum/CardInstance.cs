@@ -1,6 +1,7 @@
 namespace SpaceDeck.GameState.Minimum
 {
     using SpaceDeck.Utility.Minimum;
+    using System;
     using System.Collections.Generic;
 
     public class CardInstance : IDescribable, IEffectIDescribable, IHaveQualities
@@ -18,6 +19,11 @@ namespace SpaceDeck.GameState.Minimum
         public virtual EffectDescription GetDescription()
         {
             throw new System.NotImplementedException();
+        }
+
+        public virtual IReadOnlyList<IChangeTarget> GetPossibleTargets(IGameStateMutator mutator)
+        {
+            return Array.Empty<IChangeTarget>();
         }
     }
 }

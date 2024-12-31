@@ -1,15 +1,13 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.Evaluation.Actual;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Text;
     using System.Text.RegularExpressions;
     using UnityEngine;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.UX;
 
     public class EnemyRepresenterUX : MonoBehaviour
     {
@@ -20,8 +18,6 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
-        [Obsolete("Transition to " + nameof(_SpawnedEnemiesLookup))]
-        public Dictionary<Enemy, EnemyUX> SpawnedEnemiesLookup { get; set; } = new Dictionary<Enemy, EnemyUX>();
         public readonly Dictionary<Entity, EnemyUX> _SpawnedEnemiesLookup = new Dictionary<Entity, EnemyUX>();
         public List<EnemyUX> OrderedEnemyList { get; set; } = new List<EnemyUX>();
 
@@ -51,18 +47,6 @@ namespace SpaceDeck.UX
             }
         }
 
-        [Obsolete("Transition to " + nameof(_RemoveEnemy))]
-        public void RemoveEnemy(Enemy toRemove)
-        {
-            if (this.SpawnedEnemiesLookup.TryGetValue(toRemove, out EnemyUX ux))
-            {
-                EnemyUX representation = this.SpawnedEnemiesLookup[toRemove];
-                this.SpawnedEnemiesLookup.Remove(toRemove);
-                this.OrderedEnemyList.Remove(representation);
-                Destroy(representation.gameObject);
-            }
-        }
-
         public void _RemoveEnemy(Entity toRemove)
         {
             if (this._SpawnedEnemiesLookup.TryGetValue(toRemove, out EnemyUX ux))
@@ -81,7 +65,6 @@ namespace SpaceDeck.UX
                 Destroy(this.EnemyRepresentationTransform.GetChild(ii).gameObject);
             }
 
-            this.SpawnedEnemiesLookup.Clear();
             this._SpawnedEnemiesLookup.Clear();
             this.OrderedEnemyList.Clear();
 

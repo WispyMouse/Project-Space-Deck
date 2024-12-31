@@ -3,6 +3,7 @@ namespace SpaceDeck.UX
     using SFDDCards;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
+    using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
@@ -108,12 +109,10 @@ namespace SpaceDeck.UX
 
         private void OnEnable()
         {
-            GlobalUpdateUX.UpdateUXEvent.AddListener(UpdateUX);
         }
 
         private void OnDestroy()
         {
-            GlobalUpdateUX.UpdateUXEvent.RemoveListener(UpdateUX);
             GlobalUpdateUX.LogTextEvent.RemoveListener(AddToLog);
         }
 
@@ -279,27 +278,6 @@ namespace SpaceDeck.UX
             }
         }
 
-        [Obsolete("Transition to " + nameof(_UpdateUX))]
-        public void UpdateUX(CampaignContext forCampaign)
-        {
-            if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
-            {
-                this.AllCardsBrowserButton.SetActive(false);
-            }
-            else
-            {
-                this.AllCardsBrowserButton.SetActive(true);
-            }
-
-            // TODO DISMANTLE: this.CheckAndActIfGameCampaignNavigationStateChanged();
-            this.RemoveDefeatedEntities();
-            this.SetElementValueLabel();
-            this.SetCurrenciesValueLabel();
-            this.UpdateEnemyUX();
-            this.UpdatePlayerLabelValues();
-            this.RepresentTargetables();
-        }
-
         public void _UpdateUX(CampaignContext forCampaign)
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
@@ -396,11 +374,6 @@ namespace SpaceDeck.UX
             ClearAllTargetableIndicators();
         }
 
-        public void AnimateEnemyTurns(Action continuationAction)
-        {
-            this.StartCoroutine(AnimateEnemyTurnsInternal(continuationAction));
-        }
-
         public void _ShowRewardsPanel(List<PickReward> toReward)
         {
             this.RewardsPanelUXInstance.gameObject.SetActive(true);
@@ -414,47 +387,40 @@ namespace SpaceDeck.UX
             this.ShopPanelUXInstance._SetShopItems(itemsInShop);
         }
 
-        [Obsolete("Should transition to " + nameof(_AnimateEnemyTurnsInternal))]
-        private IEnumerator AnimateEnemyTurnsInternal(Action continuationAction)
-        {
-            foreach (Enemy curEnemy in this.CurrentCampaignContext.CurrentCombatContext.Enemies)
-            {
-                yield return AnimateAction(this.EnemyRepresenterUX.SpawnedEnemiesLookup[curEnemy], curEnemy.Intent, curEnemy.Intent.PrecalculatedTarget);
-            }
-
-            continuationAction.Invoke();
-        }
-
         private IEnumerator _AnimateEnemyTurnsInternal(Action continuationAction)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerator AnimateCardPlay(Card toPlay, ICombatantTarget target)
+        public IEnumerator _AnimateCardPlay(CardInstance toPlay, IChangeTarget target)
         {
-            yield return AnimateCardPlayInternal(toPlay, target);
+            yield return _AnimateCardPlayInternal(toPlay, target);
         }
 
-        private IEnumerator AnimateCardPlayInternal(Card toPlay, ICombatantTarget target)
+        private IEnumerator _AnimateCardPlayInternal(CardInstance toPlay, IChangeTarget target)
         {
             PlayerIsCurrentlyAnimating = true;
 
-            yield return AnimateAction(this.PlayerUXInstance, toPlay, target);
+            // TODO: REINTRODUCE CARD ANIMATIONS
+            yield return _AnimateAction(this.PlayerUXInstance, target);
 
             PlayerIsCurrentlyAnimating = false;
         }
 
-        private IEnumerator AnimateAction(IAnimationPuppet puppet, IAttackTokenHolder attack, ICombatantTarget target)
+        private IEnumerator _AnimateAction(IAnimationPuppet puppet, IChangeTarget target)
         {
             IAnimationPuppet targetPuppet = null;
 
-            if (target is Player)
+            if (target is Entity entity)
             {
-                targetPuppet = this.PlayerUXInstance;
-            }
-            else if (target is Enemy targetEnemy)
-            {
-                targetPuppet = this.EnemyRepresenterUX.SpawnedEnemiesLookup[targetEnemy];
+                if (entity.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
+                {
+                    targetPuppet = this.PlayerUXInstance;
+                }
+                else
+                {
+                    targetPuppet = this.EnemyRepresenterUX._SpawnedEnemiesLookup[entity];
+                }
             }
 
             if (targetPuppet == null || targetPuppet == puppet)
@@ -547,51 +513,54 @@ namespace SpaceDeck.UX
         [Obsolete("Transition to " + nameof(_AppointTargetableIndicatorsToValidTargets))]
         private void AppointTargetableIndicatorsToValidTargets(Card toTarget)
         {
+            throw new System.Exception("OBSOLETE");
+        }
+
+        private void _AppointTargetableIndicatorsToValidTargets(CardInstance toTarget)
+        {
             this.ClearAllTargetableIndicators();
 
-            List<ICombatantTarget> possibleTargets = new List<ICombatantTarget>();
-            possibleTargets.Add(this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CampaignPlayer);
-
-            foreach (Enemy curEnemy in this.EnemyRepresenterUX.SpawnedEnemiesLookup.Keys)
-            {
-                possibleTargets.Add(curEnemy);
-            }
-
-            AllFoesTarget allFoesTarget = new AllFoesTarget(new List<ICombatantTarget>(this.EnemyRepresenterUX.SpawnedEnemiesLookup.Keys));
-            possibleTargets.Add(allFoesTarget);
-
-            List<ICombatantTarget> remainingTargets = ScriptTokenEvaluator.GetTargetsThatCanBeTargeted(this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CampaignPlayer, toTarget, possibleTargets);
+            List<IChangeTarget> remainingTargets = new List<IChangeTarget>(toTarget.GetPossibleTargets(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState));
 
             if (remainingTargets.Count > 0)
             {
-                if (remainingTargets[0] is AllFoesTarget)
+                // TODO: is this the all foes target?
+                foreach (IChangeTarget target in remainingTargets)
                 {
-                    // TODO: DISMANTLE
-                    // this.AllFoeTargetsIndicator.SetFromTarget(allFoesTarget, _SelectTarget, BeginHoverTarget, EndHoverTarget);
-                    this.AllFoeTargetsIndicator.gameObject.SetActive(true);
-                }
-                else
-                {
-                    foreach (ICombatantTarget target in remainingTargets)
+                    if (target == NobodyTarget.Instance)
                     {
-                        TargetableIndicator indicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, target.UXPositionalTransform);
-                        // TODO: DISMANTLE
-                        // indicator.SetFromTarget(target, this._SelectTarget, BeginHoverTarget, EndHoverTarget);
-                        this.ActiveIndicators.Add(indicator);
+                        this.NoTargetsIndicator._SetFromTarget(target, _SelectTarget, _BeginHoverTarget, _EndHoverTarget);
+                        this.NoTargetsIndicator.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        IReadOnlyList<Entity> representedEntities = new List<Entity>(target.GetRepresentedEntities(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState));
+
+                        foreach (Entity representedEntity in representedEntities)
+                        {
+                            if (representedEntity == this.CentralGameStateControllerInstance.CurrentCampaignContext._CampaignPlayer)
+                            {
+                                PlayerUX playerUx = this.PlayerUXInstance;
+                                TargetableIndicator playerIndicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, playerUx.transform);
+                                playerIndicator._SetFromTarget(representedEntities[0], this._SelectTarget, _BeginHoverTarget, _EndHoverTarget);
+                                this.ActiveIndicators.Add(playerIndicator);
+                            }
+                            else
+                            {
+                                if (this.EnemyRepresenterUX._SpawnedEnemiesLookup.TryGetValue(representedEntity, out EnemyUX enemyUX))
+                                {
+                                    TargetableIndicator playerIndicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, enemyUX.transform);
+                                    playerIndicator._SetFromTarget(representedEntities[0], this._SelectTarget, _BeginHoverTarget, _EndHoverTarget);
+                                    this.ActiveIndicators.Add(playerIndicator);
+                                }
+                            }
+                        }
                     }
                 }
             }
             else
             {
-                // TODO: DISMANTLE
-                // this.NoTargetsIndicator.SetFromTarget(new NoTarget(), _SelectTarget, BeginHoverTarget, EndHoverTarget);
-                this.NoTargetsIndicator.gameObject.SetActive(true);
             }
-        }
-
-        private void _AppointTargetableIndicatorsToValidTargets(CardInstance toTarget)
-        {
-            throw new System.NotImplementedException();
         }
 
         void UpdateEnemyUX()
@@ -749,28 +718,6 @@ namespace SpaceDeck.UX
             this.CampaignChooserUXInstance._ShowChooser();
         }
 
-        [Obsolete("Transition to " + nameof(_RemoveDefeatedEntities))]
-        private void RemoveDefeatedEntities()
-        {
-            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
-            {
-                foreach (Enemy key in new List<Enemy>(this.EnemyRepresenterUX.SpawnedEnemiesLookup.Keys))
-                {
-                    this.EnemyRepresenterUX.RemoveEnemy(key);
-                }
-
-                return;
-            }
-
-            foreach (Enemy curEnemy in new List<Enemy>(this.EnemyRepresenterUX.SpawnedEnemiesLookup.Keys))
-            {
-                if (!this.CurrentCampaignContext.CurrentCombatContext.Enemies.Contains(curEnemy))
-                {
-                    this.EnemyRepresenterUX.RemoveEnemy(curEnemy);
-                }
-            }
-        }
-
         private void _RemoveDefeatedEntities()
         {
             if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
@@ -919,7 +866,7 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void _EndHoverTarget(ICombatantTarget target)
+        public void _EndHoverTarget(IChangeTarget target)
         {
             if (this._HoveredCombatant == target)
             {

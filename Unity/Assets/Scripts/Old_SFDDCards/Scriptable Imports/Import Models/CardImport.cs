@@ -9,6 +9,7 @@ namespace SFDDCards.ImportModels
     using System.Threading.Tasks;
     using UnityEngine;
 
+    [Obsolete("Should use new SpaceDeck.Models.Imports model")]
     [Serializable]
     public class CardImport : Importable
     {

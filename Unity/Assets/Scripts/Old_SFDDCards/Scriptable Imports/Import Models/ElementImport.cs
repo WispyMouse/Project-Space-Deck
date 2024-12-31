@@ -9,6 +9,7 @@ namespace SFDDCards.ImportModels
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Models.Imports;
 
+    [Obsolete("Should use new SpaceDeck.Models.Imports model")]
     [Serializable]
     public class ElementImport : Importable
     {
