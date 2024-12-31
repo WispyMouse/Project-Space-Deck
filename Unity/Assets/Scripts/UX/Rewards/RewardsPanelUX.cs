@@ -33,7 +33,7 @@ namespace SpaceDeck.UX
             foreach (SpaceDeck.GameState.Minimum.PickReward pickReward in this._Rewards)
             {
                 PickXRewardPanelUX pickRewardPanel = Instantiate(this.PickRewardUXPF, this.RewardPanelsHolder);
-                pickRewardPanel._RepresentPick(CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, this, pickReward);
+                pickRewardPanel._RepresentPick(CentralGameStateControllerInstance.GameplayState, this, pickReward);
             }
         }
 

@@ -1,5 +1,11 @@
 namespace SpaceDeck.UX
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using UnityEngine;
     using SFDDCards;
     using SFDDCards.Evaluation.Actual;
     using SFDDCards.ImportModels;
@@ -9,12 +15,6 @@ namespace SpaceDeck.UX
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using UnityEngine;
 
     public class GameplayUXController : MonoBehaviour
     {
@@ -88,7 +88,9 @@ namespace SpaceDeck.UX
         public DisplayedCardUX CurrentSelectedCard { get; private set; } = null;
         public bool PlayerIsCurrentlyAnimating { get; private set; } = false;
 
+        [Obsolete("These will be obsoleted with new data types.")]
         private CampaignContext.GameplayCampaignState previousCampaignState { get; set; } = CampaignContext.GameplayCampaignState.NotStarted;
+        [Obsolete("These will be obsoleted with new data types.")]
         private CampaignContext.NonCombatEncounterStatus previousNonCombatEncounterState { get; set; } = CampaignContext.NonCombatEncounterStatus.NotInNonCombatEncounter;
 
         [Obsolete("Should transition to extrapolating this information from " + nameof(previousCombatTurnTaker))]
@@ -138,7 +140,16 @@ namespace SpaceDeck.UX
 
             this.PlayerUXInstance = Instantiate(this.PlayerRepresentationPF, this.PlayerRepresentationTransform);
 
-            Entity campaignEntity = this.CurrentCampaignContext._CampaignPlayer;
+            Entity campaignEntity = null;
+            foreach (Entity curEntity in this.CurrentGameState.PersistentEntities)
+            {
+                if (curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
+                {
+                    campaignEntity = curEntity;
+                    break;
+                }
+            }
+
             this.PlayerUXInstance._SetFromPlayer(campaignEntity);
 
             this.LifeValue.text = $"{campaignEntity.Qualities.GetNumericQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
@@ -163,9 +174,9 @@ namespace SpaceDeck.UX
                 currentTurnTaker = null;
             }
 
-            if (this.CurrentCampaignContext?._PendingRewards != null && this.RewardsPanelUXInstance._Rewards != this.CurrentCampaignContext?._PendingRewards)
+            if (this.CurrentGameState.PendingRewards != null && this.RewardsPanelUXInstance._Rewards != this.CurrentGameState.PendingRewards)
             {
-                this._PresentAwards(this.CurrentCampaignContext._PendingRewards);
+                this._PresentAwards(this.CurrentGameState.PendingRewards);
             }
 
             /*
@@ -285,7 +296,7 @@ namespace SpaceDeck.UX
             this._SetCurrenciesValueLabel();
             this.UpdateEnemyUX();
             this.UpdatePlayerLabelValues();
-            this.RepresentTargetables();
+            this._RepresentTargetables();
         }
 
         public void _SelectTarget(IChangeTarget toSelect)
@@ -633,21 +644,9 @@ namespace SpaceDeck.UX
             this.PlayerStatusEffectUXHolderInstance.Annihilate();
         }
 
-        void RepresentTargetables()
+        void _RepresentTargetables()
         {
-            if (this.CurrentCampaignContext?.CurrentCombatContext == null)
-            {
-                ClearAllTargetableIndicators();
-                return;
-            }
-
-            if (this.CurrentCampaignContext.CurrentGameplayCampaignState != CampaignContext.GameplayCampaignState.InCombat)
-            {
-                ClearAllTargetableIndicators();
-                return;
-            }
-
-            if (this.CurrentCampaignContext.CurrentCombatContext.CurrentTurnStatus != CombatContext.TurnStatus.PlayerTurn)
+            if (this.CurrentGameState?.CurrentEncounterState == null)
             {
                 ClearAllTargetableIndicators();
                 return;
@@ -659,20 +658,14 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            this.AppointTargetableIndicatorsToValidTargets(this.CurrentSelectedCard.RepresentedCard);
+            this._AppointTargetableIndicatorsToValidTargets(this.CurrentSelectedCard._RepresentedCard);
         }
 
         public void EndTurn()
         {
             this.CancelAllSelections();
 
-            if (GlobalSequenceEventHolder.StackedSequenceEvents.Count > 0)
-            {
-                GlobalUpdateUX.LogTextEvent.Invoke($"Animations and events are happening, can't end turn yet.", GlobalUpdateUX.LogType.GameEvent);
-                return;
-            }
-
-            if (this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext.CurrentTurnStatus != CombatContext.TurnStatus.PlayerTurn)
+            if (this.CentralGameStateControllerInstance.GameplayState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CurrentGameState, out Entity currentTurnEntity) && currentTurnEntity != this.PlayerUXInstance._RepresentedPlayer)
             {
                 GlobalUpdateUX.LogTextEvent.Invoke($"It's not the player's turn, can't end turn.", GlobalUpdateUX.LogType.GameEvent);
                 return;
@@ -683,7 +676,7 @@ namespace SpaceDeck.UX
 
         public void _PresentAwards(List<PickReward> toPresent)
         {
-            this.CurrentCampaignContext._PendingRewards = null;
+            this.CurrentGameState.PendingRewards = null;
             this.CancelAllSelections();
             this._ShowRewardsPanel(toPresent);
         }
@@ -692,7 +685,7 @@ namespace SpaceDeck.UX
         {
             this.CancelAllSelections();
 
-            SpaceDeck.GameState.Minimum.ChoiceNode campaignNode = this.CurrentCampaignContext._GetCampaignCurrentNode();
+            SpaceDeck.GameState.Minimum.ChoiceNode campaignNode = this.CurrentGameState.GetCampaignCurrentNode();
 
             if (campaignNode == null)
             {
@@ -710,30 +703,19 @@ namespace SpaceDeck.UX
             this.ChoiceUXFolder.SetActive(false);
         }
 
-        [Obsolete("Transition to " + nameof(_NodeIsChosen))]
-        public void NodeIsChosen(SFDDCards.ChoiceNodeOption option)
-        {
-            this.CancelAllSelections();
-            this.CentralGameStateControllerInstance.CurrentCampaignContext.MakeChoiceNodeDecision(option);
-        }
-
         public void _NodeIsChosen(SpaceDeck.GameState.Minimum.ChoiceNodeOption option)
         {
             this.CancelAllSelections();
-            this.CentralGameStateControllerInstance.CurrentCampaignContext._MakeChoiceNodeDecision(option);
-        }
-
-        [Obsolete("Transition to " + nameof(_RouteChosen))]
-        public void ProceedToNextRoom()
-        {
-            this.CancelAllSelections();
-            this.CentralGameStateControllerInstance.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
+            this.CentralGameStateControllerInstance.GameplayState.MakeChoiceNodeDecision(option);
         }
 
         public void _ProceedToNextRoom()
         {
             this.CancelAllSelections();
-            this.CentralGameStateControllerInstance.CurrentCampaignContext.SetCampaignState(CampaignContext.GameplayCampaignState.MakingRouteChoice);
+            if (this.CentralGameStateControllerInstance.GameplayState.StartNextRoomFromCampaign(out SpaceDeck.GameState.Minimum.ChoiceNode nextChoice))
+            {
+                this._PresentNextRouteChoice();
+            }
         }
 
         public void _RouteChosen(Route chosenRoute)
@@ -761,30 +743,9 @@ namespace SpaceDeck.UX
 
             foreach (Entity curEnemy in new List<Entity>(this.EnemyRepresenterUX._SpawnedEnemiesLookup.Keys))
             {
-                if (!this.CurrentCampaignContext._CurrentEncounter.EncounterEntities.Contains(curEnemy))
+                if (!this.CurrentEncounterState.EncounterEntities.Contains(curEnemy))
                 {
                     this.EnemyRepresenterUX._RemoveEnemy(curEnemy);
-                }
-            }
-        }
-
-        [Obsolete("Transition to " + nameof(_StatusEffectClicked))]
-        public void StatusEffectClicked(SFDDCards.AppliedStatusEffect representingEffect)
-        {
-            if (representingEffect.BasedOnStatusEffect.WindowResponders.ContainsKey(KnownReactionWindows.Activated))
-            {
-                ReactionWindowContext activatedContext = new ReactionWindowContext(
-                    this.CentralGameStateControllerInstance.CurrentCampaignContext,
-                    KnownReactionWindows.Activated,
-                    this.CentralGameStateControllerInstance.CurrentCampaignContext.CampaignPlayer, 
-                    playedFromZone: "potion");
-
-                if (representingEffect.TryGetReactionEvents(this.CentralGameStateControllerInstance.CurrentCampaignContext, activatedContext, out List<WindowResponse> responses))
-                {
-                    foreach (WindowResponse response in responses)
-                    {
-                        this.CentralGameStateControllerInstance.CurrentCampaignContext.IngestStatusEffectHappening(activatedContext, response);
-                    }
                 }
             }
         }
@@ -794,10 +755,10 @@ namespace SpaceDeck.UX
             if (representingEffect.TriggerOnEventIds.Contains(WellknownGameStateEvents.Activated))
             {
                 GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.Activated);
-                if (representingEffect.TryApplyStatusEffect(trigger, this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, out List<GameStateChange> changes))
+                if (representingEffect.TryApplyStatusEffect(trigger, this.CentralGameStateControllerInstance.GameplayState, out List<GameStateChange> changes))
                 {
-                    SpaceDeck.GameState.Execution.GameStateDelta delta = new SpaceDeck.GameState.Execution.GameStateDelta(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, changes);
-                    GameStateDeltaApplier.ApplyGameStateDelta(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, delta);
+                    SpaceDeck.GameState.Execution.GameStateDelta delta = new SpaceDeck.GameState.Execution.GameStateDelta(this.CentralGameStateControllerInstance.GameplayState, changes);
+                    GameStateDeltaApplier.ApplyGameStateDelta(this.CentralGameStateControllerInstance.GameplayState, delta);
                 }
             }
         }
@@ -823,14 +784,14 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
+            if (this.CentralGameStateControllerInstance?.GameplayState?.CurrentEncounterState == null)
             {
                 return;
             }
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Discard");
-            this.CardBrowserUXInstance._SetFromCards(this.CentralGameStateControllerInstance.CurrentCampaignContext._CurrentEncounter.GetZoneCards(WellknownZones.Discard));
+            this.CardBrowserUXInstance._SetFromCards(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.GetZoneCards(WellknownZones.Discard));
         }
 
         public void _OpenDeckCardsBrowser()
@@ -850,7 +811,7 @@ namespace SpaceDeck.UX
 
             if (this.CentralGameStateControllerInstance?.GameplayState.CurrentEncounterState != null)
             {
-                cardsInDeck = new List<CardInstance>(this.CurrentCampaignContext._CurrentEncounter.GetZoneCards(WellknownZones.Deck));
+                cardsInDeck = new List<CardInstance>(this.CurrentEncounterState.GetZoneCards(WellknownZones.Deck));
             }
 
             cardsInDeck.Sort((CardInstance a, CardInstance b) => a.Name.CompareTo(b.Name));
@@ -884,15 +845,6 @@ namespace SpaceDeck.UX
         public void _BeginHoverTarget(IChangeTarget target)
         {
             this._HoveredCombatant = target;
-        }
-
-        [Obsolete("Transition to " + nameof(_EndHoverTarget))]
-        public void EndHoverTarget(ICombatantTarget target)
-        {
-            if (this.HoveredCombatant == target)
-            {
-                this.HoveredCombatant = null;
-            }
         }
 
         public void _EndHoverTarget(IChangeTarget target)

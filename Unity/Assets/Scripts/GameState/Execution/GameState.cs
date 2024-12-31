@@ -32,6 +32,8 @@ namespace SpaceDeck.GameState.Execution
         public readonly Dictionary<Currency, int> Currencies = new Dictionary<Currency, int>();
         public readonly Dictionary<Element, int> Elements = new Dictionary<Element, int>();
         public readonly Route BasedOnRoute;
+        public int RouteIndex = -1;
+        public List<PickReward> PendingRewards;
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
@@ -404,6 +406,43 @@ namespace SpaceDeck.GameState.Execution
         public void Gain(Reward toGain)
         {
             throw new System.NotImplementedException();
+        }
+
+        public ChoiceNode GetCampaignCurrentNode()
+        {
+            if (this.BasedOnRoute == null || this.BasedOnRoute.Choices.Count <= this.RouteIndex)
+            {
+                return null;
+            }
+
+            return this.BasedOnRoute.Choices[this.RouteIndex];
+        }
+
+        public void MakeChoiceNodeDecision(ChoiceNodeOption chosen)
+        {
+            chosen.WasSelected = true;
+            this.StartNextRoomFromEncounter(chosen.WillEncounter);
+        }
+
+        public void StartNextRoomFromEncounter(EncounterState basedOn)
+        {
+            this.CurrentEncounterState = null;
+            this.StartEncounter(basedOn);
+        }
+
+        public bool StartNextRoomFromCampaign(out ChoiceNode nextChoice)
+        {
+            this.RouteIndex++;
+
+            if (this.RouteIndex >= this.BasedOnRoute.Choices.Count)
+            {
+                // TODO: LOG VICTORY
+                nextChoice = null;
+                return false;
+            }
+
+            nextChoice = this.BasedOnRoute.Choices[this.RouteIndex];
+            return true;
         }
     }
 }

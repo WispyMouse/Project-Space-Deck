@@ -93,7 +93,7 @@ namespace SpaceDeck.UX
                 break;
             }
 
-            outcome.Apply(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState, out LowercaseString destination);
+            outcome.Apply(this.CentralGameStateControllerInstance.GameplayState, out LowercaseString destination);
             if (string.IsNullOrEmpty(destination.ToString()))
             {
                 this.GameplayUXControllerInstance.EncounterDialogueComplete(_representingModel);
@@ -101,7 +101,7 @@ namespace SpaceDeck.UX
             else
             {
                 this.UXParent.SetActive(true);
-                this.SetEncounterIndex(destination, this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState);
+                this.SetEncounterIndex(destination, this.CentralGameStateControllerInstance.GameplayState);
             }
         }
 

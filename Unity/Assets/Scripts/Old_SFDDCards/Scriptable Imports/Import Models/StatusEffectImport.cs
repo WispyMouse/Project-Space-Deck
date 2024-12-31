@@ -9,6 +9,7 @@ namespace SFDDCards.ImportModels
     using SpaceDeck.UX.AssetLookup;
     using SpaceDeck.Models.Imports;
 
+    [Obsolete("Should transition to SpaceDeck.Models.Imports")]
     [Serializable]
     public class StatusEffectImport : Importable
     {
