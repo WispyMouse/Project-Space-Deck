@@ -1,19 +1,15 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.Evaluation.Actual;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class EnemyUX : MonoBehaviour, IAnimationPuppet
     {
-        [Obsolete("Should transition to " + nameof(_RepresentedEnemy))]
-        public Enemy RepresentedEnemy { get; private set; } = null;
         public Entity _RepresentedEnemy { get; private set; } = null;
 
         public Transform OwnTransform => this.transform;
@@ -35,8 +31,6 @@ namespace SpaceDeck.UX
         public void _SetFromEnemy(Entity toSet, CentralGameStateController centralGameStateController)
         {
             this._RepresentedEnemy = toSet;
-
-            this.RepresentedEnemy.UXPositionalTransform = this.transform;
 
             this.ClearEffectText();
             this.OwnStatusEffectHolder.Annihilate();
@@ -62,31 +56,6 @@ namespace SpaceDeck.UX
         public void ClearEffectText()
         {
             this.EffectText.gameObject.SetActive(false);
-        }
-
-        [Obsolete("Should transition to " + nameof(_UpdateIntent))]
-        void UpdateIntent(CentralGameStateController centralGameStateController)
-        {
-            string description = "";
-
-            if (this.RepresentedEnemy.Intent != null)
-            {
-                description = EffectDescriberDatabase.DescribeRealizedEffect(
-                    this.RepresentedEnemy.Intent,
-                    centralGameStateController.CurrentCampaignContext,
-                    this.RepresentedEnemy,
-                    centralGameStateController.CurrentCampaignContext.CurrentCombatContext.CombatPlayer
-                    );
-            }
-
-            if (!string.IsNullOrEmpty(description))
-            {
-                this.SetEffectText(description);
-            }
-            else
-            {
-                this.ClearEffectText();
-            }
         }
 
         void _UpdateIntent(CentralGameStateController centralGameStateController)

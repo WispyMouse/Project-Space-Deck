@@ -1,18 +1,17 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Tokenization.Minimum.Context;
-    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using UnityEngine;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.UX;
 
 
-    public class CombatTurnController : MonoBehaviour, ICombatTurnController
+    public class CombatTurnController : MonoBehaviour
     {
         private static CombatTurnController Instance { get; set; }
 
@@ -24,16 +23,12 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private EnemyRepresenterUX EnemyRepresenterUX;
 
-        private EncounterState _Context => this.CentralGameStateControllerInstance?.GameplayState?.CurrentEncounterState;
-
         private QuestionAnsweringContext CurrentQuestionAnsweringContext { get; set; }
         
         public bool CurrentlyActive { get; private set; } = false;
 
         private static Coroutine AnimationCoroutine { get; set; } = null;
         private static bool AnimationCoroutineIsRunning { get; set; } = false;
-
-        public CampaignContext ForCampaign => throw new NotImplementedException();
 
         private void Awake()
         {
@@ -105,11 +100,6 @@ namespace SpaceDeck.UX
                 // Should not fail to play cards if this is directly called
                 return;
             }
-        }
-
-        public void HandleSequenceEventWithAnimation(GameplaySequenceEvent sequenceEvent)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

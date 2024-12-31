@@ -128,21 +128,6 @@ namespace SpaceDeck.UX
             }
         }
 
-        [Obsolete("Should transition to " + nameof(_PlacePlayerCharacter))]
-        public void PlacePlayerCharacter()
-        {
-            if (this.PlayerUXInstance != null)
-            {
-                Destroy(this.PlayerUXInstance.gameObject);
-                this.PlayerUXInstance = null;
-            }
-
-            this.PlayerUXInstance = Instantiate(this.PlayerRepresentationPF, this.PlayerRepresentationTransform);
-            this.PlayerUXInstance.SetFromPlayer(this.CurrentCampaignContext.CampaignPlayer);
-
-            this.LifeValue.text = $"{this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.Health)} / {this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)}";
-        }
-
         public PlayerUX _PlacePlayerCharacter()
         {
             if (this.PlayerUXInstance != null)
