@@ -25,11 +25,11 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private Transform SelectedCardTransform;
 
-        private readonly Dictionary<CardInstance, CombatCardUX> _CardsToRepresentations = new Dictionary<CardInstance, CombatCardUX>();
+        private readonly Dictionary<CardInstance, CombatCardUX> CardsToRepresentations = new Dictionary<CardInstance, CombatCardUX>();
 
         public DisplayedCardUX SelectedCard { get; set; } = null;
 
-        public void _RepresentPlayerHand(IGameStateMutator mutator)
+        public void RepresentPlayerHand(IGameStateMutator mutator)
         {
             const float MaximumCardFanDistance = 8f;
             const float CardFanDistance = 1.4f;
@@ -39,11 +39,11 @@ namespace SpaceDeck.UX
             const float MaximumDownwardsness = .6f;
 
             // Delete cards that are in this representer, but not in the hand
-            foreach (CardInstance key in new List<CardInstance>(this._CardsToRepresentations.Keys))
+            foreach (CardInstance key in new List<CardInstance>(this.CardsToRepresentations.Keys))
             {
-                if (this._CardsToRepresentations[key].gameObject.activeInHierarchy && mutator.GetCardZone(key) != WellknownZones.Hand)
+                if (this.CardsToRepresentations[key].gameObject.activeInHierarchy && mutator.GetCardZone(key) != WellknownZones.Hand)
                 {
-                    this._CardsToRepresentations[key].gameObject.SetActive(false);
+                    this.CardsToRepresentations[key].gameObject.SetActive(false);
                 }
             }
 
@@ -80,7 +80,7 @@ namespace SpaceDeck.UX
                 // And where it should be positioned
                 Vector3 objectOffset = new Vector3(leftStartingPoint, 0, 0) + new Vector3(modifiedCardFanDistance, 0, 0) * ii + backpush + downpush;
 
-                CombatCardUX newCard = _GetUX(cardsInHand[ii]);
+                CombatCardUX newCard = GetUX(cardsInHand[ii]);
 
                 if (ReferenceEquals(this.SelectedCard, newCard))
                 {
@@ -102,47 +102,47 @@ namespace SpaceDeck.UX
 
         public void Annihilate()
         {
-            foreach (CombatCardUX ux in new List<CombatCardUX>(this._CardsToRepresentations.Values))
+            foreach (CombatCardUX ux in new List<CombatCardUX>(this.CardsToRepresentations.Values))
             {
                 Destroy(ux.gameObject);
             }
 
-            this._CardsToRepresentations.Clear();
+            this.CardsToRepresentations.Clear();
         }
 
-        public void _SelectCurrentCard(DisplayedCardUX selectedCard)
+        public void SelectCurrentCard(DisplayedCardUX selectedCard)
         {
             this.SelectedCard = selectedCard;
-            this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard);
-            this.UXController._SelectCurrentCard(selectedCard);
-            this._RepresentPlayerHand(this.CentralGameStateControllerInstance.GameplayState);
+            this.SelectedCard.SetFromCard(this.SelectedCard.RepresentedCard, SelectCurrentCard);
+            this.UXController.SelectCurrentCard(selectedCard);
+            this.RepresentPlayerHand(this.CentralGameStateControllerInstance.GameplayState);
         }
 
-        public void _DeselectSelectedCard()
+        public void DeselectSelectedCard()
         {
             if (this.SelectedCard != null)
             {
-                this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard);
+                this.SelectedCard.SetFromCard(this.SelectedCard.RepresentedCard, SelectCurrentCard);
                 this.SelectedCard = null;
-                this._RepresentPlayerHand(this.CentralGameStateControllerInstance.GameplayState);
+                this.RepresentPlayerHand(this.CentralGameStateControllerInstance.GameplayState);
             }
         }
 
-        public CombatCardUX _GetUX(CardInstance forCard)
+        public CombatCardUX GetUX(CardInstance forCard)
         {
             bool wasNotVisibleOrJustCreated = false;
 
-            if (!this._CardsToRepresentations.TryGetValue(forCard, out CombatCardUX representingCard))
+            if (!this.CardsToRepresentations.TryGetValue(forCard, out CombatCardUX representingCard))
             {
                 representingCard = Instantiate(this.CardRepresentationPF, this.PlayerHandTransform);
-                representingCard._SetFromCard(forCard, _SelectCurrentCard);
-                this._CardsToRepresentations.Add(forCard, representingCard);
+                representingCard.SetFromCard(forCard, SelectCurrentCard);
+                this.CardsToRepresentations.Add(forCard, representingCard);
                 wasNotVisibleOrJustCreated = true;
             }
-            else if (!this._CardsToRepresentations[forCard].isActiveAndEnabled)
+            else if (!this.CardsToRepresentations[forCard].isActiveAndEnabled)
             {
                 representingCard.gameObject.SetActive(true);
-                representingCard._SetFromCard(forCard, _SelectCurrentCard);
+                representingCard.SetFromCard(forCard, SelectCurrentCard);
                 wasNotVisibleOrJustCreated = true;
             }
 
@@ -153,7 +153,7 @@ namespace SpaceDeck.UX
 
             if (ReferenceEquals(this.SelectedCard, representingCard))
             {
-                this.SelectedCard._SetFromCard(forCard, _SelectCurrentCard);
+                this.SelectedCard.SetFromCard(forCard, SelectCurrentCard);
             }
 
             return representingCard;

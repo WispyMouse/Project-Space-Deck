@@ -11,7 +11,7 @@ namespace SpaceDeck.UX
 
     public class RewardArtifactUX : MonoBehaviour, IMouseHoverListener
     {
-        public SpaceDeck.GameState.Minimum.AppliedStatusEffect _RepresentedArtifact { get; private set; }
+        public SpaceDeck.GameState.Minimum.AppliedStatusEffect RepresentedArtifact { get; private set; }
 
         [SerializeReference]
         private Image ImageRepresentation;
@@ -31,7 +31,7 @@ namespace SpaceDeck.UX
 
         public void SetFromArtifact(SpaceDeck.GameState.Minimum.AppliedStatusEffect artifact, Action<RewardArtifactUX> onClick, int amount)
         {
-            this._RepresentedArtifact = artifact;
+            this.RepresentedArtifact = artifact;
 
             if (SpriteLookup.TryGetSprite(artifact.Id, out Sprite sprite))
             {
@@ -64,16 +64,16 @@ namespace SpaceDeck.UX
             return this.transform;
         }
 
-        public bool _TryGetCard(out CardInstance toShow)
+        public bool TryGetCard(out CardInstance toShow)
         {
             toShow = null;
             return false;
         }
 
 
-        public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
+        public bool TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
         {
-            toShow = this._RepresentedArtifact;
+            toShow = this.RepresentedArtifact;
             return true;
         }
 

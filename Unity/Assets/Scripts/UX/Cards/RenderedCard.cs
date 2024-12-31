@@ -12,7 +12,7 @@ namespace SpaceDeck.UX
 
     public class RenderedCard : MonoBehaviour
     {
-        public CardInstance _RepresentedCard;
+        public CardInstance RepresentedCard;
 
         [SerializeReference]
         private TMPro.TMP_Text NameText;
@@ -34,11 +34,11 @@ namespace SpaceDeck.UX
 
         public Action<RenderedCard> OnClickAction { get; set; } = null;
 
-        public void _SetFromCard(CardInstance representedCard)
+        public void SetFromCard(CardInstance representedCard)
         {
             this.Annihilate();
 
-            this._RepresentedCard = representedCard;
+            this.RepresentedCard = representedCard;
 
             this.NameText.text = representedCard.Name;
             this.EffectText.text = representedCard.Describe();
@@ -54,7 +54,7 @@ namespace SpaceDeck.UX
                 icon.SetFromElement(curElement, SpaceDeck.Models.Databases.ElementDatabase.GetElementGain(curElement, representedCard));
             }
 
-            this.MyRarityIndicator._SetFromRarity(representedCard.Qualities.GetStringQuality(WellknownQualities.Rarity));
+            this.MyRarityIndicator.SetFromRarity(representedCard.Qualities.GetStringQuality(WellknownQualities.Rarity));
         }
 
         public void Annihilate()
@@ -62,7 +62,7 @@ namespace SpaceDeck.UX
             this.NameText.text = "";
             this.CardImage.sprite = null;
             this.EffectText.text = "";
-            this._RepresentedCard = null;
+            this.RepresentedCard = null;
 
             for (int ii = this.ElementResourceIconHolder.childCount - 1; ii >= 0; ii--)
             {

@@ -13,23 +13,23 @@ namespace SpaceDeck.UX
     {
         [SerializeReference]
         private StatusEffectUX StatusEffectUXPrefab;
-        private Dictionary<AppliedStatusEffect, StatusEffectUX> _StatusEffectLookup { get; set; } = new Dictionary<AppliedStatusEffect, StatusEffectUX>();
+        private Dictionary<AppliedStatusEffect, StatusEffectUX> StatusEffectLookup { get; set; } = new Dictionary<AppliedStatusEffect, StatusEffectUX>();
 
-        public void _SetStatusEffects(IEnumerable<AppliedStatusEffect> appliedEffects, Action<AppliedStatusEffect> onClickedEvent = null)
+        public void SetStatusEffects(IEnumerable<AppliedStatusEffect> appliedEffects, Action<AppliedStatusEffect> onClickedEvent = null)
         {
-            List<AppliedStatusEffect> noLongerApplicableEffects = new List<AppliedStatusEffect>(this._StatusEffectLookup.Keys);
+            List<AppliedStatusEffect> noLongerApplicableEffects = new List<AppliedStatusEffect>(this.StatusEffectLookup.Keys);
 
             foreach (AppliedStatusEffect effect in appliedEffects)
             {
-                if (this._StatusEffectLookup.TryGetValue(effect, out StatusEffectUX existingUX))
+                if (this.StatusEffectLookup.TryGetValue(effect, out StatusEffectUX existingUX))
                 {
                     existingUX.SetStacks((int)effect.Qualities.GetNumericQuality(WellknownQualities.Stacks, 0));
                 }
                 else
                 {
                     StatusEffectUX newUX = Instantiate(this.StatusEffectUXPrefab, this.transform);
-                    this._StatusEffectLookup.Add(effect, newUX);
-                    newUX._SetFromEffect(effect, onClickedEvent);
+                    this.StatusEffectLookup.Add(effect, newUX);
+                    newUX.SetFromEffect(effect, onClickedEvent);
                     newUX.SetStacks((int)effect.Qualities.GetNumericQuality(WellknownQualities.Stacks, 0));
                 }
 
@@ -40,15 +40,15 @@ namespace SpaceDeck.UX
             {
                 for (int ii = noLongerApplicableEffects.Count - 1; ii >= 0; ii--)
                 {
-                    Destroy(this._StatusEffectLookup[noLongerApplicableEffects[ii]].gameObject);
-                    this._StatusEffectLookup.Remove(noLongerApplicableEffects[ii]);
+                    Destroy(this.StatusEffectLookup[noLongerApplicableEffects[ii]].gameObject);
+                    this.StatusEffectLookup.Remove(noLongerApplicableEffects[ii]);
                 }
             }
         }
 
         public void Annihilate()
         {
-            this._StatusEffectLookup.Clear();
+            this.StatusEffectLookup.Clear();
 
             for (int ii = this.transform.childCount - 1; ii >= 0; ii--)
             {

@@ -9,35 +9,35 @@ namespace SpaceDeck.GameState.Execution
 
     public class PlayerChooseFromCardBrowser : PlayerChoice<List<CardInstance>>
     {
-        public SpaceDeck.Tokenization.Evaluatables.CardsEvaluatableValue _CardsToShow;
-        public SpaceDeck.Tokenization.Evaluatables.INumericEvaluatableValue _NumberOfCardsToChoose;
+        public SpaceDeck.Tokenization.Evaluatables.CardsEvaluatableValue CardsToShow;
+        public SpaceDeck.Tokenization.Evaluatables.INumericEvaluatableValue NumberOfCardsToChoose;
 
         public PlayerChooseFromCardBrowser(SpaceDeck.Tokenization.Evaluatables.CardsEvaluatableValue cardsToShow, SpaceDeck.Tokenization.Evaluatables.INumericEvaluatableValue numberOfCards)
         {
-            this._CardsToShow = cardsToShow;
-            this._NumberOfCardsToChoose = numberOfCards;
+            this.CardsToShow = cardsToShow;
+            this.NumberOfCardsToChoose = numberOfCards;
         }
 
-        public override string _DescribeChoice(IGameStateMutator mutator)
+        public override string DescribeChoice(IGameStateMutator mutator)
         {
             decimal numberOfCards = 0;
-            if (!this._NumberOfCardsToChoose.TryEvaluate(mutator, out numberOfCards))
+            if (!this.NumberOfCardsToChoose.TryEvaluate(mutator, out numberOfCards))
             {
                 // TODO LOG
             }
 
-            return $"Choose {numberOfCards} cards from {_CardsToShow.Describe()}";
+            return $"Choose {numberOfCards} cards from {CardsToShow.Describe()}";
         }
 
-        public override void _SetChoice(IGameStateMutator mutator, List<CardInstance> result)
+        public override void SetChoice(IGameStateMutator mutator, List<CardInstance> result)
         {
-            base._SetChoice(mutator, result);
-            this._CardsToShow = new SpaceDeck.Tokenization.Evaluatables.ConstantCardsEvaluatableValue(result);
+            base.SetChoice(mutator, result);
+            this.CardsToShow = new SpaceDeck.Tokenization.Evaluatables.ConstantCardsEvaluatableValue(result);
         }
 
-        public override bool _TryFinalizeWithoutPlayerInput(IGameStateMutator mutator)
+        public override bool TryFinalizeWithoutPlayerInput(IGameStateMutator mutator)
         {
-            if (!this._NumberOfCardsToChoose.TryEvaluate(mutator, out decimal numberOfCards))
+            if (!this.NumberOfCardsToChoose.TryEvaluate(mutator, out decimal numberOfCards))
             {
                 return false;
             }

@@ -18,7 +18,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private TMPro.TMP_Text CardsInExileValue;
 
-        public void _RepresentDeck(IGameStateMutator forContext)
+        public void RepresentDeck(IGameStateMutator forContext)
         {
             if (forContext == null)
             {

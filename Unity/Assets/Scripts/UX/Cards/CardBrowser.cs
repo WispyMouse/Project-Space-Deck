@@ -24,11 +24,11 @@ namespace SpaceDeck.UX
 
         [SerializeField]
         private GameObject CloseButton;
-        private Action<List<CardInstance>> _SelectionFinishedAction { get; set; } = null;
+        private Action<List<CardInstance>> SelectionFinishedAction { get; set; } = null;
 
         public int RemainingCardsToChoose { get; set; } = 0;
 
-        private readonly List<CardInstance> _ChosenCards = new List<CardInstance>();
+        private readonly List<CardInstance> ChosenCards = new List<CardInstance>();
 
         public void Awake()
         {
@@ -40,7 +40,7 @@ namespace SpaceDeck.UX
             this.Label.text = newText;
         }
 
-        public void _SetFromCards(IEnumerable<CardInstance> cardsToShow)
+        public void SetFromCards(IEnumerable<CardInstance> cardsToShow)
         {
             this.gameObject.SetActive(true);
             this.Annihilate(false);
@@ -49,8 +49,8 @@ namespace SpaceDeck.UX
             foreach (CardInstance curCard in cardsToShow)
             {
                 RenderedCard newCard = Instantiate(this.RenderedCardPF, this.CardHolder);
-                newCard._SetFromCard(curCard);
-                newCard.OnClickAction = this._CardClicked;
+                newCard.SetFromCard(curCard);
+                newCard.OnClickAction = this.CardClicked;
             }
         }
 
@@ -67,7 +67,7 @@ namespace SpaceDeck.UX
                 Destroy(this.CardHolder.GetChild(ii).gameObject);
             }
 
-            this._ChosenCards.Clear();
+            this.ChosenCards.Clear();
             this.RemainingCardsToChoose = 0;
 
             if (close)
@@ -76,15 +76,15 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void _SetFromCardBrowserChoice(IGameStateMutator mutator, PlayerChooseFromCardBrowser toHandle, Action<List<CardInstance>> continuationAction)
+        public void SetFromCardBrowserChoice(IGameStateMutator mutator, PlayerChooseFromCardBrowser toHandle, Action<List<CardInstance>> continuationAction)
         {
-            if (!toHandle._NumberOfCardsToChoose.TryEvaluate(mutator, out decimal evaluatedNumberOfCards))
+            if (!toHandle.NumberOfCardsToChoose.TryEvaluate(mutator, out decimal evaluatedNumberOfCards))
             {
                 // TODO LOG
                 return;
             }
 
-            if (!toHandle._CardsToShow.TryEvaluate(mutator, out IReadOnlyList<CardInstance> evaluatedCards))
+            if (!toHandle.CardsToShow.TryEvaluate(mutator, out IReadOnlyList<CardInstance> evaluatedCards))
             {
                 // TODO LOG
                 return;
@@ -99,30 +99,30 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            this._SetFromCards(evaluatedCards);
-            this.SetLabelText(toHandle._DescribeChoice(mutator));
+            this.SetFromCards(evaluatedCards);
+            this.SetLabelText(toHandle.DescribeChoice(mutator));
             this.RemainingCardsToChoose = (int)evaluatedNumberOfCards;
             this.CloseButton.SetActive(false);
-            _SelectionFinishedAction = continuationAction;
+            SelectionFinishedAction = continuationAction;
         }
 
-        public void _CardClicked(RenderedCard chosenCard)
+        public void CardClicked(RenderedCard chosenCard)
         {
             if (this.RemainingCardsToChoose == 0)
             {
                 return;
             }
 
-            this._ChosenCards.Add(chosenCard._RepresentedCard);
+            this.ChosenCards.Add(chosenCard.RepresentedCard);
             Destroy(chosenCard.gameObject);
 
             this.RemainingCardsToChoose--;
 
             if (this.RemainingCardsToChoose == 0)
             {
-                List<CardInstance> chosenCards = new List<CardInstance>(this._ChosenCards);
+                List<CardInstance> chosenCards = new List<CardInstance>(this.ChosenCards);
                 this.Close();
-                this._SelectionFinishedAction?.Invoke(chosenCards);
+                this.SelectionFinishedAction?.Invoke(chosenCards);
             }
         }
     }

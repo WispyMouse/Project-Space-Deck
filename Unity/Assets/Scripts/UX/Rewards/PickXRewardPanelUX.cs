@@ -13,7 +13,7 @@ namespace SpaceDeck.UX
 
     public class PickXRewardPanelUX : MonoBehaviour
     {
-        public PickReward _BasedOnPick { get; set; }
+        public PickReward BasedOnPick { get; set; }
         public RewardsPanelUX RewardsPanel { get; set; }
 
         [SerializeReference]
@@ -33,9 +33,9 @@ namespace SpaceDeck.UX
 
         int PicksRemaining { get; set; } = 0;
 
-        public void _RepresentPick(IGameStateMutator mutator, RewardsPanelUX rewardsPanel, SpaceDeck.GameState.Minimum.PickReward toRepresent)
+        public void RepresentPick(IGameStateMutator mutator, RewardsPanelUX rewardsPanel, SpaceDeck.GameState.Minimum.PickReward toRepresent)
         {
-            this._BasedOnPick = toRepresent;
+            this.BasedOnPick = toRepresent;
             this.RewardsPanel = rewardsPanel;
             this.PicksRemaining = toRepresent.ProtocolArgument;
 
@@ -58,15 +58,15 @@ namespace SpaceDeck.UX
                 {
                     case RewardIdentityKind.Currency:
                         RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                        rewardCurrency._SetFromCurrency(CurrencyDatabase.Get(pulledOutSlot.Id), (RewardCurrencyUX currency) => { this._RewardSlotChosen(pulledOutSlot); }, amountToAward);
+                        rewardCurrency.SetFromCurrency(CurrencyDatabase.Get(pulledOutSlot.Id), (RewardCurrencyUX currency) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
                         break;
                     case RewardIdentityKind.Artifact:
                         RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                        rewardArtifact.SetFromArtifact(SpaceDeck.Models.Databases.StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this._RewardSlotChosen(pulledOutSlot); }, amountToAward);
+                        rewardArtifact.SetFromArtifact(SpaceDeck.Models.Databases.StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
                         break;
                     case RewardIdentityKind.Card:
                         RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                        thisCard._SetFromCard(SpaceDeck.Models.Databases.CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this._RewardSlotChosen(pulledOutSlot); });
+                        thisCard.SetFromCard(SpaceDeck.Models.Databases.CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this.RewardSlotChosen(pulledOutSlot); });
                         thisCard.SetQuantity(amountToAward);
                         break;
                 }
@@ -86,9 +86,9 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void _RewardSlotChosen(SpaceDeck.GameState.Minimum.Reward rewards)
+        public void RewardSlotChosen(SpaceDeck.GameState.Minimum.Reward rewards)
         {
-            this.RewardsPanel._GainReward(rewards);
+            this.RewardsPanel.GainReward(rewards);
             this.PicksRemaining--;
 
             if (this.PicksRemaining <= 0)

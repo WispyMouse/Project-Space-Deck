@@ -32,20 +32,20 @@ namespace SpaceDeck.UX
 
         private List<PopupPanel> ActivePanels { get; set; } = new List<PopupPanel>();
 
-        public void _SetFromHoverListener(IMouseHoverListener listener)
+        public void SetFromHoverListener(IMouseHoverListener listener)
         {
-            if (listener._TryGetCard(out CardInstance cardToShow))
+            if (listener.TryGetCard(out CardInstance cardToShow))
             {
-                this._ShowCard(cardToShow);
+                this.ShowCard(cardToShow);
             }
             else
             {
                 this.HideCard();
             }
 
-            if (listener._TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect effectToShow))
+            if (listener.TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect effectToShow))
             {
-                this._SetPopupPanels(effectToShow.GetDescription(), listener.ShouldShowBase);
+                this.SetPopupPanels(effectToShow.GetDescription(), listener.ShouldShowBase);
             }
 
             foreach (Graphic curGraphic in this.GetComponentsInChildren<Graphic>(true))
@@ -54,12 +54,12 @@ namespace SpaceDeck.UX
             }
         }
 
-        private void _ShowCard(CardInstance toShow)
+        private void ShowCard(CardInstance toShow)
         {
             this.OverlayCard.gameObject.SetActive(true);
-            this.OverlayCard._SetFromCard(toShow);
+            this.OverlayCard.SetFromCard(toShow);
             this.CardHolderTransform.gameObject.SetActive(true);
-            this._SetPopupPanelsFromCard(toShow);
+            this.SetPopupPanelsFromCard(toShow);
         }
 
         private void HideCard()
@@ -69,12 +69,12 @@ namespace SpaceDeck.UX
             this.CardHolderTransform.gameObject.SetActive(false);
         }
 
-        private void _SetPopupPanelsFromCard(CardInstance toShow)
+        private void SetPopupPanelsFromCard(CardInstance toShow)
         {
-            this._SetPopupPanels(toShow.GetDescription(), false);
+            this.SetPopupPanels(toShow.GetDescription(), false);
         }
 
-        private void _SetPopupPanels(GameState.Minimum.EffectDescription description, bool includeBaseDescription = true)
+        private void SetPopupPanels(GameState.Minimum.EffectDescription description, bool includeBaseDescription = true)
         {
             for (int ii = this.RightPopupPanelHolderTransform.childCount - 1; ii >= 0; ii--)
             {

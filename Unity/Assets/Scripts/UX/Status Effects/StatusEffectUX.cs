@@ -11,7 +11,7 @@ namespace SpaceDeck.UX
 
     public class StatusEffectUX : MonoBehaviour, IMouseHoverListener
     {
-        public SpaceDeck.GameState.Minimum.AppliedStatusEffect _RepresentsEffect;
+        public SpaceDeck.GameState.Minimum.AppliedStatusEffect RepresentsEffect;
 
         [SerializeReference]
         private TMPro.TMP_Text StackText;
@@ -19,7 +19,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private Image Renderer;
 
-        private Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> _OnStatusEffectPressed;
+        private Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> OnStatusEffectPressed;
 
         public virtual bool ShouldShowBase { get; } = true;
 
@@ -28,10 +28,10 @@ namespace SpaceDeck.UX
             return this.GetComponent<RectTransform>();
         }
 
-        public void _SetFromEffect(SpaceDeck.GameState.Minimum.AppliedStatusEffect toSet, Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> onClickEvent = null)
+        public void SetFromEffect(SpaceDeck.GameState.Minimum.AppliedStatusEffect toSet, Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> onClickEvent = null)
         {
-            this._RepresentsEffect = toSet;
-            this._OnStatusEffectPressed = onClickEvent;
+            this.RepresentsEffect = toSet;
+            this.OnStatusEffectPressed = onClickEvent;
 
             if (SpriteLookup.TryGetSprite(toSet.Id, out Sprite displaySprite))
             {
@@ -51,15 +51,15 @@ namespace SpaceDeck.UX
             this.StackText.text = toStack.ToString();
         }
 
-        public bool _TryGetCard(out CardInstance toShow)
+        public bool TryGetCard(out CardInstance toShow)
         {
             toShow = null;
             return false;
         }
 
-        public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
+        public bool TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
         {
-            toShow = this._RepresentsEffect;
+            toShow = this.RepresentsEffect;
             return true;
         }
 
@@ -78,9 +78,9 @@ namespace SpaceDeck.UX
             this.UnHoverOnDisable();
         }
 
-        public void _Clicked()
+        public void Clicked()
         {
-            this._OnStatusEffectPressed?.Invoke(this._RepresentsEffect);
+            this.OnStatusEffectPressed?.Invoke(this.RepresentsEffect);
         }
 
         public void UnHoverOnDisable()

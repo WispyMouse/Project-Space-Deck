@@ -26,14 +26,14 @@ namespace SpaceDeck.UX
             //  TODO REGISTER LISTENER GlobalUpdateUX.PlayerMustMakeChoice.RemoveListener(_HandlePlayerChoice);
         }
 
-        void _HandlePlayerChoice(IGameStateMutator mutator, PlayerChoice toHandle, Action continuationAction)
+        void HandlePlayerChoice(IGameStateMutator mutator, PlayerChoice toHandle, Action continuationAction)
         {
             if (toHandle is PlayerChooseFromCardBrowser cardBrowser)
             {
-                this.CardBrowserUX._SetFromCardBrowserChoice(mutator, cardBrowser,
+                this.CardBrowserUX.SetFromCardBrowserChoice(mutator, cardBrowser,
                     (List<CardInstance> chosenCards) =>
                     {
-                        cardBrowser._SetChoice(mutator, chosenCards);
+                        cardBrowser.SetChoice(mutator, chosenCards);
                         continuationAction?.Invoke();
                     });
                 return;

@@ -24,16 +24,16 @@ namespace SpaceDeck.UX
         [SerializeReference]
         public LayoutElement OwnLayoutElement;
 
-        public Currency _RepresentedCurrency;
+        public Currency RepresentedCurrency;
         public int RewardAmount;
 
         private Action<RewardCurrencyUX> OnClicked { get; set; }
 
         public bool ShouldShowBase => true;
 
-        public void _SetFromCurrency(Currency basedOn, Action<RewardCurrencyUX> onClick, int amount)
+        public void SetFromCurrency(Currency basedOn, Action<RewardCurrencyUX> onClick, int amount)
         {
-            this._RepresentedCurrency = basedOn;
+            this.RepresentedCurrency = basedOn;
 
             if (SpriteLookup.TryGetSprite(basedOn.Id, out Sprite currencySprite))
             {
@@ -67,13 +67,13 @@ namespace SpaceDeck.UX
             return this.transform;
         }
 
-        public bool _TryGetCard(out CardInstance toShow)
+        public bool TryGetCard(out CardInstance toShow)
         {
             toShow = null;
             return false;
         }
 
-        public bool _TryGetStatusEffect(out GameState.Minimum.AppliedStatusEffect toShow)
+        public bool TryGetStatusEffect(out GameState.Minimum.AppliedStatusEffect toShow)
         {
             toShow = null;
             return false;

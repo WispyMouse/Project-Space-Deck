@@ -10,7 +10,7 @@ namespace SpaceDeck.UX
 
     public class DisplayedCardUX : MonoBehaviour, IMouseHoverListener
     {
-        public CardInstance _RepresentedCard { get; private set; } = null;
+        public CardInstance RepresentedCard { get; private set; } = null;
         
         [SerializeReference]
         private RenderedCard RenderedCard;
@@ -48,12 +48,12 @@ namespace SpaceDeck.UX
         {
         }
 
-        public void _SetFromCard(CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null)
+        public void SetFromCard(CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null)
         {
-            this._RepresentedCard = toSet;
+            this.RepresentedCard = toSet;
             this.cardSelectedAction = inCardSelectedAction;
 
-            this.RenderedCard._SetFromCard(toSet);
+            this.RenderedCard.SetFromCard(toSet);
         }
 
         public Transform GetTransform()
@@ -61,9 +61,9 @@ namespace SpaceDeck.UX
             return this.transform;
         }
 
-        public bool _TryGetCard(out CardInstance toShow)
+        public bool TryGetCard(out CardInstance toShow)
         {
-            toShow = this.RenderedCard?._RepresentedCard;
+            toShow = this.RenderedCard?.RepresentedCard;
             return toShow != null;
         }
 
@@ -77,7 +77,7 @@ namespace SpaceDeck.UX
             this.UnHoverOnDisable();
         }
 
-        public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
+        public bool TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
         {
             toShow = null;
             return false;

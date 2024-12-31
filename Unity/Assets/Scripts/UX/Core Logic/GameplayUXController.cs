@@ -89,7 +89,7 @@ namespace SpaceDeck.UX
         public GameState CurrentGameState => this.CentralGameStateControllerInstance?.GameplayState;
         public EncounterState CurrentEncounterState => this.CurrentGameState.CurrentEncounterState;
 
-        public IChangeTarget _HoveredCombatant { get; set; } = null;
+        public IChangeTarget HoveredCombatant { get; set; } = null;
 
         private void Awake()
         {
@@ -112,7 +112,7 @@ namespace SpaceDeck.UX
             }
         }
 
-        public PlayerUX _PlacePlayerCharacter()
+        public PlayerUX PlacePlayerCharacter()
         {
             if (this.PlayerUXInstance != null)
             {
@@ -132,13 +132,13 @@ namespace SpaceDeck.UX
                 }
             }
 
-            this.PlayerUXInstance._SetFromPlayer(campaignEntity);
+            this.PlayerUXInstance.SetFromPlayer(campaignEntity);
 
             this.LifeValue.text = $"{campaignEntity.Qualities.GetNumericQuality(WellknownQualities.Health, 0).ToString()} / {campaignEntity.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth, 0).ToString()}";
             return this.PlayerUXInstance;
         }
 
-        public void _CheckAndActIfGameCampaignNavigationStateChanged()
+        public void CheckAndActIfGameCampaignNavigationStateChanged()
         {
             if (this.CentralGameStateControllerInstance.GameplayState == null)
             {
@@ -156,9 +156,9 @@ namespace SpaceDeck.UX
                 currentTurnTaker = null;
             }
 
-            if (this.CurrentGameState.PendingRewards != null && this.RewardsPanelUXInstance._Rewards != this.CurrentGameState.PendingRewards)
+            if (this.CurrentGameState.PendingRewards != null && this.RewardsPanelUXInstance.Rewards != this.CurrentGameState.PendingRewards)
             {
-                this._PresentAwards(this.CurrentGameState.PendingRewards);
+                this.PresentAwards(this.CurrentGameState.PendingRewards);
             }
 
             /*
@@ -199,12 +199,12 @@ namespace SpaceDeck.UX
                     if (this.CurrentCampaignContext._CurrentEncounter.HasEncounterDialogue)
                     {
                         this.ShopPanelUXInstance.gameObject.SetActive(false);
-                        this.EncounterRepresenterUXInstance._RepresentEncounter(this.CurrentCampaignContext._CurrentEncounter, this.CurrentCampaignContext.GameplayState);
+                        this.EncounterRepresenterUXInstance.RepresentEncounter(this.CurrentCampaignContext._CurrentEncounter, this.CurrentCampaignContext.GameplayState);
                     }
                     else if (this.CurrentCampaignContext._CurrentEncounter.IsShopEncounter)
                     {
                         this.EncounterRepresenterUXInstance.Close();
-                        this._ShowShopPanel(this.CurrentCampaignContext._CurrentEncounter.GetShop());
+                        this.ShowShopPanel(this.CurrentCampaignContext._CurrentEncounter.GetShop());
                     }
                 }
             }
@@ -222,7 +222,7 @@ namespace SpaceDeck.UX
 
                 if (wasPreviousCampaignState != CampaignContext.GameplayCampaignState.InCombat)
                 {
-                    this.CombatTurnCounterInstance._BeginHandlingCombat();
+                    this.CombatTurnCounterInstance.BeginHandlingCombat();
                 }
 
                 if (currentTurnTaker.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
@@ -247,7 +247,7 @@ namespace SpaceDeck.UX
 
             if (newCampaignState == CampaignContext.GameplayCampaignState.MakingRouteChoice)
             {
-                this._PresentNextRouteChoice();
+                this.PresentNextRouteChoice();
             }
             else
             {
@@ -261,7 +261,7 @@ namespace SpaceDeck.UX
             */
         }
 
-        public void _UpdateUX()
+        public void UpdateUX()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
@@ -272,16 +272,16 @@ namespace SpaceDeck.UX
                 this.AllCardsBrowserButton.SetActive(true);
             }
 
-            this._CheckAndActIfGameCampaignNavigationStateChanged();
-            this._RemoveDefeatedEntities();
-            this._SetElementValueLabel();
-            this._SetCurrenciesValueLabel();
+            this.CheckAndActIfGameCampaignNavigationStateChanged();
+            this.RemoveDefeatedEntities();
+            this.SetElementValueLabel();
+            this.SetCurrenciesValueLabel();
             this.UpdateEnemyUX();
             this.UpdatePlayerLabelValues();
-            this._RepresentTargetables();
+            this.RepresentTargetables();
         }
 
-        public void _SelectTarget(IChangeTarget toSelect)
+        public void SelectTarget(IChangeTarget toSelect)
         {
             if (this.CentralGameStateControllerInstance.GameplayState.CurrentlyConsideredPlayedCard == null)
             {
@@ -294,7 +294,7 @@ namespace SpaceDeck.UX
             // this.CurrentSelectedCard = null;
         }
 
-        public void _SelectCurrentCard(DisplayedCardUX toSelect)
+        public void SelectCurrentCard(DisplayedCardUX toSelect)
         {
             if (this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState == null)
             {
@@ -314,7 +314,7 @@ namespace SpaceDeck.UX
 
             this.CurrentSelectedCard = toSelect;
             this.CurrentSelectedCard.EnableSelectionGlow();
-            this._AppointTargetableIndicatorsToValidTargets(toSelect._RepresentedCard);
+            this.AppointTargetableIndicatorsToValidTargets(toSelect.RepresentedCard);
         }
 
         public void CancelAllSelections()
@@ -322,7 +322,7 @@ namespace SpaceDeck.UX
             this.CurrentSelectedCard?.DisableSelectionGlow();
             this.CurrentSelectedCard = null;
 
-            this.PlayerHandRepresenter._DeselectSelectedCard();
+            this.PlayerHandRepresenter.DeselectSelectedCard();
 
             if (this.CardBrowserUXInstance.RemainingCardsToChoose > 0)
             {
@@ -332,40 +332,40 @@ namespace SpaceDeck.UX
             ClearAllTargetableIndicators();
         }
 
-        public void _ShowRewardsPanel(List<PickReward> toReward)
+        public void ShowRewardsPanel(List<PickReward> toReward)
         {
             this.RewardsPanelUXInstance.gameObject.SetActive(true);
-            this.RewardsPanelUXInstance._SetReward(toReward);
-            this._UpdateUX();
+            this.RewardsPanelUXInstance.SetReward(toReward);
+            this.UpdateUX();
         }
 
-        public void _ShowShopPanel(IReadOnlyList<IShopEntry> itemsInShop)
+        public void ShowShopPanel(IReadOnlyList<IShopEntry> itemsInShop)
         {
             this.ShopPanelUXInstance.gameObject.SetActive(true);
-            this.ShopPanelUXInstance._SetShopItems(itemsInShop);
+            this.ShopPanelUXInstance.SetShopItems(itemsInShop);
         }
 
-        private IEnumerator _AnimateEnemyTurnsInternal(Action continuationAction)
+        private IEnumerator AnimateEnemyTurnsInternal(Action continuationAction)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerator _AnimateCardPlay(CardInstance toPlay, IChangeTarget target)
+        public IEnumerator AnimateCardPlay(CardInstance toPlay, IChangeTarget target)
         {
-            yield return _AnimateCardPlayInternal(toPlay, target);
+            yield return AnimateCardPlayInternal(toPlay, target);
         }
 
-        private IEnumerator _AnimateCardPlayInternal(CardInstance toPlay, IChangeTarget target)
+        private IEnumerator AnimateCardPlayInternal(CardInstance toPlay, IChangeTarget target)
         {
             PlayerIsCurrentlyAnimating = true;
 
             // TODO: REINTRODUCE CARD ANIMATIONS
-            yield return _AnimateAction(this.PlayerUXInstance, target);
+            yield return AnimateAction(this.PlayerUXInstance, target);
 
             PlayerIsCurrentlyAnimating = false;
         }
 
-        private IEnumerator _AnimateAction(IAnimationPuppet puppet, IChangeTarget target)
+        private IEnumerator AnimateAction(IAnimationPuppet puppet, IChangeTarget target)
         {
             IAnimationPuppet targetPuppet = null;
 
@@ -377,7 +377,7 @@ namespace SpaceDeck.UX
                 }
                 else
                 {
-                    targetPuppet = this.EnemyRepresenterUX._SpawnedEnemiesLookup[entity];
+                    targetPuppet = this.EnemyRepresenterUX.SpawnedEnemiesLookup[entity];
                 }
             }
 
@@ -407,12 +407,12 @@ namespace SpaceDeck.UX
             }
 
             this.LifeValue.text = this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.Health).ToString();
-            this.PlayerStatusEffectUXHolderInstance._SetStatusEffects(
+            this.PlayerStatusEffectUXHolderInstance.SetStatusEffects(
                 this.CentralGameStateControllerInstance.CampaignPlayer.AppliedStatusEffects.Values,
-                this._StatusEffectClicked);
+                this.StatusEffectClicked);
         }
 
-        private void _SetElementValueLabel()
+        private void SetElementValueLabel()
         {
             if (this.CentralGameStateControllerInstance.GameplayState == null)
             {
@@ -431,7 +431,7 @@ namespace SpaceDeck.UX
             this.ElementsValue.text = compositeElements.ToString();
         }
 
-        private void _SetCurrenciesValueLabel()
+        private void SetCurrenciesValueLabel()
         {
             if (this.CentralGameStateControllerInstance.GameplayState == null || this.CentralGameStateControllerInstance.GameplayState.Currencies.Count == 0)
             {
@@ -466,7 +466,7 @@ namespace SpaceDeck.UX
             this.AllFoeTargetsIndicator.gameObject.SetActive(false);
         }
 
-        private void _AppointTargetableIndicatorsToValidTargets(CardInstance toTarget)
+        private void AppointTargetableIndicatorsToValidTargets(CardInstance toTarget)
         {
             this.ClearAllTargetableIndicators();
 
@@ -479,7 +479,7 @@ namespace SpaceDeck.UX
                 {
                     if (target == NobodyTarget.Instance)
                     {
-                        this.NoTargetsIndicator._SetFromTarget(target, _SelectTarget, _BeginHoverTarget, _EndHoverTarget);
+                        this.NoTargetsIndicator.SetFromTarget(target, SelectTarget, BeginHoverTarget, EndHoverTarget);
                         this.NoTargetsIndicator.gameObject.SetActive(true);
                     }
                     else
@@ -492,15 +492,15 @@ namespace SpaceDeck.UX
                             {
                                 PlayerUX playerUx = this.PlayerUXInstance;
                                 TargetableIndicator playerIndicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, playerUx.transform);
-                                playerIndicator._SetFromTarget(representedEntities[0], this._SelectTarget, _BeginHoverTarget, _EndHoverTarget);
+                                playerIndicator.SetFromTarget(representedEntities[0], this.SelectTarget, BeginHoverTarget, EndHoverTarget);
                                 this.ActiveIndicators.Add(playerIndicator);
                             }
                             else
                             {
-                                if (this.EnemyRepresenterUX._SpawnedEnemiesLookup.TryGetValue(representedEntity, out EnemyUX enemyUX))
+                                if (this.EnemyRepresenterUX.SpawnedEnemiesLookup.TryGetValue(representedEntity, out EnemyUX enemyUX))
                                 {
                                     TargetableIndicator playerIndicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, enemyUX.transform);
-                                    playerIndicator._SetFromTarget(representedEntities[0], this._SelectTarget, _BeginHoverTarget, _EndHoverTarget);
+                                    playerIndicator.SetFromTarget(representedEntities[0], this.SelectTarget, BeginHoverTarget, EndHoverTarget);
                                     this.ActiveIndicators.Add(playerIndicator);
                                 }
                             }
@@ -522,14 +522,14 @@ namespace SpaceDeck.UX
 
             foreach (Entity curEnemy in this.CurrentEncounterState.EncounterEntities)
             {
-                if (!this.EnemyRepresenterUX._SpawnedEnemiesLookup.TryGetValue(curEnemy, out EnemyUX value))
+                if (!this.EnemyRepresenterUX.SpawnedEnemiesLookup.TryGetValue(curEnemy, out EnemyUX value))
                 {
                     // It could be that the UpdateUX call was made before these enemies are spawned in to the game
                     // In that case, just continue
                     continue;
                 }
 
-                value._UpdateUX(this.CentralGameStateControllerInstance);
+                value.UpdateUX(this.CentralGameStateControllerInstance);
             }
         }
 
@@ -554,7 +554,7 @@ namespace SpaceDeck.UX
             this.PlayerStatusEffectUXHolderInstance.Annihilate();
         }
 
-        void _RepresentTargetables()
+        void RepresentTargetables()
         {
             if (this.CurrentGameState?.CurrentEncounterState == null)
             {
@@ -568,29 +568,29 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            this._AppointTargetableIndicatorsToValidTargets(this.CurrentSelectedCard._RepresentedCard);
+            this.AppointTargetableIndicatorsToValidTargets(this.CurrentSelectedCard.RepresentedCard);
         }
 
         public void EndTurn()
         {
             this.CancelAllSelections();
 
-            if (this.CentralGameStateControllerInstance.GameplayState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CurrentGameState, out Entity currentTurnEntity) && currentTurnEntity != this.PlayerUXInstance._RepresentedPlayer)
+            if (this.CentralGameStateControllerInstance.GameplayState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CurrentGameState, out Entity currentTurnEntity) && currentTurnEntity != this.PlayerUXInstance.RepresentedPlayer)
             {
                 return;
             }
 
-            this.CombatTurnCounterInstance._EndPlayerTurn();
+            this.CombatTurnCounterInstance.EndPlayerTurn();
         }
 
-        public void _PresentAwards(List<PickReward> toPresent)
+        public void PresentAwards(List<PickReward> toPresent)
         {
             this.CurrentGameState.PendingRewards = null;
             this.CancelAllSelections();
-            this._ShowRewardsPanel(toPresent);
+            this.ShowRewardsPanel(toPresent);
         }
 
-        void _PresentNextRouteChoice()
+        void PresentNextRouteChoice()
         {
             this.CancelAllSelections();
 
@@ -602,7 +602,7 @@ namespace SpaceDeck.UX
             }
 
             this.ChoiceUXFolder.SetActive(true);
-            this.ChoiceSelectorUX._RepresentNode(campaignNode);
+            this.ChoiceSelectorUX.RepresentNode(campaignNode);
         }
 
         void ClearRouteUX()
@@ -611,54 +611,54 @@ namespace SpaceDeck.UX
             this.ChoiceUXFolder.SetActive(false);
         }
 
-        public void _NodeIsChosen(SpaceDeck.GameState.Minimum.ChoiceNodeOption option)
+        public void NodeIsChosen(SpaceDeck.GameState.Minimum.ChoiceNodeOption option)
         {
             this.CancelAllSelections();
             this.CentralGameStateControllerInstance.GameplayState.MakeChoiceNodeDecision(option);
         }
 
-        public void _ProceedToNextRoom()
+        public void ProceedToNextRoom()
         {
             this.CancelAllSelections();
             if (this.CentralGameStateControllerInstance.GameplayState.StartNextRoomFromCampaign(out SpaceDeck.GameState.Minimum.ChoiceNode nextChoice))
             {
-                this._PresentNextRouteChoice();
+                this.PresentNextRouteChoice();
             }
         }
 
-        public void _RouteChosen(Route chosenRoute)
+        public void RouteChosen(Route chosenRoute)
         {
             this.CancelAllSelections();
-            this.CentralGameStateControllerInstance._RouteChosen(chosenRoute);
+            this.CentralGameStateControllerInstance.RouteChosen(chosenRoute);
         }
 
-        public void _ShowCampaignChooser()
+        public void ShowCampaignChooser()
         {
-            this.CampaignChooserUXInstance._ShowChooser();
+            this.CampaignChooserUXInstance.ShowChooser();
         }
 
-        private void _RemoveDefeatedEntities()
+        private void RemoveDefeatedEntities()
         {
             if (this.CentralGameStateControllerInstance?.GameplayState.CurrentEncounterState == null)
             {
-                foreach (Entity key in new List<Entity>(this.EnemyRepresenterUX._SpawnedEnemiesLookup.Keys))
+                foreach (Entity key in new List<Entity>(this.EnemyRepresenterUX.SpawnedEnemiesLookup.Keys))
                 {
-                    this.EnemyRepresenterUX._RemoveEnemy(key);
+                    this.EnemyRepresenterUX.RemoveEnemy(key);
                 }
 
                 return;
             }
 
-            foreach (Entity curEnemy in new List<Entity>(this.EnemyRepresenterUX._SpawnedEnemiesLookup.Keys))
+            foreach (Entity curEnemy in new List<Entity>(this.EnemyRepresenterUX.SpawnedEnemiesLookup.Keys))
             {
                 if (!this.CurrentEncounterState.EncounterEntities.Contains(curEnemy))
                 {
-                    this.EnemyRepresenterUX._RemoveEnemy(curEnemy);
+                    this.EnemyRepresenterUX.RemoveEnemy(curEnemy);
                 }
             }
         }
 
-        public void _StatusEffectClicked(SpaceDeck.GameState.Minimum.AppliedStatusEffect representingEffect)
+        public void StatusEffectClicked(SpaceDeck.GameState.Minimum.AppliedStatusEffect representingEffect)
         {
             if (representingEffect.TriggerOnEventIds.Contains(WellknownGameStateEvents.Activated))
             {
@@ -671,7 +671,7 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void _OpenAllCardsBrowser()
+        public void OpenAllCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
@@ -680,10 +680,10 @@ namespace SpaceDeck.UX
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: All Cards");
-            this.CardBrowserUXInstance._SetFromCards(SpaceDeck.Models.Databases.CardDatabase.GetOneOfEveryCard());
+            this.CardBrowserUXInstance.SetFromCards(SpaceDeck.Models.Databases.CardDatabase.GetOneOfEveryCard());
         }
 
-        public void _OpenDiscardCardsBrowser()
+        public void OpenDiscardCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
@@ -697,10 +697,10 @@ namespace SpaceDeck.UX
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Discard");
-            this.CardBrowserUXInstance._SetFromCards(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.GetZoneCards(WellknownZones.Discard));
+            this.CardBrowserUXInstance.SetFromCards(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.GetZoneCards(WellknownZones.Discard));
         }
 
-        public void _OpenDeckCardsBrowser()
+        public void OpenDeckCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
@@ -723,10 +723,10 @@ namespace SpaceDeck.UX
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Deck");
-            this.CardBrowserUXInstance._SetFromCards(cardsInDeck);
+            this.CardBrowserUXInstance.SetFromCards(cardsInDeck);
         }
 
-        public void _OpenExileCardsBrowser()
+        public void OpenExileCardsBrowser()
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
@@ -743,19 +743,19 @@ namespace SpaceDeck.UX
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Exile");
-            this.CardBrowserUXInstance._SetFromCards(cardsInExile);
+            this.CardBrowserUXInstance.SetFromCards(cardsInExile);
         }
 
-        public void _BeginHoverTarget(IChangeTarget target)
+        public void BeginHoverTarget(IChangeTarget target)
         {
-            this._HoveredCombatant = target;
+            this.HoveredCombatant = target;
         }
 
-        public void _EndHoverTarget(IChangeTarget target)
+        public void EndHoverTarget(IChangeTarget target)
         {
-            if (this._HoveredCombatant == target)
+            if (this.HoveredCombatant == target)
             {
-                this._HoveredCombatant = null;
+                this.HoveredCombatant = null;
             }
         }
 
@@ -764,7 +764,7 @@ namespace SpaceDeck.UX
             if (completed == this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState)
             {
                 this.EncounterRepresenterUXInstance.Close();
-                this._ProceedToNextRoom();
+                this.ProceedToNextRoom();
             }
         }
     }

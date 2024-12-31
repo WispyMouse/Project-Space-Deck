@@ -9,14 +9,14 @@ namespace SpaceDeck.UX
 
     public class PlayerUX : MonoBehaviour, IAnimationPuppet
     {
-        public Entity _RepresentedPlayer { get; private set; }
+        public Entity RepresentedPlayer { get; private set; }
 
         public Transform OwnTransform => this.transform;
         public bool IsNotDestroyed => this != null && this?.gameObject != null;
 
-        public void _SetFromPlayer(Entity toSet)
+        public void SetFromPlayer(Entity toSet)
         {
-            this._RepresentedPlayer = toSet;
+            this.RepresentedPlayer = toSet;
         }
     }
 }

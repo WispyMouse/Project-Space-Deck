@@ -10,7 +10,7 @@ namespace SpaceDeck.UX
 
     public class EnemyUX : MonoBehaviour, IAnimationPuppet
     {
-        public Entity _RepresentedEnemy { get; private set; } = null;
+        public Entity RepresentedEnemy { get; private set; } = null;
 
         public Transform OwnTransform => this.transform;
 
@@ -28,23 +28,23 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private EnemyStatusEffectUXHolder OwnStatusEffectHolder;
 
-        public void _SetFromEnemy(Entity toSet, CentralGameStateController centralGameStateController)
+        public void SetFromEnemy(Entity toSet, CentralGameStateController centralGameStateController)
         {
-            this._RepresentedEnemy = toSet;
+            this.RepresentedEnemy = toSet;
 
             this.ClearEffectText();
             this.OwnStatusEffectHolder.Annihilate();
 
-            this._UpdateUX(centralGameStateController);
+            this.UpdateUX(centralGameStateController);
         }
 
-        public void _UpdateUX(CentralGameStateController centralGameStateController)
+        public void UpdateUX(CentralGameStateController centralGameStateController)
         {
-            this.Name.text = this._RepresentedEnemy.Qualities.GetStringQuality(WellknownQualities.Name);
-            this.Health.text = $"{this._RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.Health)} / {this._RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)}";
-            this._UpdateIntent(centralGameStateController);
+            this.Name.text = this.RepresentedEnemy.Qualities.GetStringQuality(WellknownQualities.Name);
+            this.Health.text = $"{this.RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.Health)} / {this.RepresentedEnemy.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)}";
+            this.UpdateIntent(centralGameStateController);
 
-            this.OwnStatusEffectHolder._SetStatusEffects(this._RepresentedEnemy.AppliedStatusEffects.Values);
+            this.OwnStatusEffectHolder.SetStatusEffects(this.RepresentedEnemy.AppliedStatusEffects.Values);
         }
 
         public void SetEffectText(string toText)
@@ -58,13 +58,13 @@ namespace SpaceDeck.UX
             this.EffectText.gameObject.SetActive(false);
         }
 
-        void _UpdateIntent(CentralGameStateController centralGameStateController)
+        void UpdateIntent(CentralGameStateController centralGameStateController)
         {
             string description = "";
 
-            if (this._RepresentedEnemy.CurrentIntent != null)
+            if (this.RepresentedEnemy.CurrentIntent != null)
             {
-                description = this._RepresentedEnemy.CurrentIntent.Describe();
+                description = this.RepresentedEnemy.CurrentIntent.Describe();
             }
 
             if (!string.IsNullOrEmpty(description))

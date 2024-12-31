@@ -41,10 +41,10 @@ namespace SpaceDeck.UX
             Instance = this;
         }
 
-        public void _BeginHandlingCombat()
+        public void BeginHandlingCombat()
         {
             this.CurrentlyActive = true;
-            this._SpawnInitialEnemies();
+            this.SpawnInitialEnemies();
         }
 
         public void EndHandlingCombat()
@@ -63,22 +63,22 @@ namespace SpaceDeck.UX
 
         #region Specific Gameplay Turn Concepts
         
-        private void _SpawnInitialEnemies()
+        private void SpawnInitialEnemies()
         {
-            this.EnemyRepresenterUX._AddEnemies(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.EncounterEntities);
+            this.EnemyRepresenterUX.AddEnemies(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.EncounterEntities);
         }
 
-        private void _SpawnEnemy(Entity toSpawn)
+        private void SpawnEnemy(Entity toSpawn)
         {
-            this.EnemyRepresenterUX._AddEnemy(toSpawn);
+            this.EnemyRepresenterUX.AddEnemy(toSpawn);
         }
 
-        public void _EndPlayerTurn()
+        public void EndPlayerTurn()
         {
             this.CentralGameStateControllerInstance.GameplayState.EndCurrentEntityTurn();
         }
 
-        public void _StartPlayCard(CardInstance toPlay)
+        public void StartPlayCard(CardInstance toPlay)
         {
             QuestionAnsweringContext questionContext = this.CentralGameStateControllerInstance.GameplayState.StartConsideringPlayingCard(toPlay);
             this.CurrentQuestionAnsweringContext = questionContext;
@@ -92,7 +92,7 @@ namespace SpaceDeck.UX
             // TODO: Answer these questions, then execute card
         }
 
-        public void _ExecuteCurrentCard()
+        public void ExecuteCurrentCard()
         {
             if (!this.CentralGameStateControllerInstance.GameplayState.TryExecuteCurrentCard())
             {

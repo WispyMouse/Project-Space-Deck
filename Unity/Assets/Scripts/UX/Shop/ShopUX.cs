@@ -48,14 +48,14 @@ namespace SpaceDeck.UX
             Destroy(selectedItem.gameObject);
         }
 
-        public void _SetShopItems(IReadOnlyList<IShopEntry> shopEntries)
+        public void SetShopItems(IReadOnlyList<IShopEntry> shopEntries)
         {
             this.DestroyItems();
 
             foreach (IShopEntry curEntry in shopEntries)
             {
                 ShopItemUX shopEntry = Instantiate(this.ShopItemUXPF, this.ShopItemUXHolderTransform);
-                shopEntry._SetFromEntry(this.CentralGameStateControllerInstance.GameplayState, curEntry, ShopItemSelected);
+                shopEntry.SetFromEntry(this.CentralGameStateControllerInstance.GameplayState, curEntry, ShopItemSelected);
                 this.ActiveShopItemUXs.Add(shopEntry);
             }
         }

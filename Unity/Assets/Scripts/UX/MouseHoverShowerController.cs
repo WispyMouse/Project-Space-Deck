@@ -55,7 +55,7 @@ namespace SpaceDeck.UX
             this.CurrentListener = listener;
 
             this.CanvasSpaceHoverUX.gameObject.SetActive(true);
-            this.CanvasSpaceHoverUX._SetFromHoverListener(listener);
+            this.CanvasSpaceHoverUX.SetFromHoverListener(listener);
 
             Vector3 screenPosition = Vector3.zero;
             Transform listenerTransform = listener.GetTransform();

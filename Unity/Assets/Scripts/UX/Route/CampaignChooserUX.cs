@@ -24,12 +24,12 @@ namespace SpaceDeck.UX
             
         }
 
-        public void _RouteChosen(Route chosenRoute)
+        public void RouteChosen(Route chosenRoute)
         {
-            this.UXController._RouteChosen(chosenRoute);
+            this.UXController.RouteChosen(chosenRoute);
         }
 
-        public void _ShowChooser()
+        public void ShowChooser()
         {
             this.gameObject.SetActive(true);
 
@@ -39,7 +39,7 @@ namespace SpaceDeck.UX
                 foreach (Route route in SpaceDeck.Models.Databases.RouteDatabase.AllRoutes)
                 {
                     PlayCampaignButton nextButton = Instantiate(this.SelectorPrefab, ChoiceHolder);
-                    nextButton._SetFromRoute(route, this);
+                    nextButton.SetFromRoute(route, this);
                 }
             }
         }

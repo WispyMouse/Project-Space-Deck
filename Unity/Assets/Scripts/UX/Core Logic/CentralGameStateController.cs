@@ -46,7 +46,7 @@ namespace SpaceDeck.UX
         {
             this.UXController.Annihilate();
             this.GameplayState = null;
-            this.UXController._ShowCampaignChooser();
+            this.UXController.ShowCampaignChooser();
         }
 
         IEnumerator BootupSequence()
@@ -83,15 +83,15 @@ namespace SpaceDeck.UX
             this.SetupAndStartNewGame();
         }
 
-        public void _RouteChosen(SpaceDeck.GameState.Minimum.Route route)
+        public void RouteChosen(SpaceDeck.GameState.Minimum.Route route)
         {
             this.GameplayState = new GameState.Execution.GameState(route);
             foreach (LowercaseString startingCurrency in route.StartingCurrency.Keys)
             {
                 this.GameplayState.ModCurrency(CurrencyDatabase.Get(startingCurrency), route.StartingCurrency[startingCurrency]);
             }
-            PlayerUX placedPlayer = this.UXController._PlacePlayerCharacter();
-            this.CampaignPlayer = placedPlayer._RepresentedPlayer;
+            PlayerUX placedPlayer = this.UXController.PlacePlayerCharacter();
+            this.CampaignPlayer = placedPlayer.RepresentedPlayer;
         }
     }
 }

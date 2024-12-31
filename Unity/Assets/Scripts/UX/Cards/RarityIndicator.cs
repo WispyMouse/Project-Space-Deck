@@ -1,11 +1,9 @@
 namespace SpaceDeck.UX
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using UnityEngine;
+    using UnityEngine.UI;
 
     public class RarityIndicator : MonoBehaviour
     {
@@ -27,7 +25,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private Sprite GeneratedRarityIcon;
 
-        public void _SetFromRarity(LowercaseString rarity)
+        public void SetFromRarity(LowercaseString rarity)
         {
             if (rarity == WellknownRarities.Starter)
             {

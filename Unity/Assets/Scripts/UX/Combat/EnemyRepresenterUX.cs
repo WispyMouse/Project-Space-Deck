@@ -18,27 +18,27 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
-        public readonly Dictionary<Entity, EnemyUX> _SpawnedEnemiesLookup = new Dictionary<Entity, EnemyUX>();
+        public readonly Dictionary<Entity, EnemyUX> SpawnedEnemiesLookup = new Dictionary<Entity, EnemyUX>();
         public List<EnemyUX> OrderedEnemyList { get; set; } = new List<EnemyUX>();
 
         Coroutine EnemyPositionAdjustmentCoroutine { get; set; } = null;
 
-        public void _AddEnemies(IEnumerable<Entity> toAdd)
+        public void AddEnemies(IEnumerable<Entity> toAdd)
         {
             foreach (Entity curEnemy in toAdd)
             {
-                this._AddEnemy(curEnemy);
+                this.AddEnemy(curEnemy);
             }
 
             this.SituateEnemyPositions();
         }
 
-        public void _AddEnemy(Entity toAdd, bool skipSituating = false)
+        public void AddEnemy(Entity toAdd, bool skipSituating = false)
         {
             EnemyUX newEnemy = Instantiate(this.EnemyRepresentationPF, this.EnemyRepresentationTransform);
-            newEnemy._SetFromEnemy(toAdd, this.CentralGameStateControllerInstance);
+            newEnemy.SetFromEnemy(toAdd, this.CentralGameStateControllerInstance);
 
-            this._SpawnedEnemiesLookup.Add(toAdd, newEnemy);
+            this.SpawnedEnemiesLookup.Add(toAdd, newEnemy);
             this.OrderedEnemyList.Add(newEnemy);
 
             if (!skipSituating)
@@ -47,12 +47,12 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void _RemoveEnemy(Entity toRemove)
+        public void RemoveEnemy(Entity toRemove)
         {
-            if (this._SpawnedEnemiesLookup.TryGetValue(toRemove, out EnemyUX ux))
+            if (this.SpawnedEnemiesLookup.TryGetValue(toRemove, out EnemyUX ux))
             {
-                EnemyUX representation = this._SpawnedEnemiesLookup[toRemove];
-                this._SpawnedEnemiesLookup.Remove(toRemove);
+                EnemyUX representation = this.SpawnedEnemiesLookup[toRemove];
+                this.SpawnedEnemiesLookup.Remove(toRemove);
                 this.OrderedEnemyList.Remove(representation);
                 Destroy(representation.gameObject);
             }
@@ -65,7 +65,7 @@ namespace SpaceDeck.UX
                 Destroy(this.EnemyRepresentationTransform.GetChild(ii).gameObject);
             }
 
-            this._SpawnedEnemiesLookup.Clear();
+            this.SpawnedEnemiesLookup.Clear();
             this.OrderedEnemyList.Clear();
 
             if (this.EnemyPositionAdjustmentCoroutine != null)

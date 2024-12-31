@@ -10,8 +10,8 @@ namespace SpaceDeck.UX
     public interface IMouseHoverListener
     {
         public Transform GetTransform();
-        public bool _TryGetCard(out CardInstance toShow);
-        public bool _TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow);
+        public bool TryGetCard(out CardInstance toShow);
+        public bool TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow);
         public bool ShouldShowBase { get; }
         public void UnHoverOnDisable();
     }

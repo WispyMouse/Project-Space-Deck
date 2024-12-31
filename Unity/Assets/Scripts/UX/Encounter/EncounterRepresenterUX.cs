@@ -32,12 +32,12 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private EncounterDialogueButtonUX DialogueButtonPF;
 
-        private LowercaseString _currentEncounterIndex = "intro";
-        private EncounterState _representingModel = null;
+        private LowercaseString currentEncounterIndex = WellknownEncounters.Intro;
+        private EncounterState representingModel = null;
 
-        public void _RepresentEncounter(EncounterState toRepresent, IGameStateMutator mutator)
+        public void RepresentEncounter(EncounterState toRepresent, IGameStateMutator mutator)
         {
-            this._representingModel = toRepresent;
+            this.representingModel = toRepresent;
             this.NameLabel.text = toRepresent.EncounterName;
 
             this.SetEncounterIndex(WellknownEncounters.Intro, mutator);
@@ -46,13 +46,13 @@ namespace SpaceDeck.UX
 
         public void SetEncounterIndex(LowercaseString index, IGameStateMutator mutator)
         {
-            this._currentEncounterIndex = index;
+            this.currentEncounterIndex = index;
 
-            this.DescriptionLabel.text = this._representingModel.BuildEncounterDialogue(index, mutator);
+            this.DescriptionLabel.text = this.representingModel.BuildEncounterDialogue(index, mutator);
 
             this.DestroyButtonHolderButtons();
 
-            IReadOnlyList<EncounterOption> options = this._representingModel.GetOptions(index, mutator);
+            IReadOnlyList<EncounterOption> options = this.representingModel.GetOptions(index, mutator);
             foreach (EncounterOption option in options)
             {
                 EncounterDialogueButtonUX button = Instantiate(this.DialogueButtonPF, this.ButtonHolder);
@@ -77,7 +77,7 @@ namespace SpaceDeck.UX
             if (option.PossibleOutcomes == null || option.PossibleOutcomes.Count == 0)
             {
                 // If there are no possible outcomes, treat it as though it was a leave
-                this.GameplayUXControllerInstance.EncounterDialogueComplete(this._representingModel);
+                this.GameplayUXControllerInstance.EncounterDialogueComplete(this.representingModel);
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace SpaceDeck.UX
             outcome.Apply(this.CentralGameStateControllerInstance.GameplayState, out LowercaseString destination);
             if (string.IsNullOrEmpty(destination.ToString()))
             {
-                this.GameplayUXControllerInstance.EncounterDialogueComplete(_representingModel);
+                this.GameplayUXControllerInstance.EncounterDialogueComplete(representingModel);
             }
             else
             {

@@ -34,18 +34,18 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private GameObject CanNotAffordOverlay;
 
-        public void _SetFromEntry(IGameStateMutator mutator, IShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
+        public void SetFromEntry(IGameStateMutator mutator, IShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
         {
             int gainedAmount = toRepresent.GetGainedAmount(mutator);
 
             this.RepresentingEntry = toRepresent;
             this.OnClickDelegate = onClickDelegate;
-            this._RepresentCosts(toRepresent.Costs, mutator);
+            this.RepresentCosts(toRepresent.Costs, mutator);
 
             if (toRepresent.GainedCard != null)
             {
                 RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                thisCard._SetFromCard(toRepresent.GainedCard, (DisplayedCardUX card) => { this.OnClick(); });
+                thisCard.SetFromCard(toRepresent.GainedCard, (DisplayedCardUX card) => { this.OnClick(); });
                 thisCard.SetQuantity(gainedAmount);
             }
             else if (toRepresent.GainedArtifact != null)
@@ -56,7 +56,7 @@ namespace SpaceDeck.UX
             else if (toRepresent.GainedCurrency != null)
             {
                 RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                rewardCurrency._SetFromCurrency(toRepresent.GainedCurrency, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
+                rewardCurrency.SetFromCurrency(toRepresent.GainedCurrency, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
             }
         }
 
@@ -65,7 +65,7 @@ namespace SpaceDeck.UX
             this.OnClickDelegate.Invoke(this);
         }
 
-        void _RepresentCosts(List<IShopCost> costs, IGameStateMutator mutator)
+        void RepresentCosts(List<IShopCost> costs, IGameStateMutator mutator)
         {
             if (costs.Count == 0)
             {

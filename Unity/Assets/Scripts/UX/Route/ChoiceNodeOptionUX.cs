@@ -6,7 +6,7 @@ namespace SpaceDeck.UX
 
     public class ChoiceNodeOptionUX : MonoBehaviour
     {
-        public SpaceDeck.GameState.Minimum.ChoiceNodeOption _Representing;
+        public SpaceDeck.GameState.Minimum.ChoiceNodeOption Representing;
         private ChoiceNodeSelectorUX SelectorUx;
 
         [SerializeReference]
@@ -14,18 +14,18 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private TMPro.TMP_Text DescriptionLabel;
 
-        public void _RepresentOption(ChoiceNodeSelectorUX selector, SpaceDeck.GameState.Minimum.ChoiceNodeOption toRepresent)
+        public void RepresentOption(ChoiceNodeSelectorUX selector, SpaceDeck.GameState.Minimum.ChoiceNodeOption toRepresent)
         {
             this.SelectorUx = selector;
-            this._Representing = toRepresent;
+            this.Representing = toRepresent;
 
             this.NameLabel.text = toRepresent.GetName();
             this.DescriptionLabel.text = toRepresent.GetDescription();
         }
 
-        public void _ChooseThis()
+        public void ChooseThis()
         {
-            this.SelectorUx._NodeIsChosen(this);
+            this.SelectorUx.NodeIsChosen(this);
         }
     }
 }
