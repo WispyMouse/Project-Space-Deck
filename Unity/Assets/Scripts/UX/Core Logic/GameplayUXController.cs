@@ -95,7 +95,10 @@ namespace SpaceDeck.UX
         private CombatContext.TurnStatus previousCombatTurnState { get; set; } = CombatContext.TurnStatus.NotInCombat;
         private Entity previousCombatTurnTaker { get; set; } = null;
 
+        [Obsolete("Should transition to " + nameof(CurrentGameState))]
         public CampaignContext CurrentCampaignContext => this.CentralGameStateControllerInstance?.CurrentCampaignContext;
+        public GameState CurrentGameState => this.CentralGameStateControllerInstance?.GameplayState;
+        public EncounterState CurrentEncounterState => this.CurrentGameState.CurrentEncounterState;
 
         [Obsolete("Transition to " + nameof(_HoveredCombatant))]
         public ICombatantTarget HoveredCombatant { get; set; } = null;
@@ -159,7 +162,7 @@ namespace SpaceDeck.UX
 
         public void _CheckAndActIfGameCampaignNavigationStateChanged()
         {
-            if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null)
+            if (this.CentralGameStateControllerInstance.GameplayState == null)
             {
                 this.GoNextRoomButton.SetActive(false);
                 this.EndTurnButton.SetActive(false);
@@ -169,11 +172,8 @@ namespace SpaceDeck.UX
             }
 
             this.CampaignChooserUXInstance.HideChooser();
-
-            CampaignContext.GameplayCampaignState newCampaignState = this.CurrentCampaignContext.CurrentGameplayCampaignState;
-            CampaignContext.NonCombatEncounterStatus newNonCombatState = this.CurrentCampaignContext.CurrentNonCombatEncounterStatus;
             Entity currentTurnTaker = null;
-            if (!(this.CurrentCampaignContext._CurrentEncounter != null && this.CurrentCampaignContext.GameplayState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CurrentCampaignContext.GameplayState, out currentTurnTaker)))
+            if (!(this.CurrentEncounterState != null && this.CurrentGameState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CentralGameStateControllerInstance.GameplayState, out currentTurnTaker)))
             {
                 currentTurnTaker = null;
             }
@@ -182,6 +182,8 @@ namespace SpaceDeck.UX
             {
                 this._PresentAwards(this.CurrentCampaignContext._PendingRewards);
             }
+
+            /*
 
             CampaignContext.GameplayCampaignState wasPreviousCampaignState = this.previousCampaignState;
             CampaignContext.NonCombatEncounterStatus wasPreviousNonCombatState = this.previousNonCombatEncounterState;
@@ -278,6 +280,7 @@ namespace SpaceDeck.UX
             {
                 GlobalUpdateUX.LogTextEvent?.Invoke($"Victory!! There are no more nodes in this route! Reset game to continue from beginning.", GlobalUpdateUX.LogType.GameEvent);
             }
+            */
         }
 
         public void _UpdateUX()
@@ -293,7 +296,7 @@ namespace SpaceDeck.UX
 
             this._CheckAndActIfGameCampaignNavigationStateChanged();
             this._RemoveDefeatedEntities();
-            this.SetElementValueLabel();
+            this._SetElementValueLabel();
             this._SetCurrenciesValueLabel();
             this.UpdateEnemyUX();
             this.UpdatePlayerLabelValues();
@@ -302,7 +305,7 @@ namespace SpaceDeck.UX
 
         public void _SelectTarget(IChangeTarget toSelect)
         {
-            if (this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState.CurrentlyConsideredPlayedCard == null)
+            if (this.CentralGameStateControllerInstance.GameplayState.CurrentlyConsideredPlayedCard == null)
             {
                 return;
             }
@@ -313,10 +316,9 @@ namespace SpaceDeck.UX
             // this.CurrentSelectedCard = null;
         }
 
-        public void SelectCurrentCard(DisplayedCardUX toSelect)
+        public void _SelectCurrentCard(DisplayedCardUX toSelect)
         {
-            if (this.CurrentCampaignContext.CurrentCombatContext == null ||
-                this.CurrentCampaignContext.CurrentCombatContext.CurrentTurnStatus != CombatContext.TurnStatus.PlayerTurn)
+            if (this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState == null)
             {
                 return;
             }
@@ -335,8 +337,8 @@ namespace SpaceDeck.UX
 
             this.CurrentSelectedCard = toSelect;
             this.CurrentSelectedCard.EnableSelectionGlow();
-            this.AppointTargetableIndicatorsToValidTargets(toSelect.RepresentedCard);
-            GlobalUpdateUX.LogTextEvent.Invoke($"Selected card {toSelect.RepresentedCard.Name}", GlobalUpdateUX.LogType.GameEvent);
+            this._AppointTargetableIndicatorsToValidTargets(toSelect._RepresentedCard);
+            GlobalUpdateUX.LogTextEvent.Invoke($"Selected card {toSelect._RepresentedCard.Name}", GlobalUpdateUX.LogType.GameEvent);
         }
 
         public void AddToLog(string text, GlobalUpdateUX.LogType logType)
@@ -762,7 +764,7 @@ namespace SpaceDeck.UX
 
         private void _RemoveDefeatedEntities()
         {
-            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?.CurrentCombatContext == null)
+            if (this.CentralGameStateControllerInstance?.GameplayState.CurrentEncounterState == null)
             {
                 foreach (Entity key in new List<Entity>(this.EnemyRepresenterUX._SpawnedEnemiesLookup.Keys))
                 {

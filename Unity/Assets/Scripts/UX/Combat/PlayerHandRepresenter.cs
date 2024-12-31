@@ -114,8 +114,8 @@ namespace SpaceDeck.UX
         {
             this.SelectedCard = selectedCard;
             this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard);
-            this.UXController.SelectCurrentCard(selectedCard);
-            this._RepresentPlayerHand(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState);
+            this.UXController._SelectCurrentCard(selectedCard);
+            this._RepresentPlayerHand(this.CentralGameStateControllerInstance.GameplayState);
         }
 
         public void _DeselectSelectedCard()
@@ -124,7 +124,7 @@ namespace SpaceDeck.UX
             {
                 this.SelectedCard._SetFromCard(this.SelectedCard._RepresentedCard, _SelectCurrentCard);
                 this.SelectedCard = null;
-                this._RepresentPlayerHand(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState);
+                this._RepresentPlayerHand(this.CentralGameStateControllerInstance.GameplayState);
             }
         }
 
