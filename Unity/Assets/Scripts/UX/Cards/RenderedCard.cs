@@ -9,6 +9,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.Models.Databases;
 
     public class RenderedCard : MonoBehaviour
     {
@@ -48,10 +49,10 @@ namespace SpaceDeck.UX
                 this.CardImage.sprite = cardArt;
             }
 
-            foreach (SpaceDeck.GameState.Minimum.Element curElement in SpaceDeck.Models.Databases.ElementDatabase.ElementData.Values)
+            foreach (Element curElement in ElementDatabase.ElementData.Values)
             {
                 ElementResourceIconUX icon = Instantiate(this.ElementResourceIconUXPF, this.ElementResourceIconHolder);
-                icon.SetFromElement(curElement, SpaceDeck.Models.Databases.ElementDatabase.GetElementGain(curElement, representedCard));
+                icon.SetFromElement(curElement, ElementDatabase.GetElementGain(curElement, representedCard));
             }
 
             this.MyRarityIndicator.SetFromRarity(representedCard.Qualities.GetStringQuality(WellknownQualities.Rarity));

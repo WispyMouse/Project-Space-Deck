@@ -11,7 +11,7 @@ namespace SpaceDeck.UX
     {
         public Transform GetTransform();
         public bool TryGetCard(out CardInstance toShow);
-        public bool TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow);
+        public bool TryGetStatusEffect(out AppliedStatusEffect toShow);
         public bool ShouldShowBase { get; }
         public void UnHoverOnDisable();
     }

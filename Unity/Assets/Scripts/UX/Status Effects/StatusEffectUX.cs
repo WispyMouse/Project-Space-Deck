@@ -11,7 +11,7 @@ namespace SpaceDeck.UX
 
     public class StatusEffectUX : MonoBehaviour, IMouseHoverListener
     {
-        public SpaceDeck.GameState.Minimum.AppliedStatusEffect RepresentsEffect;
+        public AppliedStatusEffect RepresentsEffect;
 
         [SerializeReference]
         private TMPro.TMP_Text StackText;
@@ -19,7 +19,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private Image Renderer;
 
-        private Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> OnStatusEffectPressed;
+        private Action<AppliedStatusEffect> OnStatusEffectPressed;
 
         public virtual bool ShouldShowBase { get; } = true;
 
@@ -28,7 +28,7 @@ namespace SpaceDeck.UX
             return this.GetComponent<RectTransform>();
         }
 
-        public void SetFromEffect(SpaceDeck.GameState.Minimum.AppliedStatusEffect toSet, Action<SpaceDeck.GameState.Minimum.AppliedStatusEffect> onClickEvent = null)
+        public void SetFromEffect(AppliedStatusEffect toSet, Action<AppliedStatusEffect> onClickEvent = null)
         {
             this.RepresentsEffect = toSet;
             this.OnStatusEffectPressed = onClickEvent;
@@ -57,7 +57,7 @@ namespace SpaceDeck.UX
             return false;
         }
 
-        public bool TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
+        public bool TryGetStatusEffect(out AppliedStatusEffect toShow)
         {
             toShow = this.RepresentsEffect;
             return true;

@@ -77,7 +77,7 @@ namespace SpaceDeck.UX
             this.UnHoverOnDisable();
         }
 
-        public bool TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect toShow)
+        public bool TryGetStatusEffect(out AppliedStatusEffect toShow)
         {
             toShow = null;
             return false;

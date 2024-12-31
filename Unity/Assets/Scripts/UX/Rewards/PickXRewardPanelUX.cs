@@ -33,7 +33,7 @@ namespace SpaceDeck.UX
 
         int PicksRemaining { get; set; } = 0;
 
-        public void RepresentPick(IGameStateMutator mutator, RewardsPanelUX rewardsPanel, SpaceDeck.GameState.Minimum.PickReward toRepresent)
+        public void RepresentPick(IGameStateMutator mutator, RewardsPanelUX rewardsPanel, PickReward toRepresent)
         {
             this.BasedOnPick = toRepresent;
             this.RewardsPanel = rewardsPanel;
@@ -48,9 +48,9 @@ namespace SpaceDeck.UX
                     break;
             }
 
-            foreach (SpaceDeck.GameState.Minimum.Reward slot in toRepresent.RewardOptions)
+            foreach (Reward slot in toRepresent.RewardOptions)
             {
-                SpaceDeck.GameState.Minimum.Reward pulledOutSlot = slot;
+                Reward pulledOutSlot = slot;
 
                 int amountToAward = pulledOutSlot.GetAmount(mutator);
 
@@ -62,11 +62,11 @@ namespace SpaceDeck.UX
                         break;
                     case RewardIdentityKind.Artifact:
                         RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                        rewardArtifact.SetFromArtifact(SpaceDeck.Models.Databases.StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
+                        rewardArtifact.SetFromArtifact(StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
                         break;
                     case RewardIdentityKind.Card:
                         RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                        thisCard.SetFromCard(SpaceDeck.Models.Databases.CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this.RewardSlotChosen(pulledOutSlot); });
+                        thisCard.SetFromCard(CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this.RewardSlotChosen(pulledOutSlot); });
                         thisCard.SetQuantity(amountToAward);
                         break;
                 }
@@ -86,7 +86,7 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void RewardSlotChosen(SpaceDeck.GameState.Minimum.Reward rewards)
+        public void RewardSlotChosen(Reward rewards)
         {
             this.RewardsPanel.GainReward(rewards);
             this.PicksRemaining--;

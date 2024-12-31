@@ -43,7 +43,7 @@ namespace SpaceDeck.UX
                 this.HideCard();
             }
 
-            if (listener.TryGetStatusEffect(out SpaceDeck.GameState.Minimum.AppliedStatusEffect effectToShow))
+            if (listener.TryGetStatusEffect(out AppliedStatusEffect effectToShow))
             {
                 this.SetPopupPanels(effectToShow.GetDescription(), listener.ShouldShowBase);
             }

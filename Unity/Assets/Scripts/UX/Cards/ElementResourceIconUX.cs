@@ -9,6 +9,7 @@ namespace SpaceDeck.UX
     using UnityEngine.UI;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.GameState.Minimum;
 
     public class ElementResourceIconUX : MonoBehaviour
     {
@@ -18,9 +19,9 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private Image SpriteSpot;
 
-        public SpaceDeck.GameState.Minimum.Element RepresentingElement { get; private set; }
+        public Element RepresentingElement { get; private set; }
 
-        public void SetFromElement(SpaceDeck.GameState.Minimum.Element representingElement, int count)
+        public void SetFromElement(Element representingElement, int count)
         {
             this.RepresentingElement = representingElement;
             this.NumbericIndicator.text = count.ToString();

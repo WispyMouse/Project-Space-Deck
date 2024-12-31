@@ -5,6 +5,7 @@ namespace SpaceDeck.UX
     using System.Collections.Generic;
     using UnityEngine;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Databases;
 
     public class CampaignChooserUX : MonoBehaviour
     {
@@ -36,7 +37,7 @@ namespace SpaceDeck.UX
             if (!this.Initialized)
             {
                 this.Initialized = true;
-                foreach (Route route in SpaceDeck.Models.Databases.RouteDatabase.AllRoutes)
+                foreach (Route route in RouteDatabase.AllRoutes)
                 {
                     PlayCampaignButton nextButton = Instantiate(this.SelectorPrefab, ChoiceHolder);
                     nextButton.SetFromRoute(route, this);

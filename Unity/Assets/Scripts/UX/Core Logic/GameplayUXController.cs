@@ -12,6 +12,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.Models.Databases;
 
     public class GameplayUXController : MonoBehaviour
     {
@@ -422,7 +423,7 @@ namespace SpaceDeck.UX
 
             string startingSeparator = "";
             StringBuilder compositeElements = new StringBuilder();
-            foreach (SpaceDeck.GameState.Minimum.Element element in this.CentralGameStateControllerInstance.GameplayState.Elements.Keys)
+            foreach (Element element in this.CentralGameStateControllerInstance.GameplayState.Elements.Keys)
             {
                 compositeElements.Append($"{startingSeparator}{this.CentralGameStateControllerInstance.GameplayState.Elements[element]}\u00A0{SpriteLookup.GetNameAndMaybeIcon(element)}");
                 startingSeparator = ", ";
@@ -594,7 +595,7 @@ namespace SpaceDeck.UX
         {
             this.CancelAllSelections();
 
-            SpaceDeck.GameState.Minimum.ChoiceNode campaignNode = this.CurrentGameState.GetCampaignCurrentNode();
+            ChoiceNode campaignNode = this.CurrentGameState.GetCampaignCurrentNode();
 
             if (campaignNode == null)
             {
@@ -611,7 +612,7 @@ namespace SpaceDeck.UX
             this.ChoiceUXFolder.SetActive(false);
         }
 
-        public void NodeIsChosen(SpaceDeck.GameState.Minimum.ChoiceNodeOption option)
+        public void NodeIsChosen(ChoiceNodeOption option)
         {
             this.CancelAllSelections();
             this.CentralGameStateControllerInstance.GameplayState.MakeChoiceNodeDecision(option);
@@ -620,7 +621,7 @@ namespace SpaceDeck.UX
         public void ProceedToNextRoom()
         {
             this.CancelAllSelections();
-            if (this.CentralGameStateControllerInstance.GameplayState.StartNextRoomFromCampaign(out SpaceDeck.GameState.Minimum.ChoiceNode nextChoice))
+            if (this.CentralGameStateControllerInstance.GameplayState.StartNextRoomFromCampaign(out ChoiceNode nextChoice))
             {
                 this.PresentNextRouteChoice();
             }
@@ -658,14 +659,14 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void StatusEffectClicked(SpaceDeck.GameState.Minimum.AppliedStatusEffect representingEffect)
+        public void StatusEffectClicked(AppliedStatusEffect representingEffect)
         {
             if (representingEffect.TriggerOnEventIds.Contains(WellknownGameStateEvents.Activated))
             {
                 GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.Activated);
                 if (representingEffect.TryApplyStatusEffect(trigger, this.CentralGameStateControllerInstance.GameplayState, out List<GameStateChange> changes))
                 {
-                    SpaceDeck.GameState.Execution.GameStateDelta delta = new SpaceDeck.GameState.Execution.GameStateDelta(this.CentralGameStateControllerInstance.GameplayState, changes);
+                    GameStateDelta delta = new GameStateDelta(this.CentralGameStateControllerInstance.GameplayState, changes);
                     GameStateDeltaApplier.ApplyGameStateDelta(this.CentralGameStateControllerInstance.GameplayState, delta);
                 }
             }
@@ -680,7 +681,7 @@ namespace SpaceDeck.UX
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: All Cards");
-            this.CardBrowserUXInstance.SetFromCards(SpaceDeck.Models.Databases.CardDatabase.GetOneOfEveryCard());
+            this.CardBrowserUXInstance.SetFromCards(CardDatabase.GetOneOfEveryCard());
         }
 
         public void OpenDiscardCardsBrowser()

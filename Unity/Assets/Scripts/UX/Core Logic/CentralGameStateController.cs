@@ -53,7 +53,7 @@ namespace SpaceDeck.UX
         {
             SynchronizationContext currentContext = SynchronizationContext.Current;
 
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.CurrencyImport>(Application.streamingAssetsPath, "currencyImport", CurrencyDatabase.AddCurrencyToDatabase, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<CurrencyImport>(Application.streamingAssetsPath, "currencyImport", CurrencyDatabase.AddCurrencyToDatabase, currentContext));
             foreach (Currency currency in CurrencyDatabase.CurrencyData.Values)
             {
                 if (SpriteLookup.TryGetSprite(currency.Id, out Sprite foundSprite))
@@ -63,8 +63,8 @@ namespace SpaceDeck.UX
                 }
             }
 
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.ElementImport>(Application.streamingAssetsPath, "elementImport", SpaceDeck.Models.Databases.ElementDatabase.AddElement, currentContext));
-            foreach (SpaceDeck.GameState.Minimum.Element element in SpaceDeck.Models.Databases.ElementDatabase.ElementData.Values)
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<ElementImport>(Application.streamingAssetsPath, "elementImport", ElementDatabase.AddElement, currentContext));
+            foreach (SpaceDeck.GameState.Minimum.Element element in ElementDatabase.ElementData.Values)
             {
                 if (SpriteLookup.TryGetSprite(element.Id, out Sprite foundSprite))
                 {
@@ -73,17 +73,17 @@ namespace SpaceDeck.UX
                 }
             }
 
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.CardImport>(Application.streamingAssetsPath, "cardImport", SpaceDeck.Models.Databases.CardDatabase.AddCardToDatabase, currentContext));
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.StatusEffectImport>(Application.streamingAssetsPath, "statusImport", SpaceDeck.Models.Databases.StatusEffectDatabase.RegisterStatusEffect, currentContext));
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.EnemyImport>(Application.streamingAssetsPath, "enemyImport", SpaceDeck.Models.Databases.EnemyDatabase.AddEnemy, currentContext));
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.RewardImport>(Application.streamingAssetsPath, "rewardImport", SpaceDeck.Models.Databases.RewardDatabase.AddReward, currentContext));
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.EncounterImport>(Application.streamingAssetsPath, "encounterImport", EncounterDatabase.AddEncounter, currentContext));
-            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<SpaceDeck.Models.Imports.RouteImport>(Application.streamingAssetsPath, "routeImport", SpaceDeck.Models.Databases.RouteDatabase.AddRouteToDatabase, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<CardImport>(Application.streamingAssetsPath, "cardImport", CardDatabase.AddCardToDatabase, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<StatusEffectImport>(Application.streamingAssetsPath, "statusImport", StatusEffectDatabase.RegisterStatusEffect, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<EnemyImport>(Application.streamingAssetsPath, "enemyImport", EnemyDatabase.AddEnemy, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<RewardImport>(Application.streamingAssetsPath, "rewardImport", RewardDatabase.AddReward, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<EncounterImport>(Application.streamingAssetsPath, "encounterImport", EncounterDatabase.AddEncounter, currentContext));
+            yield return ImportHelper.YieldForTask(ImportHelper.ImportImportableFilesIntoDatabaseAsync<RouteImport>(Application.streamingAssetsPath, "routeImport", RouteDatabase.AddRouteToDatabase, currentContext));
 
             this.SetupAndStartNewGame();
         }
 
-        public void RouteChosen(SpaceDeck.GameState.Minimum.Route route)
+        public void RouteChosen(Route route)
         {
             this.GameplayState = new GameState.Execution.GameState(route);
             foreach (LowercaseString startingCurrency in route.StartingCurrency.Keys)

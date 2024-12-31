@@ -1,5 +1,6 @@
 namespace SpaceDeck.UX
 {
+    using SpaceDeck.GameState.Minimum;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -16,21 +17,21 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private CentralGameStateController CentralGameStateControllerInstance;
 
-        public List<SpaceDeck.GameState.Minimum.PickReward> Rewards;
+        public List<PickReward> Rewards;
 
         private void Awake()
         {
             this.Annihilate();
         }
 
-        public void SetReward(List<SpaceDeck.GameState.Minimum.PickReward> rewards)
+        public void SetReward(List<PickReward> rewards)
         {
             this.gameObject.SetActive(true);
             this.Annihilate();
 
             this.Rewards = rewards;
 
-            foreach (SpaceDeck.GameState.Minimum.PickReward pickReward in this.Rewards)
+            foreach (PickReward pickReward in this.Rewards)
             {
                 PickXRewardPanelUX pickRewardPanel = Instantiate(this.PickRewardUXPF, this.RewardPanelsHolder);
                 pickRewardPanel.RepresentPick(CentralGameStateControllerInstance.GameplayState, this, pickReward);
@@ -47,7 +48,7 @@ namespace SpaceDeck.UX
             this.Rewards = null;
         }
 
-        public void GainReward(SpaceDeck.GameState.Minimum.Reward reward)
+        public void GainReward(Reward reward)
         {
             this.CentralGameStateControllerInstance.GameplayState.Gain(reward);
         }
