@@ -6,9 +6,6 @@ namespace SpaceDeck.UX
     using System.Text;
     using System.Text.RegularExpressions;
     using UnityEngine;
-    using SFDDCards;
-    using SFDDCards.Evaluation.Actual;
-    using SFDDCards.ImportModels;
     using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
@@ -88,29 +85,15 @@ namespace SpaceDeck.UX
         public DisplayedCardUX CurrentSelectedCard { get; private set; } = null;
         public bool PlayerIsCurrentlyAnimating { get; private set; } = false;
 
-        [Obsolete("These will be obsoleted with new data types.")]
-        private CampaignContext.GameplayCampaignState previousCampaignState { get; set; } = CampaignContext.GameplayCampaignState.NotStarted;
-        [Obsolete("These will be obsoleted with new data types.")]
-        private CampaignContext.NonCombatEncounterStatus previousNonCombatEncounterState { get; set; } = CampaignContext.NonCombatEncounterStatus.NotInNonCombatEncounter;
-
-        [Obsolete("Should transition to extrapolating this information from " + nameof(previousCombatTurnTaker))]
-        private CombatContext.TurnStatus previousCombatTurnState { get; set; } = CombatContext.TurnStatus.NotInCombat;
         private Entity previousCombatTurnTaker { get; set; } = null;
-
-        [Obsolete("Should transition to " + nameof(CurrentGameState))]
-        public CampaignContext CurrentCampaignContext => this.CentralGameStateControllerInstance?.CurrentCampaignContext;
         public GameState CurrentGameState => this.CentralGameStateControllerInstance?.GameplayState;
         public EncounterState CurrentEncounterState => this.CurrentGameState.CurrentEncounterState;
 
-        [Obsolete("Transition to " + nameof(_HoveredCombatant))]
-        public ICombatantTarget HoveredCombatant { get; set; } = null;
         public IChangeTarget _HoveredCombatant { get; set; } = null;
 
         private void Awake()
         {
             this.Annihilate();
-
-            GlobalUpdateUX.LogTextEvent.AddListener(this.AddToLog);
         }
 
         private void OnEnable()
@@ -119,7 +102,6 @@ namespace SpaceDeck.UX
 
         private void OnDestroy()
         {
-            GlobalUpdateUX.LogTextEvent.RemoveListener(AddToLog);
         }
 
         private void Update()
@@ -321,7 +303,6 @@ namespace SpaceDeck.UX
 
             if (this.PlayerIsCurrentlyAnimating)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"Player is currently animating, please wait until finished.", GlobalUpdateUX.LogType.GameEvent);
                 return;
             }
 
@@ -334,29 +315,6 @@ namespace SpaceDeck.UX
             this.CurrentSelectedCard = toSelect;
             this.CurrentSelectedCard.EnableSelectionGlow();
             this._AppointTargetableIndicatorsToValidTargets(toSelect._RepresentedCard);
-            GlobalUpdateUX.LogTextEvent.Invoke($"Selected card {toSelect._RepresentedCard.Name}", GlobalUpdateUX.LogType.GameEvent);
-        }
-
-        public void AddToLog(string text, GlobalUpdateUX.LogType logType)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return;
-            }
-
-            if (!text.EndsWith("\n"))
-            {
-                text += "\n";
-            }
-            this.Log.text += text;
-
-            const int maximumLogSize = 10000;
-            if (this.Log.text.Length > maximumLogSize)
-            {
-                this.Log.text = this.Log.text.Substring(this.Log.text.Length - maximumLogSize, maximumLogSize);
-            }
-
-            Debug.Log(text);
         }
 
         public void CancelAllSelections()
@@ -440,7 +398,7 @@ namespace SpaceDeck.UX
 
         void UpdatePlayerLabelValues()
         {
-            if (this.CurrentCampaignContext?.CampaignPlayer == null)
+            if (this.CentralGameStateControllerInstance?.CampaignPlayer == null)
             {
                 this.LifeValue.text = "0";
                 this.PlayerStatusEffectUXHolderInstance.Annihilate();
@@ -448,32 +406,10 @@ namespace SpaceDeck.UX
                 return;
             }
 
-            this.LifeValue.text = this.CurrentCampaignContext.CampaignPlayer.CurrentHealth.ToString();
+            this.LifeValue.text = this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.Health).ToString();
             this.PlayerStatusEffectUXHolderInstance._SetStatusEffects(
-                this.CentralGameStateControllerInstance?.CurrentCampaignContext?._CampaignPlayer.AppliedStatusEffects.Values,
+                this.CentralGameStateControllerInstance.CampaignPlayer.AppliedStatusEffects.Values,
                 this._StatusEffectClicked);
-        }
-
-        [Obsolete("Transition to " + nameof(_SetElementValueLabel))]
-        private void SetElementValueLabel()
-        {
-            if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null ||
-                this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext == null ||
-                this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext.ElementResourceCounts == null || this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrentCombatContext.ElementResourceCounts.Count == 0)
-            {
-                this.ElementsValue.text = "None";
-                return;
-            }
-
-            string startingSeparator = "";
-            StringBuilder compositeElements = new StringBuilder();
-            foreach (SFDDCards.Element element in this.CurrentCampaignContext.CurrentCombatContext.ElementResourceCounts.Keys)
-            {
-                compositeElements.Append($"{startingSeparator}{this.CurrentCampaignContext.CurrentCombatContext.ElementResourceCounts[element]}\u00A0{element.GetNameOrIcon()}");
-                startingSeparator = ", ";
-            }
-
-            this.ElementsValue.text = compositeElements.ToString();
         }
 
         private void _SetElementValueLabel()
@@ -493,26 +429,6 @@ namespace SpaceDeck.UX
             }
 
             this.ElementsValue.text = compositeElements.ToString();
-        }
-
-        [Obsolete("Transition to " + nameof(_SetCurrenciesValueLabel))]
-        private void SetCurrenciesValueLabel()
-        {
-            if (this.CentralGameStateControllerInstance.CurrentCampaignContext == null || this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrencyCounts.Count == 0)
-            {
-                this.CurrenciesValue.text = "None";
-                return;
-            }
-
-            string startingSeparator = "";
-            StringBuilder compositeCurrencies = new StringBuilder();
-            foreach (CurrencyImport currency in this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrencyCounts.Keys)
-            {
-                compositeCurrencies.Append($"{startingSeparator}{this.CentralGameStateControllerInstance.CurrentCampaignContext.CurrencyCounts[currency]}\u00A0{currency.GetNameAndMaybeIcon()}");
-                startingSeparator = ", ";
-            }
-
-            this.CurrenciesValue.text = compositeCurrencies.ToString();
         }
 
         private void _SetCurrenciesValueLabel()
@@ -550,17 +466,11 @@ namespace SpaceDeck.UX
             this.AllFoeTargetsIndicator.gameObject.SetActive(false);
         }
 
-        [Obsolete("Transition to " + nameof(_AppointTargetableIndicatorsToValidTargets))]
-        private void AppointTargetableIndicatorsToValidTargets(Card toTarget)
-        {
-            throw new System.Exception("OBSOLETE");
-        }
-
         private void _AppointTargetableIndicatorsToValidTargets(CardInstance toTarget)
         {
             this.ClearAllTargetableIndicators();
 
-            List<IChangeTarget> remainingTargets = new List<IChangeTarget>(toTarget.GetPossibleTargets(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState));
+            List<IChangeTarget> remainingTargets = new List<IChangeTarget>(toTarget.GetPossibleTargets(this.CentralGameStateControllerInstance.GameplayState));
 
             if (remainingTargets.Count > 0)
             {
@@ -574,11 +484,11 @@ namespace SpaceDeck.UX
                     }
                     else
                     {
-                        IReadOnlyList<Entity> representedEntities = new List<Entity>(target.GetRepresentedEntities(this.CentralGameStateControllerInstance.CurrentCampaignContext.GameplayState));
+                        IReadOnlyList<Entity> representedEntities = new List<Entity>(target.GetRepresentedEntities(this.CentralGameStateControllerInstance.GameplayState));
 
                         foreach (Entity representedEntity in representedEntities)
                         {
-                            if (representedEntity == this.CentralGameStateControllerInstance.CurrentCampaignContext._CampaignPlayer)
+                            if (representedEntity == this.CentralGameStateControllerInstance.CampaignPlayer)
                             {
                                 PlayerUX playerUx = this.PlayerUXInstance;
                                 TargetableIndicator playerIndicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, playerUx.transform);
@@ -605,12 +515,12 @@ namespace SpaceDeck.UX
 
         void UpdateEnemyUX()
         {
-            if (this.CentralGameStateControllerInstance?.CurrentCampaignContext?._CurrentEncounter?.EncounterEntities == null)
+            if (this.CurrentEncounterState == null || this.CurrentEncounterState.EncounterEntities != null)
             {
                 return;
             }
 
-            foreach (Entity curEnemy in this.CentralGameStateControllerInstance?.CurrentCampaignContext._CurrentEncounter.EncounterEntities)
+            foreach (Entity curEnemy in this.CurrentEncounterState.EncounterEntities)
             {
                 if (!this.EnemyRepresenterUX._SpawnedEnemiesLookup.TryGetValue(curEnemy, out EnemyUX value))
                 {
@@ -667,7 +577,6 @@ namespace SpaceDeck.UX
 
             if (this.CentralGameStateControllerInstance.GameplayState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CurrentGameState, out Entity currentTurnEntity) && currentTurnEntity != this.PlayerUXInstance._RepresentedPlayer)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"It's not the player's turn, can't end turn.", GlobalUpdateUX.LogType.GameEvent);
                 return;
             }
 
@@ -689,7 +598,6 @@ namespace SpaceDeck.UX
 
             if (campaignNode == null)
             {
-                GlobalUpdateUX.LogTextEvent?.Invoke($"The next campaign node is null. Cannot continue with UX.", GlobalUpdateUX.LogType.RuntimeError);
                 return;
             }
 
@@ -767,7 +675,6 @@ namespace SpaceDeck.UX
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
                 return;
             }
 
@@ -780,7 +687,6 @@ namespace SpaceDeck.UX
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
                 return;
             }
 
@@ -798,7 +704,6 @@ namespace SpaceDeck.UX
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
                 return;
             }
 
@@ -825,7 +730,6 @@ namespace SpaceDeck.UX
         {
             if (this.CardBrowserUXInstance.gameObject.activeInHierarchy)
             {
-                GlobalUpdateUX.LogTextEvent.Invoke($"The card browser is already open. Perhaps you need to respond to an event.", GlobalUpdateUX.LogType.UserError);
                 return;
             }
 

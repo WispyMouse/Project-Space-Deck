@@ -1,18 +1,15 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.UX;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.UX;
 
     public class DisplayedCardUX : MonoBehaviour, IMouseHoverListener
     {
-        [Obsolete("Transition to " + nameof(_RepresentedCard))]
-        public Card RepresentedCard { get; private set; } = null;
         public CardInstance _RepresentedCard { get; private set; } = null;
         
         [SerializeReference]

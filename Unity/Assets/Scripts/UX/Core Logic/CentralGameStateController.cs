@@ -1,15 +1,5 @@
 namespace SpaceDeck.UX
 {
-    using SFDDCards;
-    using SFDDCards.ImportModels;
-    using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Models.Databases;
-    using SpaceDeck.Models.Imports;
-    using SpaceDeck.Models.Instances;
-    using SpaceDeck.Models.Prototypes;
-    using SpaceDeck.Utility.Minimum;
-    using SpaceDeck.UX;
-    using SpaceDeck.UX.AssetLookup;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -18,11 +8,17 @@ namespace SpaceDeck.UX
     using System.Threading;
     using System.Threading.Tasks;
     using UnityEngine;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Databases;
+    using SpaceDeck.Models.Imports;
+    using SpaceDeck.Models.Instances;
+    using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.UX;
+    using SpaceDeck.UX.AssetLookup;
 
     public class CentralGameStateController : MonoBehaviour
     {
-        [Obsolete("Should transition to " + nameof(GameplayState))]
-        public CampaignContext CurrentCampaignContext { get; private set; } = null;
         public SpaceDeck.GameState.Execution.GameState GameplayState;
         public Entity CampaignPlayer;
 
