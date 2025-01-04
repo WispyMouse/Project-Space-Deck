@@ -26,7 +26,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
     {
         public override bool TryParse(LowercaseString argument, out IEvaluatableValue<decimal> parsedValue)
         {
-            if (decimal.TryParse(argument.ToString(), out decimal parsedDecimal))
+            if (decimal.TryParse(argument, out decimal parsedDecimal))
             {
                 parsedValue = new ConstantNumericValue(parsedDecimal);
                 return true;

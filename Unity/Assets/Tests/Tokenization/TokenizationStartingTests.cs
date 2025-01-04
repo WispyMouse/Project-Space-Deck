@@ -12,6 +12,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
+    using SpaceDeck.Tokenization.Evaluatables;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -150,6 +151,29 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             Assert.Null(lastStatement.NextStatement, "There should be no statement after the last one, so it shouldn't have one linked.");
             Assert.Null(outerScope.NextStatementAfterScope, "There should be no statement after the outer scope, so it shouldn't have one linked.");
+        }
+
+        /// <summary>
+        /// Parses a constant int value (rolled randomly) into an evaluatable value.
+        /// Ensures it results in a constant.
+        /// </summary>
+        [Test]
+        [Repeat(10)]
+        public void ConstantValue_EvaluatesAsConstant()
+        {
+            // ARRANGE
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+            int tokenTextValue = UnityEngine.Random.Range(0, int.MaxValue);
+            string tokenTextString = tokenTextValue.ToString();
+
+            // ACT
+            Assert.IsTrue(EvaluatablesReference.TryGetNumericEvaluatableValue(tokenTextString, out INumericEvaluatableValue numericValue), "Should be able to parse token text into an evaluatable.");
+
+            // ASSERT
+            ConstantEvaluatableValue<decimal> constant = numericValue as ConstantEvaluatableValue<decimal>;
+            Assert.NotNull(constant, "Should have evaluated as a constant.");
+            Assert.IsTrue(constant.TryEvaluate(mutator: null, out decimal constantValue), "Should be able to evaluate constant value without a game state.");
+            Assert.AreEqual(tokenTextValue, constantValue, "The output should be the same as the input.");
         }
     }
 }
