@@ -22,7 +22,10 @@ namespace SpaceDeck.GameState.Minimum
         void RemoveEntity(Entity entity);
         bool EntityIsAlive(Entity entity);
         IReadOnlyList<Entity> GetAllEntities();
+
         IReadOnlyList<AppliedStatusEffect> GetAllStatusEffects();
+        void ModStatusEffectStacks(Entity onEntity, LowercaseString statusEffectId, int modStacks);
+        int GetStacks(Entity onEntity, LowercaseString statusEffectId);
 
         void StartFactionTurn(decimal factionId);
         void EndCurrentFactionTurn();

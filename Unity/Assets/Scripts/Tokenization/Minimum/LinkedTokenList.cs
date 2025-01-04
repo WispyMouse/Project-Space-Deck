@@ -31,6 +31,13 @@ namespace SpaceDeck.Tokenization.Minimum
             this.Scopes = scopes;
         }
 
+        public LinkedTokenList(params LinkedToken[] unscopedTokens)
+        {
+            this.Scopes = new List<LinkedTokenScope>();
+            LinkedTokenScope flatScope = new LinkedTokenScope(new List<LinkedToken>(unscopedTokens));
+            this.Scopes.Add(flatScope);
+        }
+
         public List<ExecutionQuestion> GetQuestions()
         {
             List<ExecutionQuestion> questions = new List<ExecutionQuestion>();

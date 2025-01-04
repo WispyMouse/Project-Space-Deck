@@ -148,4 +148,43 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         public static readonly LowercaseString IdentifierString = new LowercaseString("TWOARGUMENTS");
         public override LowercaseString Identifier => IdentifierString;
     }
+
+    public class EvaluateAndLogNumericScriptingCommand : ScriptingCommand
+    {
+        public static readonly LowercaseString IdentifierString = new LowercaseString("EvaluateAndLogNumericScriptingCommand");
+        public override LowercaseString Identifier => IdentifierString;
+
+        public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
+        {
+            throw new System.NotImplementedException("You should not parse this token. Instead, directly create an EvaluateAndLogNumericLinkedToken.");
+        }
+    }
+
+    public class EvaluateAndLogNumericLinkedToken : LinkedToken<ExecuteScriptingCommand>
+    {
+        public readonly Action<decimal> Action;
+        public readonly INumericEvaluatableValue Evaluatable;
+
+        public EvaluateAndLogNumericLinkedToken(INumericEvaluatableValue evaluatable, Action<decimal> action) : base()
+        {
+            this.Evaluatable = evaluatable;
+            this.Action = action;
+        }
+
+        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        {
+            if (!this.Evaluatable.TryEvaluate(context.ExecutedOnGameState, out decimal parsedValue))
+            {
+                changes = null;
+                return false;
+            }
+
+            changes = new List<GameStateChange>()
+            {
+                new EvaluateAndLogNumericGameStateChange(this.Evaluatable, this.Action)
+            };
+
+            return true;
+        }
+    }
 }

@@ -27,6 +27,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
+    using SpaceDeck.Models.Databases;
 
     /// <summary>
     /// These tests cover the experience of a player attempting to play a card.
@@ -50,6 +51,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
         public void PlayCard_NoQuestions_DebugExecutes()
         {
             // ARRANGE
+            RuleReference.RegisterRule(new PlayedCardsAreDiscardedRule());
+            RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
             bool debugValue = false;
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
@@ -81,6 +84,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
         public void PlayCard_OneQuestion_AutoExecutes()
         {
             // ARRANGE
+            RuleReference.RegisterRule(new PlayedCardsAreDiscardedRule());
+            RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
             bool debugValue = false;
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();

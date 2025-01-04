@@ -42,4 +42,32 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             throw new NotImplementedException();
         }
     }
+
+    public class EvaluateAndLogNumericGameStateChange : GameStateChange
+    {
+        public readonly INumericEvaluatableValue ToEvaluate;
+        public readonly Action<decimal> EvaluateLogAction;
+
+        public EvaluateAndLogNumericGameStateChange(INumericEvaluatableValue toEvaluate, Action<decimal> evaluationAction) : base(NobodyTarget.Instance)
+        {
+            this.ToEvaluate = toEvaluate;
+            this.EvaluateLogAction = evaluationAction;
+        }
+
+        public override void Apply(IGameStateMutator toApplyTo)
+        {
+            if (!ToEvaluate.TryEvaluate(toApplyTo, out decimal evaluated))
+            {
+                return;
+            }
+
+            Debug.Log(evaluated);
+            this.EvaluateLogAction.Invoke(evaluated);
+        }
+
+        public override string Describe()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

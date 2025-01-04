@@ -4,6 +4,7 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
+    using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Utility.Minimum;
@@ -261,6 +262,18 @@ namespace SpaceDeck.GameState.Execution
             return new QuestionAnsweringContext(this, toPlay);
         }
 
+        public void EntityPerformsAction(Entity toAct, LinkedToken toPerform)
+        {
+            if (!GameStateDeltaMaker.TryCreateDelta(new LinkedTokenList(toPerform), this, out GameStateDelta delta))
+            {
+                // TODO: LOG
+                return;
+            }
+
+            GameStateDeltaApplier.ApplyGameStateDelta(this, delta);
+            PendingResolveExecutor.ResolveAll(this);
+        }
+
         public bool TryGetCurrentQuestions(out IReadOnlyList<ExecutionQuestion> questions)
         {
             if (this.CurrentlyConsideredPlayedCard != null)
@@ -311,9 +324,6 @@ namespace SpaceDeck.GameState.Execution
                     }
                 }
             }
-
-            // Put the movement to discard on the stack first
-            this.PendingResolves.Push(new MoveCard(this.CurrentlyConsideredPlayedCard, WellknownZones.Discard));
 
             LinkedCardInstance linkedCard = this.CurrentlyConsideredPlayedCard as LinkedCardInstance;
             this.CurrentlyConsideredPlayedCard = null;
@@ -462,6 +472,27 @@ namespace SpaceDeck.GameState.Execution
                 this.MoveCard(cardFromDiscard, WellknownZones.Deck);
             }
             this.ShuffleDeck();
+        }
+
+        public void ModStatusEffectStacks(Entity onEntity, LowercaseString statusEffectId, int modStacks)
+        {
+            if (!onEntity.AppliedStatusEffects.TryGetValue(statusEffectId, out AppliedStatusEffect effects))
+            {
+                effects = StatusEffectDatabase.GetInstance(statusEffectId);
+                onEntity.AppliedStatusEffects.Add(statusEffectId, effects);
+            }
+
+            effects.Qualities.SetNumericQuality(statusEffectId, GetStacks(onEntity, statusEffectId) + modStacks);
+        }
+
+        public int GetStacks(Entity onEntity, LowercaseString statusEffectId)
+        {
+            if (!onEntity.AppliedStatusEffects.TryGetValue(statusEffectId, out AppliedStatusEffect effects))
+            {
+                return 0;
+            }
+
+            return (int)effects.Qualities.GetNumericQuality(WellknownQualities.Stacks, 0);
         }
     }
 }

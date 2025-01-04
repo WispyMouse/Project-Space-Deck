@@ -306,5 +306,15 @@ namespace SpaceDeck.GameState.Execution
         {
             throw new System.NotImplementedException();
         }
+
+        public void ModStatusEffectStacks(Entity onEntity, LowercaseString statusEffectId, int modStacks)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetStacks(Entity onEntity, LowercaseString statusEffectId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

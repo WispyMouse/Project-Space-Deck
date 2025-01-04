@@ -23,6 +23,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
+    using SpaceDeck.Models.Imports;
+    using SpaceDeck.Models.Databases;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -278,6 +280,43 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.AreEqual(100, entityOne.Qualities.GetNumericQuality(WellknownQualities.Health), "The first target should be unharmed.");
             Assert.AreEqual(99, entityTwoThisOneIsTheTarget.Qualities.GetNumericQuality(WellknownQualities.Health), "The second target should be specifically harmed to 99 health.");
             Assert.AreEqual(100, entityThree.Qualities.GetNumericQuality(WellknownQualities.Health), "The third target should be unharmed.");
+        }
+
+        /// <summary>
+        /// Applies a status effect to an entity, and then tries to evaluate a debug card.
+        /// The card should report the correct amount of stacks.
+        /// </summary>
+        [Test]
+        public void CountStacks_CountsSelf_OnlySelf_Correctly()
+        {
+            decimal reportedValue = 0;
+            int numberOfStacks = 10;
+
+            // ARRANGE
+            StatusEffectImport import = new StatusEffectImport()
+            {
+                Id = nameof(CountStacks_CountsSelf_OnlySelf_Correctly)
+            };
+            StatusEffectDatabase.RegisterStatusEffect(import);
+            Action<decimal> setReportedValue = (decimal value) => { reportedValue = value; };
+
+            // TODO: Register evaluatables that will parse token stacks
+            INumericEvaluatableValue stacksEvaluatable = null;
+            Assert.True(EvaluatablesReference.TryGetNumericEvaluatableValue($"COUNT(SELF,{import.Id})", out stacksEvaluatable), "Should be able to parse the count token.");
+            EvaluateAndLogNumericLinkedToken evaluateAndLogNumericLinkedToken = new EvaluateAndLogNumericLinkedToken(stacksEvaluatable, setReportedValue);
+            GameState gameState = new GameState();
+            EncounterState encounterState = new EncounterState();
+
+            // ACT
+            Entity toStack = new Entity();
+            encounterState.EncounterEntities.Add(toStack);
+            gameState.StartEncounter(encounterState);
+            gameState.ModStatusEffectStacks(toStack, import.Id, numberOfStacks);
+            gameState.EntityPerformsAction(toStack, evaluateAndLogNumericLinkedToken);
+
+            // ASSERT
+            Assert.NotZero(numberOfStacks, "Stacks should have been set by the effect.");
+            Assert.AreEqual(numberOfStacks, gameState.GetStacks(toStack, import.Id), "The evaluation should accurately count the stacks.");
         }
     }
 }
