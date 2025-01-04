@@ -57,7 +57,7 @@ namespace SpaceDeck.GameState.Execution
                             }
 
                             // Then stack rules that are at RuleApplication level
-                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, changeStack[ii]));
+                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, changeStack[ii], GameStateEventTrigger.TriggerDirection.After));
                             if (rules != null && rules.Count > 0)
                             {
                                 changeStack.InsertRange(ii+1, rules);

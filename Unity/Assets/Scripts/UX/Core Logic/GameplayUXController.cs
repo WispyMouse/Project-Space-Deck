@@ -663,7 +663,7 @@ namespace SpaceDeck.UX
         {
             if (representingEffect.TriggerOnEventIds.Contains(WellknownGameStateEvents.Activated))
             {
-                GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.Activated);
+                GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.Activated, GameStateEventTrigger.TriggerDirection.After);
                 if (representingEffect.TryApplyStatusEffect(trigger, this.CentralGameStateControllerInstance.GameplayState, out List<GameStateChange> changes))
                 {
                     GameStateDelta delta = new GameStateDelta(this.CentralGameStateControllerInstance.GameplayState, changes);

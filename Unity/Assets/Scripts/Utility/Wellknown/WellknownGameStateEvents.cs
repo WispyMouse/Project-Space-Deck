@@ -16,6 +16,6 @@ namespace SpaceDeck.Utility.Wellknown
 
         public readonly static LowercaseString EntityTurnStarted = nameof(EntityTurnStarted);
         public readonly static LowercaseString EntityTurnEnded = nameof(EntityTurnEnded);
-
+        public readonly static LowercaseString CardPlayed = nameof(CardPlayed);
     }
 }

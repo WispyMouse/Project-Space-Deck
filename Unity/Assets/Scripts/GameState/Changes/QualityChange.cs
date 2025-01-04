@@ -9,7 +9,7 @@ namespace SpaceDeck.GameState.Changes
     {
         public readonly LowercaseString QualityToChange;
 
-        public QualityChange(IChangeTarget changeTarget, LowercaseString qualityToChange) : base(changeTarget)
+        public QualityChange(IChangeTarget changeTarget, IHaveQualities qualityHaver, LowercaseString qualityToChange) : base(changeTarget)
         {
             this.QualityToChange = qualityToChange;
         }

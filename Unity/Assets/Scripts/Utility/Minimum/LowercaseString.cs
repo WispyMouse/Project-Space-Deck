@@ -36,6 +36,11 @@ namespace SpaceDeck.Utility.Minimum
             return new LowercaseString(text);
         }
 
+        public static implicit operator string(LowercaseString lowercaseString)
+        {
+            return lowercaseString.Value;
+        }
+
         public static List<LowercaseString> FromArray(string[] text)
         {
             List<LowercaseString> strings = new List<LowercaseString>();

@@ -169,24 +169,24 @@ namespace SpaceDeck.GameState.Execution
         public void StartFactionTurn(decimal factionId)
         {
             this.NewFactionTurn = factionId;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void StartEntityTurn(Entity toStart)
         {
             this.NewEntityTurn = toStart;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void EndCurrentEntityTurn()
         {
             this.NewEntityTurn = null;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void EndCurrentFactionTurn()
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public bool TryGetNextResolve(out IResolve currentResolve)
@@ -288,6 +288,16 @@ namespace SpaceDeck.GameState.Execution
         }
 
         public LowercaseString GetCardZone(CardInstance card)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetStringQuality(IHaveQualities entity, LowercaseString index, string toValue)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetStringQuality(IHaveQualities entity, LowercaseString index, string defaultValue = "")
         {
             throw new System.NotImplementedException();
         }

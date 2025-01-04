@@ -84,7 +84,11 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            changes = new List<GameStateChange>() { new ModifyQuality(target, WellknownQualities.Health, mod) };
+            changes = new List<GameStateChange>();
+            foreach (Entity representedEntity in target.GetRepresentedEntities(context.ExecutedOnGameState))
+            {
+                changes.Add(new ModifyNumericQuality(representedEntity, representedEntity, WellknownQualities.Health, mod));
+            }
             return true;
         }
     }

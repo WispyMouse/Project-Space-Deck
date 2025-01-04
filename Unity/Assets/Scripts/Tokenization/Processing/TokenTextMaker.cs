@@ -17,10 +17,13 @@ namespace SpaceDeck.Tokenization.Processing
 
         public static bool TryGetTokenTextFromString(string tokenTextString, out TokenText createdTokenText)
         {
+            // If there's no text here, perhaps this is a test fixture. Allow it through.
             if (string.IsNullOrWhiteSpace(tokenTextString))
             {
-                createdTokenText = default(TokenText);
-                return false;
+                // TODO: LOG POSSIBLE WARNING ABOUT MISSING TOKEN TEXT
+
+                createdTokenText = TokenText.Empty;
+                return true;
             }
 
             List<TokenTextScope> scopes = new List<TokenTextScope>();

@@ -6,11 +6,11 @@ namespace SpaceDeck.GameState.Changes
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Utility.Minimum;
 
-    public class ModifyQuality : QualityChange
+    public class ModifyNumericQuality : QualityChange
     {
         public readonly decimal ModifyValue;
 
-        public ModifyQuality(IChangeTarget changeTarget, LowercaseString qualityToChange, decimal modifyValue) : base(changeTarget, qualityToChange)
+        public ModifyNumericQuality(IChangeTarget changeTarget, IHaveQualities qualitiesHaver, LowercaseString qualityToChange, decimal modifyValue) : base(changeTarget, qualitiesHaver, qualityToChange)
         {
             this.ModifyValue = modifyValue;
         }

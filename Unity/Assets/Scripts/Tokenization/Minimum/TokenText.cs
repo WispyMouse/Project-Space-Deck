@@ -1,5 +1,6 @@
 namespace SpaceDeck.Tokenization.Minimum
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -17,9 +18,11 @@ namespace SpaceDeck.Tokenization.Minimum
     /// </summary>
     public struct TokenText
     {
-        public readonly List<TokenTextScope> Scopes;
+        public static readonly TokenText Empty = new TokenText(Array.Empty<TokenTextScope>());
 
-        public TokenText(List<TokenTextScope> scopes)
+        public readonly IReadOnlyList<TokenTextScope> Scopes;
+
+        public TokenText(IReadOnlyList<TokenTextScope> scopes)
         {
             this.Scopes = scopes;
         }

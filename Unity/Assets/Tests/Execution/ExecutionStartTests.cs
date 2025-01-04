@@ -177,8 +177,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
-            Assert.IsTrue(generatedDelta.Changes[0] is ModifyQuality, "Expecting token to be a quality change token.");
-            ModifyQuality modifyQuality = generatedDelta.Changes[0] as ModifyQuality;
+            Assert.IsTrue(generatedDelta.Changes[0] is ModifyNumericQuality, "Expecting token to be a quality change token.");
+            ModifyNumericQuality modifyQuality = generatedDelta.Changes[0] as ModifyNumericQuality;
             Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
 
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);

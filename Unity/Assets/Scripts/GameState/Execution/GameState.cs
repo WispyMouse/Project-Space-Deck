@@ -127,22 +127,22 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartFactionTurn(decimal factionId)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void StartEntityTurn(Entity toStart)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void EndCurrentEntityTurn()
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void EndCurrentFactionTurn()
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void TriggerAndStack(GameStateEventTrigger trigger)
@@ -188,7 +188,7 @@ namespace SpaceDeck.GameState.Execution
         public void StartEncounter(EncounterState encounter)
         {
             this.CurrentEncounterState = encounter;
-            this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
+            this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void MoveCard(CardInstance card, LowercaseString zone)
@@ -443,6 +443,16 @@ namespace SpaceDeck.GameState.Execution
 
             nextChoice = this.BasedOnRoute.Choices[this.RouteIndex];
             return true;
+        }
+
+        public void SetStringQuality(IHaveQualities entity, LowercaseString index, string toValue)
+        {
+            entity.Qualities.SetStringQuality(index, toValue);
+        }
+
+        public string GetStringQuality(IHaveQualities entity, LowercaseString index, string defaultValue = "")
+        {
+            return entity.Qualities.GetStringQuality(index, defaultValue);
         }
     }
 }

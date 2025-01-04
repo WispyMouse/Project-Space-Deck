@@ -3,12 +3,13 @@ namespace SpaceDeck.GameState.Changes
     using System;
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Minimum;
 
-    public class SetQuality : QualityChange
+    public class SetStringQuality : QualityChange
     {
-        public readonly decimal NewValue;
+        public readonly string NewValue;
 
-        public SetQuality(IChangeTarget changeTarget, string qualityToChange, decimal newValue) : base(changeTarget, qualityToChange)
+        public SetStringQuality(IChangeTarget changeTarget, IHaveQualities qualitiesHaver, string qualityToChange, string newValue) : base(changeTarget, qualitiesHaver, qualityToChange)
         {
             this.NewValue = newValue;
         }
@@ -17,7 +18,7 @@ namespace SpaceDeck.GameState.Changes
         {
             foreach (Entity curEntity in this.Target.GetRepresentedEntities(toApplyTo))
             {
-                curEntity.Qualities.SetNumericQuality(this.QualityToChange, this.NewValue);
+                curEntity.Qualities.SetStringQuality(this.QualityToChange, this.NewValue);
             }
         }
 
