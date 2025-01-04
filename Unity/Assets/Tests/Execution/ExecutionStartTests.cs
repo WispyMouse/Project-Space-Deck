@@ -1,4 +1,4 @@
-namespace SpaceDeck.Tests.EditMode.Tokenization
+namespace SpaceDeck.Tests.EditMode.Execution
 {
     using NUnit.Framework;
     using System;
