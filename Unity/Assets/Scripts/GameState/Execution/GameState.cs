@@ -454,5 +454,14 @@ namespace SpaceDeck.GameState.Execution
         {
             return entity.Qualities.GetStringQuality(index, defaultValue);
         }
+
+        public void ShuffleDiscardAndDeck()
+        {
+            foreach (CardInstance cardFromDiscard in new List<CardInstance>(this.GetCardsInZone(WellknownZones.Discard)))
+            {
+                this.MoveCard(cardFromDiscard, WellknownZones.Deck);
+            }
+            this.ShuffleDeck();
+        }
     }
 }

@@ -301,5 +301,10 @@ namespace SpaceDeck.GameState.Execution
         {
             throw new System.NotImplementedException();
         }
+
+        public void ShuffleDiscardAndDeck()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

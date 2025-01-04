@@ -38,6 +38,7 @@ namespace SpaceDeck.GameState.Minimum
         IReadOnlyList<CardInstance> GetCardsInZone(LowercaseString zone);
         LowercaseString GetCardZone(CardInstance card);
         void ShuffleDeck();
+        void ShuffleDiscardAndDeck();
         void AddCard(CardInstance card, LowercaseString zone);
 
         bool CanAfford(IEnumerable<IShopCost> costs);

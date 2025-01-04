@@ -33,16 +33,17 @@ namespace SpaceDeck.GameState.Changes
                 // If there are no cards in deck, we should attempt to reshuffle the discard into the deck
                 if (cardsInDeck.Count == 0)
                 {
-                    foreach (CardInstance cardFromDiscard in new List<CardInstance>(toApplyTo.GetCardsInZone(WellknownZones.Discard)))
-                    {
-                        toApplyTo.MoveCard(cardFromDiscard, WellknownZones.Deck);
-                    }
-                    toApplyTo.ShuffleDeck();
-                }
+                    toApplyTo.ShuffleDiscardAndDeck();
+                    cardsInDeck = toApplyTo.GetCardsInZone(WellknownZones.Deck);
 
-                if (cardsInDeck.Count == 0)
-                {
-                    break;
+                    if (cardsInDeck.Count == 0)
+                    {
+                        break;
+                        if (cardsInDeck.Count == 0)
+                        {
+                            break;
+                        }
+                    }
                 }
 
                 toApplyTo.MoveCard(cardsInDeck[0], WellknownZones.Hand);

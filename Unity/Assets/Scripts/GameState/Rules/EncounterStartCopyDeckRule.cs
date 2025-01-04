@@ -11,7 +11,7 @@ namespace SpaceDeck.GameState.Rules
 
     public class EncounterStartCopyDeckRule : Rule
     {
-        public EncounterStartCopyDeckRule() : base(WellknownGameStateEvents.EncounterStart, priorityOrder: 1)
+        public EncounterStartCopyDeckRule() : base(WellknownGameStateEvents.EncounterStart, priorityOrder: 5)
         {
         }
 

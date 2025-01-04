@@ -75,6 +75,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
         /// <summary>
         /// This creates a card that sets its own destination after playing.
         /// It should move to that destination, not the default discard pile.
+        /// This destination is the exile zone.
         /// </summary>
         [Test]
         public void PlayedCard_SetExileDestination_Moved()
@@ -87,8 +88,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EncounterState encounter = new EncounterState();
             CardImport import = new CardImport()
             {
-                Id = nameof(PlayedCard_IsDiscarded),
-                Name = nameof(PlayedCard_IsDiscarded),
+                Id = nameof(PlayedCard_SetExileDestination_Moved),
+                Name = nameof(PlayedCard_SetExileDestination_Moved),
                 EffectScript = "[DESTINATION:EXILE]"
             };
             CardPrototype cardPrototype = import.GetPrototype();
@@ -105,6 +106,139 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ASSERT
             Assert.IsTrue(gameState.GetCardZone(cardInstance) == WellknownZones.Exile);
+        }
+
+        /// <summary>
+        /// This creates a card that sets its own destination after playing.
+        /// It should move to that destination, not the default discard pile.
+        /// This destination is back into the hand. That's generally against
+        /// the normal flow of things, so this test validates that continues
+        /// to work.
+        /// </summary>
+        [Test]
+        public void PlayedCard_SetHandDestination_Moved()
+        {
+            // ARRANGE
+            RuleReference.RegisterRule(new PlayedCardsAreDiscardedRule());
+            RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
+            ScriptingCommandReference.RegisterScriptingCommand(new SetDestinationScriptingCommand());
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+            CardImport import = new CardImport()
+            {
+                Id = nameof(PlayedCard_SetHandDestination_Moved),
+                Name = nameof(PlayedCard_SetHandDestination_Moved),
+                EffectScript = "[DESTINATION:HAND]"
+            };
+            CardPrototype cardPrototype = import.GetPrototype();
+            CardDatabase.RegisterCardPrototype(cardPrototype);
+            CardDatabase.LinkTokens();
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            gameState.StartEncounter(encounter);
+            gameState.AddCard(cardInstance, WellknownZones.Hand);
+
+            // ACT
+            gameState.StartConsideringPlayingCard(cardInstance);
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.IsTrue(gameState.GetCardZone(cardInstance) == WellknownZones.Exile);
+        }
+
+        /// <summary>
+        /// This creates an encounter with a deck of cards, and exiles one of them.
+        /// Then the deck is instructed to shuffle.
+        /// The exile zone should not shuffle into the deck.
+        /// </summary>
+        [Test]
+        public void ExiledCards_DoNotShuffleIn()
+        {
+            int cardsInDeck = 10;
+
+            // ARRANGE
+            ScriptingCommandReference.RegisterScriptingCommand(new SetDestinationScriptingCommand());
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+            CardImport import = new CardImport()
+            {
+                Id = nameof(ExiledCards_DoNotShuffleIn),
+                Name = nameof(ExiledCards_DoNotShuffleIn),
+                EffectScript = ""
+            };
+            CardPrototype cardPrototype = import.GetPrototype();
+            CardDatabase.RegisterCardPrototype(cardPrototype);
+            CardDatabase.LinkTokens();
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            gameState.StartEncounter(encounter);
+
+            // ACT
+            for (int ii = 0; ii < cardsInDeck; ii++)
+            {
+                gameState.AddCard(new LinkedCardInstance(cardPrototype), WellknownZones.Deck);
+            }
+            CardInstance exileThis = gameState.GetCardsInZone(WellknownZones.Deck)[0];
+            gameState.MoveCard(exileThis, WellknownZones.Exile);
+            gameState.ShuffleDiscardAndDeck();
+
+            // ASSERT
+            Assert.AreEqual(cardsInDeck - 1, gameState.GetCardsInZone(WellknownZones.Deck).Count, "There should be exactly one card missing from the deck.");
+            Assert.AreEqual(WellknownZones.Exile, gameState.GetCardZone(exileThis), "The exiled card should still be in exile.");
+        }
+
+        /// <summary>
+        /// This validates that you can add a card to a campaign deck.
+        /// </summary>
+        [Test]
+        public void CampaignDeck_AddCard()
+        {
+            // ARRANGE
+            CardImport import = new CardImport()
+            {
+                Id = nameof(CampaignDeck_AddCard),
+                Name = nameof(CampaignDeck_AddCard),
+                EffectScript = ""
+            };
+            CardPrototype cardPrototype = import.GetPrototype();
+            CardDatabase.RegisterCardPrototype(cardPrototype);
+            CardDatabase.LinkTokens();
+            GameState gameState = new GameState();
+
+            // ACT
+            CardInstance addedCard = CardDatabase.GetInstance(import.Id);
+            gameState.AddCard(addedCard, WellknownZones.Campaign);
+
+            // ASSERT
+            Assert.AreEqual(1, gameState.CardsInDeck.Count, "Should be exactly one card in the deck.");
+            Assert.AreEqual(addedCard, gameState.CardsInDeck[0], "The added card should be as expected.");
+        }
+
+        [Test]
+        public void CampaignDeck_ShufflesAsEncounterStarts()
+        {
+            // ARRANGE
+            RuleReference.RegisterRule(new EncounterStartCopyDeckRule());
+            CardImport import = new CardImport()
+            {
+                Id = nameof(CampaignDeck_ShufflesAsEncounterStarts),
+                Name = nameof(CampaignDeck_ShufflesAsEncounterStarts),
+                EffectScript = ""
+            };
+            CardPrototype cardPrototype = import.GetPrototype();
+            CardDatabase.RegisterCardPrototype(cardPrototype);
+            CardDatabase.LinkTokens();
+            GameState gameState = new GameState();
+            CardInstance addedCard = CardDatabase.GetInstance(import.Id);
+            gameState.AddCard(addedCard, WellknownZones.Campaign);
+
+            // ACT
+            EncounterState encounter = new EncounterState();
+            gameState.StartEncounter(encounter);
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.AreEqual(1, gameState.GetCardsInZone(WellknownZones.Deck).Count, "Should have exactly one card in the encounter's deck.");
+            Assert.AreEqual(addedCard, gameState.GetCardsInZone(WellknownZones.Deck)[0], "The card in the deck should be the same instance.");
         }
     }
 }
