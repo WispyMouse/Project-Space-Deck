@@ -6,9 +6,23 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Tokenization.Evaluatables.Questions;
 
     public class CardsEvaluatableValue : ICardsEvaluatableValue
     {
+        public readonly CardInstanceProvider CardInstanceProvider;
+        public readonly CardInstancesProvider CardInstancesProvider;
+
+        public CardsEvaluatableValue(CardInstanceProvider provider)
+        {
+            this.CardInstanceProvider = provider;
+        }
+
+        public CardsEvaluatableValue(CardInstancesProvider provider)
+        {
+            this.CardInstancesProvider = provider;
+        }
+
         public string Describe()
         {
             throw new System.NotImplementedException();

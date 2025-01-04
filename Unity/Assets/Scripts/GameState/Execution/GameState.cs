@@ -258,7 +258,7 @@ namespace SpaceDeck.GameState.Execution
         public QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay)
         {
             this.CurrentlyConsideredPlayedCard = toPlay;
-            return new QuestionAnsweringContext(this);
+            return new QuestionAnsweringContext(this, toPlay);
         }
 
         public bool TryGetCurrentQuestions(out IReadOnlyList<ExecutionQuestion> questions)

@@ -38,6 +38,10 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CommonTestUtility.TearDownDatabases();
         }
 
+        /// <summary>
+        /// A card that is played should have its destination set, and then moved to that destination.
+        /// This is by default with these rules the discard pile.
+        /// </summary>
         [Test]
         public void PlayedCard_IsDiscarded()
         {
@@ -66,6 +70,41 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ASSERT
             Assert.IsTrue(gameState.GetCardZone(cardInstance) == WellknownZones.Discard);
+        }
+
+        /// <summary>
+        /// This creates a card that sets its own destination after playing.
+        /// It should move to that destination, not the default discard pile.
+        /// </summary>
+        [Test]
+        public void PlayedCard_SetExileDestination_Moved()
+        {
+            // ARRANGE
+            RuleReference.RegisterRule(new PlayedCardsAreDiscardedRule());
+            RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
+            ScriptingCommandReference.RegisterScriptingCommand(new SetDestinationScriptingCommand());
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+            CardImport import = new CardImport()
+            {
+                Id = nameof(PlayedCard_IsDiscarded),
+                Name = nameof(PlayedCard_IsDiscarded),
+                EffectScript = "[DESTINATION:EXILE]"
+            };
+            CardPrototype cardPrototype = import.GetPrototype();
+            CardDatabase.RegisterCardPrototype(cardPrototype);
+            CardDatabase.LinkTokens();
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            gameState.StartEncounter(encounter);
+            gameState.AddCard(cardInstance, WellknownZones.Hand);
+
+            // ACT
+            gameState.StartConsideringPlayingCard(cardInstance);
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.IsTrue(gameState.GetCardZone(cardInstance) == WellknownZones.Exile);
         }
     }
 }

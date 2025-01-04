@@ -19,11 +19,11 @@ namespace SpaceDeck.GameState.Execution
             return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(), stateToApplyTo, out delta);
         }
 
-        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, GameState stateToApplyTo, out GameStateDelta delta)
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, GameState stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null)
         {
             delta = new GameStateDelta(stateToApplyTo);
 
-            ScriptingExecutionContext executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers);
+            ScriptingExecutionContext executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, playedCard);
 
             LinkedToken nextToken = linkedTokenList.First;
             while (nextToken != null)

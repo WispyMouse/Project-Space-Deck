@@ -6,15 +6,16 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Tokenization.Evaluatables.Questions;
 
     public class ConstantCardsEvaluatableValue : CardsEvaluatableValue, IConstantEvaluatableValue<IReadOnlyList<CardInstance>>
     {
         public IReadOnlyList<CardInstance> Constant => this._Constant;
         private readonly IReadOnlyList<CardInstance> _Constant;
 
-        public ConstantCardsEvaluatableValue(IReadOnlyList<CardInstance> card)
+        public ConstantCardsEvaluatableValue(IReadOnlyList<CardInstance> cards) : base(new SpecificCardsProvider(cards))
         {
-            this._Constant = card;
+            this._Constant = cards;
         }
     }
 }

@@ -16,10 +16,12 @@ namespace SpaceDeck.Tokenization.Minimum.Context
     {
         public IChangeTarget DefaultTarget;
         public readonly IGameStateMutator StartingGameState;
+        public readonly CardInstance PlayingCard;
 
-        public QuestionAnsweringContext(IGameStateMutator startingGameState)
+        public QuestionAnsweringContext(IGameStateMutator startingGameState, CardInstance playingCard)
         {
             this.StartingGameState = startingGameState;
+            this.PlayingCard = playingCard;
         }
     }
 }
