@@ -1,6 +1,7 @@
 namespace SpaceDeck.Tokenization.Minimum
 {
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -9,7 +10,7 @@ namespace SpaceDeck.Tokenization.Minimum
     /// 
     /// TODO: Cache "First" such that it isn't requeried each time.
     /// </summary>
-    public struct LinkedTokenList
+    public struct LinkedTokenList : IDescribable
     {
         public List<LinkedTokenScope> Scopes;
 
@@ -54,6 +55,11 @@ namespace SpaceDeck.Tokenization.Minimum
             }
 
             return questions;
+        }
+
+        public string Describe()
+        {
+            return string.Empty;
         }
     }
 }

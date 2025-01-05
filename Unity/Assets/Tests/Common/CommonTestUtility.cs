@@ -7,10 +7,12 @@ namespace SpaceDeck.Tests.EditMode
 
     public static class CommonTestUtility
     {
+        public const string GreaterThanOrEqualToAscii = "\u2265";
+        public const string LessThanOrEqualToAscii = "\u2264";
+
         public static void TearDownDatabases()
         {
             AllDatabases.ClearAllDatabases();
-            
         }
     }
 }
