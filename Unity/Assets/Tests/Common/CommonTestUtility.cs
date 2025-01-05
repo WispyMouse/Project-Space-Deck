@@ -10,6 +10,7 @@ namespace SpaceDeck.Tests.EditMode
         public static void TearDownDatabases()
         {
             AllDatabases.ClearAllDatabases();
+            
         }
     }
 }
