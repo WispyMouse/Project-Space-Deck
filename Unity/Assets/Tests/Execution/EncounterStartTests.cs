@@ -22,7 +22,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Minimum.Context;
     using System.Linq;
 
-    public class EncounterStartTests : MonoBehaviour
+    public class EncounterStartTests
     {
         [TearDown]
         public void TearDown()

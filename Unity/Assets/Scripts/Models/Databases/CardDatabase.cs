@@ -38,7 +38,7 @@ namespace SpaceDeck.Models.Databases
         {
             foreach (CardPrototype curPrototype in Prototypes.Values)
             {
-                if (!curPrototype.LinkedTokens.HasValue && curPrototype.ParsedTokens.HasValue)
+                if (!(curPrototype.LinkedTokens.HasValue) && curPrototype.ParsedTokens.HasValue)
                 {
                     if (LinkedTokenMaker.TryGetLinkedTokenList(curPrototype.ParsedTokens.Value, out LinkedTokenList linkedTokens))
                     {

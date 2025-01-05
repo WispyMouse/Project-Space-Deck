@@ -27,6 +27,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Models.Imports;
 
     public class StatusEffectsTests
     {
@@ -133,17 +134,21 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ARRANGE
             RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
             RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
-            DebugPoisonStatusEffectPrototype prototype = new DebugPoisonStatusEffectPrototype();
-            StatusEffectDatabase.RegisterStatusEffectPrototype(prototype);
-            StatusEffectDatabase.RegisterStatusEffectPrototypeFactory(prototype,
-                (StatusEffectPrototype Prototype) =>
-                {
-                    return new DebugPoisonStatusEffectInstance();
-                });
+            StatusEffectImport import = new StatusEffectImport()
+            {
+                Id = nameof(TestDebugPoisonStatus_OneTick)
+            };
+
+            import.Reactors.Add(new ReactorImport()
+            {
+                TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health) },
+                TokenText = "" // TODO: BLOCK TOKEN TEXT
+            });
+            StatusEffectDatabase.RegisterStatusEffect(import);
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            gameState.ModStatusEffectStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype), 1);
+            gameState.ModStatusEffectStacks(targetingEntity, import.Id, 1);
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, startingHealth);
             encounter.EncounterEntities.Add(targetingEntity);
 
@@ -153,7 +158,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ASSERT
             Assert.AreEqual(startingHealth - 1, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have lost one health from one stack of poison.");
-            Assert.AreEqual(0, gameState.GetStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype)), "Should have no stacks after the poison ticks once.");
+            Assert.AreEqual(0, gameState.GetStacks(targetingEntity, import.Id), "Should have no stacks after the poison ticks once.");
         }
 
         /// <summary>
@@ -175,17 +180,22 @@ namespace SpaceDeck.Tests.EditMode.Execution
             RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
             RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
             RuleReference.RegisterRule(new FactionEndTurnNextFactionRule());
-            DebugPoisonStatusEffectPrototype prototype = new DebugPoisonStatusEffectPrototype();
-            StatusEffectDatabase.RegisterStatusEffectPrototype(prototype);
-            StatusEffectDatabase.RegisterStatusEffectPrototypeFactory(prototype,
-                (StatusEffectPrototype Prototype) =>
-                {
-                    return new DebugPoisonStatusEffectInstance();
-                });
+
+            StatusEffectImport import = new StatusEffectImport()
+            {
+                Id = nameof(TestDebugPoisonStatus_OneTick)
+            };
+
+            import.Reactors.Add(new ReactorImport()
+            {
+                TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health) },
+                TokenText = "" // TODO: BLOCK TOKEN TEXT
+            });
+            StatusEffectDatabase.RegisterStatusEffect(import);
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            gameState.ModStatusEffectStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype), startingPoison);
+            gameState.ModStatusEffectStacks(targetingEntity, import.Id, startingPoison);
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, startingHealth);
             encounter.EncounterEntities.Add(targetingEntity);
 
@@ -193,12 +203,12 @@ namespace SpaceDeck.Tests.EditMode.Execution
             gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             Assert.AreEqual(healthAfterOneTick, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have taken a specific amount of damage after one turn.");
-            Assert.AreEqual(startingPoison - 1, gameState.GetStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype)), "Should have specific stacks after the poison ticks once.");
+            Assert.AreEqual(startingPoison - 1, gameState.GetStacks(targetingEntity, import.Id), "Should have specific stacks after the poison ticks once.");
 
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
             Assert.AreEqual(healthAfterTwoTicks, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have taken a specific amount of damage after two turns.");
-            Assert.AreEqual(startingPoison - 2, gameState.GetStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype)), "Should have specific stacks after the poison ticks twice.");
+            Assert.AreEqual(startingPoison - 2, gameState.GetStacks(targetingEntity, import.Id), "Should have specific stacks after the poison ticks twice.");
         }
     }
 }

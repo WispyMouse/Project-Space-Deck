@@ -50,48 +50,4 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             return true;
         }
     }
-
-    public class DebugPoisonStatusEffectPrototype : StatusEffectPrototype
-    {
-        public DebugPoisonStatusEffectPrototype() : base(nameof(DebugPoisonStatusEffectPrototype), nameof(DebugPoisonStatusEffectPrototype))
-        {
-        }
-    }
-
-    public class DebugPoisonStatusEffectInstance : AppliedStatusEffect
-    {
-        public DebugPoisonStatusEffectInstance() : base(nameof(DebugPoisonStatusEffectPrototype), nameof(DebugPoisonStatusEffectPrototype), new HashSet<LowercaseString>() { WellknownGameStateEvents.EntityTurnStarted })
-        {
-        }
-
-        public override bool TryApplyStatusEffect(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
-        {
-            if (trigger.BasedOnTarget == null)
-            {
-                applications = null;
-                return false;
-            }
-
-            applications = new List<GameStateChange>();
-            foreach (Entity representedEntity in trigger.BasedOnTarget.GetRepresentedEntities(gameStateMutator))
-            {
-                // How many stacks?
-                int numberOfStacks = gameStateMutator.GetStacks(representedEntity, this.Id);
-
-                // Only apply if there are a positive number of stacks
-                if (numberOfStacks <= 0)
-                {
-                    continue;
-                }
-
-                // Damage equal to stack amount
-                applications.Add(new ModifyNumericQuality(representedEntity, representedEntity, WellknownQualities.Health, -gameStateMutator.GetStacks(representedEntity, this.Id)));
-
-                // Remove one stack
-                applications.Add(new ModifyStatusEffectStacks(representedEntity, this.Id, -1));
-            }
-
-            return true;
-        }
-    }
 }
