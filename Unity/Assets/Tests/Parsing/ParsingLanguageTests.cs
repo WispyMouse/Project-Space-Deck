@@ -38,14 +38,14 @@ namespace SpaceDeck.Tests.EditMode.Parsing
         }
 
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
         {
             StatusEffectDatabase.RegisterStatusEffectPrototype(DebugStatusEffectPrototype);
             ElementDatabase.AddElement(DebugElementImport);
         }
 
-        readonly static ElementImport DebugElementImport = new ElementImport() { Id = nameof(DebugElementImport), Name = nameof(DebugElementImport) };
-        readonly static StatusEffectPrototype DebugStatusEffectPrototype = new StatusEffectPrototype(nameof(DebugStatusEffectPrototype), nameof(DebugStatusEffectPrototype));
+        protected readonly static ElementImport DebugElementImport = new ElementImport() { Id = nameof(DebugElementImport), Name = nameof(DebugElementImport) };
+        protected readonly static StatusEffectPrototype DebugStatusEffectPrototype = new StatusEffectPrototype(nameof(DebugStatusEffectPrototype), nameof(DebugStatusEffectPrototype));
 
         public class AssertScriptParsing_ValueSource_Object
         {
