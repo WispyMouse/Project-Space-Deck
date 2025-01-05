@@ -17,6 +17,7 @@ namespace SpaceDeck.Models.Instances
         public LinkedCardInstance(CardPrototype prototype)
         {
             this.Prototype = prototype;
+            this.ElementalGain = prototype.ElementalGain;
         }
     }
 }

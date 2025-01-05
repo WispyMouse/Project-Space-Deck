@@ -316,5 +316,10 @@ namespace SpaceDeck.GameState.Execution
         {
             throw new System.NotImplementedException();
         }
+
+        public void ModifyElement(LowercaseString elementId, int modAmount)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

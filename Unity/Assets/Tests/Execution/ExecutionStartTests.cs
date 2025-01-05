@@ -318,5 +318,90 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.NotZero(numberOfStacks, "Stacks should have been set by the effect.");
             Assert.AreEqual(numberOfStacks, gameState.GetStacks(toStack, import.Id), "The evaluation should accurately count the stacks.");
         }
+
+        /// <summary>
+        /// A card that is played gains elements.
+        /// The card then outputs the amount of elements, which should be modified
+        /// by the element gain of the card.
+        /// </summary>
+        [Test]
+        public void GainElement_Counts()
+        {
+            int elementGain = 3;
+
+            // ARRANGE
+            ElementImport elementImport = new ElementImport()
+            {
+                Id = nameof(elementImport)
+            };
+            ElementDatabase.AddElement(elementImport);
+            Element element = ElementDatabase.GetElement(elementImport.Id);
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            // TODO: IMPORT SOME EVALUATABLE THAT CAN HANDLE ELEMENTSTACKS
+            CardImport cardImport = new CardImport()
+            {
+                Id = nameof(cardImport),
+                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:ELEMENTSTACKS({elementImport.Id})]",
+                ElementGain = new List<ElementGainImport>() { new ElementGainImport() { ElementId = OneArgumentDebugLogScriptingCommand.IdentifierString, ModAmount = elementGain } }
+            };
+            CardDatabase.AddCardToDatabase(cardImport);
+            CardDatabase.LinkTokens();
+            CardInstance instance = CardDatabase.GetInstance(cardImport.Id);
+            GameState gameState = new GameState();
+            EncounterState encounterState = new EncounterState();
+            Entity toStack = new Entity();
+            encounterState.EncounterEntities.Add(toStack);
+
+            // ACT
+            gameState.StartEncounter(encounterState);
+            gameState.StartConsideringPlayingCard(instance);
+            gameState.TryExecuteCurrentCard();
+            
+
+            // ASSERT
+            Assert.AreEqual(elementGain.ToString(), LoggingGameStateChange.LastLog, "The last log from the LoggingGameStateChange should be the expected amount of stacks.");
+            Assert.AreEqual(elementGain, gameState.Elements[element], "There should be the expected amount of elements present.");
+        }
+
+        /// <summary>
+        /// Gives the player ten of a currency, then asserts they received it.
+        /// </summary>
+        [Test]
+        public void CountCurrency_Ten()
+        {
+            int currencyGainAmount = 10;
+
+            // ARRANGE
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            CurrencyImport toGain = new CurrencyImport()
+            {
+                Id = nameof(toGain)
+            };
+            CurrencyDatabase.AddCurrencyToDatabase(toGain);
+            Currency gainedCurrency = CurrencyDatabase.Get(toGain.Id);
+            GameState gameState = new GameState();
+            EncounterState encounterState = new EncounterState();
+            // TODO: IMPORT SOME SCRIPTING COMMAND THAT AUGMENTS CURRENCY
+            // TODO: IMPORT SOME EVALUATABLE THAT CAN HANDLE COUNT
+            CardImport cardImport = new CardImport()
+            {
+                Id = nameof(cardImport),
+                EffectScript = $"[MODCURRENCY:{gainedCurrency.Id} {currencyGainAmount}][{OneArgumentDebugLogScriptingCommand.IdentifierString}:CURRENCYSTACKS({gainedCurrency.Id})]"
+            };
+            CardDatabase.AddCardToDatabase(cardImport);
+            CardDatabase.LinkTokens();
+            CardInstance instance = CardDatabase.GetInstance(cardImport.Id);
+
+            // ACT
+            gameState.StartEncounter(encounterState);
+            gameState.StartConsideringPlayingCard(instance);
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.True(gameState.Currencies.TryGetValue(gainedCurrency, out int currentvalue));
+            Assert.AreEqual(currencyGainAmount, currentvalue, "Should gain expected currency.");
+            Assert.AreEqual(currencyGainAmount, LoggingGameStateChange.LastLog, "The last log from the LoggingGameStateChange should be the expected amount of currency.");
+        }
     }
 }

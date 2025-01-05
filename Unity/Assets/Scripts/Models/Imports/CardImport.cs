@@ -20,6 +20,7 @@ namespace SpaceDeck.Models.Imports
     {
         public string Name;
         public string EffectScript;
+        public List<ElementGainImport> ElementGain;
 
         public CardPrototype GetPrototype()
         {

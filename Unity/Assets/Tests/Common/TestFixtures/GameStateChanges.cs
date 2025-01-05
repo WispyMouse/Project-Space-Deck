@@ -25,6 +25,8 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
 
     public class LoggingGameStateChange : GameStateChange
     {
+        public static string LastLog = "";
+
         public readonly string ToLog;
 
         public LoggingGameStateChange(string toLog) : base(NobodyTarget.Instance)
@@ -35,6 +37,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         public override void Apply(IGameStateMutator toApplyTo)
         {
             Debug.Log(this.ToLog);
+            LastLog = this.ToLog;
         }
 
         public override string Describe()

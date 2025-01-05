@@ -8,8 +8,14 @@ namespace SpaceDeck.GameState.Minimum
     {
         public readonly LowercaseString Id;
         public readonly string Name;
+        public Dictionary<LowercaseString, int> ElementalGain;
 
         public QualitiesHolder Qualities => new QualitiesHolder();
+
+        public CardInstance()
+        {
+
+        }
 
         public virtual string Describe()
         {

@@ -7,6 +7,7 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System;
     using System.Collections;
@@ -22,6 +23,15 @@ namespace SpaceDeck.GameState.Execution
         public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, GameState stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null)
         {
             delta = new GameStateDelta(stateToApplyTo);
+
+            // If we have a specific played card, try to get elemental gain from it first
+            if (playedCard != null && playedCard.ElementalGain != null)
+            {
+                foreach (LowercaseString element in playedCard.ElementalGain.Keys)
+                {
+                    delta.ModifyElement(element, playedCard.ElementalGain[element]);
+                }
+            }
 
             ScriptingExecutionContext executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, playedCard);
 
