@@ -133,12 +133,15 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartEntityTurn(Entity toStart)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, toStart, GameStateEventTrigger.TriggerDirection.After));
         }
 
         public void EndCurrentEntityTurn()
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, GameStateEventTrigger.TriggerDirection.After));
+            if (this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this, out Entity currentTurn))
+            {
+                this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, currentTurn, GameStateEventTrigger.TriggerDirection.After));
+            }
         }
 
         public void EndCurrentFactionTurn()
@@ -482,7 +485,7 @@ namespace SpaceDeck.GameState.Execution
                 onEntity.AppliedStatusEffects.Add(statusEffectId, effects);
             }
 
-            effects.Qualities.SetNumericQuality(statusEffectId, GetStacks(onEntity, statusEffectId) + modStacks);
+            effects.Qualities.SetNumericQuality(WellknownQualities.Stacks, GetStacks(onEntity, statusEffectId) + modStacks);
         }
 
         public int GetStacks(Entity onEntity, LowercaseString statusEffectId)

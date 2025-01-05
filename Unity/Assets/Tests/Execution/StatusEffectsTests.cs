@@ -121,5 +121,84 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ASSERT
             Assert.IsTrue(debugValue, "The beginning of the turn should have triggered the event to set the debug flag to true.");
         }
+
+        /// <summary>
+        /// Applies a debug status that resembles poison, and ensure it ticks once.
+        /// </summary>
+        [Test]
+        public void TestDebugPoisonStatus_OneTick()
+        {
+            int startingHealth = 100;
+
+            // ARRANGE
+            RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
+            RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
+            DebugPoisonStatusEffectPrototype prototype = new DebugPoisonStatusEffectPrototype();
+            StatusEffectDatabase.RegisterStatusEffectPrototype(prototype);
+            StatusEffectDatabase.RegisterStatusEffectPrototypeFactory(prototype,
+                (StatusEffectPrototype Prototype) =>
+                {
+                    return new DebugPoisonStatusEffectInstance();
+                });
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+            Entity targetingEntity = new Entity();
+            gameState.ModStatusEffectStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype), 1);
+            targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, startingHealth);
+            encounter.EncounterEntities.Add(targetingEntity);
+
+            // ACT
+            gameState.StartEncounter(encounter);
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.AreEqual(startingHealth - 1, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have lost one health from one stack of poison.");
+            Assert.AreEqual(0, gameState.GetStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype)), "Should have no stacks after the poison ticks once.");
+        }
+
+        /// <summary>
+        /// Applies a debug status that resembles poison, with a few stacks.
+        /// The turn is passed, and the turn is passed again.
+        /// Assert that the poison behaves as expected.
+        /// </summary>
+        [Test]
+        public void TestDebugPoisonStatus_TwoTicks()
+        {
+            int startingHealth = 100;
+            int startingPoison = 10;
+
+            int healthAfterOneTick = startingHealth - startingPoison;
+            int healthAfterTwoTicks = startingHealth - startingPoison - (startingPoison - 1);
+
+            // ARRANGE
+            RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
+            RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
+            RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
+            RuleReference.RegisterRule(new FactionEndTurnNextFactionRule());
+            DebugPoisonStatusEffectPrototype prototype = new DebugPoisonStatusEffectPrototype();
+            StatusEffectDatabase.RegisterStatusEffectPrototype(prototype);
+            StatusEffectDatabase.RegisterStatusEffectPrototypeFactory(prototype,
+                (StatusEffectPrototype Prototype) =>
+                {
+                    return new DebugPoisonStatusEffectInstance();
+                });
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+            Entity targetingEntity = new Entity();
+            gameState.ModStatusEffectStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype), startingPoison);
+            targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, startingHealth);
+            encounter.EncounterEntities.Add(targetingEntity);
+
+            // ACT AND ASSERT
+            gameState.StartEncounter(encounter);
+            PendingResolveExecutor.ResolveAll(gameState);
+            Assert.AreEqual(healthAfterOneTick, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have taken a specific amount of damage after one turn.");
+            Assert.AreEqual(startingPoison - 1, gameState.GetStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype)), "Should have specific stacks after the poison ticks once.");
+
+            gameState.EndCurrentEntityTurn();
+            PendingResolveExecutor.ResolveAll(gameState);
+            Assert.AreEqual(healthAfterTwoTicks, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have taken a specific amount of damage after two turns.");
+            Assert.AreEqual(startingPoison - 2, gameState.GetStacks(targetingEntity, nameof(DebugPoisonStatusEffectPrototype)), "Should have specific stacks after the poison ticks twice.");
+        }
     }
 }
