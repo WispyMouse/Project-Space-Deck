@@ -6,11 +6,13 @@ namespace SpaceDeck.Models.Imports
     using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public class ReactorImport
     {
         public List<string> TriggerOnEventIds;
         public string TokenText;
+        public TriggerDirection Direction;
 
         public Reactor GetReactor()
         {
@@ -26,7 +28,7 @@ namespace SpaceDeck.Models.Imports
                 // TODO LOG ERROR
             }
 
-            return new Reactor(triggerOnEventIds, parsedTokens);
+            return new Reactor(triggerOnEventIds, parsedTokens, this.Direction);
         }
     }
 }

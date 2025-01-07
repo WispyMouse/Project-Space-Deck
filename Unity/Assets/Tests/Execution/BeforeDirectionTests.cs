@@ -12,7 +12,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Execution;
-    using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.Tokenization.Evaluatables;
@@ -25,6 +24,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.GameState.Deltas;
 
     public class BeforeDirectionTests
     {
@@ -54,7 +54,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             }
         }
 
-        public Before_LowersValue_DataSource_Object[] Before_LowersValue_DataSource =
+        public static Before_LowersValue_DataSource_Object[] Before_LowersValue_DataSource =
         {
             new Before_LowersValue_DataSource_Object(100, 10, 5),
             new Before_LowersValue_DataSource_Object(100, 10, 15),
@@ -84,6 +84,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health) },
                 TokenText = "" // TODO: BLOCK TOKEN TEXT
             });
+            StatusEffectDatabase.RegisterStatusEffect(import);
 
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();

@@ -12,7 +12,6 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Execution;
-    using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.Tokenization.Evaluatables;
@@ -21,6 +20,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
     using System.Linq;
+    using SpaceDeck.GameState.Deltas;
 
     public class EncounterStartTests
     {

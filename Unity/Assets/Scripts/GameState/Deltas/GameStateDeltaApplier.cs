@@ -1,4 +1,4 @@
-namespace SpaceDeck.GameState.Execution
+namespace SpaceDeck.GameState.Deltas
 {
     using SpaceDeck.GameState.Context;
     using SpaceDeck.GameState.Minimum;

@@ -12,7 +12,6 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Execution;
-    using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.Tokenization.Evaluatables;
@@ -23,6 +22,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Models.Prototypes;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public class ExecuteAppliedStatusEffectPrototype : StatusEffectPrototype
     {
@@ -40,7 +40,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             this.ToExecute = toExecute;
         }
 
-        public override bool TryApplyStatusEffect(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        public override bool TryApplyStatusEffect(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, TriggerDirection direction, out List<GameStateChange> applications)
         {
             applications = new List<GameStateChange>()
             {

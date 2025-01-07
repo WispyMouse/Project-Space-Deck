@@ -1,6 +1,7 @@
 namespace SpaceDeck.GameState.Execution
 {
     using SpaceDeck.GameState.Changes;
+    using SpaceDeck.GameState.Deltas;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
@@ -12,6 +13,7 @@ namespace SpaceDeck.GameState.Execution
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     /// <summary>
     /// Describes the state of a game.
@@ -128,29 +130,55 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartFactionTurn(decimal factionId)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted));
+            this.FactionTurnTakerCalculator.SetCurrentTurnTaker(factionId);
         }
 
         public void StartEntityTurn(Entity toStart)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, toStart, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, toStart));
+            this.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart);
         }
 
         public void EndCurrentEntityTurn()
         {
             if (this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this, out Entity currentTurn))
             {
-                this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, currentTurn, GameStateEventTrigger.TriggerDirection.After));
+                this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, currentTurn));
             }
         }
 
         public void EndCurrentFactionTurn()
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded));
         }
 
         public void TriggerAndStack(GameStateEventTrigger trigger)
         {
+            this.TriggerAndStack(trigger, null);
+        }
+
+        public void TriggerAndStack(GameStateEventTrigger trigger, IResolve triggeringEvent)
+        {
+            // The order of resolution should be:
+            // - "Before" triggered effects, that are responding to an event being triggered
+            // - If there is a GameStateChange to apply, apply it here
+            // - "After" triggered effects
+            // So that means we stack "after" first
+            this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.After));
+
+            if (triggeringEvent != null)
+            {
+                this.PushResolve(triggeringEvent);
+            }
+
+            this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.Before));
+        }
+
+        public IReadOnlyList<IResolve> GetTriggers(GameStateEventTrigger trigger, TriggerDirection direction)
+        {
+            List<IResolve> triggeredResolves = new List<IResolve>();
+
             // First put on to the stack an instruction to resolve each status effect
             // We can grab all status effects with matching ids for trigger events
             // and then as they're resolving, can determine if anything should actually happen,
@@ -166,7 +194,7 @@ namespace SpaceDeck.GameState.Execution
             possiblyTriggeredStatusEffects.Sort((a, b) => a.StatusEffectPriorityOrder.CompareTo(b.StatusEffectPriorityOrder));
             foreach (AppliedStatusEffect effect in possiblyTriggeredStatusEffects)
             {
-                this.PendingResolves.Push(new ResolveTriggeredEvent(effect, trigger));
+                triggeredResolves.Add(new ResolveTriggeredEvent(effect, trigger, TriggerDirection.Before));
             }
 
             // Then put on top of the stack each rule in order of application
@@ -174,9 +202,10 @@ namespace SpaceDeck.GameState.Execution
             List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, trigger);
             foreach (GameStateChange change in appliedRules)
             {
-                this.PendingResolves.Push(change);
+                triggeredResolves.Add(change);
             }
-            
+
+            return triggeredResolves;
         }
 
         public bool TryGetNextResolve(out IResolve currentResolve)
@@ -192,7 +221,7 @@ namespace SpaceDeck.GameState.Execution
         public void StartEncounter(EncounterState encounter)
         {
             this.CurrentEncounterState = encounter;
-            this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
         }
 
         public void MoveCard(CardInstance card, LowercaseString zone)

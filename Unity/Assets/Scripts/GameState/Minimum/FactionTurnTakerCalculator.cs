@@ -9,7 +9,7 @@ namespace SpaceDeck.GameState.Minimum
     public class FactionTurnTakerCalculator
     {
         public readonly List<decimal> FactionsToTakeTurn = new List<decimal>();
-        public int NextFactionTurnIndex = 0;
+        protected int CurrentFactionTurnIndex = 0;
 
         public FactionTurnTakerCalculator(IGameStateMutator gameState)
         {
@@ -27,7 +27,7 @@ namespace SpaceDeck.GameState.Minimum
 
         public decimal GetCurrentFaction()
         {
-            return this.FactionsToTakeTurn[this.NextFactionTurnIndex];
+            return this.FactionsToTakeTurn[this.CurrentFactionTurnIndex];
         }
 
         public decimal GetNextFactionTurn(IGameStateMutator gameState)
@@ -35,7 +35,7 @@ namespace SpaceDeck.GameState.Minimum
             // If there are some how no factions, just report the faction that's already active.
             if (this.FactionsToTakeTurn.Count == 0)
             {
-                return this.NextFactionTurnIndex;
+                return this.CurrentFactionTurnIndex;
             }
 
             // If there's only one faction, it must be their turn
@@ -44,16 +44,28 @@ namespace SpaceDeck.GameState.Minimum
                 return this.FactionsToTakeTurn[0];
             }
 
-            decimal nextFaction = this.FactionsToTakeTurn[this.NextFactionTurnIndex];
+            int nextFactionIndex = CurrentFactionTurnIndex + 1;
 
-            this.NextFactionTurnIndex++;
-
-            if (this.NextFactionTurnIndex >= this.FactionsToTakeTurn.Count)
+            // Wrap around ihis is the last faction index
+            if (nextFactionIndex >= this.FactionsToTakeTurn.Count)
             {
-                this.NextFactionTurnIndex = 0;
+                nextFactionIndex = 0;
             }
 
-            return nextFaction;
+            return this.FactionsToTakeTurn[nextFactionIndex];
+        }
+
+        public void SetCurrentTurnTaker(decimal currentTurn)
+        {
+            int turnIndex = FactionsToTakeTurn.IndexOf(currentTurn);
+            if (turnIndex == -1)
+            {
+                // TODO: LOG FAILURE
+            }
+            else
+            {
+                this.CurrentFactionTurnIndex = turnIndex;
+            }
         }
     }
 }

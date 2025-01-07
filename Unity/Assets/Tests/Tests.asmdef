@@ -4,8 +4,6 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Scripts",
-        "ImportModels",
         "UX",
         "Tokenization.Minimum",
         "Tokenization.Processing",
@@ -22,7 +20,8 @@
         "Utility.Wellknown",
         "Models.Databases",
         "UX.AssetLookup",
-        "Models.Imports"
+        "Models.Imports",
+        "GameState.Deltas"
     ],
     "includePlatforms": [
         "Editor"

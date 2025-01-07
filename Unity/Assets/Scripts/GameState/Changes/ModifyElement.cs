@@ -2,7 +2,6 @@ namespace SpaceDeck.GameState.Changes
 {
     using System;
     using System.Collections;
-    using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Utility.Minimum;

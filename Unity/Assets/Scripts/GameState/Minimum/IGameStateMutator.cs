@@ -4,6 +4,7 @@ namespace SpaceDeck.GameState.Minimum
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public interface IGameStateMutator
     {
@@ -34,6 +35,7 @@ namespace SpaceDeck.GameState.Minimum
         void StartEntityTurn(Entity toStart);
         void EndCurrentEntityTurn();
 
+        IReadOnlyList<IResolve> GetTriggers(GameStateEventTrigger trigger, TriggerDirection direction);
         void TriggerAndStack(GameStateEventTrigger trigger);
         bool TryGetNextResolve(out IResolve currentResolve);
         void PushResolve(IResolve toResolve);

@@ -3,6 +3,7 @@ namespace SpaceDeck.GameState.Minimum
     using SpaceDeck.Utility.Minimum;
     using System;
     using System.Collections.Generic;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public class AppliedStatusEffect : IHaveQualities, IDescribable, IEffectIDescribable
     {
@@ -26,7 +27,7 @@ namespace SpaceDeck.GameState.Minimum
         {
         }
 
-        public virtual bool TryApplyStatusEffect(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        public virtual bool TryApplyStatusEffect(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, TriggerDirection direction, out List<GameStateChange> applications)
         {
             applications = null;
             return false;

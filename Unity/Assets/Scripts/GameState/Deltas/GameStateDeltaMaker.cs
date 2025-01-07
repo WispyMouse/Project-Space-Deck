@@ -1,4 +1,4 @@
-namespace SpaceDeck.GameState.Execution
+namespace SpaceDeck.GameState.Deltas
 {
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.GameState.Context;
@@ -15,12 +15,12 @@ namespace SpaceDeck.GameState.Execution
 
     public static class GameStateDeltaMaker
     {
-        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, GameState stateToApplyTo, out GameStateDelta delta)
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, IGameStateMutator stateToApplyTo, out GameStateDelta delta)
         {
             return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(), stateToApplyTo, out delta);
         }
 
-        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, GameState stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null)
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, IGameStateMutator stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null)
         {
             delta = new GameStateDelta(stateToApplyTo);
 
@@ -67,7 +67,7 @@ namespace SpaceDeck.GameState.Execution
                             }
 
                             // Then stack rules that are at RuleApplication level
-                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, changeStack[ii], GameStateEventTrigger.TriggerDirection.After));
+                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, changeStack[ii]));
                             if (rules != null && rules.Count > 0)
                             {
                                 changeStack.InsertRange(ii+1, rules);

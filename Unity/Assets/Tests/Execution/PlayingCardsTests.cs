@@ -12,8 +12,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Execution;
-    using SpaceDeck.GameState.Changes.Targets;
-    using SpaceDeck.Tokenization.ScriptingCommands;
+        using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum.Questions;

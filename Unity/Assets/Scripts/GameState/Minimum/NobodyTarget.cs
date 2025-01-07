@@ -1,4 +1,4 @@
-namespace SpaceDeck.GameState.Changes.Targets
+namespace SpaceDeck.GameState.Minimum
 {
     using System;
     using System.Collections;

@@ -6,13 +6,14 @@ namespace SpaceDeck.UX
     using System.Text;
     using System.Text.RegularExpressions;
     using UnityEngine;
-    using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
     using SpaceDeck.Models.Databases;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
+    using SpaceDeck.GameState.Deltas;
 
     public class GameplayUXController : MonoBehaviour
     {
@@ -663,8 +664,8 @@ namespace SpaceDeck.UX
         {
             if (representingEffect.TriggerOnEventIds.Contains(WellknownGameStateEvents.Activated))
             {
-                GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.Activated, GameStateEventTrigger.TriggerDirection.After);
-                if (representingEffect.TryApplyStatusEffect(trigger, this.CentralGameStateControllerInstance.GameplayState, out List<GameStateChange> changes))
+                GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.Activated);
+                if (representingEffect.TryApplyStatusEffect(trigger, this.CentralGameStateControllerInstance.GameplayState, TriggerDirection.Execution, out List<GameStateChange> changes))
                 {
                     GameStateDelta delta = new GameStateDelta(this.CentralGameStateControllerInstance.GameplayState, changes);
                     GameStateDeltaApplier.ApplyGameStateDelta(this.CentralGameStateControllerInstance.GameplayState, delta);

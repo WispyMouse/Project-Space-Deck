@@ -1,9 +1,8 @@
-namespace SpaceDeck.GameState.Changes
+namespace SpaceDeck.GameState.Minimum
 {
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.GameState.Changes.Targets;
     using System;
 
     public class ResolveChange : GameStateChange

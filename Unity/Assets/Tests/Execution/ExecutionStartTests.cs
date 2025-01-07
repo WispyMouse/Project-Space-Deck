@@ -12,7 +12,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Execution;
-    using SpaceDeck.GameState.Changes.Targets;
     using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.GameState.Changes;
     using SpaceDeck.Tokenization.Evaluatables;
@@ -25,6 +24,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Databases;
+    using SpaceDeck.GameState.Deltas;
 
     /// <summary>
     /// This class holds tests that were made as part of a

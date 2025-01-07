@@ -9,7 +9,7 @@ namespace SpaceDeck.GameState.Minimum
     public class EntityTurnTakerCalculator
     {
         public readonly List<Entity> EntitiesToTakeTurn = new List<Entity>();
-        public int CurrentEntityTurnIndex = 0;
+        protected int CurrentEntityTurnIndex = 0;
 
         public EntityTurnTakerCalculator(IGameStateMutator gameState, decimal factionId)
         {
@@ -41,21 +41,34 @@ namespace SpaceDeck.GameState.Minimum
 
         public bool TryGetNextEntityTurn(IGameStateMutator gameState, out Entity nextTurn)
         {
-            this.CurrentEntityTurnIndex++;
+            int nextIndex = this.CurrentEntityTurnIndex++;
 
-            if (this.EntitiesToTakeTurn.Count <= this.CurrentEntityTurnIndex)
+            if (this.EntitiesToTakeTurn.Count <= nextIndex)
             {
                 nextTurn = null;
                 return false;
             }
 
-            if (!gameState.EntityIsAlive(this.EntitiesToTakeTurn[this.CurrentEntityTurnIndex]))
+            if (!gameState.EntityIsAlive(this.EntitiesToTakeTurn[nextIndex]))
             {
                 return this.TryGetNextEntityTurn(gameState, out nextTurn);
             }
 
-            nextTurn = this.EntitiesToTakeTurn[this.CurrentEntityTurnIndex];
+            nextTurn = this.EntitiesToTakeTurn[nextIndex];
             return true;
+        }
+
+        public void SetCurrentTurnTaker(Entity currentTurn)
+        {
+            int turnIndex = EntitiesToTakeTurn.IndexOf(currentTurn);
+            if (turnIndex == -1)
+            {
+                // TODO: LOG FAILURE
+            }
+            else
+            {
+                this.CurrentEntityTurnIndex = turnIndex;
+            }
         }
     }
 }

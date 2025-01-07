@@ -1,10 +1,11 @@
-namespace SpaceDeck.GameState.Execution
+namespace SpaceDeck.GameState.Deltas
 {
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     /// <summary>
     /// Represents a list of <see cref="GameStateChange"/>.
@@ -169,24 +170,24 @@ namespace SpaceDeck.GameState.Execution
         public void StartFactionTurn(decimal factionId)
         {
             this.NewFactionTurn = factionId;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted));
         }
 
         public void StartEntityTurn(Entity toStart)
         {
             this.NewEntityTurn = toStart;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted));
         }
 
         public void EndCurrentEntityTurn()
         {
             this.NewEntityTurn = null;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded));
         }
 
         public void EndCurrentFactionTurn()
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded, GameStateEventTrigger.TriggerDirection.After));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded));
         }
 
         public bool TryGetNextResolve(out IResolve currentResolve)
@@ -201,6 +202,17 @@ namespace SpaceDeck.GameState.Execution
 
         public void TriggerAndStack(GameStateEventTrigger trigger)
         {
+            // The order of resolution should be:
+            // - "Before" triggered effects, that are responding to an event being triggered
+            // - If there is a GameStateChange to apply, apply it here
+            // - "After" triggered effects
+
+        }
+
+        public IReadOnlyList<IResolve> GetTriggers(GameStateEventTrigger trigger, TriggerDirection direction)
+        {
+            List<IResolve> triggeredResolves = new List<IResolve>();
+
             // First put on to the stack an instruction to resolve each status effect
             // We can grab all status effects with matching ids for trigger events
             // and then as they're resolving, can determine if anything should actually happen,
@@ -216,7 +228,7 @@ namespace SpaceDeck.GameState.Execution
             possiblyTriggeredStatusEffects.Sort((a, b) => a.StatusEffectPriorityOrder.CompareTo(b.StatusEffectPriorityOrder));
             foreach (AppliedStatusEffect effect in possiblyTriggeredStatusEffects)
             {
-                this.PendingResolves.Push(new ResolveTriggeredEvent(effect, trigger));
+                triggeredResolves.Add(new ResolveTriggeredEvent(effect, trigger, TriggerDirection.Before));
             }
 
             // Then put on top of the stack each rule in order of application
@@ -224,8 +236,10 @@ namespace SpaceDeck.GameState.Execution
             List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, trigger);
             foreach (GameStateChange change in appliedRules)
             {
-                this.PendingResolves.Push(change);
+                triggeredResolves.Add(change);
             }
+
+            return triggeredResolves;
         }
 
         public void MoveCard(CardInstance card, LowercaseString zone)
