@@ -36,7 +36,8 @@ namespace SpaceDeck.Models.Instances
                     continue;
                 }
 
-
+                // TODO CHECK IF SHOULD PROC
+                // TODO: ACTUALLY PROC!
             }
 
             return applications.Count > 0;

@@ -42,10 +42,10 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             this.Action = action;
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
-            changes = new List<GameStateChange>();
-            changes.Add(new ActionExecutor(this.Action));
+            changes = new Stack<GameStateChange>();
+            changes.Push(new ActionExecutor(this.Action));
             return true;
         }
     }
@@ -63,7 +63,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             this._Questions.AddRange(changeTarget.GetQuestions(this));
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             if (!this.ChangeTarget.TryEvaluate(context, out IChangeTarget target))
             {
@@ -71,8 +71,8 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
                 return false;
             }
 
-            changes = new List<GameStateChange>();
-            changes.Add(new ActionExecutor(this.Action));
+            changes = new Stack<GameStateChange>();
+            changes.Push(new ActionExecutor(this.Action));
             return true;
         }
     }
@@ -96,10 +96,10 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         {
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
-            changes = new List<GameStateChange>();
-            changes.Add(new LoggingGameStateChange(ZeroArgumentDebugLogScriptingCommand.HelloString));
+            changes = new Stack<GameStateChange>();
+            changes.Push(new LoggingGameStateChange(ZeroArgumentDebugLogScriptingCommand.HelloString));
             return true;
         }
     }
@@ -122,7 +122,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         {
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             if (this.Arguments == null || this.Arguments.Count == 0)
             {
@@ -130,8 +130,8 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
                 return false;
             }
 
-            changes = new List<GameStateChange>();
-            changes.Add(new LoggingGameStateChange(this.Arguments[0].ToString()));
+            changes = new Stack<GameStateChange>();
+            changes.Push(new LoggingGameStateChange(this.Arguments[0].ToString()));
             return true;
         }
     }
@@ -170,7 +170,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             this.Action = action;
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             if (!this.Evaluatable.TryEvaluate(context.ExecutedOnGameState, out decimal parsedValue))
             {
@@ -178,10 +178,8 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
                 return false;
             }
 
-            changes = new List<GameStateChange>()
-            {
-                new EvaluateAndLogNumericGameStateChange(this.Evaluatable, this.Action)
-            };
+            changes = new Stack<GameStateChange>();
+            changes.Push(new EvaluateAndLogNumericGameStateChange(this.Evaluatable, this.Action));
 
             return true;
         }

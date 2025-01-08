@@ -47,7 +47,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             this._Questions.AddRange(ChangeTarget.GetQuestions(this));
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             if (!this.ChangeTarget.TryEvaluate(context, out IChangeTarget target))
             {

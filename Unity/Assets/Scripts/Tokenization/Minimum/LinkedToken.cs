@@ -36,7 +36,7 @@ namespace SpaceDeck.Tokenization.Minimum
         {
         }
 
-        public virtual bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public virtual bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             changes = null;
             return true;

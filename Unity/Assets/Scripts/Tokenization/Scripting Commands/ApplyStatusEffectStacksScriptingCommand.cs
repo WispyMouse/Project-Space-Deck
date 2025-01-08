@@ -70,7 +70,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             if (!this.ChangeTarget.TryEvaluate(context, out IChangeTarget target) || !this.Mod.TryEvaluate(context, out decimal mod))
             {
@@ -78,7 +78,8 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            changes = new List<GameStateChange>() { new ModifyStatusEffectStacks(target, this.StatusEffect, mod, InitialIntensityPositivity.PositiveOrZero) };
+            changes = new Stack<GameStateChange>();
+            changes.Push(new ModifyStatusEffectStacks(target, this.StatusEffect, mod, InitialIntensityPositivity.PositiveOrZero));
             return true;
         }
     }

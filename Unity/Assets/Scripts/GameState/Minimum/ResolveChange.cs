@@ -12,6 +12,10 @@ namespace SpaceDeck.GameState.Minimum
         public ResolveChange(IResolve toResolve) : base(NobodyTarget.Instance)
         {
             this.Resolve = toResolve;
+
+            // ResolveChanges can never be the source of triggers, themselves
+            // so it's always appropriate to Apply them in the GameStateDeltaMaker
+            this.Triggered = true;
         }
 
         public override void Apply(IGameStateMutator toApplyTo)

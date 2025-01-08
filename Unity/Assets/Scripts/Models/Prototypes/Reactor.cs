@@ -1,5 +1,6 @@
 namespace SpaceDeck.Models.Prototypes
 {
+    using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Utility.Minimum;
     using System.Collections;

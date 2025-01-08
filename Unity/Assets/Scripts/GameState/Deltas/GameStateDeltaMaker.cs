@@ -41,7 +41,7 @@ namespace SpaceDeck.GameState.Deltas
                 // TODO: Check conditional for permission to be inside scope before applying
                 if (true)
                 {
-                    if (!nextToken.TryGetChanges(executionContext, out List<GameStateChange> changes))
+                    if (!nextToken.TryGetChanges(executionContext, out Stack<GameStateChange> changes))
                     {
                         // TODO LOG FAILURE
                         return false;
@@ -52,12 +52,12 @@ namespace SpaceDeck.GameState.Deltas
                         // Iterate across each change, one at a time, so that it can be determined
                         // if there are any AppliedRules that result from this, they should be applied
                         // and then continued to process
-                        List<GameStateChange> changeStack = new List<GameStateChange>(changes);
+                        // Note the double stack flip; this is to get our copy in the right order. Stacks are funny that way.
+                        Stack<GameStateChange> changeStack = new Stack<GameStateChange>(new Stack<GameStateChange>(changes));
 
-                        for (int ii = 0; ii < changeStack.Count; ii++)
+                        while (changeStack.Count > 0)
                         {
-                            GameStateChange currentlyApplyingChange = changeStack[ii];
-                            delta.Changes.Add(currentlyApplyingChange);
+                            GameStateChange currentlyApplyingChange = changeStack.Pop();
 
                             executionContext.CurrentlyExecutingGameStateChange = currentlyApplyingChange;
 
@@ -68,21 +68,30 @@ namespace SpaceDeck.GameState.Deltas
                             }
                             else
                             {
+                                delta.Changes.Add(currentlyApplyingChange);
                                 currentlyApplyingChange.Apply(delta);
                             }
 
                             // First stack any triggered events that resulted from the above application
                             // Check if there's any pending resolves, and try to apply them
+                            Stack<ResolveChange> resolveChanges = new Stack<ResolveChange>();
                             while (delta.TryGetNextResolve(out IResolve currentResolve))
                             {
-                                changeStack.Insert(ii+1, new ResolveChange(currentResolve));
+                                resolveChanges.Push(new ResolveChange(currentResolve));
+                            }
+                            foreach (ResolveChange resolve in resolveChanges)
+                            {
+                                changeStack.Push(resolve);
                             }
 
                             // Then stack rules that are at RuleApplication level
-                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, changeStack[ii]));
+                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, currentlyApplyingChange));
                             if (rules != null && rules.Count > 0)
                             {
-                                changeStack.InsertRange(ii+1, rules);
+                                foreach (GameStateChange rule in rules)
+                                {
+                                    changeStack.Push(rule);
+                                }
                             }
                         }
                     }

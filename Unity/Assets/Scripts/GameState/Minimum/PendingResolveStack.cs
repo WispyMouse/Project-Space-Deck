@@ -9,12 +9,12 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public class PendingResolveStack
     {
-        private readonly List<IResolve> PendingResolves = new List<IResolve>();
+        private readonly Stack<IResolve> PendingResolves = new Stack<IResolve>();
         public IResolve CurrentlyResolving { get; private set; } = null;
 
         public void Push(IResolve toPush)
         {
-            this.PendingResolves.Add(toPush);
+            this.PendingResolves.Push(toPush);
         }
 
         public bool TryGetNextResolve(out IResolve next)
@@ -25,10 +25,8 @@ namespace SpaceDeck.GameState.Minimum
                 return false;
             }
 
-            int nextIndex = this.PendingResolves.Count - 1;
-            next = this.PendingResolves[nextIndex];
-            this.CurrentlyResolving = next;
-            this.PendingResolves.RemoveAt(nextIndex);
+            next = this.PendingResolves.Pop();
+            CurrentlyResolving = next;
             return true;
         }
 

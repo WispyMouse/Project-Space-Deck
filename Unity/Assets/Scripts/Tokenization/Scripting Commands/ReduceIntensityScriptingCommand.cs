@@ -36,7 +36,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         }
     }
 
-    public class ReduceIntensityLinkedToken : LinkedToken<SetDestinationScriptingCommand>
+    public class ReduceIntensityLinkedToken : LinkedToken<ReduceIntensityScriptingCommand>
     {
         public readonly INumericEvaluatableValue ReduceBy;
 
@@ -45,7 +45,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             this.ReduceBy = reduceIntensity;
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             if (context.CurrentlyExecutingGameStateChange == null)
             {
@@ -59,10 +59,8 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            changes = new List<GameStateChange>()
-            {
-                new ModifyIntensity(context.CurrentlyExecutingGameStateChange, intensity, InitialIntensityPositivity.PositiveOrZero)
-            };
+            changes = new Stack<GameStateChange>();
+            changes.Push(new ModifyIntensity(context.CurrentlyExecutingGameStateChange, intensity, InitialIntensityPositivity.PositiveOrZero));
 
             return true;
         }

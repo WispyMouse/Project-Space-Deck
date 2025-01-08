@@ -236,7 +236,7 @@ namespace SpaceDeck.GameState.Deltas
             possiblyTriggeredStatusEffects.Sort((a, b) => a.StatusEffectPriorityOrder.CompareTo(b.StatusEffectPriorityOrder));
             foreach (AppliedStatusEffect effect in possiblyTriggeredStatusEffects)
             {
-                triggeredResolves.Add(new ResolveTriggeredEvent(effect, trigger, TriggerDirection.Before));
+                triggeredResolves.Add(new ResolveTriggeredEvent(effect, trigger, direction));
             }
 
             // Then put on top of the stack each rule in order of application
@@ -296,12 +296,22 @@ namespace SpaceDeck.GameState.Deltas
 
         public IReadOnlyList<AppliedStatusEffect> GetAllStatusEffects()
         {
-            throw new System.NotImplementedException();
+            List<AppliedStatusEffect> statusEffects = new List<AppliedStatusEffect>();
+
+            foreach (Entity curEntity in this.GetAllEntities())
+            {
+                foreach (AppliedStatusEffect effect in curEntity.AppliedStatusEffects.Values)
+                {
+                    statusEffects.Add(effect);
+                }
+            }
+
+            return statusEffects;
         }
 
         public void PushResolve(IResolve toResolve)
         {
-            throw new System.NotImplementedException();
+            this.PendingResolves.Push(toResolve);
         }
 
         public bool CanAfford(IEnumerable<IShopCost> costs)

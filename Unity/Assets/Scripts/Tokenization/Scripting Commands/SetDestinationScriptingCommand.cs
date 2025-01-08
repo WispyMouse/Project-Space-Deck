@@ -41,7 +41,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             this.Destination = destination;
         }
 
-        public override bool TryGetChanges(ScriptingExecutionContext context, out List<GameStateChange> changes)
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
             if (!this.CardEvalautable.TryEvaluate(context.ExecutedOnGameState, out IReadOnlyList<CardInstance> cards))
             {
@@ -49,11 +49,11 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            changes = new List<GameStateChange>();
+            changes = new Stack<GameStateChange>();
 
             foreach (CardInstance card in cards)
             {
-                changes.Add(new SetStringQuality(null, card, WellknownQualities.Destination, this.Destination));
+                changes.Push(new SetStringQuality(null, card, WellknownQualities.Destination, this.Destination));
             }
 
             return true;

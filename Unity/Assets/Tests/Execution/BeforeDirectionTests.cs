@@ -98,6 +98,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 }
             };
             StatusEffectDatabase.RegisterStatusEffect(import);
+            AllDatabases.LinkAllDatabase();
 
             GameState gameState = new GameState();
             EncounterState encounterState = new EncounterState();
