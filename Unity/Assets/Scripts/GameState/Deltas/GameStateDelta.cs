@@ -206,7 +206,15 @@ namespace SpaceDeck.GameState.Deltas
             // - "Before" triggered effects, that are responding to an event being triggered
             // - If there is a GameStateChange to apply, apply it here
             // - "After" triggered effects
+            // So that means we stack "after" first
+            this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.After));
 
+            if (trigger.BasedOnGameStateChange != null)
+            {
+                this.PushResolve(trigger.BasedOnGameStateChange);
+            }
+
+            this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.Before));
         }
 
         public IReadOnlyList<IResolve> GetTriggers(GameStateEventTrigger trigger, TriggerDirection direction)

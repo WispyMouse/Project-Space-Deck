@@ -56,8 +56,20 @@ namespace SpaceDeck.GameState.Deltas
 
                         for (int ii = 0; ii < changeStack.Count; ii++)
                         {
-                            delta.Changes.Add(changeStack[ii]);
-                            changeStack[ii].Apply(delta);
+                            GameStateChange currentlyApplyingChange = changeStack[ii];
+                            delta.Changes.Add(currentlyApplyingChange);
+
+                            executionContext.CurrentlyExecutingGameStateChange = currentlyApplyingChange;
+
+                            if (!currentlyApplyingChange.Triggered)
+                            {
+                                currentlyApplyingChange.Trigger(delta);
+                                currentlyApplyingChange.Triggered = true;
+                            }
+                            else
+                            {
+                                currentlyApplyingChange.Apply(delta);
+                            }
 
                             // First stack any triggered events that resulted from the above application
                             // Check if there's any pending resolves, and try to apply them

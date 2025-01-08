@@ -12,6 +12,7 @@ namespace SpaceDeck.GameState.Minimum
     public abstract class GameStateChange : IResolve, IDescribable
     {
         public readonly IChangeTarget Target;
+        public bool Triggered = false;
 
         public GameStateChange(IChangeTarget target)
         {
@@ -19,6 +20,12 @@ namespace SpaceDeck.GameState.Minimum
         }
 
         public abstract void Apply(IGameStateMutator toApplyTo);
+
+        public virtual void Trigger(IGameStateMutator toPushTriggers)
+        {
+            GameStateEventTrigger trigger = new GameStateEventTrigger(null, this);
+            toPushTriggers.TriggerAndStack(trigger);
+        }
 
         public abstract string Describe();
 

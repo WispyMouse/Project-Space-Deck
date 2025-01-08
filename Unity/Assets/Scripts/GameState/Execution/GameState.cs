@@ -130,14 +130,12 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartFactionTurn(decimal factionId)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted));
-            this.FactionTurnTakerCalculator.SetCurrentTurnTaker(factionId);
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, new ActionExecutor((IGameStateMutator mutator) => { mutator.FactionTurnTakerCalculator.SetCurrentTurnTaker(factionId); })));
         }
 
         public void StartEntityTurn(Entity toStart)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, toStart));
-            this.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart);
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, new ActionExecutor((IGameStateMutator mutator) => { mutator.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart); })));
         }
 
         public void EndCurrentEntityTurn()
@@ -155,11 +153,6 @@ namespace SpaceDeck.GameState.Execution
 
         public void TriggerAndStack(GameStateEventTrigger trigger)
         {
-            this.TriggerAndStack(trigger, null);
-        }
-
-        public void TriggerAndStack(GameStateEventTrigger trigger, IResolve triggeringEvent)
-        {
             // The order of resolution should be:
             // - "Before" triggered effects, that are responding to an event being triggered
             // - If there is a GameStateChange to apply, apply it here
@@ -167,9 +160,9 @@ namespace SpaceDeck.GameState.Execution
             // So that means we stack "after" first
             this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.After));
 
-            if (triggeringEvent != null)
+            if (trigger.BasedOnGameStateChange != null)
             {
-                this.PushResolve(triggeringEvent);
+                this.PushResolve(trigger.BasedOnGameStateChange);
             }
 
             this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.Before));

@@ -8,15 +8,17 @@ namespace SpaceDeck.GameState.Changes
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
 
-    public class ModifyStatusEffectStacks : GameStateChange
+    public class ModifyStatusEffectStacks : GameStateChange, IChangeWithIntensity
     {
         public readonly LowercaseString StatusEffect;
-        public readonly decimal ModifyValue;
+        public decimal Intensity { get; set; } = 0;
+        public InitialIntensityPositivity Positivity { get; private set; }
 
-        public ModifyStatusEffectStacks(IChangeTarget changeTarget, LowercaseString statusEffect, decimal modifyValue) : base(changeTarget)
+        public ModifyStatusEffectStacks(IChangeTarget changeTarget, LowercaseString statusEffect, decimal modifyValue, InitialIntensityPositivity positivity) : base(changeTarget)
         {
-            this.ModifyValue = modifyValue;
             this.StatusEffect = statusEffect;
+            this.Intensity = modifyValue;
+            this.Positivity = positivity;
         }
 
         public override void Apply(IGameStateMutator toApplyTo)
@@ -30,7 +32,7 @@ namespace SpaceDeck.GameState.Changes
                 }
 
                 decimal currentStacks = toApplyTo.GetNumericQuality(existingEffect, WellknownQualities.Stacks, 0);
-                decimal newTotal = currentStacks + this.ModifyValue;
+                decimal newTotal = currentStacks + this.Intensity;
                 toApplyTo.SetNumericQuality(existingEffect, WellknownQualities.Stacks, newTotal);
             }
         }

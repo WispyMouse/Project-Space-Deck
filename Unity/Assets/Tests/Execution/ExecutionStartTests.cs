@@ -181,7 +181,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
             Assert.IsTrue(generatedDelta.Changes[0] is ModifyNumericQuality, "Expecting token to be a quality change token.");
             ModifyNumericQuality modifyQuality = generatedDelta.Changes[0] as ModifyNumericQuality;
-            Assert.AreEqual(modifyQuality.ModifyValue, -1, "Expecting damage amount to be (negative) one.");
+            Assert.AreEqual(modifyQuality.Intensity, -1, "Expecting damage amount to be (negative) one.");
 
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
             Assert.AreEqual(99, gameState.GetAllEntities()[0].Qualities.GetNumericQuality(WellknownQualities.Health), "Expecting health to currently be 1 less than starting, so 99.");

@@ -8,24 +8,23 @@ namespace SpaceDeck.GameState.Changes
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
 
-    public class DrawCard : GameStateChange
+    public class DrawCard : GameStateChange, IChangeWithIntensity
     {
-        public readonly INumericEvaluatableValue AmountToDraw;
+        public decimal Intensity { get; set; } = 0;
+        public InitialIntensityPositivity Positivity => InitialIntensityPositivity.PositiveOrZero;
 
-        public DrawCard(INumericEvaluatableValue amountToDraw) : base(NobodyTarget.Instance)
+        public DrawCard(int amountToDraw) : base(NobodyTarget.Instance)
         {
-            this.AmountToDraw = amountToDraw;
+            this.Intensity = amountToDraw;
+        }
+
+        public DrawCard(decimal amountToDraw) : this((int)Math.Floor(amountToDraw))
+        {
         }
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            decimal cardsToDraw = 0;
-            if (!this.AmountToDraw.TryEvaluate(toApplyTo, out cardsToDraw))
-            {
-                // TODO log
-                return;
-            }
-            for (int ii = (int)cardsToDraw; ii >= 0; ii--)
+            for (int ii = (int)this.Intensity; ii > 0; ii--)
             {
                 IReadOnlyList<CardInstance> cardsInDeck = toApplyTo.GetCardsInZone(WellknownZones.Deck);
 

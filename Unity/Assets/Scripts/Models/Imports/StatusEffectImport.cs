@@ -9,8 +9,8 @@ namespace SpaceDeck.Models.Imports
     [System.Serializable]
     public class StatusEffectImport : Importable
     {
-        public readonly List<ReactorImport> Reactors = new List<ReactorImport>();
-        public readonly string Name;
+        public List<ReactorImport> Reactors = new List<ReactorImport>();
+        public string Name;
 
         public StatusEffectPrototype GetPrototype()
         {

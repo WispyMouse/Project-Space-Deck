@@ -33,9 +33,15 @@ namespace SpaceDeck.GameState.Rules
                 return false;
             }
 
+            if (!this.AmountToDraw.TryEvaluate(gameStateMutator, out decimal amountToDraw))
+            {
+                applications = null;
+                return false;
+            }
+
             applications = new List<GameStateChange>()
             {
-                new DrawCard(this.AmountToDraw)
+                new DrawCard(amountToDraw)
             };
             return true;
         }

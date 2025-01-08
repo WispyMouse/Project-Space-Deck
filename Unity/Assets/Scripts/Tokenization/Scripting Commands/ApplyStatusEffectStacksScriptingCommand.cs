@@ -78,7 +78,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 return false;
             }
 
-            changes = new List<GameStateChange>() { new ModifyStatusEffectStacks(target, this.StatusEffect, mod) };
+            changes = new List<GameStateChange>() { new ModifyStatusEffectStacks(target, this.StatusEffect, mod, InitialIntensityPositivity.PositiveOrZero) };
             return true;
         }
     }

@@ -34,30 +34,36 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CommonTestUtility.TearDownDatabases();
         }
 
-        public class Before_LowersValue_DataSource_Object
+        public class Before_ReducesIntensity_DataSource_Object
         {
             public int StartingHealth;
+            public int DamageReduction;
             public int Damage;
-            public int Armor;
 
             public int ExpectedEndHealth;
-            public int ExpectedArmor;
 
-            public Before_LowersValue_DataSource_Object(int startingHealth, int damage, int armor)
+            public Before_ReducesIntensity_DataSource_Object(int startingHealth, int damage, int damageReduction)
             {
                 this.StartingHealth = startingHealth;
                 this.Damage = damage;
-                this.Armor = armor;
+                this.DamageReduction = damageReduction;
 
-                this.ExpectedArmor = Mathf.Max(0, armor - damage);
-                this.ExpectedEndHealth = startingHealth - Mathf.Max(0, damage - armor);
+                this.ExpectedEndHealth = startingHealth - Mathf.Max(0, damage - DamageReduction);
+            }
+
+            public override string ToString()
+            {
+                return $"StartingHealth {StartingHealth} // DamageReduction {DamageReduction} // Damage {Damage} // ExpectedEndHealth {ExpectedEndHealth}";
             }
         }
 
-        public static Before_LowersValue_DataSource_Object[] Before_LowersValue_DataSource =
+        public static Before_ReducesIntensity_DataSource_Object[] Before_LowersValue_DataSource =
         {
-            new Before_LowersValue_DataSource_Object(100, 10, 5),
-            new Before_LowersValue_DataSource_Object(100, 10, 15),
+            new Before_ReducesIntensity_DataSource_Object(100, 10, 5),
+            new Before_ReducesIntensity_DataSource_Object(100, 10, 15),
+            new Before_ReducesIntensity_DataSource_Object(100, 10, 0),
+            new Before_ReducesIntensity_DataSource_Object(100, 10, 15),
+            new Before_ReducesIntensity_DataSource_Object(10, 10, 15)
         };
 
         /// <summary>
@@ -66,47 +72,57 @@ namespace SpaceDeck.Tests.EditMode.Execution
         /// </summary>
         [Test]
         [TestCaseSource(nameof(Before_LowersValue_DataSource))]
-        public void Before_LowersValue(Before_LowersValue_DataSource_Object dataSource)
+        public void Before_ReducesIntensity(Before_ReducesIntensity_DataSource_Object data)
         {
-            LowercaseString debugStatusId = "DEBUG";
-            int startingHealth = dataSource.StartingHealth;
-            int damage = dataSource.Damage;
-            int armor = dataSource.Armor;
-
             // ARRANGE
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+            DamageScriptingCommand damageScriptingCommand = new DamageScriptingCommand();
+            ReduceIntensityScriptingCommand reduceScriptingCommand = new ReduceIntensityScriptingCommand();
+            ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
+            ScriptingCommandReference.RegisterScriptingCommand(reduceScriptingCommand);
+
             StatusEffectImport import = new StatusEffectImport()
             {
-                Id = nameof(Before_LowersValue)
+                Id = nameof(Before_ReducesIntensity),
+                Reactors = new List<ReactorImport>()
+                {
+                    new ReactorImport()
+                    {
+                         Direction = GameStateEventTrigger.TriggerDirection.Before,
+                         TokenText = $"[{reduceScriptingCommand.Identifier}:1]",
+                         TriggerOnEventIds = new List<string>()
+                         {
+                             WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health)
+                         }
+                    }
+                }
             };
-
-            import.Reactors.Add(new ReactorImport()
-            {
-                TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health) },
-                TokenText = "" // TODO: BLOCK TOKEN TEXT
-            });
             StatusEffectDatabase.RegisterStatusEffect(import);
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
+            EncounterState encounterState = new EncounterState();
             Entity targetingEntity = new Entity();
-            encounter.EncounterEntities.Add(targetingEntity);
-            gameState.ModStatusEffectStacks(targetingEntity, import.Id, armor);
-            gameState.SetNumericQuality(targetingEntity, WellknownQualities.Health, startingHealth);
+            targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, data.StartingHealth);
+            gameState.ModStatusEffectStacks(targetingEntity, import.Id, data.DamageReduction);
+            encounterState.EncounterEntities.Add(targetingEntity);
+            gameState.StartEncounter(encounterState);
+            PendingResolveExecutor.ResolveAll(gameState);
 
-            // ACT
-            gameState.StartEncounter(encounter);
-            string damageArgumentTokenTextString = $"[{import.Id}:{damage}]";
+            string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:{data.Damage}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
+            Assert.True(linkedTokenSet.Scopes.Count == 1 && linkedTokenSet.Scopes[0].Tokens.Count == 1 && linkedTokenSet.Scopes[0].Tokens[0] is DamageLinkedToken damageToken, $"Expecting linking to result in a single token of the {nameof(DamageLinkedToken)} type.");
+
+            // ACT
+
             ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
-            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create delta after providing answers.");
+            Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
-            Assert.AreEqual(dataSource.ExpectedArmor, gameState.GetStacks(targetingEntity, import.Id), "Should have no block remaining after absorbing impact.");
-            Assert.AreEqual(dataSource.ExpectedEndHealth, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have a specific amount of health left after the attack.");
+            Assert.AreEqual(data.ExpectedEndHealth, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Expecting absorption to result in expected health total.");
         }
     }
 }
