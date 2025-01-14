@@ -1,7 +1,6 @@
 namespace SpaceDeck.GameState.Deltas
 {
     using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Models.Databases;
     using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;

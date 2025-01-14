@@ -1,9 +1,7 @@
 namespace SpaceDeck.GameState.Deltas
 {
-    using SpaceDeck.GameState.Changes;
     using SpaceDeck.GameState.Context;
     using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Models.Databases;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
@@ -20,7 +18,7 @@ namespace SpaceDeck.GameState.Deltas
             return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(), stateToApplyTo, out delta);
         }
 
-        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, IGameStateMutator stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null)
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, IGameStateMutator stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null, GameStateChange basedOnChange = null)
         {
             delta = new GameStateDelta(stateToApplyTo);
 
@@ -34,6 +32,7 @@ namespace SpaceDeck.GameState.Deltas
             }
 
             ScriptingExecutionContext executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, playedCard);
+            executionContext.CurrentlyExecutingGameStateChange = basedOnChange;
 
             LinkedToken nextToken = linkedTokenList.First;
             while (nextToken != null)

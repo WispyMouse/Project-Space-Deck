@@ -3,6 +3,7 @@ namespace SpaceDeck.Models.Instances
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.GameState.Deltas;
     using SpaceDeck.Models.Prototypes;
     using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
@@ -37,7 +38,13 @@ namespace SpaceDeck.Models.Instances
                 }
 
                 // TODO CHECK IF SHOULD PROC
-                // TODO: ACTUALLY PROC!
+                if (!GameStateDeltaMaker.TryCreateDelta(reactor.LinkedTokens.Value, null, gameStateMutator, out GameStateDelta delta, playedCard: trigger.ProccingCard, basedOnChange: trigger.BasedOnGameStateChange))
+                {
+                    // TODO LOG FAILURE
+                    continue;
+                }
+
+                applications.AddRange(delta.Changes);
             }
 
             return applications.Count > 0;
