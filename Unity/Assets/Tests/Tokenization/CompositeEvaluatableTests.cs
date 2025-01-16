@@ -35,6 +35,147 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             LoggingGameStateChange.LastLog = String.Empty;
         }
 
+        public class Addition_Adds_DataSource_Object
+        {
+            public readonly int ValueOne;
+            public readonly int ValueTwo;
+            public readonly int Total;
+
+            public Addition_Adds_DataSource_Object(int valueOne, int valueTwo)
+            {
+                this.ValueOne = valueOne;
+                this.ValueTwo = valueTwo;
+                this.Total = valueOne + valueTwo;
+            }
+
+            public override string ToString()
+            {
+                return $"{this.ValueOne} + {this.ValueTwo} = {this.Total}";
+            }
+        }
+
+        public static Addition_Adds_DataSource_Object[] Addition_Adds_DataSource =
+        {
+            new Addition_Adds_DataSource_Object(5, 5),
+            new Addition_Adds_DataSource_Object(0, 6),
+            new Addition_Adds_DataSource_Object(11, -4)
+        };
+
+        [Test]
+        [TestCaseSource(nameof(Addition_Adds_DataSource))]
+        public void Addition_Adds(Addition_Adds_DataSource_Object data)
+        {
+            // ARRANGE
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            CardImport import = new CardImport()
+            {
+                Id = nameof(Addition_Adds),
+                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:{data.ValueOne}+{data.ValueTwo}]"
+            };
+            CardDatabase.AddCardToDatabase(import);
+            CardInstance instance = CardDatabase.GetInstance(import.Id);
+
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+
+            gameState.StartEncounter(encounter);
+
+            // ACT
+            gameState.StartConsideringPlayingCard(instance);
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.AreEqual(data.Total, LoggingGameStateChange.LastLog, "Expecting the last log to be the calculated total.");
+        }
+
+        public class Addition_ManyAdds_DataSource_Object
+        {
+            public readonly int[] Values;
+            public readonly int Total;
+
+            public Addition_ManyAdds_DataSource_Object(params int[] values)
+            {
+                this.Values = values;
+                foreach (int value in values)
+                {
+                    this.Total += value;
+                }
+            }
+
+            public override string ToString()
+            {
+                StringBuilder sb = new StringBuilder();
+
+                for (int ii = 0; ii < this.Values.Length; ii++)
+                {
+                    if (ii != 0)
+                    {
+                        sb.Append(" + ");
+                    }
+                    sb.Append(this.Values[ii]);
+                }
+
+                sb.Append(" = ");
+                sb.Append(this.Total);
+
+                return sb.ToString();
+            }
+
+            public string GetEffectScript()
+            {
+                StringBuilder sb = new StringBuilder();
+
+                for (int ii = 0; ii < this.Values.Length; ii++)
+                {
+                    if (ii != 0)
+                    {
+                        sb.Append("+");
+                    }
+                    sb.Append(this.Values[ii]);
+                }
+
+                return sb.ToString();
+            }
+        }
+
+        public static Addition_ManyAdds_DataSource_Object[] Addition_ManyAdds_DataSource =
+        {
+            new Addition_ManyAdds_DataSource_Object(0),
+            new Addition_ManyAdds_DataSource_Object(1, 2),
+            new Addition_ManyAdds_DataSource_Object(1, 2, 3),
+            new Addition_ManyAdds_DataSource_Object(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+            new Addition_ManyAdds_DataSource_Object(1, 2, -3, 4, -5, -6),
+        };
+
+        [Test]
+        [TestCaseSource(nameof(Addition_ManyAdds_DataSource))]
+        public void Addition_ManyAdds(Addition_ManyAdds_DataSource_Object data)
+        {
+            // ARRANGE
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            CardImport import = new CardImport()
+            {
+                Id = nameof(Addition_ManyAdds),
+                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:{data.GetEffectScript()}]"
+            };
+            CardDatabase.AddCardToDatabase(import);
+            CardInstance instance = CardDatabase.GetInstance(import.Id);
+
+            GameState gameState = new GameState();
+            EncounterState encounter = new EncounterState();
+
+            gameState.StartEncounter(encounter);
+
+            // ACT
+            gameState.StartConsideringPlayingCard(instance);
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            PendingResolveExecutor.ResolveAll(gameState);
+
+            // ASSERT
+            Assert.AreEqual(data.Total, LoggingGameStateChange.LastLog, "Expecting the last log to be the calculated total.");
+        }
+
         [Test]
         public void Division_RoundsDown()
         {
