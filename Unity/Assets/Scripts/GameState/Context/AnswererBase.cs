@@ -16,7 +16,7 @@ namespace SpaceDeck.GameState.Context
         {
             if (questions.Count == 0)
             {
-                answerReceiver.Invoke(new ExecutionAnswerSet());
+                answerReceiver.Invoke(new ExecutionAnswerSet(answeringContext.User));
                 return;
             }
 

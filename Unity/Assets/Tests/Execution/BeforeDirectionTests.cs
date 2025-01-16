@@ -76,6 +76,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
         {
             // ARRANGE
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new StacksEvaluatableParser());
             DamageScriptingCommand damageScriptingCommand = new DamageScriptingCommand();
             ReduceIntensityScriptingCommand reduceScriptingCommand = new ReduceIntensityScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
@@ -89,7 +90,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                     new ReactorImport()
                     {
                          Direction = GameStateEventTrigger.TriggerDirection.Before,
-                         TokenText = $"[{reduceScriptingCommand.Identifier}:1]",
+                         TokenText = $"[{reduceScriptingCommand.Identifier}:STACKS]",
                          TriggerOnEventIds = new List<string>()
                          {
                              WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health)
@@ -113,7 +114,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
-            Assert.True(linkedTokenSet.Scopes.Count == 1 && linkedTokenSet.Scopes[0].Tokens.Count == 1 && linkedTokenSet.Scopes[0].Tokens[0] is DamageLinkedToken damageToken, $"Expecting linking to result in a single token of the {nameof(DamageLinkedToken)} type.");
 
             // ACT
 

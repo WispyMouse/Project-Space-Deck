@@ -32,7 +32,7 @@ namespace SpaceDeck.GameState.Changes
                 }
 
                 decimal currentStacks = toApplyTo.GetNumericQuality(existingEffect, WellknownQualities.Stacks, 0);
-                decimal newTotal = currentStacks + this.Intensity;
+                decimal newTotal = currentStacks + (int)toApplyTo.GetIntensity(this);
                 toApplyTo.SetNumericQuality(existingEffect, WellknownQualities.Stacks, newTotal);
             }
         }

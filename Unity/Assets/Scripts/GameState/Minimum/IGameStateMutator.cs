@@ -18,6 +18,9 @@ namespace SpaceDeck.GameState.Minimum
         void SetStringQuality(IHaveQualities entity, LowercaseString index, string toValue);
         string GetStringQuality(IHaveQualities entity, LowercaseString index, string defaultValue = "");
 
+        void SetIntensity(IChangeWithIntensity intensity, decimal newValue);
+        decimal GetIntensity(IChangeWithIntensity intensity);
+
         void AddEncounterEntity(Entity toAdd);
         void AddPersistentEntity(Entity toAdd);
         void RemoveEntity(Entity entity);

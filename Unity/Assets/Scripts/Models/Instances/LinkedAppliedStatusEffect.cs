@@ -6,6 +6,7 @@ namespace SpaceDeck.Models.Instances
     using SpaceDeck.GameState.Deltas;
     using SpaceDeck.Models.Prototypes;
     using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
+    using SpaceDeck.Tokenization.Minimum.Questions;
 
     public class LinkedAppliedStatusEffect : AppliedStatusEffect
     {
@@ -38,13 +39,25 @@ namespace SpaceDeck.Models.Instances
                 }
 
                 // TODO CHECK IF SHOULD PROC
-                if (!GameStateDeltaMaker.TryCreateDelta(reactor.LinkedTokens.Value, null, gameStateMutator, out GameStateDelta delta, playedCard: trigger.ProccingCard, basedOnChange: trigger.BasedOnGameStateChange))
+
+                if (trigger.BasedOnTarget == null)
                 {
-                    // TODO LOG FAILURE
                     continue;
                 }
 
-                applications.AddRange(delta.Changes);
+                foreach (Entity curEntity in trigger.BasedOnTarget.GetRepresentedEntities(gameStateMutator))
+                {
+                    ExecutionAnswerSet answers = new ExecutionAnswerSet(curEntity);
+
+                    if (!GameStateDeltaMaker.TryCreateDelta(reactor.LinkedTokens.Value, answers, gameStateMutator, out GameStateDelta delta, playedCard: trigger.ProccingCard, basedOnChange: trigger.BasedOnGameStateChange, statusEffect: this))
+                    {
+                        // TODO LOG FAILURE
+                        continue;
+                    }
+
+                    applications.AddRange(delta.Changes);
+                }
+
             }
 
             return applications.Count > 0;

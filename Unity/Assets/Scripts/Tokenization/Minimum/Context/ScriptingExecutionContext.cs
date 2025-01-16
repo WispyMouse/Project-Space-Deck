@@ -21,16 +21,28 @@ namespace SpaceDeck.Tokenization.Minimum.Context
         public readonly LinkedTokenList TokenList;
         public readonly ExecutionAnswerSet Answers;
         public readonly CardInstance PlayingCard;
+        public readonly AppliedStatusEffect BasedOnAppliedStatusEffect;
 
+        public Entity User;
         public IChangeTarget CurrentDefaultTarget;
         public GameStateChange CurrentlyExecutingGameStateChange;
 
-        public ScriptingExecutionContext(IGameStateMutator executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers, CardInstance playingCard)
+        public ScriptingExecutionContext(IGameStateMutator executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers)
         {
             this.ExecutedOnGameState = executedOnGameState;
             this.TokenList = tokenList;
+            this.User = answers.User;
             this.Answers = answers;
+        }
+
+        public ScriptingExecutionContext(IGameStateMutator executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers, CardInstance playingCard) : this(executedOnGameState, tokenList, answers)
+        {
             this.PlayingCard = playingCard;
+        }
+
+        public ScriptingExecutionContext(IGameStateMutator executedOnGameState, LinkedTokenList tokenList, ExecutionAnswerSet answers, AppliedStatusEffect statusEffect) : this(executedOnGameState, tokenList, answers)
+        {
+            this.BasedOnAppliedStatusEffect = statusEffect;
         }
     }
 }

@@ -30,11 +30,11 @@ namespace SpaceDeck.GameState.Changes
             {
                 if (changeWithIntensity.Positivity == InitialIntensityPositivity.PositiveOrZero)
                 {
-                    changeWithIntensity.Intensity = Math.Max(0, changeWithIntensity.Intensity + this.Intensity);
+                    toApplyTo.SetIntensity(changeWithIntensity, Math.Max(0, toApplyTo.GetIntensity(changeWithIntensity) + this.Intensity));
                 }
                 else
                 {
-                    changeWithIntensity.Intensity = Math.Min(0, changeWithIntensity.Intensity + this.Intensity);
+                    toApplyTo.SetIntensity(changeWithIntensity, Math.Min(0, toApplyTo.GetIntensity(changeWithIntensity) + this.Intensity));
                 }
             }
         }

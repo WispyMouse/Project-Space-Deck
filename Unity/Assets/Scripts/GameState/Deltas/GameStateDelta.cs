@@ -32,6 +32,7 @@ namespace SpaceDeck.GameState.Deltas
 
         public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
         public readonly Dictionary<CardInstance, LowercaseString> CardDestinationChanges = new Dictionary<CardInstance, LowercaseString>();
+        public readonly Dictionary<IChangeWithIntensity, decimal> IntensityChanges = new Dictionary<IChangeWithIntensity, decimal>();
 
         public decimal? NewFactionTurn = null;
         public Entity NewEntityTurn = null;
@@ -345,12 +346,35 @@ namespace SpaceDeck.GameState.Deltas
 
         public int GetStacks(Entity onEntity, LowercaseString statusEffectId)
         {
-            throw new System.NotImplementedException();
+            // TODO
+            return this.BaseGameState.GetStacks(onEntity, statusEffectId);
         }
 
         public void ModifyElement(LowercaseString elementId, int modAmount)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void SetIntensity(IChangeWithIntensity intensity, decimal newValue)
+        {
+            if (this.IntensityChanges.ContainsKey(intensity))
+            {
+                this.IntensityChanges[intensity] = newValue;
+            }
+            else
+            {
+                this.IntensityChanges.Add(intensity, newValue);
+            }
+        }
+
+        public decimal GetIntensity(IChangeWithIntensity intensity)
+        {
+            if (this.IntensityChanges.TryGetValue(intensity, out decimal value))
+            {
+                return value;
+            }
+
+            return intensity.Intensity;
         }
     }
 }

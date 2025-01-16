@@ -15,10 +15,10 @@ namespace SpaceDeck.GameState.Deltas
     {
         public static bool TryCreateDelta(LinkedTokenList linkedTokenList, IGameStateMutator stateToApplyTo, out GameStateDelta delta)
         {
-            return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(), stateToApplyTo, out delta);
+            return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(user: null), stateToApplyTo, out delta);
         }
 
-        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, IGameStateMutator stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null, GameStateChange basedOnChange = null)
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, IGameStateMutator stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null, GameStateChange basedOnChange = null, AppliedStatusEffect statusEffect = null)
         {
             delta = new GameStateDelta(stateToApplyTo);
 
@@ -31,7 +31,20 @@ namespace SpaceDeck.GameState.Deltas
                 }
             }
 
-            ScriptingExecutionContext executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, playedCard);
+            ScriptingExecutionContext executionContext;
+            
+            if (playedCard != null)
+            {
+                executionContext= new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, playedCard);
+            }
+            else if (statusEffect != null)
+            {
+                executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, statusEffect);
+            }
+            else
+            {
+                executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers);
+            }
             executionContext.CurrentlyExecutingGameStateChange = basedOnChange;
 
             LinkedToken nextToken = linkedTokenList.First;

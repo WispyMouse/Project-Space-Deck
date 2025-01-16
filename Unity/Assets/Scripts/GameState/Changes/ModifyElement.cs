@@ -22,7 +22,7 @@ namespace SpaceDeck.GameState.Changes
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            toApplyTo.ModifyElement(this.ElementId, (int)this.Intensity);
+            toApplyTo.ModifyElement(this.ElementId, (int)toApplyTo.GetIntensity(this));
         }
 
         public override string Describe()

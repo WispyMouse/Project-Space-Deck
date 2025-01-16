@@ -1,3 +1,4 @@
+using SpaceDeck.GameState.Minimum;
 using System.Collections.Generic;
 
 namespace SpaceDeck.Tokenization.Minimum.Questions
@@ -6,9 +7,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     {
         private readonly Dictionary<ExecutionQuestion, ExecutionAnswer> questionsToAnswers = new Dictionary<ExecutionQuestion, ExecutionAnswer>();
         public IEnumerable<ExecutionAnswer> Answers => questionsToAnswers.Values;
+        public Entity User;
 
-        public ExecutionAnswerSet()
+        public ExecutionAnswerSet(Entity user)
         {
+            this.User = user;
         }
 
         public ExecutionAnswerSet(ExecutionAnswer answer)

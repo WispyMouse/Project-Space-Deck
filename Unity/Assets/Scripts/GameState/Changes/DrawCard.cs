@@ -24,7 +24,7 @@ namespace SpaceDeck.GameState.Changes
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            for (int ii = (int)this.Intensity; ii > 0; ii--)
+            for (int ii = (int)toApplyTo.GetIntensity(this); ii > 0; ii--)
             {
                 IReadOnlyList<CardInstance> cardsInDeck = toApplyTo.GetCardsInZone(WellknownZones.Deck);
 
@@ -37,10 +37,6 @@ namespace SpaceDeck.GameState.Changes
                     if (cardsInDeck.Count == 0)
                     {
                         break;
-                        if (cardsInDeck.Count == 0)
-                        {
-                            break;
-                        }
                     }
                 }
 

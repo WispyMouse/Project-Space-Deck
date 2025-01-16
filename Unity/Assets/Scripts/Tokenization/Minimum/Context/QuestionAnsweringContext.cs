@@ -14,13 +14,15 @@ namespace SpaceDeck.Tokenization.Minimum.Context
     /// </summary>
     public class QuestionAnsweringContext
     {
+        public Entity User;
         public IChangeTarget DefaultTarget;
         public readonly IGameStateMutator StartingGameState;
         public readonly CardInstance PlayingCard;
 
-        public QuestionAnsweringContext(IGameStateMutator startingGameState, CardInstance playingCard)
+        public QuestionAnsweringContext(IGameStateMutator startingGameState, Entity user, CardInstance playingCard)
         {
             this.StartingGameState = startingGameState;
+            this.User = user;
             this.PlayingCard = playingCard;
         }
     }

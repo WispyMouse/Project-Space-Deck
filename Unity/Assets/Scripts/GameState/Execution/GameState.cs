@@ -283,8 +283,18 @@ namespace SpaceDeck.GameState.Execution
 
         public QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay)
         {
+            Entity campaignEntity = null;
+            foreach (Entity curEntity in this.PersistentEntities)
+            {
+                if (curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
+                {
+                    campaignEntity = curEntity;
+                    break;
+                }
+            }
+
             this.CurrentlyConsideredPlayedCard = toPlay;
-            return new QuestionAnsweringContext(this, toPlay);
+            return new QuestionAnsweringContext(this, campaignEntity, toPlay);
         }
 
         public void EntityPerformsAction(Entity toAct, LinkedToken toPerform)
@@ -532,6 +542,16 @@ namespace SpaceDeck.GameState.Execution
             {
                 this.Elements[toGet] += modAmount;
             }
+        }
+
+        public void SetIntensity(IChangeWithIntensity intensity, decimal newValue)
+        {
+            intensity.Intensity = newValue;
+        }
+
+        public decimal GetIntensity(IChangeWithIntensity intensity)
+        {
+            return intensity.Intensity;
         }
     }
 }

@@ -42,12 +42,15 @@ namespace SpaceDeck.GameState.Minimum
         /// </summary>
         public CardInstance ProccingCard { get; set; }
 
+        public AppliedStatusEffect ProccingStatusEffect { get; set; }
+
         public GameStateEventTrigger(LowercaseString eventId)
         {
             this.EventId = eventId;
             this.BasedOnGameStateChange = null;
             this.BasedOnTarget = null;
             this.ProccingCard = null;
+            this.ProccingStatusEffect = null;
         }
 
         public GameStateEventTrigger(LowercaseString eventId, GameStateChange basedOnChange) : this(eventId)
@@ -63,9 +66,12 @@ namespace SpaceDeck.GameState.Minimum
 
         public GameStateEventTrigger(LowercaseString eventId, CardInstance basedOnCard) : this(eventId)
         {
-            this.BasedOnTarget = null;
-            this.BasedOnGameStateChange = null;
             this.ProccingCard = basedOnCard;
+        }
+
+        public GameStateEventTrigger(LowercaseString eventId, AppliedStatusEffect basedOnStatusEffect) : this(eventId)
+        {
+            this.ProccingStatusEffect = basedOnStatusEffect;
         }
 
         public void Apply(IGameStateMutator mutator)

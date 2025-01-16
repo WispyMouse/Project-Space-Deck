@@ -216,7 +216,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             ExecutionAnswerSet answers = null;
-            new TestSpecificTargetAnswerer(targetingEntity).HandleQuestions(new QuestionAnsweringContext(gameState, null), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
+            new TestSpecificTargetAnswerer(targetingEntity).HandleQuestions(new QuestionAnsweringContext(gameState, targetingEntity, null), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });
@@ -267,7 +267,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             ExecutionAnswerSet answers = null;
-            new IndexChoosingAnswerer(1).HandleQuestions(new QuestionAnsweringContext(gameState, null), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
+            new IndexChoosingAnswerer(1).HandleQuestions(new QuestionAnsweringContext(gameState, entityOne, null), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });
