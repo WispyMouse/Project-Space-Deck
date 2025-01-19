@@ -1,0 +1,16 @@
+{
+    "name": "Utility.Logging",
+    "rootNamespace": "",
+    "references": [
+        "GUID:236eebad63b2bc641bb665bdea6c026a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

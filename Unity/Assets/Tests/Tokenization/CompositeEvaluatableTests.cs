@@ -25,9 +25,22 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
+    using SpaceDeck.Utility.Unity;
 
     public class CompositeEvaluatableTests
     {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            DebugLogger.SubscribeDebugListener(true);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            DebugLogger.UnsubscribeDebugListener();
+        }
+
         [TearDown]
         public void TearDown()
         {

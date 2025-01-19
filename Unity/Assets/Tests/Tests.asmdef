@@ -7,21 +7,23 @@
         "UX",
         "Tokenization.Minimum",
         "Tokenization.Processing",
-        "Models.Instances",
+        "Models.Imports",
         "Models.Prototypes",
+        "Models.Databases",
+        "Models.Instances",
         "GameState.Execution",
         "GameState.Minimum",
         "GameState.Changes",
+        "GameState.Deltas",
         "Tokenization.ScriptingCommands",
         "Tokenization.Evaluatables",
         "GameState.Context",
         "GameState.Rules",
         "Utility.Minimum",
         "Utility.Wellknown",
-        "Models.Databases",
-        "UX.AssetLookup",
-        "Models.Imports",
-        "GameState.Deltas"
+        "Utility.Logging",
+        "Utility.Unity",
+        "UX.AssetLookup"
     ],
     "includePlatforms": [
         "Editor"
