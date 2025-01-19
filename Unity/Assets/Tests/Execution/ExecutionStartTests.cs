@@ -25,6 +25,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.GameState.Deltas;
+    using SpaceDeck.Tokenization.Functions;
+    using SpaceDeck.Utility.Unity;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -35,6 +37,18 @@ namespace SpaceDeck.Tests.EditMode.Execution
     /// </summary>
     public class ExecutionStartTests
     {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            DebugLogger.SubscribeDebugListener(true);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            DebugLogger.UnsubscribeDebugListener();
+        }
+
         [TearDown]
         public void TearDown()
         {
@@ -373,6 +387,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ARRANGE
             ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            EvaluatablesReference.SubscribeEvaluatable(new CountCurrencyEvaluatableParser());
             CurrencyImport toGain = new CurrencyImport()
             {
                 Id = nameof(toGain)
@@ -401,7 +416,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ASSERT
             Assert.True(gameState.Currencies.TryGetValue(gainedCurrency, out int currentvalue));
             Assert.AreEqual(currencyGainAmount, currentvalue, "Should gain expected currency.");
-            Assert.AreEqual(currencyGainAmount, LoggingGameStateChange.LastLog, "The last log from the LoggingGameStateChange should be the expected amount of currency.");
+            Assert.AreEqual(currencyGainAmount.ToString(), LoggingGameStateChange.LastLog, "The last log from the LoggingGameStateChange should be the expected amount of currency.");
         }
     }
 }

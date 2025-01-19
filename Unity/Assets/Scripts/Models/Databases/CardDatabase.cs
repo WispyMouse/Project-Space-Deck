@@ -16,11 +16,16 @@ namespace SpaceDeck.Models.Databases
 
         public static void AddCardToDatabase(CardImport import)
         {
-            Prototypes.Add(import.Id, import.GetPrototype());
+            RegisterCardPrototype(import.GetPrototype());
         }
 
         public static void RegisterCardPrototype(CardPrototype prototype)
         {
+            if (prototype == null)
+            {
+                throw new System.ArgumentNullException(nameof(prototype));
+            }
+
             Prototypes.Add(prototype.Id, prototype);
         }
 

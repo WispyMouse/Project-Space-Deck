@@ -23,7 +23,8 @@
         "Utility.Wellknown",
         "Utility.Logging",
         "Utility.Unity",
-        "UX.AssetLookup"
+        "UX.AssetLookup",
+        "Tokenization.Functions"
     ],
     "includePlatforms": [
         "Editor"

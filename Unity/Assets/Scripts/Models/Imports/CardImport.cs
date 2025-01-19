@@ -11,7 +11,9 @@ namespace SpaceDeck.Models.Imports
     using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Processing;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX.AssetLookup;
     using UnityEngine;
 
@@ -26,12 +28,12 @@ namespace SpaceDeck.Models.Imports
         {
             if (!TokenTextMaker.TryGetTokenTextFromString(this.EffectScript, out TokenText statement))
             {
-                // TODO: LOG IMPORT FAILURE
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.CardImport, $"Failed to determine token text from string. '{this.EffectScript}'");
                 return null;
             }
             else if (!ParsedTokenMaker.TryGetParsedTokensFromTokenText(statement, out ParsedTokenList parsedTokens))
             {
-                // TODO: LOG IMPORT FAILURE
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.CardImport, $"Failed to parse tokens from token text. '{this.EffectScript}'");
                 return null;
             }
             else
