@@ -12,6 +12,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Utility.Logging;
 
     public class DamageScriptingCommand : ScriptingCommand
     {
@@ -22,27 +23,27 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             // Presently, Damage Scripting Commands can only have one argument; the damage amount to deal
             // TODO: Add a target, so that the target can be set as an argument
             // TODO: Add a user, so that both the user and the target can be set as an argument
-            if (parsedToken.Arguments.Count == 1)
+            if (parsedToken.Arguments.Count != 1)
             {
-                // Try to evaluate the first token as a numeric value. If it can't be done, this isn't a hit.
-                if (!EvaluatablesReference.TryGetNumericEvaluatableValue(parsedToken.Arguments[0], out INumericEvaluatableValue evaluatable))
-                {
-                    linkedToken = null;
-                    return false;
-                }
-
-                linkedToken = new DamageLinkedToken(parsedToken, new ChangeTargetEvaluatableValue(DefaultTargetProvider.Instance), evaluatable);
-                return true;
-            }
-            else
-            {
-                // If there aren't one or two arugments, it can't be a damage scripting command.
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.GetLinkedScriptingToken,
+                    $"Damage token requires exactly one argument. Number of arguments: {parsedToken.Arguments.Count}");
                 linkedToken = null;
                 return false;
             }
 
-            // linkedToken = null;
-            // return false;
+            // Try to evaluate the first token as a numeric value. If it can't be done, this isn't a hit.
+            if (!EvaluatablesReference.TryGetNumericEvaluatableValue(parsedToken.Arguments[0], out INumericEvaluatableValue evaluatable))
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.GetLinkedScriptingToken,
+                    $"Failed to parse numeric evaluatalbe argument out of one argument. Argument: '{parsedToken.Arguments[0]}'");
+                linkedToken = null;
+                return false;
+            }
+
+            linkedToken = new DamageLinkedToken(parsedToken, new ChangeTargetEvaluatableValue(DefaultTargetProvider.Instance), evaluatable);
+            return true;
         }
     }
 

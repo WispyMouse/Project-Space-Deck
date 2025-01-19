@@ -106,5 +106,23 @@ namespace SpaceDeck.Utility.Minimum
         {
             return this.Value.GetHashCode();
         }
+
+        public bool ContainsAnyOf(params char[] characters)
+        {
+            for (int ii = 0; ii < this.Value.Length; ii++)
+            {
+                char currentCharacter = this.Value[ii];
+
+                for (int jj = 0; jj < characters.Length; jj++)
+                {
+                    if (currentCharacter == characters[jj])
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 }

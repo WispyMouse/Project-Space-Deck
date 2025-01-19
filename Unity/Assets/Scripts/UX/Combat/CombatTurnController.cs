@@ -9,7 +9,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.UX;
-
+    using SpaceDeck.Tokenization.Minimum.Questions;
 
     public class CombatTurnController : MonoBehaviour
     {
@@ -82,7 +82,7 @@ namespace SpaceDeck.UX
         {
             QuestionAnsweringContext questionContext = this.CentralGameStateControllerInstance.GameplayState.StartConsideringPlayingCard(toPlay);
             this.CurrentQuestionAnsweringContext = questionContext;
-            if (this.CentralGameStateControllerInstance.GameplayState.TryExecuteCurrentCard())
+            if (this.CentralGameStateControllerInstance.GameplayState.TryExecuteCurrentCard(new ExecutionAnswerSet(questionContext.User)))
             {
                 // The card has been played, hooray
                 this.CurrentQuestionAnsweringContext = null;
@@ -92,9 +92,9 @@ namespace SpaceDeck.UX
             // TODO: Answer these questions, then execute card
         }
 
-        public void ExecuteCurrentCard()
+        public void ExecuteCurrentCard(ExecutionAnswerSet answers)
         {
-            if (!this.CentralGameStateControllerInstance.GameplayState.TryExecuteCurrentCard())
+            if (!this.CentralGameStateControllerInstance.GameplayState.TryExecuteCurrentCard(answers))
             {
                 // TODO LOG
                 // Should not fail to play cards if this is directly called

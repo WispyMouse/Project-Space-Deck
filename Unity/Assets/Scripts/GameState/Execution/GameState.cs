@@ -377,11 +377,6 @@ namespace SpaceDeck.GameState.Execution
             return true;
         }
 
-        public bool TryExecuteCurrentCard()
-        {
-            return TryExecuteCurrentCard(null);
-        }
-
         public IReadOnlyList<AppliedStatusEffect> GetAllStatusEffects()
         {
             List<AppliedStatusEffect> statusEffects = new List<AppliedStatusEffect>();

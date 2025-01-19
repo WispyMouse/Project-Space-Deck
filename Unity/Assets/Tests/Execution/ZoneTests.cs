@@ -64,7 +64,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ACT
             gameState.StartConsideringPlayingCard(cardInstance);
-            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
@@ -100,7 +100,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ACT
             gameState.StartConsideringPlayingCard(cardInstance);
-            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
@@ -138,7 +138,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ACT
             gameState.StartConsideringPlayingCard(cardInstance);
-            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT

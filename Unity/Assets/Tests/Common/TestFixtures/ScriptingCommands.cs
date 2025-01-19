@@ -136,6 +136,47 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         }
     }
 
+    public class OneArgumentNumericDebugLogScriptingCommand : ScriptingCommand
+    {
+        public static readonly LowercaseString IdentifierString = new LowercaseString("ONEARGUMENTNUMERICCDEBUG");
+        public override LowercaseString Identifier => IdentifierString;
+
+        public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
+        {
+            if (!EvaluatablesReference.TryGetNumericEvaluatableValue(parsedToken.Arguments[0], out INumericEvaluatableValue evaluatable))
+            {
+                linkedToken = null;
+                return false;
+            }
+
+            linkedToken = new OneArgumentNumericDebugLogLinkedToken(parsedToken, evaluatable);
+            return true;
+        }
+    }
+
+    public class OneArgumentNumericDebugLogLinkedToken : LinkedToken<OneArgumentNumericDebugLogScriptingCommand>
+    {
+        public readonly INumericEvaluatableValue NumericEvaluatable;
+
+        public OneArgumentNumericDebugLogLinkedToken(ParsedToken parsedToken, INumericEvaluatableValue numericEvaluatable) : base(parsedToken)
+        {
+            this.NumericEvaluatable = numericEvaluatable;
+        }
+
+        public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
+        {
+            if (!this.NumericEvaluatable.TryEvaluate(context, out decimal value))
+            {
+                changes = null;
+                return false;
+            }
+
+            changes = new Stack<GameStateChange>();
+            changes.Push(new LoggingGameStateChange(value.ToString()));
+            return true;
+        }
+    }
+
     public class HelloWorldScriptingCommand : ScriptingCommand
     {
         public static readonly LowercaseString IdentifierString = new LowercaseString("HELLOWORLD");

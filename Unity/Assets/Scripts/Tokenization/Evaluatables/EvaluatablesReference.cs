@@ -1,4 +1,4 @@
-namespace SpaceDeck.Tokenization.Processing
+namespace SpaceDeck.Tokenization.Evaluatables
 {
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;

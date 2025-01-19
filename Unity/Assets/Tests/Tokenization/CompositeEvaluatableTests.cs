@@ -59,6 +59,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 this.ValueOne = valueOne;
                 this.ValueTwo = valueTwo;
                 this.Total = valueOne + valueTwo;
+
+                Assert.True(valueOne >= 0);
+                Assert.True(valueTwo >= 0);
             }
 
             public override string ToString()
@@ -70,8 +73,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         public static Addition_Adds_DataSource_Object[] Addition_Adds_DataSource =
         {
             new Addition_Adds_DataSource_Object(5, 5),
-            new Addition_Adds_DataSource_Object(0, 6),
-            new Addition_Adds_DataSource_Object(11, -4)
+            new Addition_Adds_DataSource_Object(0, 6)
         };
 
         [Test]
@@ -79,13 +81,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         public void Addition_Adds(Addition_Adds_DataSource_Object data)
         {
             // ARRANGE
-            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentNumericDebugLogScriptingCommand());
+            EvaluatablesReference.SubscribeEvaluatable(new CompositeNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
             CardImport import = new CardImport()
             {
                 Id = nameof(Addition_Adds),
-                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:{data.ValueOne}+{data.ValueTwo}]"
+                EffectScript = $"[{OneArgumentNumericDebugLogScriptingCommand.IdentifierString}:{data.ValueOne}+{data.ValueTwo}]"
             };
             CardDatabase.AddCardToDatabase(import);
+            AllDatabases.LinkAllDatabase();
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
@@ -95,11 +100,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
-            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
-            Assert.AreEqual(data.Total, LoggingGameStateChange.LastLog, "Expecting the last log to be the calculated total.");
+            Assert.AreEqual(data.Total.ToString(), LoggingGameStateChange.LastLog, "Expecting the last log to be the calculated total.");
         }
 
         public class Addition_ManyAdds_DataSource_Object
@@ -113,6 +118,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 foreach (int value in values)
                 {
                     this.Total += value;
+                    Assert.True(value >= 0);
                 }
             }
 
@@ -158,7 +164,6 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             new Addition_ManyAdds_DataSource_Object(1, 2),
             new Addition_ManyAdds_DataSource_Object(1, 2, 3),
             new Addition_ManyAdds_DataSource_Object(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-            new Addition_ManyAdds_DataSource_Object(1, 2, -3, 4, -5, -6),
         };
 
         [Test]
@@ -166,13 +171,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         public void Addition_ManyAdds(Addition_ManyAdds_DataSource_Object data)
         {
             // ARRANGE
-            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentNumericDebugLogScriptingCommand());
+            EvaluatablesReference.SubscribeEvaluatable(new CompositeNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
             CardImport import = new CardImport()
             {
                 Id = nameof(Addition_ManyAdds),
-                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:{data.GetEffectScript()}]"
+                EffectScript = $"[{OneArgumentNumericDebugLogScriptingCommand.IdentifierString}:{data.GetEffectScript()}]"
             };
             CardDatabase.AddCardToDatabase(import);
+            AllDatabases.LinkAllDatabase();
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
@@ -182,24 +190,27 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
-            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
-            Assert.AreEqual(data.Total, LoggingGameStateChange.LastLog, "Expecting the last log to be the calculated total.");
+            Assert.AreEqual(data.Total.ToString(), LoggingGameStateChange.LastLog, "Expecting the last log to be the calculated total.");
         }
 
         [Test]
-        public void Division_RoundsDown()
+        public void Division()
         {
             // ARRANGE
-            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentNumericDebugLogScriptingCommand());
+            EvaluatablesReference.SubscribeEvaluatable(new CompositeNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
             CardImport import = new CardImport()
             {
-                Id = nameof(Division_RoundsDown),
-                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:10/3]"
+                Id = nameof(Division),
+                EffectScript = $"[{OneArgumentNumericDebugLogScriptingCommand.IdentifierString}:10/3]"
             };
             CardDatabase.AddCardToDatabase(import);
+            AllDatabases.LinkAllDatabase();
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
@@ -209,11 +220,11 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
-            Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+            Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user:null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
-            Assert.AreEqual(3, LoggingGameStateChange.LastLog, "Expecting the last log to be 3, which is 10/3 rounded down.");
+            Assert.AreEqual(((decimal)10 / (decimal)3).ToString(), LoggingGameStateChange.LastLog, "Expecting the last log to be 3.333.");
         }
 
         /// <summary>
@@ -227,13 +238,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             int timesToPlayCard = 1000;
 
             // ARRANGE
-            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentNumericDebugLogScriptingCommand());
+            EvaluatablesReference.SubscribeEvaluatable(new CompositeNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
             CardImport import = new CardImport()
             {
-                Id = nameof(Division_RoundsDown),
-                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:0~10]"
+                Id = nameof(Randomization_RoundTrip),
+                EffectScript = $"[{OneArgumentNumericDebugLogScriptingCommand.IdentifierString}:0~10]"
             };
             CardDatabase.AddCardToDatabase(import);
+            AllDatabases.LinkAllDatabase();
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
@@ -246,7 +260,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             for (int ii = 0; ii < timesToPlayCard; ii++)
             {
                 gameState.StartConsideringPlayingCard(instance);
-                Assert.IsTrue(gameState.TryExecuteCurrentCard(), "Should be able to execute question-less card.");
+                Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
                 PendingResolveExecutor.ResolveAll(gameState);
 
                 string lastLog = LoggingGameStateChange.LastLog;

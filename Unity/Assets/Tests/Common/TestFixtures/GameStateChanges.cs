@@ -21,6 +21,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Utility.Logging;
 
     public class LoggingGameStateChange : GameStateChange
     {
@@ -35,6 +36,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
+            Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.Test, this.ToLog);
             Debug.Log(this.ToLog);
             LastLog = this.ToLog;
         }
