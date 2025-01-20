@@ -21,7 +21,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
                 return false;
             }
 
-            string substring = functionName.Value.Substring(functionName.Value.Length + FunctionParameterStart.Length, tokenTextString.Value.Length - (functionName.Value.Length + FunctionParameterStart.Length + FunctionParamterEnd.Length));
+            string substring = tokenTextString.Value.Substring(functionName.Value.Length + FunctionParameterStart.Length, tokenTextString.Value.Length - (functionName.Value.Length + FunctionParameterStart.Length + FunctionParamterEnd.Length));
 
             string[] separated = substring.Split(FunctionParameterSeparator.ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
             tokenTextParts = new List<LowercaseString>();

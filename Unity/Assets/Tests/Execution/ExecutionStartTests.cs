@@ -383,28 +383,35 @@ namespace SpaceDeck.Tests.EditMode.Execution
         [Test]
         public void CountCurrency_Ten()
         {
+            // SET PARAMETERS
             int currencyGainAmount = 10;
 
-            // ARRANGE
-            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
+            // IMPORT DATABASES
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentNumericDebugLogScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new ModCurrencyScriptingCommand());
+
             EvaluatablesReference.SubscribeEvaluatable(new CountCurrencyEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+
             CurrencyImport toGain = new CurrencyImport()
             {
                 Id = nameof(toGain)
             };
             CurrencyDatabase.AddCurrencyToDatabase(toGain);
             Currency gainedCurrency = CurrencyDatabase.Get(toGain.Id);
-            GameState gameState = new GameState();
-            EncounterState encounterState = new EncounterState();
-            // TODO: IMPORT SOME SCRIPTING COMMAND THAT AUGMENTS CURRENCY
-            // TODO: IMPORT SOME EVALUATABLE THAT CAN HANDLE COUNT
+
             CardImport cardImport = new CardImport()
             {
                 Id = nameof(cardImport),
-                EffectScript = $"[MODCURRENCY:{gainedCurrency.Id} {currencyGainAmount}][{OneArgumentDebugLogScriptingCommand.IdentifierString}:CURRENCYSTACKS({gainedCurrency.Id})]"
+                EffectScript = $"[MODCURRENCY:{gainedCurrency.Id} {currencyGainAmount}][{OneArgumentNumericDebugLogScriptingCommand.IdentifierString}:COUNTCURRENCY({gainedCurrency.Id})]"
             };
             CardDatabase.AddCardToDatabase(cardImport);
-            CardDatabase.LinkTokens();
+
+            AllDatabases.LinkAllDatabase();
+
+            // ARRANGE
+            GameState gameState = new GameState();
+            EncounterState encounterState = new EncounterState();
             CardInstance instance = CardDatabase.GetInstance(cardImport.Id);
 
             // ACT

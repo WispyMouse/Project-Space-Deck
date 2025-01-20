@@ -1,6 +1,8 @@
 namespace SpaceDeck.Tokenization.Processing
 {
     using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -25,7 +27,9 @@ namespace SpaceDeck.Tokenization.Processing
                 {
                     if (!parsedToken.CommandToExecute.TryGetLinkedToken(parsedToken, out LinkedToken linkedToken))
                     {
-                        // TODO log failure
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.TryGetLinkedTokenList,
+                            $"Failed to link token for parsedToken's CommandToExecute '{parsedToken.CommandToExecute.Identifier}'.");
                         linkedTokenList = default(LinkedTokenList);
                         return false;
                     }

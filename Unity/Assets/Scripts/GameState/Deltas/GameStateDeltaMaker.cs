@@ -5,6 +5,7 @@ namespace SpaceDeck.GameState.Deltas
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System;
@@ -35,15 +36,15 @@ namespace SpaceDeck.GameState.Deltas
             
             if (playedCard != null)
             {
-                executionContext= new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, playedCard);
+                executionContext= new ScriptingExecutionContext(delta, linkedTokenList, answers, playedCard);
             }
             else if (statusEffect != null)
             {
-                executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers, statusEffect);
+                executionContext = new ScriptingExecutionContext(delta, linkedTokenList, answers, statusEffect);
             }
             else
             {
-                executionContext = new ScriptingExecutionContext(stateToApplyTo, linkedTokenList, answers);
+                executionContext = new ScriptingExecutionContext(delta, linkedTokenList, answers);
             }
             executionContext.CurrentlyExecutingGameStateChange = basedOnChange;
 
@@ -55,7 +56,9 @@ namespace SpaceDeck.GameState.Deltas
                 {
                     if (!nextToken.TryGetChanges(executionContext, out Stack<GameStateChange> changes))
                     {
-                        // TODO LOG FAILURE
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.TryCreateDelta,
+                            $"Failed to get changes for executing token.");
                         return false;
                     }
 
