@@ -26,7 +26,7 @@ namespace SpaceDeck.GameState.Deltas
             // If we have a specific played card, try to get elemental gain from it first
             if (playedCard != null && playedCard.ElementalGain != null)
             {
-                foreach (LowercaseString element in playedCard.ElementalGain.Keys)
+                foreach (Element element in playedCard.ElementalGain.Keys)
                 {
                     delta.ModifyElement(element, playedCard.ElementalGain[element]);
                 }

@@ -58,7 +58,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardPrototype cardPrototype = import.GetPrototype();
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
-            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
@@ -94,7 +94,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardPrototype cardPrototype = import.GetPrototype();
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
-            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
@@ -132,7 +132,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardPrototype cardPrototype = import.GetPrototype();
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
-            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
@@ -168,13 +168,13 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardPrototype cardPrototype = import.GetPrototype();
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
-            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             gameState.StartEncounter(encounter);
 
             // ACT
             for (int ii = 0; ii < cardsInDeck; ii++)
             {
-                gameState.AddCard(new LinkedCardInstance(cardPrototype), WellknownZones.Deck);
+                gameState.AddCard(new LinkedCardInstance(cardPrototype, ElementDatabase.Provider), WellknownZones.Deck);
             }
             CardInstance exileThis = gameState.GetCardsInZone(WellknownZones.Deck)[0];
             gameState.MoveCard(exileThis, WellknownZones.Exile);

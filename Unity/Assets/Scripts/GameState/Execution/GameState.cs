@@ -525,17 +525,15 @@ namespace SpaceDeck.GameState.Execution
             return (int)effects.Qualities.GetNumericQuality(WellknownQualities.Stacks, 0);
         }
 
-        public void ModifyElement(LowercaseString elementId, int modAmount)
+        public void ModifyElement(Element element, int modAmount)
         {
-            Element toGet = ElementDatabase.GetElement(elementId);
-
-            if (!this.Elements.ContainsKey(toGet))
+            if (!this.Elements.ContainsKey(element))
             {
-                this.Elements.Add(toGet, modAmount);
+                this.Elements.Add(element, modAmount);
             }
             else
             {
-                this.Elements[toGet] += modAmount;
+                this.Elements[element] += modAmount;
             }
         }
 

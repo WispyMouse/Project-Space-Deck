@@ -9,6 +9,8 @@ namespace SpaceDeck.Models.Databases
 
     public static class ElementDatabase
     {
+        public static ElementDatabaseProvider Provider => ElementDatabaseProvider.Instance;
+
         public static Dictionary<LowercaseString, Element> ElementData { get; set; } = new Dictionary<LowercaseString, Element>();
 
         public static void AddElement(ElementImport toAdd)
@@ -42,6 +44,21 @@ namespace SpaceDeck.Models.Databases
         public static int GetElementGain(Element forElement, CardInstance forCard)
         {
             return (int)forCard.Qualities.GetNumericQuality(WellknownElements.GetElementGain(forElement.Id));
+        }
+    }
+
+    public class ElementDatabaseProvider : IElementProvider
+    {
+        public static readonly ElementDatabaseProvider Instance = new ElementDatabaseProvider();
+
+        private ElementDatabaseProvider()
+        {
+
+        }
+
+        public bool TryGetElement(LowercaseString elementId, out Element foundElement)
+        {
+            return ElementDatabase.TryGetElement(elementId, out foundElement);
         }
     }
 }

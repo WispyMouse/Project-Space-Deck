@@ -350,7 +350,7 @@ namespace SpaceDeck.GameState.Deltas
             return this.BaseGameState.GetStacks(onEntity, statusEffectId);
         }
 
-        public void ModifyElement(LowercaseString elementId, int modAmount)
+        public void ModifyElement(Element element, int modAmount)
         {
             throw new System.NotImplementedException();
         }

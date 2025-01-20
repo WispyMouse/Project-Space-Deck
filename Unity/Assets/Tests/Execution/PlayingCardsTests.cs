@@ -60,7 +60,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 LinkedTokenMaker.CreateTokenListFromLinkedTokens(
                     new ExecuteLinkedToken((IGameStateMutator mutator) => { debugValue = true; }))
                 );
-            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
@@ -93,7 +93,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 LinkedTokenMaker.CreateTokenListFromLinkedTokens(
                     new ExecuteWithTargetLinkedToken(new ChangeTargetEvaluatableValue(FoeTargetProvider.Instance), (IGameStateMutator mutator) => { debugValue = true; }))
                 );
-            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype);
+            LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             Entity foeEntity = new Entity();
             foeEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(foeEntity);

@@ -31,7 +31,7 @@ namespace SpaceDeck.Models.Databases
 
         public static LinkedCardInstance GetInstance(LowercaseString id)
         {
-            return new LinkedCardInstance(Prototypes[id]);
+            return new LinkedCardInstance(Prototypes[id], ElementDatabase.Provider);
         }
 
         public static void ClearDatabase()

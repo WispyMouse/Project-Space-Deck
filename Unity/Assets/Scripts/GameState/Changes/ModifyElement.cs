@@ -11,18 +11,18 @@ namespace SpaceDeck.GameState.Changes
         public decimal Intensity { get; set; } = 0;
         public InitialIntensityPositivity Positivity { get; private set; }
 
-        public readonly LowercaseString ElementId;
+        public readonly Element ElementToModify;
 
-        public ModifyElement(LowercaseString elementId, int modifyValue, InitialIntensityPositivity positivity) : base(NobodyTarget.Instance)
+        public ModifyElement(Element element, int modifyValue, InitialIntensityPositivity positivity) : base(NobodyTarget.Instance)
         {
-            this.ElementId = elementId;
+            this.ElementToModify = element;
             this.Intensity = modifyValue;
             this.Positivity = positivity;
         }
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            toApplyTo.ModifyElement(this.ElementId, (int)toApplyTo.GetIntensity(this));
+            toApplyTo.ModifyElement(this.ElementToModify, (int)toApplyTo.GetIntensity(this));
         }
 
         public override string Describe()
