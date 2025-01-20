@@ -38,7 +38,12 @@ namespace SpaceDeck.Models.Imports
             }
             else
             {
-                return new CardPrototype(this.Id, parsedTokens);
+                Dictionary<LowercaseString, int> elementGain = new Dictionary<LowercaseString, int>();
+                foreach (ElementGainImport import in this.ElementGain)
+                {
+                    elementGain.Add(import.ElementId, import.ModAmount);
+                }
+                return new CardPrototype(this.Id, parsedTokens, elementGain);
             }
         }
 

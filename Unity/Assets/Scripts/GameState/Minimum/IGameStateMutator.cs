@@ -31,6 +31,7 @@ namespace SpaceDeck.GameState.Minimum
         void ModStatusEffectStacks(Entity onEntity, LowercaseString statusEffectId, int modStacks);
         int GetStacks(Entity onEntity, LowercaseString statusEffectId);
         void ModifyElement(Element element, int modAmount);
+        int GetElement(Element element);
 
         void StartFactionTurn(decimal factionId);
         void EndCurrentFactionTurn();

@@ -1,9 +1,8 @@
-namespace SpaceDeck.GameState.Changes
+namespace SpaceDeck.GameState.Minimum
 {
     using System;
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Utility.Minimum;
 
     public class ModifyElement : GameStateChange, IChangeWithIntensity

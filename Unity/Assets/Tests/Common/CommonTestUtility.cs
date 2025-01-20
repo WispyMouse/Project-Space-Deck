@@ -18,3 +18,9 @@ namespace SpaceDeck.Tests.EditMode
         }
     }
 }
+
+// SET PARAMETERS
+// IMPORT DATABASES
+// ARRANGE
+// ACT
+// ASSERT

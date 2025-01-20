@@ -366,7 +366,7 @@ namespace SpaceDeck.GameState.Execution
             // If the token has the appropriate information, execute it
             if (linkedCard != null)
             {
-                if (linkedCard.Prototype.LinkedTokens.HasValue && GameStateDeltaMaker.TryCreateDelta(linkedCard.Prototype.LinkedTokens.Value, answers, this, out GameStateDelta delta))
+                if (linkedCard.Prototype.LinkedTokens.HasValue && GameStateDeltaMaker.TryCreateDelta(linkedCard.Prototype.LinkedTokens.Value, answers, this, out GameStateDelta delta, linkedCard))
                 {
                     GameStateDeltaApplier.ApplyGameStateDelta(this, delta);
                 }
@@ -535,6 +535,19 @@ namespace SpaceDeck.GameState.Execution
             {
                 this.Elements[element] += modAmount;
             }
+        }
+
+        public int GetElement(Element element)
+        {
+            if (this.Elements.TryGetValue(element, out int elementCount))
+            {
+                return elementCount;
+            }
+
+            // This must be an element we should care about, so track it.
+            this.Elements.Add(element, 0);
+
+            return 0;
         }
 
         public void SetIntensity(IChangeWithIntensity intensity, decimal newValue)

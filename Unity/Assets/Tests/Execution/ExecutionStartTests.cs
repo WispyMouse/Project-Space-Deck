@@ -352,25 +352,32 @@ namespace SpaceDeck.Tests.EditMode.Execution
         [Test]
         public void GainElement_Counts()
         {
+            // SET PARAMETERS
             int elementGain = 3;
 
-            // ARRANGE
+            // IMPORT DATABASES
             ElementImport elementImport = new ElementImport()
             {
                 Id = nameof(elementImport)
             };
             ElementDatabase.AddElement(elementImport);
             Element element = ElementDatabase.GetElement(elementImport.Id);
-            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentDebugLogScriptingCommand());
-            // TODO: IMPORT SOME EVALUATABLE THAT CAN HANDLE ELEMENTSTACKS
+
+            ScriptingCommandReference.RegisterScriptingCommand(new OneArgumentNumericDebugLogScriptingCommand());
+
+            EvaluatablesReference.SubscribeEvaluatable(new CountElementEvaluatableParser());
+
             CardImport cardImport = new CardImport()
             {
                 Id = nameof(cardImport),
-                EffectScript = $"[{OneArgumentDebugLogScriptingCommand.IdentifierString}:ELEMENTSTACKS({elementImport.Id})]",
-                ElementGain = new List<ElementGainImport>() { new ElementGainImport() { ElementId = OneArgumentDebugLogScriptingCommand.IdentifierString, ModAmount = elementGain } }
+                EffectScript = $"[{OneArgumentNumericDebugLogScriptingCommand.IdentifierString}:COUNTELEMENT({elementImport.Id})]",
+                ElementGain = new List<ElementGainImport>() { new ElementGainImport() { ElementId = elementImport.Id, ModAmount = elementGain } }
             };
             CardDatabase.AddCardToDatabase(cardImport);
-            CardDatabase.LinkTokens();
+
+            AllDatabases.LinkAllDatabase();
+
+            // ARRANGE
             CardInstance instance = CardDatabase.GetInstance(cardImport.Id);
             GameState gameState = new GameState();
             EncounterState encounterState = new EncounterState();
@@ -381,7 +388,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             gameState.StartEncounter(encounterState);
             gameState.StartConsideringPlayingCard(instance);
             gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(toStack));
-            
+            PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
             Assert.AreEqual(elementGain.ToString(), LoggingGameStateChange.LastLog, "The last log from the LoggingGameStateChange should be the expected amount of stacks.");

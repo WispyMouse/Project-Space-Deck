@@ -21,6 +21,7 @@ namespace SpaceDeck.Models.Instances
         public LinkedCardInstance(CardPrototype prototype, IElementProvider elementProvider)
         {
             this.Prototype = prototype;
+            this.ElementalGain = new Dictionary<Element, int>();
 
             foreach (LowercaseString elementId in (prototype.ElementalGain != null ? (IEnumerable<LowercaseString>)(prototype.ElementalGain.Keys) : Array.Empty<LowercaseString>()))
             {

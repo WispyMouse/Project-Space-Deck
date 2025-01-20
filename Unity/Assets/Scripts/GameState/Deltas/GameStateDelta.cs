@@ -33,6 +33,7 @@ namespace SpaceDeck.GameState.Deltas
         public readonly Dictionary<Entity, EntityDestination> EntityDestinationChanges = new Dictionary<Entity, EntityDestination>();
         public readonly Dictionary<CardInstance, LowercaseString> CardDestinationChanges = new Dictionary<CardInstance, LowercaseString>();
         public readonly Dictionary<IChangeWithIntensity, decimal> IntensityChanges = new Dictionary<IChangeWithIntensity, decimal>();
+        public readonly Dictionary<Element, decimal> ElementChanges = new Dictionary<Element, decimal>();
 
         public decimal? NewFactionTurn = null;
         public Entity NewEntityTurn = null;
@@ -352,7 +353,28 @@ namespace SpaceDeck.GameState.Deltas
 
         public void ModifyElement(Element element, int modAmount)
         {
-            throw new System.NotImplementedException();
+            int newValue = GetElement(element) + modAmount;
+
+            // GetElement will certainly result in the creation of an entry in
+            // ElementChanges for this element, but just in case, this is safe
+            if (this.ElementChanges.TryGetValue(element, out decimal currentValue))
+            {
+                this.ElementChanges[element] = currentValue + modAmount;
+            }
+            else
+            {
+                this.ElementChanges.Add(element, modAmount);
+            }
+        }
+
+        public int GetElement(Element toGet)
+        {
+            if (this.ElementChanges.TryGetValue(toGet, out decimal value))
+            {
+                return (int)value;
+            }
+
+            return this.BaseGameState.GetElement(toGet);
         }
 
         public void SetIntensity(IChangeWithIntensity intensity, decimal newValue)

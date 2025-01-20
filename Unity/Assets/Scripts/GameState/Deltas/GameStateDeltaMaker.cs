@@ -28,7 +28,9 @@ namespace SpaceDeck.GameState.Deltas
             {
                 foreach (Element element in playedCard.ElementalGain.Keys)
                 {
-                    delta.ModifyElement(element, playedCard.ElementalGain[element]);
+                    ModifyElement modifyElement = new ModifyElement(element, playedCard.ElementalGain[element], InitialIntensityPositivity.PositiveOrZero);
+                    delta.Changes.Add(modifyElement);
+                    modifyElement.Apply(delta);
                 }
             }
 
@@ -36,7 +38,7 @@ namespace SpaceDeck.GameState.Deltas
             
             if (playedCard != null)
             {
-                executionContext= new ScriptingExecutionContext(delta, linkedTokenList, answers, playedCard);
+                executionContext = new ScriptingExecutionContext(delta, linkedTokenList, answers, playedCard);
             }
             else if (statusEffect != null)
             {
