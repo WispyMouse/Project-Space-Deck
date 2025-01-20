@@ -83,18 +83,32 @@ namespace SpaceDeck.GameState.Deltas
                             }
                             else
                             {
-                                delta.Changes.Add(currentlyApplyingChange);
+                                if (currentlyApplyingChange.ShouldKeepHistory)
+                                {
+                                    delta.Changes.Add(currentlyApplyingChange);
+                                }
+
                                 currentlyApplyingChange.Apply(delta);
                             }
 
                             // First stack any triggered events that resulted from the above application
                             // Check if there's any pending resolves, and try to apply them
-                            Stack<ResolveChange> resolveChanges = new Stack<ResolveChange>();
+                            Stack<GameStateChange> resolveChanges = new Stack<GameStateChange>();
                             while (delta.TryGetNextResolve(out IResolve currentResolve))
                             {
-                                resolveChanges.Push(new ResolveChange(currentResolve));
+                                // If this next resolve already is a GameStateChange, then just push it as is
+                                // Otherwise, wrap it in a ResolveChange
+                                if (currentResolve is GameStateChange change)
+                                {
+                                    resolveChanges.Push(change);
+                                }
+                                else
+                                {
+                                    resolveChanges.Push(new ResolveChange(currentResolve));
+                                }
                             }
-                            foreach (ResolveChange resolve in resolveChanges)
+
+                            foreach (GameStateChange resolve in resolveChanges)
                             {
                                 changeStack.Push(resolve);
                             }

@@ -17,6 +17,8 @@ namespace SpaceDeck.GameState.Minimum
             this.ExecutionScript = executionScript;
         }
 
+        public bool ShouldKeepHistory => true;
+
         public void Apply(IGameStateMutator mutator)
         {
             this.Apply(mutator, out _);

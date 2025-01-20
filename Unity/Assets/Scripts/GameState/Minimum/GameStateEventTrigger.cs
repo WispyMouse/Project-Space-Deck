@@ -44,6 +44,8 @@ namespace SpaceDeck.GameState.Minimum
 
         public AppliedStatusEffect ProccingStatusEffect { get; set; }
 
+        public bool ShouldKeepHistory => false;
+
         public GameStateEventTrigger(LowercaseString eventId)
         {
             this.EventId = eventId;

@@ -14,6 +14,8 @@ namespace SpaceDeck.GameState.Minimum
         public readonly IChangeTarget Target;
         public bool Triggered = false;
 
+        public virtual bool ShouldKeepHistory => true;
+
         public GameStateChange(IChangeTarget target)
         {
             this.Target = target;

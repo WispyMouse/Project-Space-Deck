@@ -9,6 +9,12 @@ namespace SpaceDeck.GameState.Minimum
     {
         public readonly IResolve Resolve;
 
+        /// <summary>
+        /// ResolveChange should only keep its history if the IResolve it is
+        /// meant for should keep its history.
+        /// </summary>
+        public override bool ShouldKeepHistory => this.Resolve.ShouldKeepHistory;
+
         public ResolveChange(IResolve toResolve) : base(NobodyTarget.Instance)
         {
             this.Resolve = toResolve;

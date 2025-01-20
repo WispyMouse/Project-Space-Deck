@@ -18,6 +18,8 @@ namespace SpaceDeck.GameState.Minimum
             this.Direction = direction;
         }
 
+        public bool ShouldKeepHistory => true;
+
         public void Apply(IGameStateMutator mutator)
         {
             if (this.TriggeredEffect.TryApplyStatusEffect(this.Trigger, mutator, this.Direction, out List<GameStateChange> applications))

@@ -17,6 +17,13 @@ namespace SpaceDeck.GameState.Minimum
             this.Direction = direction;
         }
 
+        /// <summary>
+        /// TriggerAndResolve should not keep the history in GameStateDelta.
+        /// They are entirely used to create a GameStateDelta, and are not
+        /// useful outside of its limited context.
+        /// </summary>
+        public bool ShouldKeepHistory => false;
+
         public void Apply(IGameStateMutator mutator)
         {
             IReadOnlyList<IResolve> resolves = mutator.GetTriggers(this.Trigger, this.Direction);
