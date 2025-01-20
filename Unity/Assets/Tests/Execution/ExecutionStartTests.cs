@@ -27,6 +27,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.GameState.Deltas;
     using SpaceDeck.Tokenization.Functions;
     using SpaceDeck.Utility.Unity;
+    using SpaceDeck.Utility.Logging;
+    using UnityEngine.TestTools;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -47,6 +49,13 @@ namespace SpaceDeck.Tests.EditMode.Execution
         public void OneTimeTearDown()
         {
             DebugLogger.UnsubscribeDebugListener();
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            DebugLogger.AssertFailureOnError = true;
+            LogAssert.ignoreFailingMessages = false;
         }
 
         [TearDown]
@@ -129,6 +138,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ASSERT
             // DAMAGE requires a target, and without a target this shouldn't be able to evaluate
+            DebugLogger.AssertFailureOnError = false;
+            LogAssert.ignoreFailingMessages = true;
             Assert.False(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
         }
 

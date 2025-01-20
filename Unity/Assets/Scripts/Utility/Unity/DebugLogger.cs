@@ -9,7 +9,7 @@ namespace SpaceDeck.Utility.Unity
 
     public class DebugLogger : MonoBehaviour
     {
-        private static bool AssertFailureOnError = false;
+        public static bool AssertFailureOnError = false;
 
         public static void SubscribeDebugListener(bool assertFailureOnError)
         {

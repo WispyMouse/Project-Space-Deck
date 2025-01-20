@@ -80,6 +80,9 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         {
             if (!this.ChangeTarget.TryEvaluate(context, out IChangeTarget target) || !this.Mod.TryEvaluate(context, out decimal mod))
             {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.TokenTryGetChanges,
+                    $"Failed to evaluate either change target or modifier value.");
                 changes = null;
                 return false;
             }
