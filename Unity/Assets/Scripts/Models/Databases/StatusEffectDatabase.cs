@@ -80,5 +80,10 @@ namespace SpaceDeck.Models.Databases
                 }
             }
         }
+
+        public static bool HasEntry(LowercaseString statusEffectId)
+        {
+            return Prototypes.ContainsKey(statusEffectId);
+        }
     }
 }

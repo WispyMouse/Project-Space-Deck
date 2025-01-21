@@ -314,20 +314,26 @@ namespace SpaceDeck.Tests.EditMode.Execution
         [Test]
         public void CountStacks_CountsSelf_OnlySelf_Correctly()
         {
+            // SET PARAMETERS
             decimal reportedValue = 0;
             int numberOfStacks = 10;
 
-            // ARRANGE
+            // IMPORT DATABASES
             StatusEffectImport import = new StatusEffectImport()
             {
                 Id = nameof(CountStacks_CountsSelf_OnlySelf_Correctly)
             };
             StatusEffectDatabase.RegisterStatusEffect(import);
-            Action<decimal> setReportedValue = (decimal value) => { reportedValue = value; };
 
-            // TODO: Register evaluatables that will parse token stacks
+            EvaluatablesReference.SubscribeEvaluatable(new CountStacksEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new SelfTargetEvaluatableParser());
+
+            AllDatabases.LinkAllDatabase();
+
+            // ARRANGE
+            Action<decimal> setReportedValue = (decimal value) => { reportedValue = value; };
             INumericEvaluatableValue stacksEvaluatable = null;
-            Assert.True(EvaluatablesReference.TryGetNumericEvaluatableValue($"COUNT(SELF,{import.Id})", out stacksEvaluatable), "Should be able to parse the count token.");
+            Assert.True(EvaluatablesReference.TryGetNumericEvaluatableValue($"COUNTSTACKS(SELF,{import.Id})", out stacksEvaluatable), "Should be able to parse the count token.");
             EvaluateAndLogNumericLinkedToken evaluateAndLogNumericLinkedToken = new EvaluateAndLogNumericLinkedToken(stacksEvaluatable, setReportedValue);
             GameState gameState = new GameState();
             EncounterState encounterState = new EncounterState();

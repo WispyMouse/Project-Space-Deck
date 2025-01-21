@@ -9,6 +9,7 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Imports;
+    using SpaceDeck.Tokenization.Evaluatables;
 
     public static class AllDatabases
     {
@@ -23,6 +24,7 @@ namespace SpaceDeck.Models.Databases
             RewardDatabase.ClearDatabase();
             ScriptingCommandReference.Clear();
             RuleReference.ClearRules();
+            EvaluatablesReference.Clear();
         }
 
         public static void LinkAllDatabase()

@@ -30,8 +30,7 @@ namespace SpaceDeck.Tokenization.Functions
 
         public bool TryEvaluate(ScriptingExecutionContext context, out decimal value)
         {
-            value = context.ExecutedOnGameState.GetElement(this.ElementToCount);
-            return true;
+            return this.TryEvaluate(context.ExecutedOnGameState, out value);
         }
 
         public bool TryEvaluate(IGameStateMutator mutator, out decimal value)
