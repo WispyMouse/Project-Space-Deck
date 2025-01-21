@@ -25,8 +25,10 @@ namespace SpaceDeck.GameState.Minimum
 
         public virtual void Trigger(IGameStateMutator toPushTriggers)
         {
-            GameStateEventTrigger trigger = new GameStateEventTrigger(null, this);
-            toPushTriggers.TriggerAndStack(trigger);
+            // The only way a GameStateChange can be properly observed on triggering is if it is called out
+            // Otherwise, it is assumed nothing can react to the event.
+            // Just push this as a resolve.
+            toPushTriggers.PushResolve(this);
         }
 
         public abstract string Describe();

@@ -124,15 +124,7 @@ namespace SpaceDeck.UX
 
             this.PlayerUXInstance = Instantiate(this.PlayerRepresentationPF, this.PlayerRepresentationTransform);
 
-            Entity campaignEntity = null;
-            foreach (Entity curEntity in this.CurrentGameState.PersistentEntities)
-            {
-                if (curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
-                {
-                    campaignEntity = curEntity;
-                    break;
-                }
-            }
+            Entity campaignEntity = this.CentralGameStateControllerInstance.CampaignPlayer;
 
             this.PlayerUXInstance.SetFromPlayer(campaignEntity);
 

@@ -8,10 +8,12 @@ namespace SpaceDeck.GameState.Changes
     public abstract class QualityChange : GameStateChange
     {
         public readonly LowercaseString QualityToChange;
+        public readonly IHaveQualities QualitiesHaver;
 
         public QualityChange(IChangeTarget changeTarget, IHaveQualities qualityHaver, LowercaseString qualityToChange) : base(changeTarget)
         {
             this.QualityToChange = qualityToChange;
+            this.QualitiesHaver = qualityHaver;
         }
 
         public override string Describe()

@@ -41,19 +41,7 @@ namespace SpaceDeck.GameState.Deltas
 
             if (answers != null)
             {
-                QuestionAnsweringContext questionAnsweringContext = new QuestionAnsweringContext(stateToApplyTo, answers?.User, playedCard);
-                foreach (ExecutionQuestion question in linkedTokenList.GetQuestions())
-                {
-                    // If there's no answer already, look for a default answer for each
-                    if (!answers.TryGetAnswerForQuestion(question, out _))
-                    {
-                        if (question.TryGetDefaultAnswer(questionAnsweringContext, out ExecutionAnswer defaultAnswer))
-                        {
-                            answers.AddAnswer(question, defaultAnswer);
-                        }
-                        continue;
-                    }
-                }
+                answers.SetDefaultAnswers(linkedTokenList.GetQuestions(), new QuestionAnsweringContext(stateToApplyTo, answers?.User));
             }
 
             ScriptingExecutionContext executionContext;

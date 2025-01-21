@@ -16,10 +16,7 @@ namespace SpaceDeck.GameState.Changes
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            foreach (Entity curEntity in this.Target.GetRepresentedEntities(toApplyTo))
-            {
-                curEntity.Qualities.SetNumericQuality(this.QualityToChange, this.NewValue);
-            }
+            toApplyTo.SetNumericQuality(this.QualitiesHaver, this.QualityToChange, this.NewValue);
         }
 
         public override string Describe()

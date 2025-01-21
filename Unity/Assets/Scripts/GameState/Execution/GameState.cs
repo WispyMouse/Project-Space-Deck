@@ -284,40 +284,55 @@ namespace SpaceDeck.GameState.Execution
 
         public QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay)
         {
-            Entity campaignEntity = null;
-            foreach (Entity curEntity in this.PersistentEntities)
-            {
-                if (curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
-                {
-                    campaignEntity = curEntity;
-                    break;
-                }
-            }
-
             this.CurrentlyConsideredPlayedCard = toPlay;
-            return new QuestionAnsweringContext(this, campaignEntity, toPlay);
+            return new QuestionAnsweringContext(this, this.GetPlayerEntity(), toPlay);
         }
 
         public void EntityPerformsAction(Entity toAct, LinkedToken toPerform)
         {
-            QuestionAnsweringContext questionAnsweringContext = new QuestionAnsweringContext(this, toAct);
-            List<ExecutionAnswer> answers = new List<ExecutionAnswer>();
-            foreach (ExecutionQuestion question in toPerform.Questions)
-            {
-                if (!question.TryGetDefaultAnswer(questionAnsweringContext, out ExecutionAnswer answer))
-                {
-                    Logging.DebugLog(WellknownLoggingLevels.Error,
-                        WellknownLoggingCategories.EvaluatableEvaluation,
-                        $"Cannot get default answer for action. All actions performed through {nameof(EntityPerformsAction)} must have only questions that are default evaluatable, or no questions.");
-                    return;
-                }
+            this.EntityPerformsAction(toAct, toPerform, new ExecutionAnswerSet(toAct));
+        }
 
-                answers.Add(answer);
+        public void EntityPerformsAction(Entity toAct, LinkedToken toPerform, ExecutionAnswerSet answers)
+        {
+            QuestionAnsweringContext questionAnsweringContext = new QuestionAnsweringContext(this, toAct);
+            answers.SetDefaultAnswers(toPerform.Questions, questionAnsweringContext);
+
+            if (!GameStateDeltaMaker.TryCreateDelta(new LinkedTokenList(toPerform), answers, this, out GameStateDelta delta))
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.TryCreateDelta,
+                    $"Failed to create delta for entity performing action.");
+                return;
             }
 
-            ExecutionAnswerSet answerSet = new ExecutionAnswerSet(answers, toAct);
+            GameStateDeltaApplier.ApplyGameStateDelta(this, delta);
+            PendingResolveExecutor.ResolveAll(this);
+        }
 
-            if (!GameStateDeltaMaker.TryCreateDelta(new LinkedTokenList(toPerform), answerSet, this, out GameStateDelta delta))
+        public void EntityPerformsActions(Entity toAct, LinkedTokenList toPerform, ExecutionAnswerSet answers)
+        {
+            QuestionAnsweringContext questionAnsweringContext = new QuestionAnsweringContext(this, toAct);
+            answers.SetDefaultAnswers(toPerform.GetQuestions(), questionAnsweringContext);
+
+            if (!GameStateDeltaMaker.TryCreateDelta(toPerform, answers, this, out GameStateDelta delta))
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.TryCreateDelta,
+                    $"Failed to create delta for entity performing action.");
+                return;
+            }
+
+            GameStateDeltaApplier.ApplyGameStateDelta(this, delta);
+            PendingResolveExecutor.ResolveAll(this);
+        }
+
+        public void EntityPlaysLinkedCard(Entity toAct, LinkedCardInstance toPlay, ExecutionAnswerSet answers)
+        {
+            QuestionAnsweringContext questionAnsweringContext = new QuestionAnsweringContext(this, toAct);
+            answers.SetDefaultAnswers(toPlay.Prototype.LinkedTokens.Value.GetQuestions(), questionAnsweringContext);
+
+            if (!GameStateDeltaMaker.TryCreateDelta(toPlay.Prototype.LinkedTokens.Value, answers, this, out GameStateDelta delta, playedCard: toPlay))
             {
                 Logging.DebugLog(WellknownLoggingLevels.Error,
                     WellknownLoggingCategories.TryCreateDelta,
@@ -380,18 +395,30 @@ namespace SpaceDeck.GameState.Execution
                 }
             }
 
-            LinkedCardInstance linkedCard = this.CurrentlyConsideredPlayedCard as LinkedCardInstance;
+            // Store the currently considered card, so we don't have pointer shenanigans
+            CardInstance cardInstance = this.CurrentlyConsideredPlayedCard;
             this.CurrentlyConsideredPlayedCard = null;
 
-            // If the token has the appropriate information, execute it
-            if (linkedCard != null)
+            GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.CardPlayed, cardInstance);
+            this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.After));
+
+            // This is where we should push something to execute the card
+            // Executing a card is basically "the player takes an action", right?
+            // HACK: Definitely feels wrong to need to unbox cards to play them
+            // Need some other solution for getting or using Linked things...
+            if (cardInstance is LinkedCardInstance linkedCardInstance && linkedCardInstance.Prototype.LinkedTokens.HasValue)
             {
-                if (linkedCard.Prototype.LinkedTokens.HasValue && GameStateDeltaMaker.TryCreateDelta(linkedCard.Prototype.LinkedTokens.Value, answers, this, out GameStateDelta delta, linkedCard))
-                {
-                    GameStateDeltaApplier.ApplyGameStateDelta(this, delta);
-                }
+                this.PushResolve(
+                    new ActionExecutor(
+                        (IGameStateMutator mutator) => 
+                        {
+                            this.EntityPlaysLinkedCard(this.GetPlayerEntity(), linkedCardInstance, answers);
+                        }
+                    ));
             }
-            
+
+            this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.Before));
+
             PendingResolveExecutor.ResolveAll(this);
 
             return true;
@@ -578,6 +605,23 @@ namespace SpaceDeck.GameState.Execution
         public decimal GetIntensity(IChangeWithIntensity intensity)
         {
             return intensity.Intensity;
+        }
+
+        /// <summary>
+        /// HACK: For now, use this to point to the player entity.
+        /// Ideally we wouldn't make assumption like this in the base code.
+        /// </summary>
+        public Entity GetPlayerEntity()
+        {
+            foreach (Entity curEntity in this.PersistentEntities)
+            {
+                if (this.GetNumericQuality(curEntity, WellknownQualities.Faction) == WellknownFactions.Player)
+                {
+                    return curEntity;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -1,4 +1,7 @@
 using SpaceDeck.GameState.Minimum;
+using SpaceDeck.Tokenization.Minimum.Context;
+using SpaceDeck.Utility.Logging;
+using SpaceDeck.Utility.Wellknown;
 using System.Collections.Generic;
 
 namespace SpaceDeck.Tokenization.Minimum.Questions
@@ -78,7 +81,29 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
 
         public void AddAnswer(ExecutionQuestion question, ExecutionAnswer answer)
         {
-            this.questionsToAnswers.Add(answer.Question, answer);
+            this.questionsToAnswers.Add(question, answer);
+        }
+
+        public void SetDefaultAnswers(IReadOnlyList<ExecutionQuestion> questions, QuestionAnsweringContext questionAnsweringContext)
+        {
+            foreach (ExecutionQuestion question in questions)
+            {
+                if (this.TryGetAnswerForQuestion(question, out _))
+                {
+                    // Already have an answer
+                    continue;
+                }
+
+                if (!question.TryGetDefaultAnswer(questionAnsweringContext, out ExecutionAnswer answer))
+                {
+                    Logging.DebugLog(WellknownLoggingLevels.Error,
+                        WellknownLoggingCategories.EvaluatableEvaluation,
+                        $"Cannot get default answer for action.");
+                    return;
+                }
+
+                this.AddAnswer(question, answer);
+            }
         }
     }
 }
