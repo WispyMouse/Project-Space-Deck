@@ -39,7 +39,7 @@ namespace SpaceDeck.Models.Imports
             else
             {
                 Dictionary<LowercaseString, int> elementGain = new Dictionary<LowercaseString, int>();
-                foreach (ElementGainImport import in this.ElementGain)
+                foreach (ElementGainImport import in (this.ElementGain != null ? (IEnumerable<ElementGainImport>)this.ElementGain : Array.Empty<ElementGainImport>()))
                 {
                     elementGain.Add(import.ElementId, import.ModAmount);
                 }

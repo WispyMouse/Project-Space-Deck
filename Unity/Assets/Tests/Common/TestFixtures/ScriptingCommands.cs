@@ -161,6 +161,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         public OneArgumentNumericDebugLogLinkedToken(ParsedToken parsedToken, INumericEvaluatableValue numericEvaluatable) : base(parsedToken)
         {
             this.NumericEvaluatable = numericEvaluatable;
+            this._Questions.AddRange(this.NumericEvaluatable.GetQuestions(this));
         }
 
         public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
@@ -209,18 +210,19 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         {
             this.Evaluatable = evaluatable;
             this.Action = action;
+            this._Questions.AddRange(this.Evaluatable.GetQuestions(this));
         }
 
         public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
-            if (!this.Evaluatable.TryEvaluate(context.ExecutedOnGameState, out decimal parsedValue))
+            if (!this.Evaluatable.TryEvaluate(context, out decimal parsedValue))
             {
                 changes = null;
                 return false;
             }
 
             changes = new Stack<GameStateChange>();
-            changes.Push(new EvaluateAndLogNumericGameStateChange(this.Evaluatable, this.Action));
+            changes.Push(new EvaluateAndLogNumericGameStateChange(parsedValue, this.Action));
 
             return true;
         }

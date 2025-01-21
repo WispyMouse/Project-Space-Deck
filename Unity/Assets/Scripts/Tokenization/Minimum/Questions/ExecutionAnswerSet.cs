@@ -7,19 +7,19 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     {
         private readonly Dictionary<ExecutionQuestion, ExecutionAnswer> questionsToAnswers = new Dictionary<ExecutionQuestion, ExecutionAnswer>();
         public IEnumerable<ExecutionAnswer> Answers => questionsToAnswers.Values;
-        public Entity User;
+        public readonly Entity User;
 
         public ExecutionAnswerSet(Entity user)
         {
             this.User = user;
         }
 
-        public ExecutionAnswerSet(ExecutionAnswer answer)
+        public ExecutionAnswerSet(ExecutionAnswer answer, Entity user) : this(user)
         {
             this.questionsToAnswers.Add(answer.Question, answer);
         }
 
-        public ExecutionAnswerSet(IEnumerable<ExecutionAnswer> answers)
+        public ExecutionAnswerSet(IEnumerable<ExecutionAnswer> answers, Entity user) : this(user)
         {
             foreach (ExecutionAnswer answer in answers)
             {
@@ -74,6 +74,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
             }
 
             return true;
+        }
+
+        public void AddAnswer(ExecutionQuestion question, ExecutionAnswer answer)
+        {
+            this.questionsToAnswers.Add(answer.Question, answer);
         }
     }
 }

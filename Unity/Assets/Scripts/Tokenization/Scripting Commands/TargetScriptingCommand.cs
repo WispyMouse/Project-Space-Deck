@@ -39,12 +39,11 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
     public class TargetLinkedToken : LinkedToken<TargetScriptingCommand>
     {
         public readonly ChangeTargetEvaluatableValue ChangeTarget;
-        public readonly INumericEvaluatableValue Mod;
 
         public TargetLinkedToken(ChangeTargetEvaluatableValue changeTarget, ParsedToken parsedToken) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
-            this._Questions.AddRange(ChangeTarget.GetQuestions(this));
+            this._Questions.AddRange(this.ChangeTarget.GetQuestions(this));
         }
 
         public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)

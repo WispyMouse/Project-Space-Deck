@@ -8,6 +8,7 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System;
@@ -299,9 +300,28 @@ namespace SpaceDeck.GameState.Execution
 
         public void EntityPerformsAction(Entity toAct, LinkedToken toPerform)
         {
-            if (!GameStateDeltaMaker.TryCreateDelta(new LinkedTokenList(toPerform), this, out GameStateDelta delta))
+            QuestionAnsweringContext questionAnsweringContext = new QuestionAnsweringContext(this, toAct);
+            List<ExecutionAnswer> answers = new List<ExecutionAnswer>();
+            foreach (ExecutionQuestion question in toPerform.Questions)
             {
-                // TODO: LOG
+                if (!question.TryGetDefaultAnswer(questionAnsweringContext, out ExecutionAnswer answer))
+                {
+                    Logging.DebugLog(WellknownLoggingLevels.Error,
+                        WellknownLoggingCategories.EvaluatableEvaluation,
+                        $"Cannot get default answer for action. All actions performed through {nameof(EntityPerformsAction)} must have only questions that are default evaluatable, or no questions.");
+                    return;
+                }
+
+                answers.Add(answer);
+            }
+
+            ExecutionAnswerSet answerSet = new ExecutionAnswerSet(answers, toAct);
+
+            if (!GameStateDeltaMaker.TryCreateDelta(new LinkedTokenList(toPerform), answerSet, this, out GameStateDelta delta))
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.TryCreateDelta,
+                    $"Failed to create delta for entity performing action.");
                 return;
             }
 

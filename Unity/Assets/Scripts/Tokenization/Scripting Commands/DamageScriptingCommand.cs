@@ -55,8 +55,9 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         public DamageLinkedToken(ChangeTargetEvaluatableValue changeTarget, ParsedToken parsedToken, INumericEvaluatableValue mod) : base(parsedToken)
         {
             this.ChangeTarget = changeTarget;
-            this._Questions.AddRange(ChangeTarget.GetQuestions(this));
             this.Mod = mod;
+            this._Questions.AddRange(this.ChangeTarget.GetQuestions(this));
+            this._Questions.AddRange(this.Mod.GetQuestions(this));
         }
 
 

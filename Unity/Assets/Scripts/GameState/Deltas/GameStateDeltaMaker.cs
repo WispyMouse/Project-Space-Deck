@@ -16,7 +16,12 @@ namespace SpaceDeck.GameState.Deltas
     {
         public static bool TryCreateDelta(LinkedTokenList linkedTokenList, IGameStateMutator stateToApplyTo, out GameStateDelta delta)
         {
-            return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(user: null), stateToApplyTo, out delta);
+            return TryCreateDelta(linkedTokenList, stateToApplyTo, null, out delta);
+        }
+
+        public static bool TryCreateDelta(LinkedTokenList linkedTokenList, IGameStateMutator stateToApplyTo, Entity user, out GameStateDelta delta)
+        {
+            return TryCreateDelta(linkedTokenList, new ExecutionAnswerSet(user), stateToApplyTo, out delta);
         }
 
         public static bool TryCreateDelta(LinkedTokenList linkedTokenList, ExecutionAnswerSet answers, IGameStateMutator stateToApplyTo, out GameStateDelta delta, CardInstance playedCard = null, GameStateChange basedOnChange = null, AppliedStatusEffect statusEffect = null)
@@ -31,6 +36,23 @@ namespace SpaceDeck.GameState.Deltas
                     ModifyElement modifyElement = new ModifyElement(element, playedCard.ElementalGain[element], InitialIntensityPositivity.PositiveOrZero);
                     delta.Changes.Add(modifyElement);
                     modifyElement.Apply(delta);
+                }
+            }
+
+            if (answers != null)
+            {
+                QuestionAnsweringContext questionAnsweringContext = new QuestionAnsweringContext(stateToApplyTo, answers?.User, playedCard);
+                foreach (ExecutionQuestion question in linkedTokenList.GetQuestions())
+                {
+                    // If there's no answer already, look for a default answer for each
+                    if (!answers.TryGetAnswerForQuestion(question, out _))
+                    {
+                        if (question.TryGetDefaultAnswer(questionAnsweringContext, out ExecutionAnswer defaultAnswer))
+                        {
+                            answers.AddAnswer(question, defaultAnswer);
+                        }
+                        continue;
+                    }
                 }
             }
 

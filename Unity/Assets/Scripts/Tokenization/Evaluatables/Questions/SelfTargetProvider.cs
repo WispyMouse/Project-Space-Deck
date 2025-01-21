@@ -45,17 +45,17 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         public override string Describe()
         {
-            return "Foe";
+            return "Self";
         }
     }
 
     public class SelfTargetEvaluatableParser : EvaluatableParser<ChangeTargetEvaluatableValue, IChangeTarget>
     {
-        private static readonly LowercaseString FoeText = new LowercaseString("SELF");
+        private static readonly LowercaseString SelfText = new LowercaseString("SELF");
 
         public override bool TryParse(LowercaseString argument, out IEvaluatableValue<IChangeTarget> parsedValue)
         {
-            if (argument.Equals(FoeText))
+            if (argument.Equals(SelfText))
             {
                 parsedValue = new ChangeTargetEvaluatableValue(SelfTargetProvider.Instance);
                 return true;

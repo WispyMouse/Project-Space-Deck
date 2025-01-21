@@ -19,10 +19,14 @@ namespace SpaceDeck.Tokenization.Minimum.Context
         public readonly IGameStateMutator StartingGameState;
         public readonly CardInstance PlayingCard;
 
-        public QuestionAnsweringContext(IGameStateMutator startingGameState, Entity user, CardInstance playingCard)
+        public QuestionAnsweringContext(IGameStateMutator startingGameState, Entity user)
         {
             this.StartingGameState = startingGameState;
             this.User = user;
+        }
+
+        public QuestionAnsweringContext(IGameStateMutator startingGameState, Entity user, CardInstance playingCard) : this(startingGameState, user)
+        {
             this.PlayingCard = playingCard;
         }
     }

@@ -49,24 +49,19 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
 
     public class EvaluateAndLogNumericGameStateChange : GameStateChange
     {
-        public readonly INumericEvaluatableValue ToEvaluate;
+        public readonly decimal Value;
         public readonly Action<decimal> EvaluateLogAction;
 
-        public EvaluateAndLogNumericGameStateChange(INumericEvaluatableValue toEvaluate, Action<decimal> evaluationAction) : base(NobodyTarget.Instance)
+        public EvaluateAndLogNumericGameStateChange(decimal value, Action<decimal> evaluationAction) : base(NobodyTarget.Instance)
         {
-            this.ToEvaluate = toEvaluate;
+            this.Value = value;
             this.EvaluateLogAction = evaluationAction;
         }
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            if (!ToEvaluate.TryEvaluate(toApplyTo, out decimal evaluated))
-            {
-                return;
-            }
-
-            Debug.Log(evaluated);
-            this.EvaluateLogAction.Invoke(evaluated);
+            Debug.Log(this.Value.ToString());
+            this.EvaluateLogAction.Invoke(this.Value);
         }
 
         public override string Describe()

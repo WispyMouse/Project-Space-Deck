@@ -167,7 +167,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
-            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
+            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity), targetingEntity);
 
             // ASSERT
             // With the appropriate answers provided, assert this can be performed
@@ -200,7 +200,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 
-            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
+            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity), targetingEntity);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
 
             Assert.AreEqual(1, generatedDelta.Changes.Count, "Expecting one change.");
@@ -231,6 +231,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
+            targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(targetingEntity);
             gameState.StartEncounter(encounter);
 
@@ -292,7 +293,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             ExecutionAnswerSet answers = null;
-            new IndexChoosingAnswerer(1).HandleQuestions(new QuestionAnsweringContext(gameState, entityOne, null), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
+            new IndexChoosingAnswerer(1).HandleQuestions(new QuestionAnsweringContext(gameState, entityOne), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });

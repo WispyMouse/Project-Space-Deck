@@ -27,12 +27,24 @@ namespace SpaceDeck.Tokenization.Functions
 
         public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken)
         {
-            throw new System.NotImplementedException();
+            return this.StacksOnTarget.GetQuestions(linkedToken);
         }
 
         public bool TryEvaluate(ScriptingExecutionContext context, out decimal value)
         {
-            return this.TryEvaluate(context.ExecutedOnGameState, out value);
+            value = 0;
+
+            if (!this.StacksOnTarget.TryEvaluate(context, out IChangeTarget target))
+            {
+                return false;
+            }
+
+            foreach (Entity entity in target.GetRepresentedEntities(context.ExecutedOnGameState))
+            {
+                value += context.ExecutedOnGameState.GetStacks(entity, this.StatusEffectToApply);
+            }
+
+            return true;
         }
 
         public bool TryEvaluate(IGameStateMutator mutator, out decimal value)

@@ -8,6 +8,7 @@ namespace SpaceDeck.Tokenization.Functions
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Models.Databases;
+    using System;
 
     public class CountCurrencyEvaluatableValue : INumericEvaluatableValue
     {
@@ -25,7 +26,7 @@ namespace SpaceDeck.Tokenization.Functions
 
         public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken)
         {
-            throw new System.NotImplementedException();
+            return Array.Empty<ExecutionQuestion>();
         }
 
         public bool TryEvaluate(ScriptingExecutionContext context, out decimal value)

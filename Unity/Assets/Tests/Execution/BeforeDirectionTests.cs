@@ -117,7 +117,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ACT
 
-            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity));
+            ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity), targetingEntity);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
             GameStateDeltaApplier.ApplyGameStateDelta(gameState, generatedDelta);
             PendingResolveExecutor.ResolveAll(gameState);

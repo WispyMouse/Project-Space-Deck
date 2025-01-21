@@ -32,7 +32,7 @@ namespace SpaceDeck.GameState.Context
 
                 if (answers.Count == questions.Count)
                 {
-                    answerReceiver.Invoke(new ExecutionAnswerSet(answers));
+                    answerReceiver.Invoke(new ExecutionAnswerSet(answers, answeringContext.User));
                     return;
                 }
 

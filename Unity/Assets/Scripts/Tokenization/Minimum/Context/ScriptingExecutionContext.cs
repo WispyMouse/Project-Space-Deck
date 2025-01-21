@@ -31,7 +31,7 @@ namespace SpaceDeck.Tokenization.Minimum.Context
         {
             this.ExecutedOnGameState = executedOnGameState;
             this.TokenList = tokenList;
-            this.User = answers.User;
+            this.User = answers?.User;
             this.Answers = answers;
         }
 
