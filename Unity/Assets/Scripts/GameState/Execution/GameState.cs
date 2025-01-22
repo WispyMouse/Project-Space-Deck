@@ -136,7 +136,8 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartEntityTurn(Entity toStart)
         {
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, new ActionExecutor((IGameStateMutator mutator) => { mutator.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart); })));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, 
+                new ActionExecutor((IGameStateMutator mutator) => { mutator.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart); })));
         }
 
         public void EndCurrentEntityTurn()
@@ -188,12 +189,12 @@ namespace SpaceDeck.GameState.Execution
             possiblyTriggeredStatusEffects.Sort((a, b) => a.StatusEffectPriorityOrder.CompareTo(b.StatusEffectPriorityOrder));
             foreach (AppliedStatusEffect effect in possiblyTriggeredStatusEffects)
             {
-                triggeredResolves.Add(new ResolveTriggeredEvent(effect, trigger, TriggerDirection.Before));
+                triggeredResolves.Add(new ResolveTriggeredEvent(effect, trigger, direction));
             }
 
             // Then put on top of the stack each rule in order of application
             // This way, rules always resolve before the triggered abilities consider triggering
-            List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, trigger);
+            List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, direction, trigger);
             foreach (GameStateChange change in appliedRules)
             {
                 triggeredResolves.Add(change);

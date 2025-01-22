@@ -8,6 +8,7 @@ namespace SpaceDeck.GameState.Rules
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Wellknown;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public class TurnEndNextAllyOrEndFactionTurnRule : Rule
     {
@@ -15,8 +16,14 @@ namespace SpaceDeck.GameState.Rules
         {
         }
 
-        public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        public override bool TryApplyRule(GameStateEventTrigger trigger, TriggerDirection direction, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
+            if (direction != TriggerDirection.After)
+            {
+                applications = null;
+                return false;
+            }
+
             if (gameStateMutator.EntityTurnTakerCalculator.TryGetNextEntityTurn(gameStateMutator, out Entity nextTurnSameFaction))
             {
                 applications = new List<GameStateChange>() { new StartEntityTurn(nextTurnSameFaction) };

@@ -9,6 +9,8 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Imports;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
 
     public delegate AppliedStatusEffect GetLinkedAppliedStatusEffectFactoryMethod(StatusEffectPrototype prototype);
 
@@ -65,17 +67,38 @@ namespace SpaceDeck.Models.Databases
         {
             foreach (StatusEffectPrototype curPrototype in Prototypes.Values)
             {
-                if (curPrototype.Reactors != null)
+                // There may be no reactors at all, if so then skip
+                if (curPrototype.Reactors == null || curPrototype.Reactors.Count == 0)
                 {
-                    foreach(Reactor curReactor in curPrototype.Reactors)
+                    continue;
+                }
+
+                foreach(Reactor curReactor in curPrototype.Reactors)
+                {
+                    if (curReactor.LinkedTokens.HasValue)
                     {
-                        if (!curReactor.LinkedTokens.HasValue && curReactor.ParsedTokens.HasValue)
-                        {
-                            if (LinkedTokenMaker.TryGetLinkedTokenList(curReactor.ParsedTokens.Value, out LinkedTokenList linkedTokens))
-                            {
-                                curReactor.LinkedTokens = linkedTokens;
-                            }
-                        }
+                        // This already has linked tokens! No work to do
+                        continue;
+                    }
+
+                    if (!curReactor.ParsedTokens.HasValue)
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.LinkingFailure,
+                            $"Current reactor has no parsed tokens, and cannot be linked.");
+                        continue;
+                    }
+
+                    if (LinkedTokenMaker.TryGetLinkedTokenList(curReactor.ParsedTokens.Value, out LinkedTokenList linkedTokens))
+                    {
+                        curReactor.LinkedTokens = linkedTokens;
+                    }
+                    else
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.LinkingFailure,
+                            $"Current reactor failed to get linked token list.");
+                        continue;
                     }
                 }
             }

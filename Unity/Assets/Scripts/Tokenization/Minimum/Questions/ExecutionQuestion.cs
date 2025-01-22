@@ -9,6 +9,11 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
             answer = null;
             return false;
         }
+
+        public virtual void ApplyDefaultToContext(QuestionAnsweringContext answeringContext)
+        {
+            // No-op
+        }
     }
 
     /// <summary>

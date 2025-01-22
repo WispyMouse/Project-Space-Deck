@@ -22,8 +22,10 @@ namespace SpaceDeck.GameState.Deltas
             Persistent
         }
 
-        public EntityTurnTakerCalculator EntityTurnTakerCalculator { get => BaseGameState.EntityTurnTakerCalculator; set => BaseGameState.EntityTurnTakerCalculator = value; }
-        public FactionTurnTakerCalculator FactionTurnTakerCalculator { get => BaseGameState.FactionTurnTakerCalculator; set => BaseGameState.FactionTurnTakerCalculator = value; }
+        public EntityTurnTakerCalculator EntityTurnTakerCalculator { get => _EntityTurnTakerCalculator; set => _EntityTurnTakerCalculator = value; }
+        private EntityTurnTakerCalculator _EntityTurnTakerCalculator;
+        public FactionTurnTakerCalculator FactionTurnTakerCalculator { get => _FactionTurnTakerCalculator; set => _FactionTurnTakerCalculator = value; }
+        private FactionTurnTakerCalculator _FactionTurnTakerCalculator;
 
         public readonly IGameStateMutator BaseGameState;
         public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
@@ -43,6 +45,8 @@ namespace SpaceDeck.GameState.Deltas
         public GameStateDelta(IGameStateMutator baseGameState)
         {
             this.BaseGameState = baseGameState;
+            this._EntityTurnTakerCalculator = baseGameState?.EntityTurnTakerCalculator?.Clone(baseGameState);
+            this._FactionTurnTakerCalculator = baseGameState?.FactionTurnTakerCalculator?.Clone(baseGameState);
         }
 
         public GameStateDelta(IGameStateMutator baseGameState, IEnumerable<GameStateChange> changes) : this (baseGameState)
@@ -177,13 +181,17 @@ namespace SpaceDeck.GameState.Deltas
         public void StartEntityTurn(Entity toStart)
         {
             this.NewEntityTurn = toStart;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted));
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted,
+                new ActionExecutor((IGameStateMutator mutator) => { mutator.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart); })));
         }
 
         public void EndCurrentEntityTurn()
         {
             this.NewEntityTurn = null;
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded));
+            if (this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this, out Entity currentTurn))
+            {
+                this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, currentTurn));
+            }
         }
 
         public void EndCurrentFactionTurn()
@@ -242,7 +250,7 @@ namespace SpaceDeck.GameState.Deltas
 
             // Then put on top of the stack each rule in order of application
             // This way, rules always resolve before the triggered abilities consider triggering
-            List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, trigger);
+            List<GameStateChange> appliedRules = RuleReference.GetAppliedRules(this, direction, trigger);
             foreach (GameStateChange change in appliedRules)
             {
                 triggeredResolves.Add(change);

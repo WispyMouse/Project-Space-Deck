@@ -88,6 +88,13 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
         {
             foreach (ExecutionQuestion question in questions)
             {
+                // As we are executing the question answering context, set the default user inside it
+                // such that questions that want the "default" answer update to that
+                // Do this even if the question is answered already
+                // This is the primary reason that the questions need to be ordered, so that earlier questions
+                // can supply default answers to later ones
+                question.ApplyDefaultToContext(questionAnsweringContext);
+
                 if (this.TryGetAnswerForQuestion(question, out _))
                 {
                     // Already have an answer

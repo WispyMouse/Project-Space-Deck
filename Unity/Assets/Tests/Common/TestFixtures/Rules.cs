@@ -21,6 +21,7 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public class ExecuteOnTriggerRule : Rule
     {
@@ -31,9 +32,15 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             this.ToExecute = toExecute;
         }
 
-        public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        public override bool TryApplyRule(GameStateEventTrigger trigger, TriggerDirection direction, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
             Assert.IsTrue(this.TriggerOnEventIds.Contains(trigger.EventId), "Should only execute rule upon the correct rule event id triggering.");
+
+            if (direction != TriggerDirection.After)
+            {
+                applications = null;
+                return false;
+            }
 
             applications = new List<GameStateChange>() { new ActionExecutor(this.ToExecute) };
             return true;

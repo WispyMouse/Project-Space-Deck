@@ -25,15 +25,10 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.GameState.Deltas;
+    using SpaceDeck.Tokenization.Functions;
 
-    public class BeforeDirectionTests
+    public class BeforeDirectionTests : EditModeTestBase
     {
-        [TearDown]
-        public void TearDown()
-        {
-            CommonTestUtility.TearDownDatabases();
-        }
-
         public class Before_ReducesIntensity_DataSource_Object
         {
             public int StartingHealth;
@@ -76,7 +71,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
         {
             // ARRANGE
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
-            EvaluatablesReference.SubscribeEvaluatable(new StacksEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new CountStacksEvaluatableParser());
             DamageScriptingCommand damageScriptingCommand = new DamageScriptingCommand();
             ReduceIntensityScriptingCommand reduceScriptingCommand = new ReduceIntensityScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);

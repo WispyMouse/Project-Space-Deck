@@ -37,33 +37,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
     /// Its function serves both as a test, and a working diary
     /// of the features being considered and implemented.
     /// </summary>
-    public class ExecutionStartTests
+    public class ExecutionStartTests : EditModeTestBase
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            DebugLogger.SubscribeDebugListener(true);
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            DebugLogger.UnsubscribeDebugListener();
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            DebugLogger.AssertFailureOnError = true;
-            LogAssert.ignoreFailingMessages = false;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            CommonTestUtility.TearDownDatabases();
-        }
-
         /// <summary>
         /// This creates an effect that will result in
         /// logging out a simple message in the Debug logs.

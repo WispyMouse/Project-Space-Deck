@@ -28,15 +28,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Models.Imports;
     using SpaceDeck.GameState.Deltas;
+    using SpaceDeck.Utility.Unity;
+    using SpaceDeck.Tokenization.Functions;
 
-    public class StatusEffectsTests
+    public class StatusEffectsTests : EditModeTestBase
     {
-        [TearDown]
-        public void TearDown()
-        {
-            CommonTestUtility.TearDownDatabases();
-        }
-
         /// <summary>
         /// Plays an effect on an entity that should apply status effects.
         /// Asserts that the stacks are applied.
@@ -124,44 +120,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
         }
 
         /// <summary>
-        /// Applies a debug status that resembles poison, and ensure it ticks once.
-        /// </summary>
-        [Test]
-        public void TestDebugPoisonStatus_OneTick()
-        {
-            int startingHealth = 100;
-
-            // ARRANGE
-            RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
-            RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
-            StatusEffectImport import = new StatusEffectImport()
-            {
-                Id = nameof(TestDebugPoisonStatus_OneTick)
-            };
-
-            import.Reactors.Add(new ReactorImport()
-            {
-                TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health) },
-                TokenText = "" // TODO: BLOCK TOKEN TEXT
-            });
-            StatusEffectDatabase.RegisterStatusEffect(import);
-            GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
-            Entity targetingEntity = new Entity();
-            gameState.ModStatusEffectStacks(targetingEntity, import.Id, 1);
-            targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, startingHealth);
-            encounter.EncounterEntities.Add(targetingEntity);
-
-            // ACT
-            gameState.StartEncounter(encounter);
-            PendingResolveExecutor.ResolveAll(gameState);
-
-            // ASSERT
-            Assert.AreEqual(startingHealth - 1, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have lost one health from one stack of poison.");
-            Assert.AreEqual(0, gameState.GetStacks(targetingEntity, import.Id), "Should have no stacks after the poison ticks once.");
-        }
-
-        /// <summary>
         /// Applies a debug status that resembles poison, with a few stacks.
         /// The turn is passed, and the turn is passed again.
         /// Assert that the poison behaves as expected.
@@ -169,17 +127,25 @@ namespace SpaceDeck.Tests.EditMode.Execution
         [Test]
         public void TestDebugPoisonStatus_TwoTicks()
         {
+            // SET PARAMETERS
             int startingHealth = 100;
             int startingPoison = 10;
-
             int healthAfterOneTick = startingHealth - startingPoison;
             int healthAfterTwoTicks = startingHealth - startingPoison - (startingPoison - 1);
 
-            // ARRANGE
+            // IMPORT DATABASES
             RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
             RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
             RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
             RuleReference.RegisterRule(new FactionEndTurnNextFactionRule());
+
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new CountStacksEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new SelfTargetEvaluatableParser());
+
+            ScriptingCommandReference.RegisterScriptingCommand(new TargetScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new DamageScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new ApplyStatusEffectStacksScriptingCommand());
 
             StatusEffectImport import = new StatusEffectImport()
             {
@@ -188,10 +154,15 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             import.Reactors.Add(new ReactorImport()
             {
-                TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health) },
-                TokenText = "" // TODO: BLOCK TOKEN TEXT
+                TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.EntityTurnEnded },
+                TokenText = $"[TARGET:SELF][DAMAGE:COUNTSTACKS(self,{import.Id})][APPLYSTATUSEFFECTSTACKS:{import.Id} -1]",
+                Direction = GameStateEventTrigger.TriggerDirection.After
             });
             StatusEffectDatabase.RegisterStatusEffect(import);
+
+            AllDatabases.LinkAllDatabase();
+
+            // ARRANGE
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
@@ -202,9 +173,17 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ACT AND ASSERT
             gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
+
+            // The poison applies at the end of the entity's turn
+            // The rules above will make it so the encounter starts, and makes it the entity's turn
+            // End the turn to receive poison damage
+            gameState.EndCurrentEntityTurn();
+            PendingResolveExecutor.ResolveAll(gameState);
             Assert.AreEqual(healthAfterOneTick, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have taken a specific amount of damage after one turn.");
             Assert.AreEqual(startingPoison - 1, gameState.GetStacks(targetingEntity, import.Id), "Should have specific stacks after the poison ticks once.");
 
+            // Because of the prior established rules, it'll become this entity's turn again after ending the turn
+            // so end it again
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
             Assert.AreEqual(healthAfterTwoTicks, gameState.GetNumericQuality(targetingEntity, WellknownQualities.Health), "Should have taken a specific amount of damage after two turns.");

@@ -5,6 +5,7 @@ namespace SpaceDeck.GameState.Minimum
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public static class RuleReference
     {
@@ -43,7 +44,7 @@ namespace SpaceDeck.GameState.Minimum
             AlwaysConsideredRules.Clear();
         }
 
-        public static List<GameStateChange> GetAppliedRules(IGameStateMutator mutator, GameStateEventTrigger trigger)
+        public static List<GameStateChange> GetAppliedRules(IGameStateMutator mutator, TriggerDirection direction, GameStateEventTrigger trigger)
         {
             List<GameStateChange> applications = new List<GameStateChange>();
 
@@ -60,7 +61,7 @@ namespace SpaceDeck.GameState.Minimum
 
             foreach (Rule curRule in rulesToConsider)
             {
-                if (curRule.TryApplyRule(trigger, mutator, out List<GameStateChange> thisRuleApplications))
+                if (curRule.TryApplyRule(trigger, direction, mutator, out List<GameStateChange> thisRuleApplications))
                 {
                     applications.AddRange(thisRuleApplications);
                 }

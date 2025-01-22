@@ -10,6 +10,7 @@ namespace SpaceDeck.GameState.Rules
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public class MovePlayedCardToDestinationRule : Rule
     {
@@ -18,8 +19,14 @@ namespace SpaceDeck.GameState.Rules
 
         }
 
-        public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        public override bool TryApplyRule(GameStateEventTrigger trigger, TriggerDirection direction, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
+            if (direction != TriggerDirection.After)
+            {
+                applications = null;
+                return false;
+            }
+
             if (trigger.ProccingCard != null)
             {
                 LowercaseString destination = gameStateMutator.GetStringQuality(trigger.ProccingCard, WellknownQualities.Destination, WellknownZones.Discard);

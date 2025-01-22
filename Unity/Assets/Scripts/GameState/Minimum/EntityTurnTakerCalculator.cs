@@ -10,9 +10,12 @@ namespace SpaceDeck.GameState.Minimum
     {
         public readonly List<Entity> EntitiesToTakeTurn = new List<Entity>();
         protected int CurrentEntityTurnIndex = 0;
+        protected decimal FactionId = 0;
 
         public EntityTurnTakerCalculator(IGameStateMutator gameState, decimal factionId)
         {
+            this.FactionId = factionId;
+
             foreach (Entity curEntity in gameState.GetAllEntities())
             {
                 if (curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction, -1) == factionId)
@@ -69,6 +72,14 @@ namespace SpaceDeck.GameState.Minimum
             {
                 this.CurrentEntityTurnIndex = turnIndex;
             }
+        }
+
+        public EntityTurnTakerCalculator Clone(IGameStateMutator gameState)
+        {
+            EntityTurnTakerCalculator newCalculator = new EntityTurnTakerCalculator(gameState, this.FactionId);
+            newCalculator.CurrentEntityTurnIndex = this.CurrentEntityTurnIndex;
+            newCalculator.EntitiesToTakeTurn.AddRange(this.EntitiesToTakeTurn);
+            return newCalculator;
         }
     }
 }

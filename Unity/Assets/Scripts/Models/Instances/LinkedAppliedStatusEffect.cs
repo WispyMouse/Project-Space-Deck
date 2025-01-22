@@ -7,6 +7,8 @@ namespace SpaceDeck.Models.Instances
     using SpaceDeck.Models.Prototypes;
     using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
 
     public class LinkedAppliedStatusEffect : AppliedStatusEffect
     {
@@ -38,6 +40,12 @@ namespace SpaceDeck.Models.Instances
                     continue;
                 }
 
+                if (reactor.Direction != direction)
+                {
+                    // Only react to prescribed direction
+                    continue;
+                }
+
                 // TODO CHECK IF SHOULD PROC
 
                 if (trigger.BasedOnTarget == null)
@@ -49,10 +57,20 @@ namespace SpaceDeck.Models.Instances
                 {
                     ExecutionAnswerSet answers = new ExecutionAnswerSet(curEntity);
 
+                    if (!reactor.LinkedTokens.HasValue)
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.LinkingFailure,
+                            $"Reactor has null LinkedTokens. After adding all database entries, use AllDatabases.LinkAllDatabase to link them.");
+                        return false;
+                    }
+
                     if (!GameStateDeltaMaker.TryCreateDelta(reactor.LinkedTokens.Value, answers, gameStateMutator, out GameStateDelta delta, playedCard: trigger.ProccingCard, basedOnChange: trigger.BasedOnGameStateChange, statusEffect: this))
                     {
-                        // TODO LOG FAILURE
-                        continue;
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.TryCreateDelta,
+                            $"Failed to create delta with linked tokens.");
+                        return false;
                     }
 
                     applications.AddRange(delta.Changes);

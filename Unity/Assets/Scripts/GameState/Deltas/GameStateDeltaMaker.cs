@@ -41,7 +41,7 @@ namespace SpaceDeck.GameState.Deltas
 
             if (answers != null)
             {
-                answers.SetDefaultAnswers(linkedTokenList.GetQuestions(), new QuestionAnsweringContext(stateToApplyTo, answers?.User));
+                answers.SetDefaultAnswers(linkedTokenList.GetQuestions(), new QuestionAnsweringContext(delta, answers?.User));
             }
 
             ScriptingExecutionContext executionContext;
@@ -126,7 +126,9 @@ namespace SpaceDeck.GameState.Deltas
                             }
 
                             // Then stack rules that are at RuleApplication level
-                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta, new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, currentlyApplyingChange));
+                            List<GameStateChange> rules = RuleReference.GetAppliedRules(delta,
+                                GameStateEventTrigger.TriggerDirection.After,
+                                new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, currentlyApplyingChange));
                             if (rules != null && rules.Count > 0)
                             {
                                 foreach (GameStateChange rule in rules)

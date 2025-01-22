@@ -11,8 +11,12 @@ namespace SpaceDeck.GameState.Minimum
         public readonly List<decimal> FactionsToTakeTurn = new List<decimal>();
         protected int CurrentFactionTurnIndex = 0;
 
+        public readonly IGameStateMutator GameState;
+
         public FactionTurnTakerCalculator(IGameStateMutator gameState)
         {
+            this.GameState = gameState;
+
             HashSet<decimal> factions = new HashSet<decimal>();
 
             foreach (Entity curEntity in gameState.GetAllEntities())
@@ -23,6 +27,14 @@ namespace SpaceDeck.GameState.Minimum
             List<decimal> factionsToTakeTurn = new List<decimal>(factions);
             factionsToTakeTurn.Sort();
             this.FactionsToTakeTurn = factionsToTakeTurn;
+        }
+
+        public FactionTurnTakerCalculator Clone(IGameStateMutator gameState)
+        {
+            FactionTurnTakerCalculator newCalculator = new FactionTurnTakerCalculator(gameState);
+            newCalculator.CurrentFactionTurnIndex = this.CurrentFactionTurnIndex;
+            newCalculator.FactionsToTakeTurn.AddRange(this.FactionsToTakeTurn);
+            return newCalculator;
         }
 
         public decimal GetCurrentFaction()

@@ -9,6 +9,7 @@ namespace SpaceDeck.GameState.Rules
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Wellknown;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public class PlayerTurnEndDiscardRule : Rule
     {
@@ -17,8 +18,14 @@ namespace SpaceDeck.GameState.Rules
 
         }
 
-        public override bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        public override bool TryApplyRule(GameStateEventTrigger trigger, TriggerDirection direction, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
+            if (direction != TriggerDirection.After)
+            {
+                applications = null;
+                return false;
+            }
+
             if (!gameStateMutator.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(gameStateMutator, out Entity currentTurn))
             {
                 applications = null;

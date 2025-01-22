@@ -13,7 +13,7 @@ namespace SpaceDeck.Utility.Logging
 
         public static void DebugLog(LowercaseString logLevel, LowercaseString logCategory, string log)
         {
-            DebugLoggingActionEvent.Invoke(logLevel, logCategory, log);
+            DebugLoggingActionEvent?.Invoke(logLevel, logCategory, log);
         }
     }
 }

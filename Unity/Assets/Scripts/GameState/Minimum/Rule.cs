@@ -4,6 +4,7 @@ namespace SpaceDeck.GameState.Minimum
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
+    using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     public abstract class Rule
     {
@@ -29,7 +30,7 @@ namespace SpaceDeck.GameState.Minimum
 
         }
 
-        public virtual bool TryApplyRule(GameStateEventTrigger trigger, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
+        public virtual bool TryApplyRule(GameStateEventTrigger trigger, TriggerDirection direction, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
             applications = null;
             return false;
