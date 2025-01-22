@@ -69,9 +69,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
         [TestCaseSource(nameof(Before_LowersValue_DataSource))]
         public void Before_ReducesIntensity(Before_ReducesIntensity_DataSource_Object data)
         {
-            // ARRANGE
+            // IMPORT DATABASES
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
             EvaluatablesReference.SubscribeEvaluatable(new CountStacksEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new SelfTargetEvaluatableParser());
+
             DamageScriptingCommand damageScriptingCommand = new DamageScriptingCommand();
             ReduceIntensityScriptingCommand reduceScriptingCommand = new ReduceIntensityScriptingCommand();
             ScriptingCommandReference.RegisterScriptingCommand(damageScriptingCommand);
@@ -85,7 +87,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                     new ReactorImport()
                     {
                          Direction = GameStateEventTrigger.TriggerDirection.Before,
-                         TokenText = $"[{reduceScriptingCommand.Identifier}:STACKS]",
+                         TokenText = $"[{reduceScriptingCommand.Identifier}:COUNTSTACKS(SELF,{nameof(Before_ReducesIntensity)})]",
                          TriggerOnEventIds = new List<string>()
                          {
                              WellknownGameStateEvents.GetQualityAffected(WellknownQualities.Health)
@@ -94,7 +96,10 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 }
             };
             StatusEffectDatabase.RegisterStatusEffect(import);
+
             AllDatabases.LinkAllDatabase();
+
+            // ARRANGE
 
             GameState gameState = new GameState();
             EncounterState encounterState = new EncounterState();

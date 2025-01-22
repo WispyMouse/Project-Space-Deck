@@ -43,6 +43,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         public ReduceIntensityLinkedToken(ParsedToken parsedToken, INumericEvaluatableValue reduceIntensity) : base(parsedToken)
         {
             this.ReduceBy = reduceIntensity;
+            this._Questions.AddRange(this.ReduceBy.GetQuestions(this));
         }
 
         public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)

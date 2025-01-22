@@ -62,7 +62,8 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             this.ChangeTarget = changeTarget;
             this.Mod = stacksToApply;
             this.StatusEffect = statusEffect;
-            this._Questions.AddRange(ChangeTarget.GetQuestions(this));
+            this._Questions.AddRange(this.ChangeTarget.GetQuestions(this));
+            this._Questions.AddRange(this.Mod.GetQuestions(this));
         }
 
         public ApplyStatusEffectStacksLinkedToken(ChangeTargetEvaluatableValue changeTarget, ParsedToken parsedToken, LowercaseString statusEffect, int stacksToApply) : this(changeTarget, parsedToken, statusEffect, new ConstantNumericValue(stacksToApply))
