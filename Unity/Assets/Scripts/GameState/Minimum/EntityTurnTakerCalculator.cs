@@ -44,7 +44,7 @@ namespace SpaceDeck.GameState.Minimum
 
         public bool TryGetNextEntityTurn(IGameStateMutator gameState, out Entity nextTurn)
         {
-            int nextIndex = this.CurrentEntityTurnIndex++;
+            int nextIndex = ++this.CurrentEntityTurnIndex;
 
             if (this.EntitiesToTakeTurn.Count <= nextIndex)
             {

@@ -10,7 +10,8 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
 
     public abstract class CardInstancesProvider : IDescribable
     {
-        public abstract IReadOnlyList<CardInstance> GetProvidedCards(QuestionAnsweringContext answeringContext);
+        public abstract IReadOnlyList<CardInstance> GetProvidedCards(ScriptingExecutionContext answeringContext);
+        public abstract IReadOnlyList<CardInstance> GetProvidedCards(IGameStateMutator mutator);
         public abstract string Describe();
     }
 }

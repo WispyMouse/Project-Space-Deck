@@ -26,7 +26,18 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         public IReadOnlyList<ExecutionQuestion> GetQuestions(LinkedToken linkedToken)
         {
-            throw new System.NotImplementedException();
+            List<ExecutionQuestion> questions = new List<ExecutionQuestion>();
+
+            foreach (CompositeRelationEntry relation in this.CompositeEntries)
+            {
+                IReadOnlyList<ExecutionQuestion> relationQuestions = relation.InnerValue.GetQuestions(linkedToken);
+                if (relationQuestions != null && relationQuestions.Count > 0)
+                {
+                    questions.AddRange(relationQuestions);
+                }
+            }
+
+            return questions;
         }
 
         public bool TryEvaluate(ScriptingExecutionContext context, out decimal value)

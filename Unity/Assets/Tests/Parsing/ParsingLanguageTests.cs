@@ -58,7 +58,7 @@ namespace SpaceDeck.Tests.EditMode.Parsing
             }
         }
 
-        public List<AssertScriptParsing_ValueSource_Object> AssertScriptParsing_ValueSources = new List<AssertScriptParsing_ValueSource_Object>()
+        public static List<AssertScriptParsing_ValueSource_Object> AssertScriptParsing_ValueSources = new List<AssertScriptParsing_ValueSource_Object>()
         {
             new AssertScriptParsing_ValueSource_Object("[SETTARGET: FOE][DAMAGE: 1]", "1 damage."),
             new AssertScriptParsing_ValueSource_Object("[SETTARGET: SELF][DAMAGE: 1]", "1 damage to self."),

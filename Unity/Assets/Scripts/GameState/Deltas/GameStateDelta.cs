@@ -70,13 +70,33 @@ namespace SpaceDeck.GameState.Deltas
 
         public decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0)
         {
+            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
+            {
+                return overrideAttributes.GetNumericQuality(index, defaultValue);
+            }
+
+            return this.BaseGameState.GetNumericQuality(entity, index, defaultValue);
+        }
+
+        public void SetStringQuality(IHaveQualities entity, LowercaseString index, string toValue)
+        {
             if (!this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
             {
                 overrideAttributes = new QualitiesHolder();
                 this.DeltaValues.Add(entity, new QualitiesHolder());
             }
 
-            return overrideAttributes.GetNumericQuality(index, defaultValue);
+            overrideAttributes.SetStringQuality(index, toValue);
+        }
+
+        public string GetStringQuality(IHaveQualities entity, LowercaseString index, string defaultValue = "")
+        {
+            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
+            {
+                return overrideAttributes.GetStringQuality(index, defaultValue);
+            }
+
+            return this.BaseGameState.GetStringQuality(entity, index, defaultValue);
         }
 
         public void ModCurrency(Currency toMod, int amount)
@@ -329,16 +349,6 @@ namespace SpaceDeck.GameState.Deltas
         }
 
         public LowercaseString GetCardZone(CardInstance card)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetStringQuality(IHaveQualities entity, LowercaseString index, string toValue)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public string GetStringQuality(IHaveQualities entity, LowercaseString index, string defaultValue = "")
         {
             throw new System.NotImplementedException();
         }

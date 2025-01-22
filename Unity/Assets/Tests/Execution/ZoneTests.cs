@@ -29,14 +29,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Databases;
 
-    public class ZoneTests
+    public class ZoneTests : EditModeTestBase
     {
-        [TearDown]
-        public void TearDown()
-        {
-            CommonTestUtility.TearDownDatabases();
-        }
-
         /// <summary>
         /// A card that is played should have its destination set, and then moved to that destination.
         /// This is by default with these rules the discard pile.
@@ -142,7 +136,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
-            Assert.IsTrue(gameState.GetCardZone(cardInstance) == WellknownZones.Exile);
+            Assert.IsTrue(gameState.GetCardZone(cardInstance) == WellknownZones.Hand);
         }
 
         /// <summary>

@@ -22,7 +22,12 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
             return string.Empty;
         }
 
-        public override IReadOnlyList<CardInstance> GetProvidedCards(QuestionAnsweringContext answeringContext)
+        public override IReadOnlyList<CardInstance> GetProvidedCards(ScriptingExecutionContext answeringContext)
+        {
+            return this.SpecificCards;
+        }
+
+        public override IReadOnlyList<CardInstance> GetProvidedCards(IGameStateMutator mutator)
         {
             return this.SpecificCards;
         }

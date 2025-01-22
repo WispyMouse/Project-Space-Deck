@@ -43,7 +43,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
         public override bool TryGetChanges(ScriptingExecutionContext context, out Stack<GameStateChange> changes)
         {
-            if (!this.CardEvalautable.TryEvaluate(context.ExecutedOnGameState, out IReadOnlyList<CardInstance> cards))
+            if (!this.CardEvalautable.TryEvaluate(context, out IReadOnlyList<CardInstance> cards))
             {
                 changes = null;
                 return false;

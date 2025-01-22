@@ -20,7 +20,9 @@ namespace SpaceDeck.GameState.Rules
 
         public override bool TryApplyRule(GameStateEventTrigger trigger, TriggerDirection direction, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
-            if (direction != TriggerDirection.After)
+            // This triggers before the card is played, setting its destination zone.
+            // This allows for things that trigger other than rules to set a new destination
+            if (direction != TriggerDirection.Before)
             {
                 applications = null;
                 return false;

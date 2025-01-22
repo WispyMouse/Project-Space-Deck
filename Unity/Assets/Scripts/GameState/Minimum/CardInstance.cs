@@ -10,7 +10,7 @@ namespace SpaceDeck.GameState.Minimum
         public readonly string Name;
         public Dictionary<Element, int> ElementalGain;
 
-        public QualitiesHolder Qualities => new QualitiesHolder();
+        public QualitiesHolder Qualities { get; } = new QualitiesHolder();
 
         public CardInstance()
         {
