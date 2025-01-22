@@ -149,7 +149,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             StatusEffectImport import = new StatusEffectImport()
             {
-                Id = nameof(TestDebugPoisonStatus_OneTick)
+                Id = nameof(TestDebugPoisonStatus_TwoTicks)
             };
 
             import.Reactors.Add(new ReactorImport()
