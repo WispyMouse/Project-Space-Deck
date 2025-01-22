@@ -35,7 +35,7 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
         public override void ApplyDefaultToContext(QuestionAnsweringContext answeringContext)
         {
             IReadOnlyList<IChangeTarget> targets = this.Options.GetProvidedTargets(answeringContext);
-            if (targets != null)
+            if (targets != null && targets.Count == 1)
             {
                 answeringContext.DefaultTarget = targets[0];
             }

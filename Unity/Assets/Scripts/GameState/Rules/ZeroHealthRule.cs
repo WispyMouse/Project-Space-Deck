@@ -30,8 +30,12 @@ namespace SpaceDeck.GameState.Rules
 
             foreach (Entity curEntity in gameStateMutator.GetAllEntities())
             {
-                if (gameStateMutator.EntityIsAlive(curEntity) && gameStateMutator.GetNumericQuality(curEntity, WellknownQualities.Health, 0) <= 0)
+                if (gameStateMutator.EntityIsAlive(curEntity) 
+                    && gameStateMutator.GetNumericQuality(curEntity, WellknownQualities.Health, 0) <= 0
+                    && gameStateMutator.GetNumericQuality(curEntity, WellknownQualities.DeathFlag, 0) == 0)
                 {
+                    // Immediately mark this entity for death
+                    gameStateMutator.SetNumericQuality(curEntity, WellknownQualities.DeathFlag, 1);
                     applications.Add(new RemoveEntity(curEntity));
                 }
             }

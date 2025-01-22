@@ -15,5 +15,7 @@ namespace SpaceDeck.Utility.Wellknown
         public readonly static LowercaseString Name = nameof(Name);
         public readonly static LowercaseString Rarity = nameof(Rarity);
         public readonly static LowercaseString Destination = nameof(Destination);
+
+        public readonly static LowercaseString DeathFlag = nameof(DeathFlag);
     }
 }
