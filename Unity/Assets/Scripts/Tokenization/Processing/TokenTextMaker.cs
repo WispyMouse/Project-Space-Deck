@@ -7,6 +7,8 @@ namespace SpaceDeck.Tokenization.Processing
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
 
     /// <summary>
     /// Static helper class for turning Token Text Strings into <see cref="TokenText"/>.
@@ -64,8 +66,10 @@ namespace SpaceDeck.Tokenization.Processing
                     if (scopeStack.Count == 0)
                     {
                         // There's no scope on the stack, so we can't pop the current scope
-                        // TODO Log why this failed
                         createdTokenText = default(TokenText);
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.ParseTokenText,
+                            $"Cannot end current scope, as this is the most outer scope. Are your '{{' and '}}'s balanced? Pointer index: {tokenTextPointer}");
                         return false;
                     }
 
@@ -75,8 +79,10 @@ namespace SpaceDeck.Tokenization.Processing
                     if (scopeStack.Count == 0)
                     {
                         // There's no scope on the stack, so we can't pop the current scope
-                        // TODO Log why this failed
                         createdTokenText = default(TokenText);
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.ParseTokenText,
+                            $"Cannot end current scope, as this is the most outer scope. Are your '{{' and '}}'s balanced? Pointer index: {tokenTextPointer}");
                         return false;
                     }
 
@@ -89,7 +95,9 @@ namespace SpaceDeck.Tokenization.Processing
                     if (!statementRegexMatch.Success)
                     {
                         // We've failed to parse this.
-                        // TODO: Log this out
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.ParseTokenText,
+                            $"Could not match '{tokenTextPointer}' to the regex '{TokenStatementRegex}'. Pointer index: {tokenTextPointer}");
                         createdTokenText = default(TokenText);
                         return false;
                     }
@@ -97,7 +105,9 @@ namespace SpaceDeck.Tokenization.Processing
                     if (!TryGetTokenStatementFromString(statementRegexMatch.Groups[0].Value, out TokenStatement statement))
                     {
                         // We've failed to parse this.
-                        // TODO: Log this out
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.ParseTokenText,
+                            $"Could not parse token statement from text. '{statementRegexMatch.Groups[0].Value}'. Pointer index: {tokenTextPointer}");
                         createdTokenText = default(TokenText);
                         return false;
                     }

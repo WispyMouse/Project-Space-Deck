@@ -16,6 +16,11 @@ namespace SpaceDeck.UX
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.Tokenization.Evaluatables;
+    using SpaceDeck.Tokenization.Functions;
+    using SpaceDeck.GameState.Rules;
+    using SpaceDeck.Tokenization.Processing;
+    using SpaceDeck.Tokenization.ScriptingCommands;
 
     public class CentralGameStateController : MonoBehaviour
     {
@@ -30,6 +35,40 @@ namespace SpaceDeck.UX
 
         private void Awake()
         {
+            // EVALUATABLE PARSERS
+            // TODO: Custom parsers? Bring in from other dlls?
+            EvaluatablesReference.SubscribeEvaluatable(new CompositeNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new SelfTargetEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
+
+            // FUNCTION PARSERS
+            EvaluatablesReference.SubscribeEvaluatable(new CountCurrencyEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new CountElementEvaluatableParser());
+            EvaluatablesReference.SubscribeEvaluatable(new CountStacksEvaluatableParser());
+
+            // RULES
+            // TODO: Rules should be defined and then brought in, rather than prescribed.
+            // For now, just import the same set of rules always.
+            RuleReference.RegisterRule(new EncounterStartCopyDeckRule());
+            RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
+            RuleReference.RegisterRule(new FactionEndTurnNextFactionRule());
+            RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
+            RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
+            RuleReference.RegisterRule(new PlayedCardsAreDiscardedRule());
+            RuleReference.RegisterRule(new PlayerTurnStartDrawCardsRule(new ConstantNumericValue(7))); // TODO Variable card draw
+            RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
+            RuleReference.RegisterRule(new ZeroHealthRule());
+
+            // SCRIPTING COMMANDS
+            // TODO: Custom scripting commands?
+            ScriptingCommandReference.RegisterScriptingCommand(new ApplyStatusEffectStacksScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new DamageScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new ModCurrencyScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new ModifyElementScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new ReduceIntensityScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new SetDestinationScriptingCommand());
+            ScriptingCommandReference.RegisterScriptingCommand(new TargetScriptingCommand());
         }
 
         void Start()

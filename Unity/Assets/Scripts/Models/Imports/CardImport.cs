@@ -28,12 +28,16 @@ namespace SpaceDeck.Models.Imports
         {
             if (!TokenTextMaker.TryGetTokenTextFromString(this.EffectScript, out TokenText statement))
             {
-                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.CardImport, $"Failed to determine token text from string. '{this.EffectScript}'");
+                Logging.DebugLog(WellknownLoggingLevels.Error, 
+                    WellknownLoggingCategories.CardImport,
+                    $"({this.Id}) Failed to determine token text from string. '{this.EffectScript}'");
                 return null;
             }
             else if (!ParsedTokenMaker.TryGetParsedTokensFromTokenText(statement, out ParsedTokenList parsedTokens))
             {
-                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.CardImport, $"Failed to parse tokens from token text. '{this.EffectScript}'");
+                Logging.DebugLog(WellknownLoggingLevels.Error, 
+                    WellknownLoggingCategories.CardImport, 
+                    $"({this.Id}) Failed to parse tokens from token text. '{this.EffectScript}'");
                 return null;
             }
             else
@@ -41,6 +45,22 @@ namespace SpaceDeck.Models.Imports
                 Dictionary<LowercaseString, int> elementGain = new Dictionary<LowercaseString, int>();
                 foreach (ElementGainImport import in (this.ElementGain != null ? (IEnumerable<ElementGainImport>)this.ElementGain : Array.Empty<ElementGainImport>()))
                 {
+                    if (string.IsNullOrEmpty(import.ElementId))
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.CardImport,
+                            $"({this.Id}) An element gain amount in the import list has no id. Cannot import.");
+                        return null;
+                    }
+
+                    if (elementGain.ContainsKey(import.ElementId))
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.CardImport,
+                            $"({this.Id}) Element gain is redundantly in ElementGain list. '{import.ElementId}'");
+                        return null;
+                    }
+
                     elementGain.Add(import.ElementId, import.ModAmount);
                 }
                 return new CardPrototype(this.Id, parsedTokens, elementGain);

@@ -9,6 +9,8 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Imports;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
 
     public static class CardDatabase
     {
@@ -16,14 +18,37 @@ namespace SpaceDeck.Models.Databases
 
         public static void AddCardToDatabase(CardImport import)
         {
-            RegisterCardPrototype(import.GetPrototype());
+            // TODO: CardImport is Serializable, so it's not necessarily nullable
+            // Can we do better at validating it is not empty?
+            if (import == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.CardImport,
+                    $"Provided {nameof(CardImport)} is null.");
+                return;
+            }
+
+            CardPrototype prototype = import.GetPrototype();
+
+            if (prototype == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.CardImport,
+                    $"The {nameof(CardPrototype)} generated from {nameof(import.GetPrototype)} was null.");
+                return;
+            }
+
+            RegisterCardPrototype(prototype);
         }
 
         public static void RegisterCardPrototype(CardPrototype prototype)
         {
             if (prototype == null)
             {
-                throw new System.ArgumentNullException(nameof(prototype));
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.CardImport,
+                    $"Attempted to register a null card prototype.");
+                return;
             }
 
             Prototypes.Add(prototype.Id, prototype);

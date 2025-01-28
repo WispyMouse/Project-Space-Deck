@@ -4,6 +4,8 @@ namespace SpaceDeck.Tokenization.Processing
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
 
     /// <summary>
     /// Static helper class for turning <see cref="TokenText"/> into <see cref="ParsedTokenList"/>.
@@ -26,7 +28,9 @@ namespace SpaceDeck.Tokenization.Processing
                 {
                     if (!ScriptingCommandReference.TryGetScriptingCommandByIdentifier(statement.ScriptingCommandIdentifier, out ScriptingCommand scriptingCommand))
                     {
-                        // TODO Log failure
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.ParseTokenText,
+                            $"Cannot find a scripting command using this identifier: '{statement.ScriptingCommandIdentifier}'");
                         parsedSet = default(ParsedTokenList);
                         return false;
                     }

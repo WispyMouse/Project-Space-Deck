@@ -20,5 +20,6 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString TryCreateDelta = nameof(TryCreateDelta);
 
         public static readonly LowercaseString LinkingFailure = nameof(LinkingFailure);
+        public static readonly LowercaseString ParseTokenText = nameof(ParseTokenText);
     }
 }
