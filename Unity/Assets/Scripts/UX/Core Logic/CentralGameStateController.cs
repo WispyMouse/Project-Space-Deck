@@ -137,8 +137,12 @@ namespace SpaceDeck.UX
                 }
                 this.GameplayState.ModCurrency(CurrencyDatabase.Get(startingCurrency), route.StartingCurrency[startingCurrency]);
             }
+
+            this.CampaignPlayer = new Entity();
+            this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
+            this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.MaximumHealth, 100); // TODO VARIABLE MAX HEALTH
+            this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Health, this.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth));
             PlayerUX placedPlayer = this.UXController.PlacePlayerCharacter();
-            this.CampaignPlayer = placedPlayer.RepresentedPlayer;
         }
     }
 }
