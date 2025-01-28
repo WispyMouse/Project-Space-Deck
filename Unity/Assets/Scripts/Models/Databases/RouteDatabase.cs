@@ -6,7 +6,9 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public static class RouteDatabase
     {
@@ -14,7 +16,25 @@ namespace SpaceDeck.Models.Databases
 
         public static void AddRouteToDatabase(RouteImport toAdd)
         {
-            AddRouteToDatabase(toAdd.GetRoute());
+            if (toAdd == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.Route,
+                    $"{nameof(RouteImport)} is null.");
+                return;
+            }
+
+            Route route = toAdd.GetRoute();
+
+            if (route == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.Route,
+                    $"({toAdd.Id}) Generated route from {nameof(RouteImport)} is null.");
+                return;
+            }
+
+            AddRouteToDatabase(route);
         }
 
         public static void AddRouteToDatabase(Route toAdd)

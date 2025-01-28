@@ -6,8 +6,9 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
-
+    using SpaceDeck.Utility.Wellknown;
 
     public class CurrencyDatabase
     {
@@ -21,6 +22,9 @@ namespace SpaceDeck.Models.Databases
         public static void AddCurrencyToDatabase(Currency toImport)
         {
             CurrencyData.Add(toImport.Id, toImport);
+            Logging.DebugLog(WellknownLoggingLevels.ImportComplete,
+                WellknownLoggingCategories.DatabaseImportCompletion,
+                $"Currency: Imported {toImport.Id} successfully.");
         }
 
         public static Currency Get(LowercaseString id)

@@ -21,6 +21,8 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Rules;
     using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Tokenization.ScriptingCommands;
+    using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Utility.Logging;
 
     public class CentralGameStateController : MonoBehaviour
     {
@@ -127,6 +129,12 @@ namespace SpaceDeck.UX
             this.GameplayState = new GameState.Execution.GameState(route);
             foreach (LowercaseString startingCurrency in route.StartingCurrency.Keys)
             {
+                if (!CurrencyDatabase.TryGet(startingCurrency, out Currency foundCurrency))
+                {
+                    Logging.DebugLog(WellknownLoggingLevels.Error,
+                        WellknownLoggingCategories.Route,
+                        $"Attempted to get currency that doesn't exist from currency database. Id '{startingCurrency}'.");
+                }
                 this.GameplayState.ModCurrency(CurrencyDatabase.Get(startingCurrency), route.StartingCurrency[startingCurrency]);
             }
             PlayerUX placedPlayer = this.UXController.PlacePlayerCharacter();

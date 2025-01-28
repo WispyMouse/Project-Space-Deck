@@ -7,7 +7,9 @@ namespace SpaceDeck.Utility.Wellknown
 
     public static class WellknownLoggingLevels
     {
+        public static readonly LowercaseString ImportComplete = nameof(ImportComplete);
         public static readonly LowercaseString Debug = nameof(Debug);
+        public static readonly LowercaseString Warning = nameof(Warning);
         public static readonly LowercaseString Error = nameof(Error);
     }
 }
