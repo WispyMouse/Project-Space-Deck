@@ -4,6 +4,8 @@ namespace SpaceDeck.Tokenization.Processing
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Utility.Logging;
 
     /// <summary>
     /// A lookup table of all <see cref="ScriptingCommand"/>.
@@ -30,8 +32,9 @@ namespace SpaceDeck.Tokenization.Processing
 
             if (s_IdentifierToScriptingCommand.ContainsKey(toRegisterIdentifier))
             {
-                // TODO: What do we do in this situation?
-                // Likely need to log this.
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.DatabaseImportCompletion,
+                    $"Already contains a key '{toRegister.Identifier}'.");
                 return;
             }
 

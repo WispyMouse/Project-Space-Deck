@@ -12,9 +12,17 @@ namespace SpaceDeck.Models.Instances
     {
         public readonly EncounterPrototype Prototype;
 
-        public EncounterInstance(EncounterPrototype prototype) :base()
+        public override bool HasEncounterDialogue => this.Prototype.EncounterScripts.Count > 0;
+        public override bool IsShopEncounter => this.Prototype.IsShopEncounter;
+
+        public EncounterInstance(EncounterPrototype prototype, IEncounterEntitiesProvider entityProvider) :base()
         {
             this.Prototype = prototype;
+
+            this.EncounterId = prototype.Id;
+            this.EncounterName = prototype.Name;
+            this.EncounterDescription = prototype.Description;
+            this.EncounterEntities.AddRange(entityProvider.GetEntities(this.Prototype.EnemiesInEncounterById));
         }
 
         public override string BuildEncounterDialogue(LowercaseString index, IGameStateMutator mutator)

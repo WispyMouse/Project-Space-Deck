@@ -60,6 +60,11 @@ namespace SpaceDeck.Models.Databases
 
         public static bool TryGetEncounterWithAllTags(RandomDecider<EncounterPrototype> decider, HashSet<LowercaseString> tags, out EncounterPrototype encounter)
         {
+            if (decider == null)
+            {
+                decider = new RandomDecider<EncounterPrototype>();
+            }
+
             List<EncounterPrototype> candidates = new List<EncounterPrototype>();
 
             foreach (EncounterPrototype model in EncounterData.Values)
@@ -77,12 +82,13 @@ namespace SpaceDeck.Models.Databases
             }
 
             encounter = decider.ChooseRandomly(candidates);
+            
             return true;
         }
 
         public static EncounterInstance GetEvaluatorForKind(EncounterPrototype model)
         {
-            return new EncounterInstance(model);
+            return new EncounterInstance(model, EncounterDatabaseEntitiesProvider.Instance);
         }
 
         public static void ClearDatabase()

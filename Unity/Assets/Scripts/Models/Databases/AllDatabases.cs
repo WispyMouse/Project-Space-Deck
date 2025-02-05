@@ -31,6 +31,7 @@ namespace SpaceDeck.Models.Databases
         {
             CardDatabase.LinkTokens();
             StatusEffectDatabase.LinkTokens();
+            RouteDatabase.LinkAllRoutes();
         }
     }
 }

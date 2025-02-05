@@ -6,7 +6,9 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public static class EnemyDatabase
     {
@@ -29,6 +31,14 @@ namespace SpaceDeck.Models.Databases
 
         public static EnemyInstance GetInstance(LowercaseString id)
         {
+            if (!EnemyData.ContainsKey(id))
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.DatabaseImportCompletion,
+                    $"Failure to get enemy with id '{id}'.");
+                return null;
+            }
+
             return new EnemyInstance(EnemyData[id]);
         }
     }

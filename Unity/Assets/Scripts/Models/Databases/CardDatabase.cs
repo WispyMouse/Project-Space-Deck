@@ -70,10 +70,15 @@ namespace SpaceDeck.Models.Databases
             {
                 if (!(curPrototype.LinkedTokens.HasValue) && curPrototype.ParsedTokens.HasValue)
                 {
-                    if (LinkedTokenMaker.TryGetLinkedTokenList(curPrototype.ParsedTokens.Value, out LinkedTokenList linkedTokens))
+                    if (!LinkedTokenMaker.TryGetLinkedTokenList(curPrototype.ParsedTokens.Value, out LinkedTokenList linkedTokens))
                     {
-                        curPrototype.LinkedTokens = linkedTokens;
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.LinkingFailure,
+                            $"Failure to get linked token list. Id '{curPrototype.Id}'");
+                        continue;
                     }
+
+                    curPrototype.LinkedTokens = linkedTokens;
                 }
             }
         }

@@ -20,13 +20,13 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
         public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
         {
             // Presently, Apply Status effect Stacks Scripting command needs exactly two arguments;
-            // the status to apply, and the amount of stacks to apply
+            // the amount to apply, and the status to apply
             // TODO: Add a target, so that the target can be set as an argument
             // TODO: Add a user, so that both the user and the target can be set as an argument
             if (parsedToken.Arguments.Count == 2)
             {
                 // Try to evaluate the second token as a numeric value. If it can't be done, this isn't a hit.
-                if (!EvaluatablesReference.TryGetNumericEvaluatableValue(parsedToken.Arguments[1], out INumericEvaluatableValue evaluatable))
+                if (!EvaluatablesReference.TryGetNumericEvaluatableValue(parsedToken.Arguments[0], out INumericEvaluatableValue evaluatable))
                 {
                     linkedToken = null;
                     return false;
@@ -35,7 +35,7 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
                 linkedToken = new ApplyStatusEffectStacksLinkedToken(
                     new ChangeTargetEvaluatableValue(DefaultTargetProvider.Instance),
                     parsedToken,
-                    parsedToken.Arguments[0],
+                    parsedToken.Arguments[1],
                     evaluatable);
                 return true;
             }
