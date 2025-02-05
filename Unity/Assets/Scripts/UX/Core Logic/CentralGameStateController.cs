@@ -135,7 +135,7 @@ namespace SpaceDeck.UX
                         WellknownLoggingCategories.Route,
                         $"Attempted to get currency that doesn't exist from currency database. Id '{startingCurrency}'.");
                 }
-                this.GameplayState.ModCurrency(CurrencyDatabase.Get(startingCurrency), route.StartingCurrency[startingCurrency]);
+                this.GameplayState.ModCurrency(foundCurrency, route.StartingCurrency[startingCurrency]);
             }
 
             this.CampaignPlayer = new Entity();
@@ -143,6 +143,8 @@ namespace SpaceDeck.UX
             this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.MaximumHealth, 100); // TODO VARIABLE MAX HEALTH
             this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Health, this.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth));
             PlayerUX placedPlayer = this.UXController.PlacePlayerCharacter();
+            this.GameplayState.StartNextRoomFromCampaign(out ChoiceNode nextChoice);
+            this.UXController.PresentNextRouteChoice(nextChoice);
         }
     }
 }

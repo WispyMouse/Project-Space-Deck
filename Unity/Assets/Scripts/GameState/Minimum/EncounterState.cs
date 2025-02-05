@@ -4,6 +4,7 @@ namespace SpaceDeck.GameState.Minimum
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     /// <summary>
     /// Describes the state of a encounter.
@@ -85,6 +86,22 @@ namespace SpaceDeck.GameState.Minimum
         public virtual IReadOnlyList<IShopEntry> GetShop()
         {
             return Array.Empty<IShopEntry>();
+        }
+
+        public virtual LowercaseString GetStartingCampaignState()
+        {
+            if (this.IsShopEncounter)
+            {
+                return WellknownCampaignStates.ShopEncounter;
+            }
+            else if (this.HasEncounterDialogue)
+            {
+                return WellknownCampaignStates.DialogueEncounter;
+            }
+            else
+            {
+                return WellknownCampaignStates.CombatEncounter;
+            }
         }
     }
 }

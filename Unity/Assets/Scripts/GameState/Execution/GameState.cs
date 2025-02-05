@@ -38,6 +38,7 @@ namespace SpaceDeck.GameState.Execution
         public readonly Route BasedOnRoute;
         public int RouteIndex = -1;
         public List<PickReward> PendingRewards;
+        public LowercaseString CurrentCampaignState = default;
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
@@ -63,9 +64,10 @@ namespace SpaceDeck.GameState.Execution
         public GameState()
         {
             this.BasedOnRoute = null;
+            this.CurrentCampaignState = WellknownCampaignStates.ChoosingRouteNode;
         }
 
-        public GameState(Route basedOnRoute)
+        public GameState(Route basedOnRoute) : this()
         {
             this.BasedOnRoute = basedOnRoute;
         }
@@ -216,6 +218,8 @@ namespace SpaceDeck.GameState.Execution
         public void StartEncounter(EncounterState encounter)
         {
             this.CurrentEncounterState = encounter;
+            this.CurrentCampaignState = encounter.GetStartingCampaignState();
+
             this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
         }
 

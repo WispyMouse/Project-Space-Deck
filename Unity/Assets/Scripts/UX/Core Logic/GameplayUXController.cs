@@ -316,6 +316,8 @@ namespace SpaceDeck.UX
             this.CurrentSelectedCard?.DisableSelectionGlow();
             this.CurrentSelectedCard = null;
 
+            this.CampaignChooserUXInstance.HideChooser();
+
             this.PlayerHandRepresenter.DeselectSelectedCard();
 
             if (this.CardBrowserUXInstance.RemainingCardsToChoose > 0)
@@ -584,19 +586,17 @@ namespace SpaceDeck.UX
             this.ShowRewardsPanel(toPresent);
         }
 
-        void PresentNextRouteChoice()
+        public void PresentNextRouteChoice(ChoiceNode nextChoice)
         {
             this.CancelAllSelections();
 
-            ChoiceNode campaignNode = this.CurrentGameState.GetCampaignCurrentNode();
-
-            if (campaignNode == null)
+            if (nextChoice == null)
             {
                 return;
             }
 
             this.ChoiceUXFolder.SetActive(true);
-            this.ChoiceSelectorUX.RepresentNode(campaignNode);
+            this.ChoiceSelectorUX.RepresentNode(nextChoice);
         }
 
         void ClearRouteUX()
@@ -616,7 +616,7 @@ namespace SpaceDeck.UX
             this.CancelAllSelections();
             if (this.CentralGameStateControllerInstance.GameplayState.StartNextRoomFromCampaign(out ChoiceNode nextChoice))
             {
-                this.PresentNextRouteChoice();
+                this.PresentNextRouteChoice(nextChoice);
             }
         }
 

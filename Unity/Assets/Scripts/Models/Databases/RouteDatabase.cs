@@ -46,5 +46,32 @@ namespace SpaceDeck.Models.Databases
         {
             AllRoutes.Clear();
         }
+
+        /// <summary>
+        /// Links all routes, making each evaluatable and token have proper references.
+        /// Unlike other databases, this linking will randomize the results of things with arguments.
+        /// Re-Linking this database will create a new seed for a run.
+        /// </summary>
+        public static void LinkAllRoutes()
+        {
+            foreach (Route curRoute in AllRoutes)
+            {
+                 foreach (ChoiceNode node in curRoute.Choices)
+                {
+                    foreach (ChoiceNodeOption option in node.Options)
+                    {
+                        if (!EncounterDatabase.TryGetEncounterWithArguments(null, option.WillEncounterId, null, out EncounterInstance encounter))
+                        {
+                            Logging.DebugLog(WellknownLoggingLevels.Error,
+                                WellknownLoggingCategories.LinkingFailure,
+                                $"Could not link encounter. Id: '{option.WillEncounterId}'");
+                            continue;
+                        }
+
+                        option.WillEncounter = encounter;
+                    }
+                }
+            }
+        }
     }
 }

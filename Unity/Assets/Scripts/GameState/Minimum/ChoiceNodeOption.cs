@@ -6,7 +6,7 @@ namespace SpaceDeck.GameState.Minimum
     public class ChoiceNodeOption
     {
         public string NodeName => this.WillEncounter?.EncounterName;
-        public EncounterState WillEncounter { get; private set; }
+        public EncounterState WillEncounter { get; set; }
         public readonly LowercaseString WillEncounterId;
         public bool WasSelected { get; set; } = false;
 
@@ -27,12 +27,12 @@ namespace SpaceDeck.GameState.Minimum
 
         public string GetName()
         {
-            return this.WillEncounter.EncounterName;
+            return this.WillEncounter?.EncounterName;
         }
 
         public string GetDescription()
         {
-            return this.WillEncounter.EncounterDescription;
+            return this.WillEncounter?.EncounterDescription;
         }
     }
 }
