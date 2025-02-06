@@ -317,6 +317,7 @@ namespace SpaceDeck.UX
             this.CurrentSelectedCard = null;
 
             this.CampaignChooserUXInstance.HideChooser();
+            this.ChoiceUXFolder.SetActive(false);
 
             this.PlayerHandRepresenter.DeselectSelectedCard();
 
@@ -599,16 +600,10 @@ namespace SpaceDeck.UX
             this.ChoiceSelectorUX.RepresentNode(nextChoice);
         }
 
-        void ClearRouteUX()
-        {
-            this.CancelAllSelections();
-            this.ChoiceUXFolder.SetActive(false);
-        }
-
         public void NodeIsChosen(ChoiceNodeOption option)
         {
             this.CancelAllSelections();
-            this.CentralGameStateControllerInstance.GameplayState.MakeChoiceNodeDecision(option);
+            this.CentralGameStateControllerInstance.MakeChoiceNodeDecision(option);
         }
 
         public void ProceedToNextRoom()
@@ -759,6 +754,22 @@ namespace SpaceDeck.UX
             {
                 this.EncounterRepresenterUXInstance.Close();
                 this.ProceedToNextRoom();
+            }
+        }
+
+        public void RepresentEncounter(EncounterState toStart)
+        {
+            if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.ShopEncounter)
+            {
+                this.ShowShopPanel(toStart.GetShop());
+            }
+            else if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.DialogueEncounter)
+            {
+                this.EncounterRepresenterUXInstance.RepresentEncounter(toStart, this.CentralGameStateControllerInstance.GameplayState);
+            }
+            else
+            {
+                this.CombatTurnCounterInstance.BeginHandlingCombat();
             }
         }
     }

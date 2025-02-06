@@ -41,5 +41,49 @@ namespace SpaceDeck.Models.Databases
 
             return new EnemyInstance(EnemyData[id]);
         }
+
+        public static bool TryGetInstanceWithTagsOrId(LowercaseStringSet tagsOrId, out EnemyInstance instance, RandomDecider<EnemyPrototype> decider = null)
+        {
+            if (decider == null)
+            {
+                decider = new RandomDecider<EnemyPrototype>();
+            }
+
+            if (tagsOrId.OnlyValue.HasValue && EnemyData.ContainsKey(tagsOrId.OnlyValue.Value))
+            {
+                // Use the GetInstance call instead of duplicating its logic
+                instance = GetInstance(tagsOrId.OnlyValue.Value);
+
+                // Should always be true, given that the EnemyData dictionary contains this key
+                return instance != null;
+            }
+
+            List<EnemyPrototype> fittingPrototypes = new List<EnemyPrototype>();
+            foreach (EnemyPrototype prototype in EnemyData.Values)
+            {
+                if (!prototype.Tags.Contains(tagsOrId))
+                {
+                    continue;
+                }
+                fittingPrototypes.Add(prototype);
+            }
+
+            if (fittingPrototypes.Count == 0)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error,
+                    WellknownLoggingCategories.DatabaseImportCompletion,
+                    $"Failure to find enemy with tags: {tagsOrId}");
+                instance = null;
+                return false;
+            }
+
+            EnemyPrototype chosenPrototype = decider.ChooseRandomly(fittingPrototypes);
+
+            // Reuse GetInstance
+            instance = GetInstance(chosenPrototype.Id);
+
+            // Should certainly not be null
+            return instance != null;
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace SpaceDeck.Models.Prototypes
         public readonly string Name;
         public readonly string Description;
         public readonly HashSet<LowercaseString> EncounterTags = new HashSet<LowercaseString>();
-        public readonly IReadOnlyList<LowercaseString> EnemiesInEncounterById = new List<LowercaseString>();
+        public readonly IReadOnlyList<LowercaseStringSet> EnemiesInEncounterById = new List<LowercaseStringSet>();
         public readonly bool IsShopEncounter;
         public readonly IReadOnlyList<string> Arguments = new List<string>();
         // TODO RewardImport
@@ -22,7 +22,7 @@ namespace SpaceDeck.Models.Prototypes
             string name,
             string description,
             HashSet<LowercaseString> encounterTags,
-            IReadOnlyList<LowercaseString> enemiesInEncounterById,
+            IReadOnlyList<LowercaseStringSet> enemiesInEncounterById,
             bool isShopEncounter,
             IReadOnlyList<string> arguments,
             // TODO RewardImport

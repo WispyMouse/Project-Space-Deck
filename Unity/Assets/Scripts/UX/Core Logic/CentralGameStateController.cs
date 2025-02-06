@@ -148,5 +148,15 @@ namespace SpaceDeck.UX
             this.GameplayState.StartNextRoomFromCampaign(out ChoiceNode nextChoice);
             this.UXController.PresentNextRouteChoice(nextChoice);
         }
+
+        public void MakeChoiceNodeDecision(ChoiceNodeOption choice)
+        {
+            this.GameplayState.MakeChoiceNodeDecision(choice);
+
+            if (this.GameplayState.CurrentEncounterState != null)
+            {
+                this.UXController.RepresentEncounter(this.GameplayState.CurrentEncounterState);
+            }
+        }
     }
 }

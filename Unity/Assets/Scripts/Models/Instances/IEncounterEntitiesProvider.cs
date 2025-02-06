@@ -13,6 +13,6 @@ namespace SpaceDeck.Models.Instances
 
     public interface IEncounterEntitiesProvider
     {
-        IEnumerable<Entity> GetEntities(IEnumerable<LowercaseString> entityIds);
+        IEnumerable<Entity> GetEntities(IEnumerable<LowercaseStringSet> entityIds, RandomDecider<EnemyPrototype> decider = null);
     }
 }

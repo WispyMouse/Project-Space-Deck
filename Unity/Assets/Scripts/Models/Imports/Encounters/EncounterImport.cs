@@ -26,10 +26,10 @@ namespace SpaceDeck.Models.Imports
                 hashTags.Add(tag);
             }
 
-            List<LowercaseString> enemiesInEncounter = new List<LowercaseString>();
-            foreach (string enemy in (IEnumerable<string>)(this.EnemiesInEncounterById ?? Array.Empty<string>()))
+            List<LowercaseStringSet> enemiesInEncounter = new List<LowercaseStringSet>();
+            foreach (string enemyTags in (IEnumerable<string>)(this.EnemiesInEncounterById ?? Array.Empty<string>()))
             {
-                enemiesInEncounter.Add(enemy);
+                enemiesInEncounter.Add(new LowercaseStringSet(enemyTags));
             }
 
             List<EncounterScript> encounterScripts = new List<EncounterScript>();

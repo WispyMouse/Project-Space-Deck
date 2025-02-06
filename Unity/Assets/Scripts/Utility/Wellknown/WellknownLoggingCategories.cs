@@ -22,6 +22,7 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString LinkingFailure = nameof(LinkingFailure);
         public static readonly LowercaseString ParseTokenText = nameof(ParseTokenText);
         public static readonly LowercaseString Route = nameof(Route);
+        public static readonly LowercaseString EnemyDatabase = nameof(EnemyDatabase);
 
         public static readonly LowercaseString DatabaseImportCompletion = nameof(DatabaseImportCompletion);
     }
