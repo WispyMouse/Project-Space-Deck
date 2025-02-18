@@ -6,6 +6,8 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Tokenization.Minimum;
+    using SpaceDeck.Tokenization.Processing;
     using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
@@ -84,6 +86,45 @@ namespace SpaceDeck.Models.Databases
 
             // Should certainly not be null
             return instance != null;
+        }
+
+        public static void LinkDatabase()
+        {
+            foreach (EnemyPrototype prototype in EnemyData.Values)
+            {
+                IEnumerable<LowercaseString> attacks = prototype.AttackScripts.Keys;
+                foreach (LowercaseString attackId in attacks)
+                {
+                    EnemyAttack attackToLink = prototype.AttackScripts[attackId];
+                    LowercaseString rawAttackScript = attackToLink.RawAttackScript;
+
+                    if (!TokenTextMaker.TryGetTokenTextFromString(prototype.AttackScripts[attackId].RawAttackScript, out TokenText text))
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.CardImport,
+                            $"({prototype.Id} {attackId}) Failed to determine token text from string. '{rawAttackScript}'");
+                        continue;
+                    }
+
+                    if (!ParsedTokenMaker.TryGetParsedTokensFromTokenText(text, out ParsedTokenList parsedTokens))
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.CardImport,
+                            $"({prototype.Id} {attackId}) Failed to generated parsed token list from string. '{rawAttackScript}'");
+                        continue;
+                    }
+
+                    if (!LinkedTokenMaker.TryGetLinkedTokenList(parsedTokens, out LinkedTokenList linkedTokens))
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Error,
+                            WellknownLoggingCategories.CardImport,
+                            $"({prototype.Id} {attackId}) Failed to link tokens from string. '{rawAttackScript}'");
+                        continue;
+                    }
+
+                    prototype.AttackScripts[attackId] = new LinkedEnemyAttack(attackToLink, linkedTokens);
+                }
+            }
         }
     }
 }

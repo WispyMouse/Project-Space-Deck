@@ -8,23 +8,23 @@ namespace SpaceDeck.Utility.Minimum
     {
         public HashSet<T> AlreadyChosen = new HashSet<T>();
 
-        protected override void EliminateOptions(List<T> fromList)
+        protected override IReadOnlyList<T> EliminateOptions(IReadOnlyList<T> originalFromList)
         {
-            base.EliminateOptions(fromList);
-
-            List<T> originalList = new List<T>(fromList);
+            List<T> workingFromList = new List<T>(base.EliminateOptions(originalFromList));
 
             foreach (T item in this.AlreadyChosen)
             {
-                fromList.Remove(item);
+                workingFromList.Remove(item);
             }
 
             // If we've exhausted the options, reset the chosen list
-            if (fromList.Count == 0)
+            if (workingFromList.Count == 0)
             {
-                fromList.AddRange(originalList);
                 this.AlreadyChosen.Clear();
+                return originalFromList;
             }
+
+            return workingFromList;
         }
 
         protected override void NoteAsChosen(T chosen)

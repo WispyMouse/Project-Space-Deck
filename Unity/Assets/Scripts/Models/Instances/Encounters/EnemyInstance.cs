@@ -13,6 +13,8 @@ namespace SpaceDeck.Models.Instances
     {
         public readonly LowercaseString Id;
 
+        public Dictionary<LowercaseString, EnemyAttack> Attacks = new Dictionary<LowercaseString, EnemyAttack>();
+
         public EnemyInstance(EnemyPrototype prototype)
         {
             this.Id = prototype.Id;
@@ -24,6 +26,21 @@ namespace SpaceDeck.Models.Instances
             this.Qualities.SetNumericQuality(WellknownQualities.Health, 
                 this.Qualities.GetNumericQuality(WellknownQualities.Health, 
                     this.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)));
+        }
+
+        public override EnemyAttack GetNextAttack(RandomDecider<EnemyAttack> decider = null)
+        {
+            if (decider == null)
+            {
+                decider = new RandomDecider<EnemyAttack>();
+            }
+
+            if (this.Attacks.Count == 0)
+            {
+                return null;
+            }
+
+            return decider.ChooseRandomly(new List<EnemyAttack>(this.Attacks.Values));
         }
     }
 }

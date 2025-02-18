@@ -6,7 +6,7 @@ namespace SpaceDeck.Utility.Minimum
 
     public class RandomDecider<T>
     {
-        public T ChooseRandomly(List<T> toChooseFrom)
+        public T ChooseRandomly(IReadOnlyList<T> toChooseFrom)
         {
             if (toChooseFrom.Count == 0)
             {
@@ -14,7 +14,7 @@ namespace SpaceDeck.Utility.Minimum
                 return default(T);
             }
 
-            this.EliminateOptions(toChooseFrom);
+            toChooseFrom = this.EliminateOptions(toChooseFrom);
 
             if (toChooseFrom.Count == 0)
             {
@@ -27,14 +27,15 @@ namespace SpaceDeck.Utility.Minimum
             return chosen;
         }
 
-        protected virtual void EliminateOptions(List<T> fromList)
+        protected virtual IReadOnlyList<T> EliminateOptions(IReadOnlyList<T> fromList)
         {
-
+            return fromList;
         }
 
-        protected virtual T ChooseOneRandomly(List<T> fromList)
+        protected virtual T ChooseOneRandomly(IReadOnlyList<T> fromList)
         {
             int randomIndex = new Random().Next(0, fromList.Count);
+
             return fromList[randomIndex];
         }
 

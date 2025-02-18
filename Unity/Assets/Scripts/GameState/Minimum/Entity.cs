@@ -33,5 +33,10 @@ namespace SpaceDeck.GameState.Minimum
         {
             return this.selfList;
         }
+
+        public virtual EnemyAttack GetNextAttack(RandomDecider<EnemyAttack> decider = null)
+        {
+            return null;
+        }
     }
 }
