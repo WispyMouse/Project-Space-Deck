@@ -195,7 +195,7 @@ TextureImporter:
       213: -5819853751554385393
     second: spritefontasset_63
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -212,10 +212,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -254,6 +256,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -265,6 +269,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -277,6 +282,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -289,6 +295,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -301,6 +308,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -1660,9 +1668,73 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      spritefontasset_0: 8350462171796576871
+      spritefontasset_1: 4860109886816802973
+      spritefontasset_10: -3163219883484870216
+      spritefontasset_11: 3130235409788925873
+      spritefontasset_12: -7518052348574114365
+      spritefontasset_13: 6210897843468718478
+      spritefontasset_14: 3686021066741919135
+      spritefontasset_15: -7343704271479828804
+      spritefontasset_16: -8750202041358786124
+      spritefontasset_17: 1235560855206429405
+      spritefontasset_18: -3251320972184446242
+      spritefontasset_19: 1671721509537017841
+      spritefontasset_2: -958118690602711964
+      spritefontasset_20: 6506234276347592566
+      spritefontasset_21: -8774869382191867292
+      spritefontasset_22: -8195393885999192216
+      spritefontasset_23: 4519305020307829256
+      spritefontasset_24: -7142961971145522306
+      spritefontasset_25: -7517583100669070933
+      spritefontasset_26: 269169117908629013
+      spritefontasset_27: 363085466665678585
+      spritefontasset_28: -3554069488429606429
+      spritefontasset_29: 5833144037139694234
+      spritefontasset_3: 3002844670484676071
+      spritefontasset_30: -2284035967235482660
+      spritefontasset_31: 7184660914026115090
+      spritefontasset_32: -8189740720573370191
+      spritefontasset_33: -6529893845423542800
+      spritefontasset_34: 3437978462160432700
+      spritefontasset_35: -4251974037262524067
+      spritefontasset_36: -1623901636321238380
+      spritefontasset_37: 8915954814879241078
+      spritefontasset_38: 3137412208093082390
+      spritefontasset_39: 5821362075226141405
+      spritefontasset_4: 4881642062623182846
+      spritefontasset_40: 1923455900871619200
+      spritefontasset_41: 1849702511257311767
+      spritefontasset_42: 433733945430454350
+      spritefontasset_43: 2565200457015011775
+      spritefontasset_44: 8903022117402926763
+      spritefontasset_45: -2503494992016204673
+      spritefontasset_46: -2181789402119687724
+      spritefontasset_47: -1070912961378766554
+      spritefontasset_48: 1926464505620780200
+      spritefontasset_49: -3294408440361994343
+      spritefontasset_5: 4275069887888870960
+      spritefontasset_50: 634631235495863983
+      spritefontasset_51: 1021565574678720096
+      spritefontasset_52: 6765676906650274006
+      spritefontasset_53: 1789240586990585490
+      spritefontasset_54: 1593717669512850233
+      spritefontasset_55: 4503229745933342918
+      spritefontasset_56: -481807915866179232
+      spritefontasset_57: -6072362609095056380
+      spritefontasset_58: -8093635393726104123
+      spritefontasset_59: 4510468667163147026
+      spritefontasset_6: -2947845584629890185
+      spritefontasset_60: -6739672198927404212
+      spritefontasset_61: -5076207750830028359
+      spritefontasset_62: -1443694638884466910
+      spritefontasset_63: -5819853751554385393
+      spritefontasset_7: -6713669879297513318
+      spritefontasset_8: -101441312360183334
+      spritefontasset_9: 4766367193861351690
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

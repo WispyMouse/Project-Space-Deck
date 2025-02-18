@@ -64,5 +64,35 @@ namespace SpaceDeck.Utility.Minimum
                 this.StringQualities.Add(index, newValue);
             }
         }
+
+        public QualitiesHolder Clone()
+        {
+            QualitiesHolder clone = new QualitiesHolder();
+
+            foreach (string stringKey in this.StringQualities.Keys)
+            {
+                clone.SetStringQuality(stringKey, this.StringQualities[stringKey]);
+            }
+
+            foreach (string numericKey in this.NumericQualities.Keys)
+            {
+                clone.SetNumericQuality(numericKey, this.NumericQualities[numericKey]);
+            }
+
+            return clone;
+        }
+
+        public void AddQualities(QualitiesHolder from)
+        {
+            foreach (string stringKey in from.StringQualities.Keys)
+            {
+                this.SetStringQuality(stringKey, from.StringQualities[stringKey]);
+            }
+
+            foreach (string numericKey in from.NumericQualities.Keys)
+            {
+                this.SetNumericQuality(numericKey, from.NumericQualities[numericKey]);
+            }
+        }
     }
 }

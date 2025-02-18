@@ -12,7 +12,7 @@ namespace SpaceDeck.GameState.Minimum
     public class Entity : IChangeTarget, IHaveQualities
     {
         public QualitiesHolder Qualities => this._Qualities;
-        private readonly QualitiesHolder _Qualities = new QualitiesHolder();
+        protected readonly QualitiesHolder _Qualities = new QualitiesHolder();
 
         public readonly Dictionary<LowercaseString, AppliedStatusEffect> AppliedStatusEffects = new Dictionary<LowercaseString, AppliedStatusEffect>();
 

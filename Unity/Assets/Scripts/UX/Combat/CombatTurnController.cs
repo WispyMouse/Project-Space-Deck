@@ -68,11 +68,6 @@ namespace SpaceDeck.UX
             this.EnemyRepresenterUX.AddEnemies(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.EncounterEntities);
         }
 
-        private void SpawnEnemy(Entity toSpawn)
-        {
-            this.EnemyRepresenterUX.AddEnemy(toSpawn);
-        }
-
         public void EndPlayerTurn()
         {
             this.CentralGameStateControllerInstance.GameplayState.EndCurrentEntityTurn();
