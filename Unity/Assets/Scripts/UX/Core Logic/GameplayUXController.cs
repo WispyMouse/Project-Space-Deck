@@ -96,6 +96,7 @@ namespace SpaceDeck.UX
         private void Awake()
         {
             this.Annihilate();
+            GameStateDeltaApplier.GameStateUpdated += UpdateUXFromStateDelta;
         }
 
         private void OnEnable()
@@ -253,6 +254,16 @@ namespace SpaceDeck.UX
                 GlobalUpdateUX.LogTextEvent?.Invoke($"Victory!! There are no more nodes in this route! Reset game to continue from beginning.", GlobalUpdateUX.LogType.GameEvent);
             }
             */
+        }
+
+        public void UpdateUXFromStateDelta(IGameStateMutator mutator, GameStateDelta delta)
+        {
+            if (mutator != CurrentGameState)
+            {
+                return;
+            }
+
+            UpdateUX();
         }
 
         public void UpdateUX()

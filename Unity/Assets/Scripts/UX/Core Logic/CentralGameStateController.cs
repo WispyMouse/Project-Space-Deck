@@ -23,6 +23,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.Tokenization.ScriptingCommands;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Utility.Logging;
+    using SpaceDeck.GameState.Execution;
 
     public class CentralGameStateController : MonoBehaviour
     {
@@ -61,6 +62,8 @@ namespace SpaceDeck.UX
             RuleReference.RegisterRule(new PlayerTurnStartDrawCardsRule(new ConstantNumericValue(7))); // TODO Variable card draw
             RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
             RuleReference.RegisterRule(new ZeroHealthRule());
+            RuleReference.RegisterRule(new EntityPicksIntentEncounterStartRule());
+            RuleReference.RegisterRule(new EntityPicksIntentTurnEndedRule());
 
             // SCRIPTING COMMANDS
             // TODO: Custom scripting commands?
@@ -128,7 +131,7 @@ namespace SpaceDeck.UX
 
         public void RouteChosen(Route route)
         {
-            this.GameplayState = new GameState.Execution.GameState(route);
+            this.GameplayState = new GameState(route);
             foreach (LowercaseString startingCurrency in route.StartingCurrency.Keys)
             {
                 if (!CurrencyDatabase.TryGet(startingCurrency, out Currency foundCurrency))
@@ -157,6 +160,8 @@ namespace SpaceDeck.UX
             {
                 this.UXController.RepresentEncounter(this.GameplayState.CurrentEncounterState);
             }
+
+            PendingResolveExecutor.ResolveAll(this.GameplayState);
         }
     }
 }

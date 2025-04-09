@@ -20,12 +20,16 @@ namespace SpaceDeck.GameState.Deltas
     /// </summary>
     public static class GameStateDeltaApplier
     {
+        public delegate void GameStateUpdatedDelegate(IGameStateMutator updatedState, GameStateDelta appliedDelta);
+        public static event GameStateUpdatedDelegate GameStateUpdated;
+
         public static void ApplyGameStateDelta(IGameStateMutator originalState, GameStateDelta delta)
         {
             foreach (GameStateChange change in delta.Changes)
             {
                 change.Apply(originalState);
             }
+            GameStateUpdated.Invoke(originalState, delta);
         }
     }
 }
