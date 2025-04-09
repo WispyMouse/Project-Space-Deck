@@ -1,0 +1,16 @@
+{
+	"Id": "midfight",
+	"Name": "Fight Some Mooks",
+	"Description": "Here are some mooks.",
+	"EnemiesInEncounterById":
+	[
+		"MidFight",
+		"MidFight",
+		"MidFight"
+	],
+	"Tags":
+	[
+		"MidFight"
+	],
+	"StandardRewardId": "demoreward"
+}

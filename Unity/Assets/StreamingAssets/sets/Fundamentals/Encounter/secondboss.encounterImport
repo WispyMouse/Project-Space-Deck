@@ -1,0 +1,14 @@
+{
+	"Id": "secondboss",
+	"Name": "Second Boss",
+	"Description": "Second boss time!",
+	"EnemiesInEncounterById":
+	[
+		"secondboss"
+	],
+	"Tags":
+	[
+		"SecondBoss"
+	],
+	"StandardRewardId": "demoreward"
+}

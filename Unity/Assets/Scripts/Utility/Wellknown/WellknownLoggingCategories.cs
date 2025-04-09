@@ -16,6 +16,8 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString LinkConstructor = nameof(LinkConstructor);
         public static readonly LowercaseString ProviderEvaluation = nameof(ProviderEvaluation);
 
+        public static readonly LowercaseString IntentSet = nameof(IntentSet);
+
         public static readonly LowercaseString TryGetLinkedTokenList = nameof(TryGetLinkedTokenList);
         public static readonly LowercaseString TryCreateDelta = nameof(TryCreateDelta);
 

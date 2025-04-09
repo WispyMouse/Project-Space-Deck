@@ -26,6 +26,11 @@ namespace SpaceDeck.Models.Instances
             this.Qualities.SetNumericQuality(WellknownQualities.Health, 
                 this.Qualities.GetNumericQuality(WellknownQualities.Health, 
                     this.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)));
+
+            foreach (LowercaseString attackId in prototype.AttackScripts.Keys)
+            {
+                this.Attacks.Add(attackId, prototype.AttackScripts[attackId]);
+            }
         }
 
         public override EnemyAttack GetNextAttack(RandomDecider<EnemyAttack> decider = null)

@@ -30,7 +30,19 @@ namespace SpaceDeck.GameState.Rules
             foreach (Entity curEntity in gameStateMutator.GetAllEntities())
             {
                 Intent nextIntent = curEntity.GetNextAttack();
-                Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.Test, $"Wow, this is running! Is there an intent? {nextIntent != null}");
+
+                string nextIntentDescription = "<none>";
+                if (nextIntent != null)
+                {
+                    nextIntentDescription = nextIntent.Describe();
+
+                    if (string.IsNullOrEmpty(nextIntentDescription))
+                    {
+                        nextIntentDescription = "<set with no description>";
+                    }
+                }
+
+                Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.IntentSet, $"Entity {curEntity.Qualities.GetStringQuality(WellknownQualities.Name)} sets intent: {nextIntentDescription}");
                 if (nextIntent != null)
                 {
                     applications.Add(new SetEntityIntent(curEntity, nextIntent));

@@ -1,0 +1,16 @@
+{
+	"Id": "latefight",
+	"Name": "Fight Some  Stronger Mooks",
+	"Description": "Here are some mooks. (stronger)",
+	"EnemyIds":
+	[
+		"LateFight",
+		"LateFight",
+		"LateFight"
+	],
+	"Tags":
+	[
+		"LateFight"
+	],
+	"StandardRewardId": "demoreward"
+}

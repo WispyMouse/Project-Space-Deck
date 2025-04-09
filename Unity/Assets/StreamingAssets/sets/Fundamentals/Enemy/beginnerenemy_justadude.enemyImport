@@ -1,0 +1,30 @@
+{
+	"Id": "beginnerenemy_justadude",
+	"Name": "Just A Dude",
+	"NumberQualities": 
+	[
+		{
+			"Key": "MaximumHealth",
+			"Value": 3
+		}
+	],
+	"EnemyAttacks":
+	[
+		{
+			"Id": "DAMAGEONE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 2]"
+		},
+		{
+			"Id": "DAMAGETWO",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 3]"
+		},
+		{
+			"Id": "DAMAGETHREE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 4]"
+		},
+	],
+	"Tags":
+	[
+		"FirstFight"
+	]
+}

@@ -1,0 +1,30 @@
+{
+	"Id": "finalboss",
+	"Name": "Final Boss",
+	"NumberQualities": 
+	[
+		{
+			"Key": "MaximumHealth",
+			"Value": 100
+		}
+	],
+	"EnemyAttacks":
+	[
+		{
+			"Id": "DAMAGEONE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 10]"
+		},
+		{
+			"Id": "DAMAGETWO",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 11]"
+		},
+		{
+			"Id": "DAMAGETHREE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 12]"
+		},
+	],
+	"Tags":
+	[
+		"FinalBoss"
+	]
+}

@@ -1,0 +1,30 @@
+{
+	"Id": "earlyfight_mook",
+	"Name": "Mook",
+	"NumberQualities": 
+	[
+		{
+			"Key": "MaximumHealth",
+			"Value": 10
+		}
+	],
+	"EnemyAttacks":
+	[
+		{
+			"Id": "DAMAGEONE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 1]"
+		},
+		{
+			"Id": "DAMAGETWO",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 2]"
+		},
+		{
+			"Id": "DAMAGETHREE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 3]"
+		},
+	],
+	"Tags":
+	[
+		"EarlyFight"
+	]
+}

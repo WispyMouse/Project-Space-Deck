@@ -92,7 +92,7 @@ namespace SpaceDeck.Models.Databases
         {
             foreach (EnemyPrototype prototype in EnemyData.Values)
             {
-                IEnumerable<LowercaseString> attacks = prototype.AttackScripts.Keys;
+                IEnumerable<LowercaseString> attacks = new List<LowercaseString>(prototype.AttackScripts.Keys);
                 foreach (LowercaseString attackId in attacks)
                 {
                     EnemyAttack attackToLink = prototype.AttackScripts[attackId];

@@ -1,0 +1,30 @@
+{
+	"Id": "beginnerenemy_easiest",
+	"Name": "Beginner",
+	"NumberQualities": 
+	[
+		{
+			"Key": "MaximumHealth",
+			"Value": 2
+		}
+	],
+	"EnemyAttacks":
+	[
+		{
+			"Id": "DAMAGEONE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 1]"
+		},
+		{
+			"Id": "DAMAGETWO",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 2]"
+		},
+		{
+			"Id": "DAMAGETHREE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 3]"
+		},
+	],
+	"Tags":
+	[
+		"FirstFight"
+	]
+}

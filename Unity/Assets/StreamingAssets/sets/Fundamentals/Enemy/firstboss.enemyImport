@@ -1,0 +1,30 @@
+{
+	"Id": "firstboss",
+	"Name": "First Boss",
+	"NumberQualities": 
+	[
+		{
+			"Key": "MaximumHealth",
+			"Value": 40
+		}
+	],
+	"EnemyAttacks":
+	[
+		{
+			"Id": "DAMAGEONE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 7]"
+		},
+		{
+			"Id": "DAMAGETWO",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 8]"
+		},
+		{
+			"Id": "DAMAGETHREE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 9]"
+		},
+	],
+	"Tags":
+	[
+		"FirstBoss"
+	]
+}

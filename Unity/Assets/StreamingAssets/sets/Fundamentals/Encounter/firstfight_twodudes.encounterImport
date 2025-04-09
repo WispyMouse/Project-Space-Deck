@@ -1,0 +1,15 @@
+{
+	"Id": "firstfight_twodudes",
+	"Name": "Two Dudes",
+	"Description": "Here comes the dudes!",
+	"EnemiesInEncounterById":
+	[
+		"beginnerenemy_justadude",
+		"beginnerenemy_justadude"
+	],
+	"Tags":
+	[
+		"FirstFight"
+	],
+	"StandardRewardId": "demoreward"
+}
