@@ -10,6 +10,7 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString EvaluatableEvaluation = nameof(EvaluatableEvaluation);
         public static readonly LowercaseString Test = nameof(Test);
         public static readonly LowercaseString CardImport = nameof(CardImport);
+        public static readonly LowercaseString Rule = nameof(Rule);
 
         public static readonly LowercaseString GetLinkedScriptingToken = nameof(GetLinkedScriptingToken);
         public static readonly LowercaseString TokenTryGetChanges = nameof(TokenTryGetChanges);

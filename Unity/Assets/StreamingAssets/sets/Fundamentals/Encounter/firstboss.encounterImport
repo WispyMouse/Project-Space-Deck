@@ -2,13 +2,14 @@
 	"Id": "firstboss",
 	"Name": "First Boss",
 	"Description": "Boss time!",
-	"EnemyIds":
+	"EnemiesInEncounterById":
 	[
-		"firstboss"
+		"firstboss",
 	],
-	"Tags":
+	"EncounterTags":
 	[
 		"FirstBoss"
 	],
-	"StandardRewardId": "demoreward"
+	"Arguments": [],
+	"EncounterScripts": [],
 }

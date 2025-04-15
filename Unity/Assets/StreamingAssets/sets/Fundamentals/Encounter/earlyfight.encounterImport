@@ -2,15 +2,16 @@
 	"Id": "earlyfight",
 	"Name": "Hit Some Mooks",
 	"Description": "Here are some mooks.",
-	"EnemyIds":
+	"EnemiesInEncounterById":
 	[
 		"earlyfight",
 		"earlyfight",
 		"earlyfight"
 	],
-	"Tags":
+	"EncounterTags":
 	[
 		"EarlyFight"
 	],
-	"StandardRewardId": "demoreward"
+	"Arguments": [],
+	"EncounterScripts": [],
 }

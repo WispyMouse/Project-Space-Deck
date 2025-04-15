@@ -147,6 +147,7 @@ namespace SpaceDeck.UX
             this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
             this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.MaximumHealth, 100); // TODO VARIABLE MAX HEALTH
             this.CampaignPlayer.Qualities.SetNumericQuality(WellknownQualities.Health, this.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth));
+            this.GameplayState.AddPersistentEntity(this.CampaignPlayer);
             PlayerUX placedPlayer = this.UXController.PlacePlayerCharacter();
             this.GameplayState.StartNextRoomFromCampaign(out ChoiceNode nextChoice);
             this.UXController.PresentNextRouteChoice(nextChoice);

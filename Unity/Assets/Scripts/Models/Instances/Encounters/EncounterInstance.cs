@@ -6,7 +6,9 @@ namespace SpaceDeck.Models.Instances
     using System.Text;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class EncounterInstance : EncounterState
     {
@@ -23,6 +25,11 @@ namespace SpaceDeck.Models.Instances
             this.EncounterName = prototype.Name;
             this.EncounterDescription = prototype.Description;
             this.EncounterEntities.AddRange(entityProvider.GetEntities(this.Prototype.EnemiesInEncounterById));
+
+            if (!this.IsShopEncounter && !this.HasEncounterDialogue && this.EncounterEntities.Count == 0)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.DatabaseImportCompletion, $"Encounter with prototype id '{this.EncounterId}' is labeled as a combat encounter, but has no entities in it.");
+            }
         }
 
         public override string BuildEncounterDialogue(LowercaseString index, IGameStateMutator mutator)

@@ -1,0 +1,65 @@
+{
+	"Id": "super_simple_route",
+	"Name": "Super Simple Route",
+	"StringQualities":
+	[
+	],
+	"NumberQualities":
+	[
+	],
+	"StartingCards":
+	[
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+		"starter_strike",
+	],
+	"StartingCurrencies":
+	[
+	],
+	"Choices":
+	[
+		{
+			"NodeName": "First Node of 1",
+			"ChoiceNodeArguments":
+			[
+				{
+					"ChoiceNodeKind": "earlyfight"
+				},
+				{
+					"ChoiceNodeKind": "firstboss"
+				},
+			],
+		},
+		{
+			"NodeName": "Second Node of 2",
+			"ChoiceNodeArguments":
+			[
+				{
+					"ChoiceNodeKind": "earlyfight"
+				},
+				{
+					"ChoiceNodeKind": "firstboss"
+				},
+			],
+		},
+		{
+			"NodeName": "Third Node of 3",
+			"ChoiceNodeArguments":
+			[
+				{
+					"ChoiceNodeKind": "earlyfight"
+				},
+				{
+					"ChoiceNodeKind": "firstboss"
+				},
+			],
+		},
+	],
+}
