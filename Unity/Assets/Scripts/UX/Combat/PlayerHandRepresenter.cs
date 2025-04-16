@@ -9,6 +9,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.UX;
+    using SpaceDeck.GameState.Deltas;
 
     public class PlayerHandRepresenter : MonoBehaviour
     {
@@ -28,6 +29,11 @@ namespace SpaceDeck.UX
         private readonly Dictionary<CardInstance, CombatCardUX> CardsToRepresentations = new Dictionary<CardInstance, CombatCardUX>();
 
         public DisplayedCardUX SelectedCard { get; set; } = null;
+
+        private void Awake()
+        {
+            GameStateDeltaApplier.GameStateUpdated += (IGameStateMutator mutator, GameStateDelta delta) => this.RepresentPlayerHand(mutator);
+        }
 
         public void RepresentPlayerHand(IGameStateMutator mutator)
         {

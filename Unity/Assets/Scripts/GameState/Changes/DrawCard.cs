@@ -5,6 +5,7 @@ namespace SpaceDeck.GameState.Changes
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
 
@@ -31,16 +32,20 @@ namespace SpaceDeck.GameState.Changes
                 // If there are no cards in deck, we should attempt to reshuffle the discard into the deck
                 if (cardsInDeck.Count == 0)
                 {
+                    Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.Change, $"There are no cards in the deck currently. Shuffling...");
                     toApplyTo.ShuffleDiscardAndDeck();
                     cardsInDeck = toApplyTo.GetCardsInZone(WellknownZones.Deck);
 
                     if (cardsInDeck.Count == 0)
                     {
+                        Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.Change, $"After shuffling, there are zero cards in the deck.");
                         break;
                     }
                 }
 
-                toApplyTo.MoveCard(cardsInDeck[0], WellknownZones.Hand);
+                CardInstance cardToMove = cardsInDeck[0];
+                Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.Change, $"Moving card '{cardToMove.Id}' to hand");
+                toApplyTo.MoveCard(cardToMove, WellknownZones.Hand);
             }
         }
 

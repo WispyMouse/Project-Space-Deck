@@ -13,6 +13,7 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString Rule = nameof(Rule);
         public static readonly LowercaseString GameState = nameof(GameState);
         public static readonly LowercaseString CentralGameStateController = nameof(CentralGameStateController);
+        public static readonly LowercaseString Change = nameof(Change);
 
         public static readonly LowercaseString GetLinkedScriptingToken = nameof(GetLinkedScriptingToken);
         public static readonly LowercaseString TokenTryGetChanges = nameof(TokenTryGetChanges);

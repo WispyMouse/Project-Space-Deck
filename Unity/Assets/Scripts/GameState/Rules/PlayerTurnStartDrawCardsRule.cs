@@ -8,6 +8,7 @@ namespace SpaceDeck.GameState.Rules
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Wellknown;
     using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
@@ -42,10 +43,12 @@ namespace SpaceDeck.GameState.Rules
 
             if (!this.AmountToDraw.TryEvaluate(gameStateMutator, out decimal amountToDraw))
             {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.Rule, $"Amount to draw could not be resolved, so cannot draw hand.");
                 applications = null;
                 return false;
             }
 
+            Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.Rule, $"Attempting to draw starting hand of {amountToDraw} cards.");
             applications = new List<GameStateChange>()
             {
                 new DrawCard(amountToDraw)

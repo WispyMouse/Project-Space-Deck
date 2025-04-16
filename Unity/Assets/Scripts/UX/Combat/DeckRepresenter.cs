@@ -8,6 +8,7 @@ namespace SpaceDeck.UX
     using UnityEngine;
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.GameState.Deltas;
 
     public class DeckRepresenter : MonoBehaviour
     {
@@ -17,6 +18,11 @@ namespace SpaceDeck.UX
         private TMPro.TMP_Text CardsInDiscardValue;
         [SerializeReference]
         private TMPro.TMP_Text CardsInExileValue;
+
+        void Awake()
+        {
+            GameStateDeltaApplier.GameStateUpdated += (IGameStateMutator state, GameStateDelta change) => this.RepresentDeck(state);
+        }
 
         public void RepresentDeck(IGameStateMutator forContext)
         {

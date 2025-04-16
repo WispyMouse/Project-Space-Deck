@@ -289,7 +289,12 @@ namespace SpaceDeck.GameState.Execution
             {
                 if (zone == WellknownZones.Campaign)
                 {
+                    Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Adding card '{card.Id}' to '{WellknownZones.Campaign}' deck.");
                     this.CardsInDeck.Add(card);
+                }
+                else
+                {
+                    Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.GameState, $"Attempted to add card '{card.Id}' to the deck, but its zone target is '{zone}' and there isn't currently a combat situation. The only valid zone to add to is the '{WellknownZones.Campaign}' at this time.");
                 }
 
                 return;
@@ -300,6 +305,7 @@ namespace SpaceDeck.GameState.Execution
                 this.CurrentEncounterState.ZonesWithCards.Add(zone, new List<CardInstance>());
             }
 
+            Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Adding card '{card.Id}' to '{zone}' deck.");
             this.CurrentEncounterState.ZonesWithCards[zone].Add(card);
             this.CurrentEncounterState.CardsInZones.Add(card, zone);
         }
