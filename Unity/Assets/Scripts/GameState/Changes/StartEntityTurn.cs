@@ -3,6 +3,7 @@ namespace SpaceDeck.GameState.Changes
     using System;
     using System.Collections;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
 
     public class StartEntityTurn : GameStateChange

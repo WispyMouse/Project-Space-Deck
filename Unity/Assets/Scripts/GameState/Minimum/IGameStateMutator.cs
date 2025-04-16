@@ -11,6 +11,7 @@ namespace SpaceDeck.GameState.Minimum
         EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
 
+        bool HasNumericQuality(IHaveQualities entity, LowercaseString index);
         void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue);
         decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0);
         int GetCurrency(Currency currency);

@@ -66,6 +66,7 @@ namespace SpaceDeck.UX
             RuleReference.RegisterRule(new EntityPicksIntentTurnEndedRule());
             RuleReference.RegisterRule(new NonPlayerEntityEndsTurnRule());
             RuleReference.RegisterRule(new EntityActsOnIntentRule());
+            RuleReference.RegisterRule(new NonAlignedEntitiesAreEnemiesRule());
 
             // SCRIPTING COMMANDS
             // TODO: Custom scripting commands?

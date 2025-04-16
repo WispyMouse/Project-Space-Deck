@@ -10,6 +10,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.UX;
     using SpaceDeck.Tokenization.Minimum.Questions;
+    using SpaceDeck.GameState.Execution;
 
     public class CombatTurnController : MonoBehaviour
     {
@@ -71,6 +72,7 @@ namespace SpaceDeck.UX
         public void EndPlayerTurn()
         {
             this.CentralGameStateControllerInstance.GameplayState.EndCurrentEntityTurn();
+            PendingResolveExecutor.ResolveAll(this.CentralGameStateControllerInstance.GameplayState);
         }
 
         public void StartPlayCard(CardInstance toPlay)

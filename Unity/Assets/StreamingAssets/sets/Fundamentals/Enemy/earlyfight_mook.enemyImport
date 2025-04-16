@@ -1,6 +1,13 @@
 {
 	"Id": "earlyfight_mook",
 	"Name": "Mook",
+	"StringQualities":
+	[
+		{
+			"Key": "Name",
+			"Value": "Mook"
+		}
+	],
 	"NumberQualities": 
 	[
 		{

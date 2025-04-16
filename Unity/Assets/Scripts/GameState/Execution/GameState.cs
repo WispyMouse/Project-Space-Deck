@@ -72,6 +72,11 @@ namespace SpaceDeck.GameState.Execution
             this.BasedOnRoute = basedOnRoute;
         }
 
+        public bool HasNumericQuality(IHaveQualities entity, LowercaseString index)
+        {
+            return entity.Qualities.TryGetNumericQuality(index, out _);
+        }
+
         public void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue)
         {
             entity.Qualities.SetNumericQuality(index, toValue);
@@ -133,11 +138,19 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartFactionTurn(decimal factionId)
         {
+            Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"Start faction turn for '{factionId}'.");
+
+            if (factionId == WellknownFactions.UnknownFaction)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.GameState, $"Current faction is '{nameof(WellknownFactions.UnknownFaction)}', suggesting that a faction was not set in the entity. This is not an error if consistently applied, but suggests an error.");
+            }
+
             this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnStarted, new ActionExecutor((IGameStateMutator mutator) => { mutator.FactionTurnTakerCalculator.SetCurrentTurnTaker(factionId); })));
         }
 
         public void StartEntityTurn(Entity toStart)
         {
+            Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"Start turn for '{this.GetStringQuality(toStart, WellknownQualities.Name)}'.");
             this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, 
                 new ActionExecutor((IGameStateMutator mutator) => { mutator.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart); })));
         }
@@ -146,12 +159,14 @@ namespace SpaceDeck.GameState.Execution
         {
             if (this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this, out Entity currentTurn))
             {
+                Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"End turn for '{this.GetStringQuality(currentTurn, WellknownQualities.Name)}'.");
                 this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, currentTurn));
             }
         }
 
         public void EndCurrentFactionTurn()
         {
+            Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"End faction turn for '{this.FactionTurnTakerCalculator.GetCurrentFaction()}'.");
             this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.FactionTurnEnded));
         }
 

@@ -57,6 +57,16 @@ namespace SpaceDeck.GameState.Deltas
             }
         }
 
+        public bool HasNumericQuality(IHaveQualities entity, LowercaseString index)
+        {
+            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
+            {
+                return true;
+            }
+
+            return this.BaseGameState.HasNumericQuality(entity, index);
+        }
+
         public void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue)
         {
             if (!this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))

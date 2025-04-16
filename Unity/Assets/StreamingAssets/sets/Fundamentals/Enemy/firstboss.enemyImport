@@ -1,6 +1,13 @@
 {
 	"Id": "firstboss",
 	"Name": "First Boss",
+	"StringQualities":
+	[
+		{
+			"Key": "Name",
+			"Value": "First Boss"
+		}
+	],
 	"NumberQualities": 
 	[
 		{
@@ -8,6 +15,7 @@
 			"Value": 40
 		}
 	],
+	
 	"EnemyAttacks":
 	[
 		{
