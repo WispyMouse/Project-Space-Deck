@@ -6,6 +6,7 @@ namespace SpaceDeck.Tokenization.Minimum
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Utility.Minimum;
 
     /// <summary>
     /// The combination of <see cref="ParsedToken"/>,
@@ -13,7 +14,7 @@ namespace SpaceDeck.Tokenization.Minimum
     /// 
     /// This is a mostly processed and prepared to be Executed token.
     /// </summary>
-    public class LinkedToken : ParsedToken
+    public abstract class LinkedToken : ParsedToken, IDescribable
     {
         public LinkedTokenScope LinkedScope;
         public LinkedToken NextLinkedToken;
@@ -41,6 +42,8 @@ namespace SpaceDeck.Tokenization.Minimum
             changes = null;
             return true;
         }
+
+        public abstract string Describe();
     }
 
     /// <summary>

@@ -83,5 +83,10 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             changes.Push(new ModifyStatusEffectStacks(target, this.StatusEffect, mod, InitialIntensityPositivity.PositiveOrZero));
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Applies {this.Mod.Describe()} stacks of {this.StatusEffect} to {this.ChangeTarget.Describe()}.";
+        }
     }
 }

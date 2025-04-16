@@ -58,5 +58,10 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             changes = null;
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Set target to {this.ChangeTarget.Describe()}.";
+        }
     }
 }

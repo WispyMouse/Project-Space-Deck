@@ -48,6 +48,11 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             changes.Push(new ActionExecutor(this.Action));
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Executes an arbitrary action on the game state.";
+        }
     }
 
     /// <summary>
@@ -102,6 +107,11 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             changes.Push(new LoggingGameStateChange(ZeroArgumentDebugLogScriptingCommand.HelloString));
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Runs a debug log with no arguments.";
+        }
     }
 
     public class OneArgumentDebugLogScriptingCommand : ScriptingCommand
@@ -133,6 +143,11 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             changes = new Stack<GameStateChange>();
             changes.Push(new LoggingGameStateChange(this.Arguments[0].ToString()));
             return true;
+        }
+
+        public override string Describe()
+        {
+            return $"Returns a one argument debug log.";
         }
     }
 
@@ -176,18 +191,33 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             changes.Push(new LoggingGameStateChange(value.ToString()));
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Runs a debug log with one argument.";
+        }
     }
 
     public class HelloWorldScriptingCommand : ScriptingCommand
     {
         public static readonly LowercaseString IdentifierString = new LowercaseString("HELLOWORLD");
         public override LowercaseString Identifier => IdentifierString;
+
+        public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class TwoArgumentScriptingCommand : ScriptingCommand
     {
         public static readonly LowercaseString IdentifierString = new LowercaseString("TWOARGUMENTS");
         public override LowercaseString Identifier => IdentifierString;
+
+        public override bool TryGetLinkedToken(ParsedToken parsedToken, out LinkedToken linkedToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class EvaluateAndLogNumericScriptingCommand : ScriptingCommand
@@ -225,6 +255,11 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
             changes.Push(new EvaluateAndLogNumericGameStateChange(parsedValue, this.Action));
 
             return true;
+        }
+
+        public override string Describe()
+        {
+            return $"Executes an arbitrary action.";
         }
     }
 }

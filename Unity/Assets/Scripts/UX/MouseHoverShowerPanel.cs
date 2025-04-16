@@ -111,7 +111,7 @@ namespace SpaceDeck.UX
                 descriptions.Add(description);
             }
 
-            foreach (GameState.Minimum.EffectDescription innerDescription in description.MentionedDescribables)
+            foreach (GameState.Minimum.EffectDescription innerDescription in description.MentionedDescribables ?? new HashSet<IEffectIDescribable>())
             {
                 if (!innerDescription.Equals(description))
                 {

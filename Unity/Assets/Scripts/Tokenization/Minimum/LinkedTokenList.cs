@@ -4,6 +4,7 @@ namespace SpaceDeck.Tokenization.Minimum
     using SpaceDeck.Utility.Minimum;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Text;
 
     /// <summary>
     /// Describes a stack of LinkedTokens.
@@ -59,7 +60,15 @@ namespace SpaceDeck.Tokenization.Minimum
 
         public string Describe()
         {
-            return string.Empty;
+            StringBuilder description = new StringBuilder();
+            string prependSpace = "";
+            foreach (LinkedTokenScope scope in this.Scopes)
+            {
+                description.Append(prependSpace);
+                description.Append(scope.Describe());
+                prependSpace = " ";
+            }
+            return description.ToString();
         }
     }
 }

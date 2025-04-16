@@ -71,5 +71,10 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Modifies currency {this.CurrencyToMod.Name} by {this.ModIntensity.Describe()}";
+        }
     }
 }

@@ -104,6 +104,12 @@ namespace SpaceDeck.Utility.Minimum
 
         public override int GetHashCode()
         {
+            // It is possible for this to be null, when doing implicit comparisons with a null string
+            if (string.IsNullOrEmpty(this.Value))
+            {
+                return string.Empty.GetHashCode();
+            }
+
             return this.Value.GetHashCode();
         }
 

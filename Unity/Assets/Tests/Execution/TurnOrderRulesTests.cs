@@ -24,6 +24,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
+    using SpaceDeck.Tests.EditMode.Common.TestFixtures;
 
     /// <summary>
     /// Tests relating to the turn-order ruleset, used in Slay the Spire games.
@@ -200,7 +201,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             for (int ii = 0; ii < cardsToDraw; ii ++)
             {
-                gameState.AddCard(new CardInstance(), WellknownZones.Campaign);
+                gameState.AddCard(new TestCard(), WellknownZones.Campaign);
             }
 
             EncounterState encounter = new EncounterState();
@@ -238,7 +239,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             for (int ii = 0; ii < cardsToDraw; ii++)
             {
-                gameState.AddCard(new CardInstance(), WellknownZones.Campaign);
+                gameState.AddCard(new TestCard(), WellknownZones.Campaign);
             }
 
             EncounterState encounter = new EncounterState();

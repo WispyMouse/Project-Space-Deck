@@ -65,5 +65,10 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Reduces the intensity of the change by {this.ReduceBy.Describe()}.";
+        }
     }
 }

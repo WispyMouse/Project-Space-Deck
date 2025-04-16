@@ -58,5 +58,9 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
 
             return true;
         }
+        public override string Describe()
+        {
+            return $"Changes card {this.CardEvalautable.Describe()} destination to {this.Destination}.";
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace SpaceDeck.Models.Prototypes
     /// 
     /// The Models.Instances library holds individual instances of the prototype.
     /// </summary>
-    public class CardPrototype
+    public class CardPrototype : IDescribable
     {
         public readonly LowercaseString Id;
         public ParsedTokenList? ParsedTokens;
@@ -30,6 +30,16 @@ namespace SpaceDeck.Models.Prototypes
             this.Id = id;
             this.ParsedTokens = null;
             this.LinkedTokens = linkedTokens;
+        }
+
+        public string Describe()
+        {
+            if (this.LinkedTokens == null)
+            {
+                return string.Empty;
+            }
+
+            return this.LinkedTokens.Value.Describe();
         }
     }
 }

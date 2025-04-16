@@ -95,5 +95,10 @@ namespace SpaceDeck.Tokenization.ScriptingCommands
             }
             return true;
         }
+
+        public override string Describe()
+        {
+            return $"Deals {this.Mod.Describe()} damage to {this.ChangeTarget.Describe()}.";
+        }
     }
 }

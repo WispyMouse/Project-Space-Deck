@@ -22,5 +22,16 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
 
+    public class TestCard : CardInstance
+    {
+        public override string Describe()
+        {
+            return "Test Card";
+        }
 
+        public override EffectDescription GetDescription()
+        {
+            return null;
+        }
+    }
 }

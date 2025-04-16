@@ -35,5 +35,15 @@ namespace SpaceDeck.Models.Instances
                 this.ElementalGain.Add(element, prototype.ElementalGain[elementId]);
             }
         }
+
+        public override string Describe()
+        {
+            return this.Prototype.Describe();
+        }
+
+        public override EffectDescription GetDescription()
+        {
+            return new EffectDescription(this.Name, new List<String>() { this.Describe() }, null);
+        }
     }
 }
