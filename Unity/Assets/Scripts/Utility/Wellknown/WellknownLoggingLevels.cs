@@ -9,6 +9,7 @@ namespace SpaceDeck.Utility.Wellknown
     {
         public static readonly LowercaseString ImportComplete = nameof(ImportComplete);
         public static readonly LowercaseString Debug = nameof(Debug);
+        public static readonly LowercaseString DebugVerbose = nameof(DebugVerbose);
         public static readonly LowercaseString Warning = nameof(Warning);
         public static readonly LowercaseString Error = nameof(Error);
     }

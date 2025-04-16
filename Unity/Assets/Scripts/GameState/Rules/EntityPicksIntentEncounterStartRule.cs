@@ -42,7 +42,7 @@ namespace SpaceDeck.GameState.Rules
                     }
                 }
 
-                Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.IntentSet, $"Entity {curEntity.Qualities.GetStringQuality(WellknownQualities.Name)} sets intent: {nextIntentDescription}");
+                Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.IntentSet, $"Entity {curEntity.Qualities.GetStringQuality(WellknownQualities.Name)} sets intent: {nextIntentDescription}");
                 if (nextIntent != null)
                 {
                     applications.Add(new SetEntityIntent(curEntity, nextIntent));

@@ -13,7 +13,7 @@ namespace SpaceDeck.GameState.Rules
 
     public class EncounterStartPlayerTurnRule : Rule
     {
-        public EncounterStartPlayerTurnRule() : base(WellknownGameStateEvents.EncounterStart)
+        public EncounterStartPlayerTurnRule() : base(WellknownGameStateEvents.EncounterStart, -10)
         {
         }
 

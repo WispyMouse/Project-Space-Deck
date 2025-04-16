@@ -64,6 +64,8 @@ namespace SpaceDeck.UX
             RuleReference.RegisterRule(new ZeroHealthRule());
             RuleReference.RegisterRule(new EntityPicksIntentEncounterStartRule());
             RuleReference.RegisterRule(new EntityPicksIntentTurnEndedRule());
+            RuleReference.RegisterRule(new NonPlayerEntityEndsTurnRule());
+            RuleReference.RegisterRule(new EntityActsOnIntentRule());
 
             // SCRIPTING COMMANDS
             // TODO: Custom scripting commands?
