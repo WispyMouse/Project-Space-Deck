@@ -9,7 +9,7 @@ namespace SpaceDeck.GameState.Minimum
     {
         private static readonly IReadOnlyList<GameStateChange> EmptyList = new List<GameStateChange>();
 
-        public virtual IReadOnlyList<GameStateChange> ActOnIntent(IGameStateMutator mutator)
+        public virtual IReadOnlyList<GameStateChange> ActOnIntent(Entity user, IGameStateMutator mutator)
         {
             return EmptyList;
         }

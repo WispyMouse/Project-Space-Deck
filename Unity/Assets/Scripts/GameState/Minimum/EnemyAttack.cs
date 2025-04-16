@@ -5,8 +5,8 @@ namespace SpaceDeck.GameState.Minimum
 
     public class EnemyAttack : Intent
     {
-        public LowercaseString Id;
-        public LowercaseString RawAttackScript;
+        public readonly LowercaseString Id;
+        public readonly LowercaseString RawAttackScript;
 
         public EnemyAttack(LowercaseString id, LowercaseString rawAttackScript)
         {

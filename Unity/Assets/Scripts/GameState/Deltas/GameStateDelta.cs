@@ -59,7 +59,7 @@ namespace SpaceDeck.GameState.Deltas
 
         public bool HasNumericQuality(IHaveQualities entity, LowercaseString index)
         {
-            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
+            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes) && overrideAttributes.TryGetNumericQuality(index, out decimal _))
             {
                 return true;
             }
@@ -80,12 +80,27 @@ namespace SpaceDeck.GameState.Deltas
 
         public decimal GetNumericQuality(IHaveQualities entity, LowercaseString index, decimal defaultValue = 0)
         {
-            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
+            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes) && overrideAttributes.TryGetNumericQuality(index, out decimal existingValue))
             {
-                return overrideAttributes.GetNumericQuality(index, defaultValue);
+                return existingValue;
+            }
+
+            if (!this.BaseGameState.HasNumericQuality(entity, index))
+            {
+                return defaultValue;
             }
 
             return this.BaseGameState.GetNumericQuality(entity, index, defaultValue);
+        }
+
+        public bool HasStringQuality(IHaveQualities entity, LowercaseString index)
+        {
+            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes) && overrideAttributes.TryGetStringQuality(index, out string _))
+            {
+                return true;
+            }
+
+            return this.BaseGameState.HasStringQuality(entity, index);
         }
 
         public void SetStringQuality(IHaveQualities entity, LowercaseString index, string toValue)
@@ -101,9 +116,14 @@ namespace SpaceDeck.GameState.Deltas
 
         public string GetStringQuality(IHaveQualities entity, LowercaseString index, string defaultValue = "")
         {
-            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
+            if (this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes) && overrideAttributes.TryGetStringQuality(index, out string existingValue))
             {
-                return overrideAttributes.GetStringQuality(index, defaultValue);
+                return existingValue;
+            }
+
+            if (!this.BaseGameState.HasStringQuality(entity, index))
+            {
+                return defaultValue;
             }
 
             return this.BaseGameState.GetStringQuality(entity, index, defaultValue);

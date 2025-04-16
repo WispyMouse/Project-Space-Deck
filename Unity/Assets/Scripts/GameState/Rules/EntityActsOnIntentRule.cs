@@ -45,7 +45,7 @@ namespace SpaceDeck.GameState.Rules
             Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.Rule, $"Entity {gameStateMutator.GetStringQuality(currentTurnTaker, WellknownQualities.Name)} is acting on intent {currentIntent.Describe()}.");
             applications = new List<GameStateChange>();
             applications.Add(new SetEntityIntent(currentTurnTaker, null));
-            applications.AddRange(new List<GameStateChange>(currentTurnTaker.CurrentIntent.ActOnIntent(gameStateMutator)));
+            applications.AddRange(new List<GameStateChange>(currentTurnTaker.CurrentIntent.ActOnIntent(currentTurnTaker, gameStateMutator)));
 
             return true;
         }

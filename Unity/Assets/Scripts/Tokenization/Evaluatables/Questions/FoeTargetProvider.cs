@@ -8,6 +8,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Utility.Logging;
 
     public class FoeTargetProvider : ChangeTargetProvider
     {
@@ -20,6 +21,13 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
         public override IReadOnlyList<IChangeTarget> GetProvidedTargets(QuestionAnsweringContext answeringContext)
         {
+            if (answeringContext.User == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.ProviderEvaluation, $"No user has been provided for this Foe Target evaluator. Unable to determine foe.");
+                return null;
+            }
+
+            decimal userFaction = answeringContext.User.Qualities.GetNumericQuality(WellknownQualities.Faction);
             List<IChangeTarget> foes = new List<IChangeTarget>();
             foreach (IChangeTarget target in answeringContext.StartingGameState.GetAllEntities())
             {
@@ -27,7 +35,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
 
                 foreach (Entity representedEntity in target.GetRepresentedEntities(answeringContext.StartingGameState))
                 {
-                    if (answeringContext.StartingGameState.GetNumericQuality(representedEntity, WellknownQualities.Faction) != WellknownFactions.Foe)
+                    if (answeringContext.StartingGameState.GetNumericQuality(representedEntity, WellknownQualities.Faction) == userFaction)
                     {
                         includeTarget = false;
                         break;

@@ -79,6 +79,7 @@ namespace SpaceDeck.GameState.Execution
 
         public void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue)
         {
+            Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Entity '{this.GetStringQuality(entity, WellknownQualities.Name)}' has numeric quality index '{index}' set to '{toValue}'.");
             entity.Qualities.SetNumericQuality(index, toValue);
         }
 
@@ -112,6 +113,7 @@ namespace SpaceDeck.GameState.Execution
 
         public void RemoveEntity(Entity entity)
         {
+            Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Removing entity '{GetStringQuality(entity, WellknownQualities.Name)}'.");
             this.PersistentEntities.Remove(entity);
             this.CurrentEncounterState.EncounterEntities.Remove(entity);
         }
@@ -553,8 +555,14 @@ namespace SpaceDeck.GameState.Execution
             return true;
         }
 
+        public bool HasStringQuality(IHaveQualities entity, LowercaseString index)
+        {
+            return entity.Qualities.TryGetStringQuality(index, out _);
+        }
+
         public void SetStringQuality(IHaveQualities entity, LowercaseString index, string toValue)
         {
+            Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Entity '{this.GetStringQuality(entity, WellknownQualities.Name)}' has string quality index '{index}' set to '{toValue}'.");
             entity.Qualities.SetStringQuality(index, toValue);
         }
 
