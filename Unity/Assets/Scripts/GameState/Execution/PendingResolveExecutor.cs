@@ -5,7 +5,7 @@ namespace SpaceDeck.GameState.Execution
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.Utility.Minimum;
-
+    using SpaceDeck.GameState.Deltas;
 
     public static class PendingResolveExecutor
     {
@@ -13,7 +13,7 @@ namespace SpaceDeck.GameState.Execution
         {
             while (mutator.TryGetNextResolve(out IResolve next))
             {
-                next.Apply(mutator);
+                GameStateDeltaApplier.ApplyResolve(mutator, next);
             }
         }
     }

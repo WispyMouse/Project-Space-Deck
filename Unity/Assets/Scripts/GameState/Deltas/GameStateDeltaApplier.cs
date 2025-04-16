@@ -23,6 +23,12 @@ namespace SpaceDeck.GameState.Deltas
         public delegate void GameStateUpdatedDelegate(IGameStateMutator updatedState, GameStateDelta appliedDelta);
         public static event GameStateUpdatedDelegate GameStateUpdated;
 
+        public static void ApplyResolve(IGameStateMutator originalState, IResolve toResolve)
+        {
+            toResolve.Apply(originalState);
+            GameStateUpdated.Invoke(originalState, null);
+        }
+
         public static void ApplyGameStateDelta(IGameStateMutator originalState, GameStateDelta delta)
         {
             foreach (GameStateChange change in delta.Changes)

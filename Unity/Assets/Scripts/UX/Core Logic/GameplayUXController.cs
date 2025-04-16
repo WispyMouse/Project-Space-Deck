@@ -146,7 +146,7 @@ namespace SpaceDeck.UX
 
             this.CampaignChooserUXInstance.HideChooser();
             Entity currentTurnTaker = null;
-            if (!(this.CurrentEncounterState != null && this.CurrentGameState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CentralGameStateControllerInstance.GameplayState, out currentTurnTaker)))
+            if (!(this.CurrentEncounterState != null && this.CurrentGameState.EntityTurnTakerCalculator != null && this.CurrentGameState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CentralGameStateControllerInstance.GameplayState, out currentTurnTaker)))
             {
                 currentTurnTaker = null;
             }
@@ -281,6 +281,7 @@ namespace SpaceDeck.UX
             this.RemoveDefeatedEntities();
             this.SetElementValueLabel();
             this.SetCurrenciesValueLabel();
+            this.UpdatePlayerLabelValues();
             this.UpdateEnemyUX();
             this.UpdatePlayerLabelValues();
             this.RepresentTargetables();
@@ -408,13 +409,13 @@ namespace SpaceDeck.UX
         {
             if (this.CentralGameStateControllerInstance?.CampaignPlayer == null)
             {
-                this.LifeValue.text = "0";
+                this.LifeValue.text = "0/0";
                 this.PlayerStatusEffectUXHolderInstance.Annihilate();
 
                 return;
             }
 
-            this.LifeValue.text = this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.Health).ToString();
+            this.LifeValue.text = $"{this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.Health)}/{this.CentralGameStateControllerInstance.CampaignPlayer.Qualities.GetNumericQuality(WellknownQualities.MaximumHealth)}";
             this.PlayerStatusEffectUXHolderInstance.SetStatusEffects(
                 this.CentralGameStateControllerInstance.CampaignPlayer.AppliedStatusEffects.Values,
                 this.StatusEffectClicked);
