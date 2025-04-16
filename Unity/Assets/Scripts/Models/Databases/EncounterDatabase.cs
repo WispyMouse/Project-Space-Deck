@@ -66,10 +66,22 @@ namespace SpaceDeck.Models.Databases
             }
 
             List<EncounterPrototype> candidates = new List<EncounterPrototype>();
+            string singletag = string.Empty;
+            if (tags.Count == 1)
+            {
+                singletag = new List<LowercaseString>(tags)[0];
+            }
 
             foreach (EncounterPrototype model in EncounterData.Values)
             {
-                if (model.MeetsAllTags(tags))
+                // If there is only a single tag, and it matches this model's Id, we've found the encounter
+                if (singletag == model.Id)
+                {
+                    encounter = model;
+                    return true;
+                }
+                // Otherwise if every tag provided is within the model's tags, use this
+                else if (model.MeetsAllTags(tags))
                 {
                     candidates.Add(model);
                 }

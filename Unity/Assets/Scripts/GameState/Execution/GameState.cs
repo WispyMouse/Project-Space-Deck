@@ -549,6 +549,7 @@ namespace SpaceDeck.GameState.Execution
             }
 
             nextChoice = this.BasedOnRoute.Choices[this.RouteIndex];
+
             return true;
         }
 

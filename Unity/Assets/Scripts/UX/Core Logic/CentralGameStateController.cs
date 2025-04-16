@@ -153,6 +153,23 @@ namespace SpaceDeck.UX
             this.GameplayState.AddPersistentEntity(this.CampaignPlayer);
             PlayerUX placedPlayer = this.UXController.PlacePlayerCharacter();
             this.GameplayState.StartNextRoomFromCampaign(out ChoiceNode nextChoice);
+
+            // HACK: Link the encounter so that its options are populated; this should certainly go somewhere else
+            foreach (ChoiceNodeOption option in nextChoice.Options)
+            {
+                if (option.WillEncounter == null)
+                {
+                    if (EncounterDatabase.TryGetEncounterWithAllTags(new RandomDecider<EncounterPrototype>(), new HashSet<LowercaseString>() { option.WillEncounterId }, out EncounterPrototype prototype))
+                    {
+                        option.WillEncounter = EncounterDatabase.GetEvaluatorForKind(prototype);
+                    }
+                    else
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.CentralGameStateController, $"Could not find encounter with provided tags for encounter name '{route.Name}' for option '{option.WillEncounterId}'.");
+                    }
+                }
+            }
+
             this.UXController.PresentNextRouteChoice(nextChoice);
         }
 

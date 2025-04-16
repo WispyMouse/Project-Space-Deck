@@ -60,15 +60,7 @@ namespace SpaceDeck.Models.Databases
                 {
                     foreach (ChoiceNodeOption option in node.Options)
                     {
-                        if (!EncounterDatabase.TryGetEncounterWithArguments(null, option.WillEncounterId, null, out EncounterInstance encounter))
-                        {
-                            Logging.DebugLog(WellknownLoggingLevels.Error,
-                                WellknownLoggingCategories.LinkingFailure,
-                                $"Could not link encounter. Id: '{option.WillEncounterId}'");
-                            continue;
-                        }
-
-                        option.WillEncounter = encounter;
+                        // TODO
                     }
                 }
             }
