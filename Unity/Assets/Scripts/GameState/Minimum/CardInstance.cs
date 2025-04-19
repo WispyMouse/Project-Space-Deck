@@ -7,14 +7,14 @@ namespace SpaceDeck.GameState.Minimum
     public abstract class CardInstance : IDescribable, IEffectIDescribable, IHaveQualities
     {
         public readonly LowercaseString Id;
-        public readonly string Name;
         public Dictionary<Element, int> ElementalGain;
 
         public QualitiesHolder Qualities { get; } = new QualitiesHolder();
 
-        public CardInstance()
+        public CardInstance(LowercaseString id, QualitiesHolder qualities = null)
         {
-
+            this.Id = id;
+            this.Qualities = qualities ?? new QualitiesHolder();
         }
 
         public abstract string Describe();

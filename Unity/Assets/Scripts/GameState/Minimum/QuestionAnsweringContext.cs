@@ -12,8 +12,8 @@ namespace SpaceDeck.GameState.Minimum
     /// </summary>
     public class QuestionAnsweringContext
     {
-        public Entity User;
         public IChangeTarget DefaultTarget;
+        public readonly Entity User;
         public readonly IGameStateMutator StartingGameState;
         public readonly CardInstance PlayingCard;
 
@@ -26,6 +26,11 @@ namespace SpaceDeck.GameState.Minimum
         public QuestionAnsweringContext(IGameStateMutator startingGameState, Entity user, CardInstance playingCard) : this(startingGameState, user)
         {
             this.PlayingCard = playingCard;
+        }
+
+        public void ClearApplications()
+        {
+            this.DefaultTarget = null;
         }
     }
 }

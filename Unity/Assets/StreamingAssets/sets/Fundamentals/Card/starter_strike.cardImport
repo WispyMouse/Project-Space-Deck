@@ -1,6 +1,15 @@
 {
 	"Id": "starter_strike",
-	"Name": "Strike",
 	"EffectScript": "[TARGET:FOE][DAMAGE:1]",
 	"ElementalGain": [],
+	"StringQualities":
+	[
+		{
+			"Key": "Name",
+			"Value": "Strike"
+		},
+	],
+	"NumericQualities":
+	[
+	],
 }

@@ -23,6 +23,16 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
 
     public class TestCard : CardInstance
     {
+        public TestCard() : base(nameof(TestCard))
+        {
+
+        }
+
+        public TestCard(LowercaseString id) : base(id, null)
+        {
+
+        }
+
         public override string Describe()
         {
             return "Test Card";

@@ -26,6 +26,7 @@ namespace SpaceDeck.UX
 
         public void OnMouseUpAsButton()
         {
+            Debug.Log("OnMouseUpAsButton");
             this.OnClickAction?.Invoke(this.Target);
         }
 

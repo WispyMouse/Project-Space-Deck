@@ -41,7 +41,7 @@ namespace SpaceDeck.UX
 
             this.RepresentedCard = representedCard;
 
-            this.NameText.text = representedCard.Name;
+            this.NameText.text = representedCard.Qualities.GetStringQuality(WellknownQualities.Name, "<unnamed>");
             this.EffectText.text = representedCard.Describe();
 
             if (SpriteLookup.TryGetSprite(representedCard.Id, out Sprite cardArt))

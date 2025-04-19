@@ -41,7 +41,7 @@ namespace SpaceDeck.UX
 
         [SerializeReference]
         private PlayerUX PlayerRepresentationPF;
-        private PlayerUX PlayerUXInstance { get; set; }
+        public PlayerUX PlayerUXInstance { get; set; }
 
         [SerializeReference]
         private Transform PlayerRepresentationTransform;
@@ -73,14 +73,6 @@ namespace SpaceDeck.UX
         private TMPro.TMP_Text CurrenciesValue;
 
         [SerializeReference]
-        private TargetableIndicator SingleCombatantTargetableIndicatorPF;
-        private List<TargetableIndicator> ActiveIndicators { get; set; } = new List<TargetableIndicator>();
-        [SerializeReference]
-        private TargetableIndicator NoTargetsIndicator;
-        [SerializeReference]
-        private TargetableIndicator AllFoeTargetsIndicator;
-
-        [SerializeReference]
         private GameObject AllCardsBrowserButton;
 
         [SerializeReference]
@@ -93,7 +85,6 @@ namespace SpaceDeck.UX
         public GameState CurrentGameState => this.CentralGameStateControllerInstance?.GameplayState;
         public EncounterState CurrentEncounterState => this.CurrentGameState.CurrentEncounterState;
 
-        public IChangeTarget HoveredCombatant { get; set; } = null;
 
         private void Awake()
         {
@@ -289,21 +280,8 @@ namespace SpaceDeck.UX
 
             if (this.CurrentSelectedCard == null)
             {
-                this.ClearAllTargetableIndicators();
+                this.CombatTurnCounterInstance.ClearAllTargetableIndicators();
             }
-        }
-
-        public void SelectTarget(IChangeTarget toSelect)
-        {
-            if (this.CentralGameStateControllerInstance.GameplayState.CurrentlyConsideredPlayedCard == null)
-            {
-                return;
-            }
-
-            throw new NotImplementedException();
-            // TODO: INSTRUCT PLAY CARD WITH SUBMITTED TARGETS
-            // this.CombatTurnCounterInstance.PlayCard(this.CurrentSelectedCard.RepresentedCard, toSelect);
-            // this.CurrentSelectedCard = null;
         }
 
         public void SelectCurrentCard(DisplayedCardUX toSelect)
@@ -326,7 +304,7 @@ namespace SpaceDeck.UX
 
             this.CurrentSelectedCard = toSelect;
             this.CurrentSelectedCard.EnableSelectionGlow();
-            this.RepresentCardQuestions(toSelect.RepresentedCard);
+            this.CombatTurnCounterInstance.StartPlayCard(this.CurrentSelectedCard.RepresentedCard);
         }
 
         public void CancelAllSelections()
@@ -344,7 +322,7 @@ namespace SpaceDeck.UX
                 this.CardBrowserUXInstance.Close();
             }
 
-            ClearAllTargetableIndicators();
+            this.CombatTurnCounterInstance.ClearAllTargetableIndicators();
         }
 
         public void ShowRewardsPanel(List<PickReward> toReward)
@@ -463,69 +441,6 @@ namespace SpaceDeck.UX
             }
 
             this.CurrenciesValue.text = compositeCurrencies.ToString();
-        }
-
-        private void ClearAllTargetableIndicators()
-        {
-            if (this.ActiveIndicators != null)
-            {
-                for (int ii = 0; ii < this.ActiveIndicators.Count; ii++)
-                {
-                    Destroy(this.ActiveIndicators[ii].gameObject);
-                }
-
-                this.ActiveIndicators.Clear();
-            }
-
-            this.NoTargetsIndicator.gameObject.SetActive(false);
-            this.AllFoeTargetsIndicator.gameObject.SetActive(false);
-        }
-
-        private void AppointTargetableIndicatorsToValidTargets(CardInstance toTarget, EffectTargetExecutionQuestion question, IReadOnlyList<IChangeTarget> targets)
-        {
-            this.ClearAllTargetableIndicators();
-
-            List<IChangeTarget> remainingTargets = new List<IChangeTarget>(targets);
-
-            if (remainingTargets.Count > 0)
-            {
-                // TODO: is this the all foes target?
-                foreach (IChangeTarget target in remainingTargets)
-                {
-                    if (target == NobodyTarget.Instance)
-                    {
-                        this.NoTargetsIndicator.SetFromTarget(target, SelectTarget, BeginHoverTarget, EndHoverTarget);
-                        this.NoTargetsIndicator.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        IReadOnlyList<Entity> representedEntities = new List<Entity>(target.GetRepresentedEntities(this.CentralGameStateControllerInstance.GameplayState));
-
-                        foreach (Entity representedEntity in representedEntities)
-                        {
-                            if (representedEntity == this.CentralGameStateControllerInstance.CampaignPlayer)
-                            {
-                                PlayerUX playerUx = this.PlayerUXInstance;
-                                TargetableIndicator playerIndicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, playerUx.transform);
-                                playerIndicator.SetFromTarget(representedEntities[0], this.SelectTarget, BeginHoverTarget, EndHoverTarget);
-                                this.ActiveIndicators.Add(playerIndicator);
-                            }
-                            else
-                            {
-                                if (this.EnemyRepresenterUX.SpawnedEnemiesLookup.TryGetValue(representedEntity, out EnemyUX enemyUX))
-                                {
-                                    TargetableIndicator playerIndicator = Instantiate(this.SingleCombatantTargetableIndicatorPF, enemyUX.transform);
-                                    playerIndicator.SetFromTarget(representedEntities[0], this.SelectTarget, BeginHoverTarget, EndHoverTarget);
-                                    this.ActiveIndicators.Add(playerIndicator);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-            }
         }
 
         void UpdateEnemyUX()
@@ -709,7 +624,7 @@ namespace SpaceDeck.UX
                 cardsInDeck = new List<CardInstance>(this.CurrentEncounterState.GetZoneCards(WellknownZones.Deck));
             }
 
-            cardsInDeck.Sort((CardInstance a, CardInstance b) => a.Name.CompareTo(b.Name));
+            cardsInDeck.Sort((CardInstance a, CardInstance b) => a.Qualities.GetStringQuality(WellknownQualities.Name, "<unnamed>").CompareTo(b.Qualities.GetStringQuality(WellknownQualities.Name, "<unnamed>")));
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Deck");
@@ -729,24 +644,11 @@ namespace SpaceDeck.UX
             }
 
             List<CardInstance> cardsInExile = new List<CardInstance>(this.CentralGameStateControllerInstance.GameplayState.GetCardsInZone(WellknownZones.Exile));
-            cardsInExile.Sort((CardInstance a, CardInstance b) => a.Name.CompareTo(b.Name));
+            cardsInExile.Sort((CardInstance a, CardInstance b) => a.Qualities.GetStringQuality(WellknownQualities.Name, "<unnamed>").CompareTo(b.Qualities.GetStringQuality(WellknownQualities.Name, "<unnamed>")));
 
             this.CardBrowserUXInstance.gameObject.SetActive(true);
             this.CardBrowserUXInstance.SetLabelText("Now Viewing: Cards in Exile");
             this.CardBrowserUXInstance.SetFromCards(cardsInExile);
-        }
-
-        public void BeginHoverTarget(IChangeTarget target)
-        {
-            this.HoveredCombatant = target;
-        }
-
-        public void EndHoverTarget(IChangeTarget target)
-        {
-            if (this.HoveredCombatant == target)
-            {
-                this.HoveredCombatant = null;
-            }
         }
 
         public void EncounterDialogueComplete(EncounterState completed)
@@ -771,29 +673,6 @@ namespace SpaceDeck.UX
             else
             {
                 this.CombatTurnCounterInstance.BeginHandlingCombat();
-            }
-        }
-
-        public void RepresentCardQuestions(CardInstance toRepresent)
-        {
-            IReadOnlyList<ExecutionQuestion> questions = toRepresent.GetQuestions();
-
-            if (questions.Count == 0)
-            {
-                Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameplayUXController, "Asked to represent a card with no questions.");
-                return;
-            }
-
-            foreach (ExecutionQuestion curQuestion in questions)
-            {
-                if (curQuestion is EffectTargetExecutionQuestion targetQuestion)
-                {
-                    IReadOnlyList<IChangeTarget> targets = targetQuestion.Options.GetProvidedTargets(this.CurrentGameState);
-                    this.AppointTargetableIndicatorsToValidTargets(toRepresent, targetQuestion, targets);
-
-                    // HACK: Handle exactly one target case, and ignore others
-                    return;
-                }
             }
         }
     }

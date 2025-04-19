@@ -57,7 +57,9 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardPrototype cardPrototype = new CardPrototype(
                 nameof(PlayCard_NoQuestions_DebugExecutes),
                 LinkedTokenMaker.CreateTokenListFromLinkedTokens(
-                    new ExecuteLinkedToken((IGameStateMutator mutator) => { debugValue = true; }))
+                    new ExecuteLinkedToken((IGameStateMutator mutator) => { debugValue = true; })),
+                qualities: null,
+                elementalGain: null
                 );
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             gameState.StartEncounter(encounter);

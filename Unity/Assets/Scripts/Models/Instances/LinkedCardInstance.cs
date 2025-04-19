@@ -17,8 +17,9 @@ namespace SpaceDeck.Models.Instances
     public class LinkedCardInstance : CardInstance
     {
         public readonly CardPrototype Prototype;
+        public readonly IReadOnlyList<ExecutionQuestion> Questions;
 
-        public LinkedCardInstance(CardPrototype prototype, IElementProvider elementProvider)
+        public LinkedCardInstance(CardPrototype prototype, IElementProvider elementProvider) : base(prototype.Id, prototype.Qualities.Clone())
         {
             this.Prototype = prototype;
             this.ElementalGain = new Dictionary<Element, int>();
@@ -34,6 +35,7 @@ namespace SpaceDeck.Models.Instances
 
                 this.ElementalGain.Add(element, prototype.ElementalGain[elementId]);
             }
+            this.Questions = this.Prototype?.LinkedTokens?.GetQuestions();
         }
 
         public override string Describe()
@@ -43,7 +45,7 @@ namespace SpaceDeck.Models.Instances
 
         public override EffectDescription GetDescription()
         {
-            return new EffectDescription(this.Name, new List<String>() { this.Describe() }, null);
+            return new EffectDescription(this.Qualities.GetStringQuality(WellknownQualities.Name, "<unnamed>"), new List<String>() { this.Describe() }, null);
         }
 
         public override IReadOnlyList<IChangeTarget> GetPossibleTargets(IGameStateMutator mutator)
@@ -53,13 +55,7 @@ namespace SpaceDeck.Models.Instances
 
         public override IReadOnlyList<ExecutionQuestion> GetQuestions()
         {
-            if (this.Prototype?.LinkedTokens == null)
-            {
-                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.LinkingFailure, $"Asked entry without a linked token set for questions. This card needs to be linked.");
-                return null;
-            }
-
-            return this.Prototype.LinkedTokens.Value.GetQuestions();
+            return this.Questions;
         }
     }
 }

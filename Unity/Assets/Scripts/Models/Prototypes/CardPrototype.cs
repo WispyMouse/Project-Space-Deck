@@ -16,20 +16,23 @@ namespace SpaceDeck.Models.Prototypes
         public ParsedTokenList? ParsedTokens;
         public LinkedTokenList? LinkedTokens;
         public Dictionary<LowercaseString, int> ElementalGain;
+        public QualitiesHolder Qualities;
 
-        public CardPrototype(LowercaseString id, ParsedTokenList parsedTokens, Dictionary<LowercaseString, int> elementalGain = null)
+        public CardPrototype(LowercaseString id, ParsedTokenList parsedTokens, QualitiesHolder qualities = null, Dictionary<LowercaseString, int> elementalGain = null)
         {
             this.Id = id;
             this.ParsedTokens = parsedTokens;
             this.LinkedTokens = null;
             this.ElementalGain = elementalGain;
+            this.Qualities = qualities ?? new QualitiesHolder();
         }
 
-        public CardPrototype(LowercaseString id, LinkedTokenList linkedTokens, Dictionary<LowercaseString, int> elementalGain = null)
+        public CardPrototype(LowercaseString id, LinkedTokenList linkedTokens, QualitiesHolder qualities = null, Dictionary<LowercaseString, int> elementalGain = null)
         {
             this.Id = id;
             this.ParsedTokens = null;
             this.LinkedTokens = linkedTokens;
+            this.Qualities = qualities ?? new QualitiesHolder();
         }
 
         public string Describe()

@@ -45,7 +45,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardImport import = new CardImport()
             {
                 Id = nameof(PlayedCard_IsDiscarded),
-                Name = nameof(PlayedCard_IsDiscarded),
                 EffectScript = String.Empty
             };
             CardPrototype cardPrototype = import.GetPrototype();
@@ -81,7 +80,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardImport import = new CardImport()
             {
                 Id = nameof(PlayedCard_SetExileDestination_Moved),
-                Name = nameof(PlayedCard_SetExileDestination_Moved),
                 EffectScript = "[DESTINATION:EXILE]"
             };
             CardPrototype cardPrototype = import.GetPrototype();
@@ -119,7 +117,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardImport import = new CardImport()
             {
                 Id = nameof(PlayedCard_SetHandDestination_Moved),
-                Name = nameof(PlayedCard_SetHandDestination_Moved),
                 EffectScript = "[DESTINATION:HAND]"
             };
             CardPrototype cardPrototype = import.GetPrototype();
@@ -155,7 +152,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardImport import = new CardImport()
             {
                 Id = nameof(ExiledCards_DoNotShuffleIn),
-                Name = nameof(ExiledCards_DoNotShuffleIn),
                 EffectScript = ""
             };
             CardPrototype cardPrototype = import.GetPrototype();
@@ -188,7 +184,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardImport import = new CardImport()
             {
                 Id = nameof(CampaignDeck_AddCard),
-                Name = nameof(CampaignDeck_AddCard),
                 EffectScript = ""
             };
             CardPrototype cardPrototype = import.GetPrototype();
@@ -213,7 +208,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardImport import = new CardImport()
             {
                 Id = nameof(CampaignDeck_ShufflesAsEncounterStarts),
-                Name = nameof(CampaignDeck_ShufflesAsEncounterStarts),
                 EffectScript = ""
             };
             CardPrototype cardPrototype = import.GetPrototype();

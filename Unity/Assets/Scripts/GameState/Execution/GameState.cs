@@ -43,6 +43,7 @@ namespace SpaceDeck.GameState.Execution
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
 
         public CardInstance CurrentlyConsideredPlayedCard { get; set; }
+        public QuestionAnsweringContext CurrentQuestionAnsweringContext { get; set; }
 
         public List<Entity> AllEntities
         {
@@ -152,7 +153,7 @@ namespace SpaceDeck.GameState.Execution
         public void StartEntityTurn(Entity toStart)
         {
             Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"Start turn for '{this.GetStringQuality(toStart, WellknownQualities.Name)}'.");
-            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted, 
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted,
                 new ActionExecutor((IGameStateMutator mutator) => { mutator.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart); })));
         }
 
@@ -312,7 +313,8 @@ namespace SpaceDeck.GameState.Execution
         public QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay)
         {
             this.CurrentlyConsideredPlayedCard = toPlay;
-            return new QuestionAnsweringContext(this, this.GetPlayerEntity(), toPlay);
+            this.CurrentQuestionAnsweringContext = new QuestionAnsweringContext(this, this.GetPlayerEntity(), toPlay);
+            return this.CurrentQuestionAnsweringContext;
         }
 
         public void EntityPerformsAction(Entity toAct, LinkedToken toPerform)
@@ -396,13 +398,15 @@ namespace SpaceDeck.GameState.Execution
             return false;
         }
 
-        public bool TryExecuteCurrentCard(ExecutionAnswerSet answers)
+        public bool CouldExecuteCurrentCard(ExecutionAnswerSet answers)
         {
             IReadOnlyList<ExecutionQuestion> questions;
             if (!TryGetCurrentQuestions(out questions))
             {
                 questions = new List<ExecutionQuestion>();
             }
+
+            this.CurrentQuestionAnsweringContext.ClearApplications();
 
             if (questions.Count > 0)
             {
@@ -414,17 +418,35 @@ namespace SpaceDeck.GameState.Execution
 
                 foreach (ExecutionQuestion curQuestion in questions)
                 {
-                    if (!answers.TryGetAnswerForQuestion(curQuestion, out _))
+                    ExecutionAnswer answer = null;
+                    if (!answers.TryGetAnswerForQuestion(curQuestion, out answer) && !curQuestion.TryGetDefaultAnswer(this.CurrentQuestionAnsweringContext, out answer))
                     {
-                        // There's a question without an answer; cannot execute
+                        // Couldn't find an answer explicitly for this question, nor can a default question be determined
+                        Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.GameState, $"Could not play current card because no answer was found for it in the current answering context.");
                         return false;
                     }
+
+                    // Apply the answer to the context, which will set things like the default target
+                    // such that other answers might be able to get a default answer
+                    answer.ApplyToQuestionAnsweringContext(this.CurrentQuestionAnsweringContext);
                 }
+            }
+
+            return true;
+        }
+
+        public bool TryExecuteCurrentCard(ExecutionAnswerSet answers)
+        {
+            if (!CouldExecuteCurrentCard(answers))
+            {
+                return false;
             }
 
             // Store the currently considered card, so we don't have pointer shenanigans
             CardInstance cardInstance = this.CurrentlyConsideredPlayedCard;
             this.CurrentlyConsideredPlayedCard = null;
+            QuestionAnsweringContext answeringContext = this.CurrentQuestionAnsweringContext;
+            this.CurrentQuestionAnsweringContext = null;
 
             GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.CardPlayed, cardInstance);
             this.PushResolve(new TriggerAndResolve(trigger, TriggerDirection.After));
@@ -437,7 +459,7 @@ namespace SpaceDeck.GameState.Execution
             {
                 this.PushResolve(
                     new ActionExecutor(
-                        (IGameStateMutator mutator) => 
+                        (IGameStateMutator mutator) =>
                         {
                             this.EntityPlaysLinkedCard(this.GetPlayerEntity(), linkedCardInstance, answers);
                         }
