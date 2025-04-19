@@ -75,7 +75,7 @@ namespace SpaceDeck.Models.Imports
 
             if (File.Exists(spriteFile))
             {
-                Sprite mySprite = await ImportHelper.GetSpriteAsync(spriteFile, 64, 64, mainThreadContext).ConfigureAwait(false);
+                Sprite mySprite = await ImportHelper.GetSpriteAsync(spriteFile, 144, 80, mainThreadContext).ConfigureAwait(false);
                 SpriteLookup.SetSprite(this.Id, mySprite);
             }
         }
@@ -86,7 +86,7 @@ namespace SpaceDeck.Models.Imports
 
             if (File.Exists(spriteFile))
             {
-                Sprite mySprite = ImportHelper.GetSprite(spriteFile, 64, 64);
+                Sprite mySprite = ImportHelper.GetSprite(spriteFile, 144, 80);
                 SpriteLookup.SetSprite(this.Id, mySprite);
             }
         }
