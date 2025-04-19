@@ -31,6 +31,11 @@ namespace SpaceDeck.GameState.Deltas
 
         public static void ApplyGameStateDelta(IGameStateMutator originalState, GameStateDelta delta)
         {
+            if (delta.Changes.Count == 0)
+            {
+                return;
+            }
+
             foreach (GameStateChange change in delta.Changes)
             {
                 change.Apply(originalState);

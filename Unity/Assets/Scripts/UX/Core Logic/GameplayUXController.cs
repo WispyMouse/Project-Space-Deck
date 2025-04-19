@@ -445,7 +445,7 @@ namespace SpaceDeck.UX
 
         void UpdateEnemyUX()
         {
-            if (this.CurrentEncounterState == null || this.CurrentEncounterState.EncounterEntities != null)
+            if (this.CurrentEncounterState == null || this.CurrentEncounterState.EncounterEntities == null)
             {
                 return;
             }
