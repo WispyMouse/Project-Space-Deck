@@ -12,5 +12,6 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString DebugVerbose = nameof(DebugVerbose);
         public static readonly LowercaseString Warning = nameof(Warning);
         public static readonly LowercaseString Error = nameof(Error);
+        public static readonly LowercaseString Playerfacing = nameof(Playerfacing);
     }
 }

@@ -124,7 +124,6 @@ namespace SpaceDeck.GameState.Deltas
                                 changeStack.Push(resolve);
                             }
 
-                            // Then stack rules that are at RuleApplication level
                             List<GameStateChange> rules = RuleReference.GetAppliedRules(delta,
                                 GameStateEventTrigger.TriggerDirection.After,
                                 new GameStateEventTrigger(WellknownGameStateEvents.RuleApplication, currentlyApplyingChange));

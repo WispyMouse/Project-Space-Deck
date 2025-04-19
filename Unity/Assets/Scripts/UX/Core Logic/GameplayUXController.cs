@@ -137,6 +137,11 @@ namespace SpaceDeck.UX
                 return;
             }
 
+            if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.GameOver)
+            {
+                return;
+            }
+
             this.CampaignChooserUXInstance.HideChooser();
             Entity currentTurnTaker = null;
             if (!(this.CurrentEncounterState != null && this.CurrentGameState.EntityTurnTakerCalculator != null && this.CurrentGameState.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this.CentralGameStateControllerInstance.GameplayState, out currentTurnTaker)))

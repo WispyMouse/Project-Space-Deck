@@ -20,10 +20,7 @@ namespace SpaceDeck.GameState.Changes
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            foreach (Entity curEntity in this.Target.GetRepresentedEntities(toApplyTo) ?? Array.Empty<Entity>())
-            {
-                toApplyTo.SetNumericQuality(curEntity, this.QualityToChange, toApplyTo.GetNumericQuality(curEntity, this.QualityToChange) + (int)toApplyTo.GetIntensity(this));
-            }
+            toApplyTo.SetNumericQuality(this.QualitiesHaver, this.QualityToChange, toApplyTo.GetNumericQuality(this.QualitiesHaver, this.QualityToChange) + (int)toApplyTo.GetIntensity(this));
         }
 
         public override void Trigger(IGameStateMutator toPushTriggers)

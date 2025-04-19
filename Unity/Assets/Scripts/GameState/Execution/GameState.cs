@@ -38,6 +38,7 @@ namespace SpaceDeck.GameState.Execution
         public int RouteIndex = -1;
         public List<PickReward> PendingRewards;
         public LowercaseString CurrentCampaignState = default;
+        public LowercaseString CampaignState => this.CurrentCampaignState;
 
         public EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         public FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
@@ -678,6 +679,16 @@ namespace SpaceDeck.GameState.Execution
             }
 
             return null;
+        }
+
+        public void SetCampaignState(LowercaseString toState)
+        {
+            this.CurrentCampaignState = toState;
+
+            if (toState == WellknownCampaignStates.GameOver)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Playerfacing, WellknownLoggingCategories.GameState, $"Game over! The player entity has been removed. Please restart the campaign.");
+            }
         }
     }
 }

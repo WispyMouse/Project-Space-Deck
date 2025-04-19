@@ -41,6 +41,7 @@ namespace SpaceDeck.GameState.Deltas
         public Entity NewEntityTurn = null;
 
         public readonly Dictionary<Currency, int> CurrencyChanges = new Dictionary<Currency, int>();
+        public LowercaseString CampaignState => this.BaseGameState.CampaignState;
 
         public GameStateDelta(IGameStateMutator baseGameState)
         {
@@ -72,7 +73,7 @@ namespace SpaceDeck.GameState.Deltas
             if (!this.DeltaValues.TryGetValue(entity, out QualitiesHolder overrideAttributes))
             {
                 overrideAttributes = new QualitiesHolder();
-                this.DeltaValues.Add(entity, new QualitiesHolder());
+                this.DeltaValues.Add(entity, overrideAttributes);
             }
 
             overrideAttributes.SetNumericQuality(index, toValue);
@@ -445,6 +446,11 @@ namespace SpaceDeck.GameState.Deltas
             }
 
             return intensity.Intensity;
+        }
+
+        public void SetCampaignState(LowercaseString toState)
+        {
+            // TODO
         }
     }
 }

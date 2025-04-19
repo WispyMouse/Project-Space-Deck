@@ -4,6 +4,7 @@ namespace SpaceDeck.GameState.Changes
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Utility.Wellknown;
 
     public class RemoveEntity : GameStateChange
     {
@@ -16,6 +17,11 @@ namespace SpaceDeck.GameState.Changes
             foreach (Entity curEntity in new List<Entity>(this.Target.GetRepresentedEntities(toApplyTo)))
             {
                 toApplyTo.RemoveEntity(curEntity);
+
+                if (curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
+                {
+                    toApplyTo.SetCampaignState(WellknownCampaignStates.GameOver);
+                }
             }
         }
 

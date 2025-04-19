@@ -100,18 +100,36 @@ namespace SpaceDeck.UX
 
         public void EndPlayerTurn()
         {
+            if (this.GameplayState.CurrentCampaignState != WellknownCampaignStates.CombatEncounter)
+            {
+                // Do nothing if not in a combat encounter
+                return;
+            }
+
             this.GameplayState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(this.GameplayState);
         }
 
         public void StartPlayCard(CardInstance toPlay)
         {
+            if (this.GameplayState.CurrentCampaignState != WellknownCampaignStates.CombatEncounter)
+            {
+                // Do nothing if not in a combat encounter
+                return;
+            }
+
             this.GameplayState.StartConsideringPlayingCard(toPlay);
             this.RepresentCardQuestions(toPlay);
         }
 
         public void ExecuteCurrentCard(ExecutionAnswerSet answers)
         {
+            if (this.GameplayState.CurrentCampaignState != WellknownCampaignStates.CombatEncounter)
+            {
+                // Do nothing if not in a combat encounter
+                return;
+            }
+
             this.ClearAllTargetableIndicators();
 
             if (!this.GameplayState.TryExecuteCurrentCard(answers))

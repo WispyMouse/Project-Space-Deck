@@ -10,6 +10,7 @@ namespace SpaceDeck.GameState.Minimum
     {
         EntityTurnTakerCalculator EntityTurnTakerCalculator { get; set; }
         FactionTurnTakerCalculator FactionTurnTakerCalculator { get; set; }
+        LowercaseString CampaignState { get; }
 
         bool HasNumericQuality(IHaveQualities entity, LowercaseString index);
         void SetNumericQuality(IHaveQualities entity, LowercaseString index, decimal toValue);
@@ -54,5 +55,6 @@ namespace SpaceDeck.GameState.Minimum
         void AddCard(CardInstance card, LowercaseString zone);
 
         bool CanAfford(IEnumerable<IShopCost> costs);
+        void SetCampaignState(LowercaseString toState);
     }
 }

@@ -18,6 +18,12 @@ namespace SpaceDeck.GameState.Rules
 
         public override bool TryApplyRule(GameStateEventTrigger trigger, TriggerDirection direction, IGameStateMutator gameStateMutator, out List<GameStateChange> applications)
         {
+            if (gameStateMutator.CampaignState != WellknownCampaignStates.CombatEncounter)
+            {
+                applications = null;
+                return false;
+            }
+
             if (direction != TriggerDirection.After)
             {
                 applications = null;
