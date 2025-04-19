@@ -26,13 +26,16 @@ namespace SpaceDeck.GameState.Rules
                 return false;
             }
 
-            if (!gameStateMutator.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(gameStateMutator, out Entity currentTurn))
+            // Check if the entity that is ending their turn is the player
+            // HACK: Assume there is one player!
+            IReadOnlyList<Entity> entities = new List<Entity>(trigger.BasedOnTarget.GetRepresentedEntities(gameStateMutator));
+            if (entities.Count != 1)
             {
                 applications = null;
                 return false;
             }
 
-            if (currentTurn.Qualities.GetNumericQuality(WellknownQualities.Faction) != WellknownFactions.Player)
+            if (gameStateMutator.GetNumericQuality(entities[0], WellknownQualities.Faction) != WellknownFactions.Player)
             {
                 applications = null;
                 return false;
@@ -42,7 +45,7 @@ namespace SpaceDeck.GameState.Rules
 
             foreach (CardInstance curCard in gameStateMutator.GetCardsInZone(WellknownZones.Hand))
             {
-                applications.Add(new MoveCard(curCard, WellknownZones.Discard));
+                applications.Add(new MoveCard(curCard, gameStateMutator.GetStringQuality(curCard, WellknownQualities.Destination, WellknownZones.Discard)));
             }
 
             return true;
