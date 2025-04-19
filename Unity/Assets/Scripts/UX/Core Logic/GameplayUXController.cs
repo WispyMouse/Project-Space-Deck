@@ -14,6 +14,8 @@ namespace SpaceDeck.UX
     using SpaceDeck.Models.Databases;
     using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
     using SpaceDeck.GameState.Deltas;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Tokenization.Evaluatables.Questions;
 
     public class GameplayUXController : MonoBehaviour
     {
@@ -284,7 +286,11 @@ namespace SpaceDeck.UX
             this.UpdatePlayerLabelValues();
             this.UpdateEnemyUX();
             this.UpdatePlayerLabelValues();
-            this.RepresentTargetables();
+
+            if (this.CurrentSelectedCard == null)
+            {
+                this.ClearAllTargetableIndicators();
+            }
         }
 
         public void SelectTarget(IChangeTarget toSelect)
@@ -320,7 +326,7 @@ namespace SpaceDeck.UX
 
             this.CurrentSelectedCard = toSelect;
             this.CurrentSelectedCard.EnableSelectionGlow();
-            this.AppointTargetableIndicatorsToValidTargets(toSelect.RepresentedCard);
+            this.RepresentCardQuestions(toSelect.RepresentedCard);
         }
 
         public void CancelAllSelections()
@@ -475,11 +481,11 @@ namespace SpaceDeck.UX
             this.AllFoeTargetsIndicator.gameObject.SetActive(false);
         }
 
-        private void AppointTargetableIndicatorsToValidTargets(CardInstance toTarget)
+        private void AppointTargetableIndicatorsToValidTargets(CardInstance toTarget, EffectTargetExecutionQuestion question, IReadOnlyList<IChangeTarget> targets)
         {
             this.ClearAllTargetableIndicators();
 
-            List<IChangeTarget> remainingTargets = new List<IChangeTarget>(toTarget.GetPossibleTargets(this.CentralGameStateControllerInstance.GameplayState));
+            List<IChangeTarget> remainingTargets = new List<IChangeTarget>(targets);
 
             if (remainingTargets.Count > 0)
             {
@@ -561,23 +567,6 @@ namespace SpaceDeck.UX
             this.ShopPanelUXInstance.gameObject.SetActive(false);
             this.RewardsPanelUXInstance.gameObject.SetActive(false);
             this.PlayerStatusEffectUXHolderInstance.Annihilate();
-        }
-
-        void RepresentTargetables()
-        {
-            if (this.CurrentGameState?.CurrentEncounterState == null)
-            {
-                ClearAllTargetableIndicators();
-                return;
-            }
-
-            if (this.CurrentSelectedCard == null)
-            {
-                ClearAllTargetableIndicators();
-                return;
-            }
-
-            this.AppointTargetableIndicatorsToValidTargets(this.CurrentSelectedCard.RepresentedCard);
         }
 
         public void EndTurn()
@@ -782,6 +771,29 @@ namespace SpaceDeck.UX
             else
             {
                 this.CombatTurnCounterInstance.BeginHandlingCombat();
+            }
+        }
+
+        public void RepresentCardQuestions(CardInstance toRepresent)
+        {
+            IReadOnlyList<ExecutionQuestion> questions = toRepresent.GetQuestions();
+
+            if (questions.Count == 0)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameplayUXController, "Asked to represent a card with no questions.");
+                return;
+            }
+
+            foreach (ExecutionQuestion curQuestion in questions)
+            {
+                if (curQuestion is EffectTargetExecutionQuestion targetQuestion)
+                {
+                    IReadOnlyList<IChangeTarget> targets = targetQuestion.Options.GetProvidedTargets(this.CurrentGameState);
+                    this.AppointTargetableIndicatorsToValidTargets(toRepresent, targetQuestion, targets);
+
+                    // HACK: Handle exactly one target case, and ignore others
+                    return;
+                }
             }
         }
     }

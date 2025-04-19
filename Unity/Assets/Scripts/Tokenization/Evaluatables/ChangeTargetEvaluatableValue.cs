@@ -4,7 +4,6 @@ namespace SpaceDeck.Tokenization.Evaluatables
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.GameState.Context;
     using System.Collections.Generic;
-    using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Logging;

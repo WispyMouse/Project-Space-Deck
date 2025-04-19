@@ -4,7 +4,6 @@ namespace SpaceDeck.GameState.Deltas
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
-    using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;

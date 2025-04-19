@@ -1,10 +1,9 @@
 using SpaceDeck.GameState.Minimum;
-using SpaceDeck.Tokenization.Minimum.Context;
 using SpaceDeck.Utility.Logging;
 using SpaceDeck.Utility.Wellknown;
 using System.Collections.Generic;
 
-namespace SpaceDeck.Tokenization.Minimum.Questions
+namespace SpaceDeck.GameState.Minimum
 {
     public class ExecutionAnswerSet
     {

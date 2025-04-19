@@ -25,5 +25,10 @@ namespace SpaceDeck.GameState.Minimum
         {
             return Array.Empty<IChangeTarget>();
         }
+
+        public virtual IReadOnlyList<ExecutionQuestion> GetQuestions()
+        {
+            return Array.Empty<ExecutionQuestion>();
+        }
     }
 }

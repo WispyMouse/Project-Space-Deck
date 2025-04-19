@@ -1,6 +1,4 @@
-using SpaceDeck.Tokenization.Minimum.Context;
-
-namespace SpaceDeck.Tokenization.Minimum.Questions
+namespace SpaceDeck.GameState.Minimum
 {
     public abstract class ExecutionQuestion
     {
@@ -21,13 +19,6 @@ namespace SpaceDeck.Tokenization.Minimum.Questions
     /// </summary>
     public abstract class ExecutionQuestion<A> : ExecutionQuestion where A : ExecutionAnswer
     {
-        public readonly LinkedToken Token;
-
-        public ExecutionQuestion(LinkedToken token)
-        {
-            this.Token = token;
-        }
-
         public override bool TryGetDefaultAnswer(QuestionAnsweringContext answeringContext, out ExecutionAnswer answer)
         {
             if (this.TryGetDefaultTypedAnswer(answeringContext, out A typedAnswer))

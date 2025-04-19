@@ -1,6 +1,4 @@
-using SpaceDeck.Tokenization.Minimum.Context;
-
-namespace SpaceDeck.Tokenization.Minimum.Questions
+namespace SpaceDeck.GameState.Minimum
 {
     /// <summary>
     /// Represents an answer to a particular kind of <see cref="ExecutionQuestion"/>.

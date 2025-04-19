@@ -4,13 +4,12 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
-    using SpaceDeck.Tokenization.Minimum.Questions;
     using System.Collections.Generic;
 
     /// <summary>
     /// Describes that an effect needs a target to be resolved.
     /// </summary>
-    public class EffectTargetExecutionQuestion : ExecutionQuestion<EffectTargetExecutionAnswer>
+    public class EffectTargetExecutionQuestion : LinkedExecutionQuestion<EffectTargetExecutionAnswer>
     {
         public readonly ChangeTargetProvider Options;
 

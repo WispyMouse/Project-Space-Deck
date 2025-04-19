@@ -1,8 +1,6 @@
-namespace SpaceDeck.Tokenization.Minimum.Context
+namespace SpaceDeck.GameState.Minimum
 {
     using SpaceDeck.GameState.Minimum;
-    using SpaceDeck.Tokenization.Minimum;
-    using SpaceDeck.Tokenization.Minimum.Questions;
     using System;
     using System.Collections;
     using System.Collections.Generic;

@@ -9,7 +9,6 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.UX;
-    using SpaceDeck.Tokenization.Minimum.Questions;
     using SpaceDeck.GameState.Execution;
 
     public class CombatTurnController : MonoBehaviour

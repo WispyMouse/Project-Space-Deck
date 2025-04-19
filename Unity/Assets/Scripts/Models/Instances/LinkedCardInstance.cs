@@ -45,5 +45,21 @@ namespace SpaceDeck.Models.Instances
         {
             return new EffectDescription(this.Name, new List<String>() { this.Describe() }, null);
         }
+
+        public override IReadOnlyList<IChangeTarget> GetPossibleTargets(IGameStateMutator mutator)
+        {
+            return base.GetPossibleTargets(mutator);
+        }
+
+        public override IReadOnlyList<ExecutionQuestion> GetQuestions()
+        {
+            if (this.Prototype?.LinkedTokens == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.LinkingFailure, $"Asked entry without a linked token set for questions. This card needs to be linked.");
+                return null;
+            }
+
+            return this.Prototype.LinkedTokens.Value.GetQuestions();
+        }
     }
 }
