@@ -1,6 +1,6 @@
 {
 	"Id": "starter_strike",
-	"EffectScript": "[TARGET:FOE][DAMAGE:1]",
+	"EffectScript": "[TARGET:FOE][DAMAGE:3]",
 	"ElementalGain": [],
 	"StringQualities":
 	[

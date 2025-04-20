@@ -17,12 +17,13 @@ namespace SpaceDeck.GameState.Changes
             foreach (Entity curEntity in new List<Entity>(this.Target.GetRepresentedEntities(toApplyTo)))
             {
                 toApplyTo.RemoveEntity(curEntity);
-
-                if (curEntity.Qualities.GetNumericQuality(WellknownQualities.Faction) == WellknownFactions.Player)
-                {
-                    toApplyTo.SetCampaignState(WellknownCampaignStates.GameOver);
-                }
             }
+        }
+
+        public override void Trigger(IGameStateMutator toPushTriggers)
+        {
+            GameStateEventTrigger trigger = new GameStateEventTrigger(WellknownGameStateEvents.EntityRemoved, this);
+            toPushTriggers.TriggerAndStack(trigger);
         }
 
         public override string Describe()
