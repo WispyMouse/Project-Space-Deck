@@ -94,13 +94,14 @@ namespace SpaceDeck.GameState.Minimum
                 // can supply default answers to later ones
                 question.ApplyDefaultToContext(questionAnsweringContext);
 
-                if (this.TryGetAnswerForQuestion(question, out _))
+                if (this.TryGetAnswerForQuestion(question, out ExecutionAnswer answer))
                 {
                     // Already have an answer
+                    answer.ApplyToQuestionAnsweringContext(questionAnsweringContext);
                     continue;
                 }
 
-                if (!question.TryGetDefaultAnswer(questionAnsweringContext, out ExecutionAnswer answer))
+                if (!question.TryGetDefaultAnswer(questionAnsweringContext, out answer))
                 {
                     Logging.DebugLog(WellknownLoggingLevels.Error,
                         WellknownLoggingCategories.EvaluatableEvaluation,
@@ -108,6 +109,7 @@ namespace SpaceDeck.GameState.Minimum
                     return;
                 }
 
+                answer.ApplyToQuestionAnsweringContext(questionAnsweringContext);
                 this.AddAnswer(question, answer);
             }
         }
