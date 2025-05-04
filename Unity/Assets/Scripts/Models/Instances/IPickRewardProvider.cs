@@ -1,15 +1,12 @@
 namespace SpaceDeck.Models.Instances
 {
-    using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Utility.Minimum;
 
-    public class RewardInstance : Reward
+    public interface IPickRewardProvider
     {
-        public RewardInstance(RewardPrototype prototype) : base(prototype.Id, prototype.IdentityKind)
-        {
-        }
+        IEnumerable<PickReward> GetRewards(IEnumerable<PickRewardPrototype> rewards, RandomDecider<LowercaseString> decider = null);
     }
 }

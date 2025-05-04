@@ -689,6 +689,10 @@ namespace SpaceDeck.GameState.Execution
             {
                 Logging.DebugLog(WellknownLoggingLevels.Playerfacing, WellknownLoggingCategories.GameState, $"Game over! The player entity has been removed. Please restart the campaign.");
             }
+            else if (toState == WellknownCampaignStates.EncounterResolved && this.CurrentEncounterState != null)
+            {
+                PendingRewards = this.CurrentEncounterState.EncounterRewards;
+            }
         }
     }
 }

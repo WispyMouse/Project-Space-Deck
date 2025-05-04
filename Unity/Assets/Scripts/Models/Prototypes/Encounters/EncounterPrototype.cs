@@ -1,8 +1,6 @@
 namespace SpaceDeck.Models.Prototypes
 {
-    using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Utility.Minimum;
-    using System.Collections;
     using System.Collections.Generic;
 
     public class EncounterPrototype
@@ -14,8 +12,8 @@ namespace SpaceDeck.Models.Prototypes
         public readonly IReadOnlyList<LowercaseStringSet> EnemiesInEncounterById = new List<LowercaseStringSet>();
         public readonly bool IsShopEncounter;
         public readonly IReadOnlyList<string> Arguments = new List<string>();
-        // TODO RewardImport
         public readonly Dictionary<LowercaseString, EncounterScript> EncounterScripts = new Dictionary<LowercaseString, EncounterScript>();
+        public readonly IEnumerable<PickRewardPrototype> Rewards = new List<PickRewardPrototype>();
 
         public EncounterPrototype(
             LowercaseString id,
@@ -25,8 +23,8 @@ namespace SpaceDeck.Models.Prototypes
             IReadOnlyList<LowercaseStringSet> enemiesInEncounterById,
             bool isShopEncounter,
             IReadOnlyList<string> arguments,
-            // TODO RewardImport
-            IEnumerable<EncounterScript> encounterScripts)
+            IEnumerable<EncounterScript> encounterScripts,
+            IEnumerable<PickRewardPrototype> rewards)
         {
             this.Id = id;
             this.Name = name;
@@ -35,7 +33,7 @@ namespace SpaceDeck.Models.Prototypes
             this.EnemiesInEncounterById = enemiesInEncounterById;
             this.IsShopEncounter = isShopEncounter;
             this.Arguments = arguments;
-            // TODO: RewardImport
+            this.Rewards = rewards;
             
             foreach (EncounterScript script in encounterScripts)
             {

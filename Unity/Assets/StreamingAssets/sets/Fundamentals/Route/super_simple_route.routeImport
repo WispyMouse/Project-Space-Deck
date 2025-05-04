@@ -33,7 +33,10 @@
 					"ChoiceNodeKind": "earlyfight"
 				},
 				{
-					"ChoiceNodeKind": "firstboss"
+					"ChoiceNodeKind": "earlyfight"
+				},
+				{
+					"ChoiceNodeKind": "trivialfight"
 				},
 			],
 		},
@@ -45,7 +48,10 @@
 					"ChoiceNodeKind": "earlyfight"
 				},
 				{
-					"ChoiceNodeKind": "firstboss"
+					"ChoiceNodeKind": "earlyfight"
+				},
+				{
+					"ChoiceNodeKind": "trivialfight"
 				},
 			],
 		},
@@ -56,6 +62,18 @@
 				{
 					"ChoiceNodeKind": "earlyfight"
 				},
+				{
+					"ChoiceNodeKind": "earlyfight"
+				},
+				{
+					"ChoiceNodeKind": "trivialfight"
+				},
+			],
+		},
+		{
+			"NodeName": "Boss Time!",
+			"ChoiceNodeArguments":
+			[
 				{
 					"ChoiceNodeKind": "firstboss"
 				},

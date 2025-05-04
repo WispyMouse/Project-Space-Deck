@@ -12,6 +12,5 @@ namespace SpaceDeck.Models.Imports
     {
         public RewardIdentityKind IdentityKind = RewardIdentityKind.Card;
         public string RewardIdentifier = string.Empty;
-        public string QuantityText = string.Empty;
     }
 }

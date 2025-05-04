@@ -14,7 +14,7 @@ namespace SpaceDeck.Models.Databases
 
         public static void AddEncounter(EncounterImport import)
         {
-            EncounterData.Add(import.Id, import.GetPrototype());
+            AddEncounter(import);
         }
 
         public static void AddEncounter(EncounterPrototype toAdd)
@@ -100,7 +100,7 @@ namespace SpaceDeck.Models.Databases
 
         public static EncounterInstance GetEvaluatorForKind(EncounterPrototype model)
         {
-            return new EncounterInstance(model, EncounterDatabaseEntitiesProvider.Instance);
+            return new EncounterInstance(model, EncounterDatabaseEntitiesProvider.Instance, RewardDatabasePickRewardProvider.Instance);
         }
 
         public static void ClearDatabase()

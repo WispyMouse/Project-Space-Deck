@@ -26,6 +26,7 @@ namespace SpaceDeck.GameState.Minimum
         public readonly List<Entity> EncounterEntities = new List<Entity>();
         public Dictionary<CardInstance, LowercaseString> CardsInZones = new Dictionary<CardInstance, LowercaseString>();
         public Dictionary<LowercaseString, List<CardInstance>> ZonesWithCards = new Dictionary<LowercaseString, List<CardInstance>>();
+        public readonly List<PickReward> EncounterRewards = new List<PickReward>();
 
         public virtual bool HasEncounterDialogue => false;
         public virtual bool IsShopEncounter => false;

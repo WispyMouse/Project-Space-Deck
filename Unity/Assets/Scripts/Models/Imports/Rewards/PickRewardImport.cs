@@ -1,6 +1,7 @@
 namespace SpaceDeck.Models.Imports
 {
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Prototypes;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
@@ -8,21 +9,22 @@ namespace SpaceDeck.Models.Imports
     using static SpaceDeck.GameState.Minimum.Reward;
 
     [System.Serializable]
-    public class PickRewardImport
+    public class PickRewardImport : Importable
     {
         public PickRewardProtocol Protocol = PickRewardProtocol.ChooseX;
         public int ProtocolArgument = 1;
 
         public List<RewardIdentityImport> RewardIdentities = new List<RewardIdentityImport>();
 
-        public PickReward GetRewards()
+        public PickRewardPrototype GetPrototype()
         {
-            List<Reward> rewards = new List<Reward>();
-            foreach (RewardIdentityImport identity in this.RewardIdentities)
+            List<Reward> rewardIdentities = new List<Reward>();
+            foreach (RewardIdentityImport import in this.RewardIdentities)
             {
-                // TODO: Somehow get rewards without access to databases???
+                rewardIdentities.Add(new Reward(import.RewardIdentifier, import.IdentityKind));
             }
-            return new PickReward(this.Protocol, this.ProtocolArgument, rewards);
+
+            return new PickRewardPrototype(this.Id, this.ProtocolArgument, rewardIdentities);
         }
     }
 }

@@ -1,0 +1,28 @@
+{
+	"Id": "trivialenemy",
+	"Name": "Trivial Enemy",
+	"StringQualities":
+	[
+		{
+			"Key": "Name",
+			"Value": "Trivial Enemy"
+		}
+	],
+	"NumberQualities": 
+	[
+		{
+			"Key": "MaximumHealth",
+			"Value": 1
+		}
+	],
+	"EnemyAttacks":
+	[
+		{
+			"Id": "DAMAGEONE",
+			"AttackScript": "[TARGET: FOE][DAMAGE: 1]"
+		},
+	],
+	"Tags":
+	[
+	]
+}

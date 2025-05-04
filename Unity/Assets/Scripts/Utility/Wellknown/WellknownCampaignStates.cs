@@ -13,5 +13,6 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString CombatEncounter = nameof(CombatEncounter);
         public static readonly LowercaseString ChoosingRewards = nameof(ChoosingRewards);
         public static readonly LowercaseString GameOver = nameof(GameOver);
+        public static readonly LowercaseString EncounterResolved = nameof(EncounterResolved);
     }
 }

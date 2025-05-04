@@ -17,7 +17,7 @@ namespace SpaceDeck.Models.Instances
         public override bool HasEncounterDialogue => this.Prototype.EncounterScripts.Count > 0;
         public override bool IsShopEncounter => this.Prototype.IsShopEncounter;
 
-        public EncounterInstance(EncounterPrototype prototype, IEncounterEntitiesProvider entityProvider) :base()
+        public EncounterInstance(EncounterPrototype prototype, IEncounterEntitiesProvider entityProvider, IPickRewardProvider rewardProvider) :base()
         {
             this.Prototype = prototype;
 
@@ -25,6 +25,7 @@ namespace SpaceDeck.Models.Instances
             this.EncounterName = prototype.Name;
             this.EncounterDescription = prototype.Description;
             this.EncounterEntities.AddRange(entityProvider.GetEntities(this.Prototype.EnemiesInEncounterById));
+            this.EncounterRewards.AddRange(rewardProvider.GetRewards(this.Prototype.Rewards));
 
             if (!this.IsShopEncounter && !this.HasEncounterDialogue && this.EncounterEntities.Count == 0)
             {

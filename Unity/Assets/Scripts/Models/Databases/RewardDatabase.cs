@@ -11,27 +11,33 @@ namespace SpaceDeck.Models.Databases
 
     public class RewardDatabase
     {
-        public static Dictionary<LowercaseString, RewardPrototype> RewardData { get; private set; } = new Dictionary<LowercaseString, RewardPrototype>();
+        public static Dictionary<LowercaseString, PickRewardPrototype> PickRewardData { get; private set; } = new Dictionary<LowercaseString, PickRewardPrototype>();
 
-        public static void AddReward(RewardImport toImport)
+
+        public static PickReward GetReward(LowercaseString id)
         {
-            AddReward(toImport.GetReward());
+            PickRewardPrototype prototype = PickRewardData[id];
+
+            List<Reward> rewards = new List<Reward>(prototype.Rewards);
+
+            PickReward newReward = new PickReward(PickReward.PickRewardProtocol.ChooseX, prototype.PickNumber, prototype.Rewards);
+            return newReward;
         }
 
-        public static void AddReward(RewardPrototype toImport)
+        public static void AddReward(PickRewardImport toImport)
         {
-            RewardData.Add(toImport.Id, toImport);
+
         }
 
-        public static RewardInstance GetInstance(LowercaseString id)
+        public static void AddReward(PickRewardPrototype toImport)
         {
-            return new RewardInstance(RewardData[id]);
+            PickRewardData.Add(toImport.Id, toImport);
         }
 
         
         public static void ClearDatabase()
         {
-            RewardData.Clear();
+            PickRewardData.Clear();
         }
     }
 }
