@@ -14,4 +14,8 @@
 	],
 	"Arguments": [],
 	"EncounterScripts": [],
+	"RewardIdentities":
+	[
+		"commoncard"
+	],
 }

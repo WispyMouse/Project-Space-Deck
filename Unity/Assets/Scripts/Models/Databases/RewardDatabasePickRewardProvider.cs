@@ -17,13 +17,25 @@ namespace SpaceDeck.Models.Databases
 
         }
 
+        public IEnumerable<PickReward> GetRewards(IEnumerable<LowercaseString> ids, RandomDecider<LowercaseString> decider = null)
+        {
+            List<PickReward> pickRewards = new List<PickReward>();
+
+            foreach (LowercaseString reward in ids)
+            {
+                pickRewards.Add(RewardDatabase.GetReward(reward));
+            }
+
+            return pickRewards;
+        }
+
         public IEnumerable<PickReward> GetRewards(IEnumerable<PickRewardPrototype> rewards, RandomDecider<LowercaseString> decider = null)
         {
             List<PickReward> pickRewards = new List<PickReward>();
 
             foreach (PickRewardPrototype reward in rewards)
             {
-                pickRewards.Add(RewardDatabase.GetReward(reward.Id));
+                pickRewards.Add(RewardDatabase.GetReward(reward));
             }
 
             return pickRewards;

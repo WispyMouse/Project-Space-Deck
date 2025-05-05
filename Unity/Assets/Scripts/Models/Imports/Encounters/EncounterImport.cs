@@ -4,6 +4,7 @@ namespace SpaceDeck.Models.Imports
     using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Utility.Minimum;
 
@@ -17,9 +18,9 @@ namespace SpaceDeck.Models.Imports
         public bool IsShopEncounter;
         public string[] Arguments = Array.Empty<string>();
         public EncounterScriptImport[] DialogueScripts;
-        public PickRewardImport[] RewardIdentities = Array.Empty<PickRewardImport>();
+        public string[] RewardIdentities = Array.Empty<string>();
 
-        public EncounterPrototype GetPrototype()
+        public EncounterPrototype GetPrototype(IPickRewardPrototypeProvider pickRewardPrototypeProvider)
         {
             HashSet<LowercaseString> hashTags = new HashSet<LowercaseString>();
             foreach (string tag in (IEnumerable<string>)(this.Tags ?? Array.Empty<string>()))
@@ -39,11 +40,13 @@ namespace SpaceDeck.Models.Imports
                 encounterScripts.Add(import.GetLinkedScript());
             }
 
-            List<PickRewardPrototype> rewardPrototypes = new List<PickRewardPrototype>();
-            foreach (PickRewardImport import in this.RewardIdentities)
+            List<LowercaseString> rewardIdentities = new List<LowercaseString>();
+            foreach (string rewardIdentity in this.RewardIdentities)
             {
-                rewardPrototypes.Add(import.GetPrototype());
+                rewardIdentities.Add(rewardIdentity);
             }
+
+            IEnumerable<PickRewardPrototype> rewardPrototypes = pickRewardPrototypeProvider.GetPrototypes(rewardIdentities);
 
             return new EncounterPrototype(this.Id,
                 this.Name,

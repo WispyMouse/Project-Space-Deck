@@ -56,7 +56,66 @@ namespace SpaceDeck.Models.Databases
 
         public static LinkedCardInstance GetInstance(LowercaseString id)
         {
-            return new LinkedCardInstance(Prototypes[id], ElementDatabase.Provider);
+            CardPrototype matchingPrototype = GetPrototype(id);
+            return new LinkedCardInstance(matchingPrototype, ElementDatabase.Provider);
+        }
+
+        public static LinkedCardInstance GetInstance(LowercaseStringSet criteria)
+        {
+            CardPrototype matchingPrototype = GetPrototype(criteria);
+            return new LinkedCardInstance(matchingPrototype, ElementDatabase.Provider);
+        }
+
+        public static CardPrototype GetPrototype(LowercaseString id)
+        {
+            LowercaseStringSet set = new LowercaseStringSet(id);
+            return GetPrototype(set);
+        }
+
+        public static CardPrototype GetPrototype(LowercaseStringSet criteria)
+        {
+            if (criteria.OnlyValue.HasValue && Prototypes.TryGetValue(criteria.OnlyValue.Value, out CardPrototype exactMatch))
+            {
+                return exactMatch;
+            }
+
+            List<CardPrototype> matchingPrototypes = new List<CardPrototype>();
+            foreach (CardPrototype prototype in Prototypes.Values)
+            {
+                bool matchbroken = false;
+
+                foreach (LowercaseString tag in criteria.Strings)
+                {
+                    // Is it in the tags?
+                    if (prototype.Tags.Contains(tag))
+                    {
+                        continue;
+                    }
+                    // Is it the rarity?
+                    else if (prototype.Qualities.GetStringQuality(WellknownQualities.Rarity) == tag)
+                    {
+                        continue;
+                    }
+                    // Is it the name?
+                    else if (prototype.Qualities.GetStringQuality(WellknownQualities.Name) == tag)
+                    {
+                        continue;
+                    }
+                    // No match
+                    else
+                    {
+                        matchbroken = true;
+                        break;
+                    }
+                }
+
+                if (!matchbroken)
+                {
+                    matchingPrototypes.Add(prototype);
+                }
+            }
+            RandomDecider<CardPrototype> decider = new RandomDecider<CardPrototype>();
+            return decider.ChooseRandomly(matchingPrototypes);
         }
 
         public static void ClearDatabase()

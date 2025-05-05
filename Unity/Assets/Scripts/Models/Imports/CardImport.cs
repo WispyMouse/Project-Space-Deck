@@ -21,9 +21,10 @@ namespace SpaceDeck.Models.Imports
     public class CardImport : Importable
     {
         public string EffectScript;
-        public List<ElementGainImport> ElementGain;
-        public List<StringQualityImport> StringQualities;
-        public List<NumericQualityImport> NumericQualities;
+        public List<ElementGainImport> ElementGain = new List<ElementGainImport>();
+        public List<StringQualityImport> StringQualities = new List<StringQualityImport>();
+        public List<NumericQualityImport> NumericQualities = new List<NumericQualityImport>();
+        public HashSet<string> Tags = new HashSet<string>();
 
         public CardPrototype GetPrototype()
         {
@@ -65,7 +66,14 @@ namespace SpaceDeck.Models.Imports
                     elementGain.Add(import.ElementId, import.ModAmount);
                 }
                 QualitiesHolder qualities = this.GetQualities(this.StringQualities, this.NumericQualities);
-                return new CardPrototype(this.Id, parsedTokens, qualities: qualities, elementalGain: elementGain);
+
+                HashSet<LowercaseString> tags = new HashSet<LowercaseString>();
+                foreach (string tag in Tags)
+                {
+                    tags.Add(tag);
+                }
+
+                return new CardPrototype(this.Id, parsedTokens, tags, qualities: qualities, elementalGain: elementGain);
             }
         }
 

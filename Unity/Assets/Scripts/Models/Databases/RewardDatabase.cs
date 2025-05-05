@@ -14,10 +14,19 @@ namespace SpaceDeck.Models.Databases
         public static Dictionary<LowercaseString, PickRewardPrototype> PickRewardData { get; private set; } = new Dictionary<LowercaseString, PickRewardPrototype>();
 
 
+        public static PickRewardPrototype GetRewardPrototype(LowercaseString id)
+        {
+            return PickRewardData[id];
+        }
+
         public static PickReward GetReward(LowercaseString id)
         {
             PickRewardPrototype prototype = PickRewardData[id];
+            return GetReward(prototype);
+        }
 
+        public static PickReward GetReward(PickRewardPrototype prototype)
+        {
             List<Reward> rewards = new List<Reward>(prototype.Rewards);
 
             PickReward newReward = new PickReward(PickReward.PickRewardProtocol.ChooseX, prototype.PickNumber, prototype.Rewards);
@@ -26,7 +35,7 @@ namespace SpaceDeck.Models.Databases
 
         public static void AddReward(PickRewardImport toImport)
         {
-
+            AddReward(toImport.GetPrototype());
         }
 
         public static void AddReward(PickRewardPrototype toImport)

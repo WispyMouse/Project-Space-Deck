@@ -1,0 +1,12 @@
+{
+	"Id": "commoncard",
+	"Protocol": "ChooseX",
+	"ProtocolArgument": 1,
+	"RewardIdentities":
+	[
+		{
+			"IdentityKind": "Card",
+			"RewardIdentifier": "common"
+		}
+	],
+}

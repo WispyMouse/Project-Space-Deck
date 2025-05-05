@@ -7,6 +7,7 @@ namespace SpaceDeck.Models.Instances
 
     public interface IPickRewardProvider
     {
-        IEnumerable<PickReward> GetRewards(IEnumerable<PickRewardPrototype> rewards, RandomDecider<LowercaseString> decider = null);
+        IEnumerable<PickReward> GetRewards(IEnumerable<LowercaseString> ids, RandomDecider<LowercaseString> decider = null);
+        IEnumerable<PickReward> GetRewards(IEnumerable<PickRewardPrototype> prototypes, RandomDecider<LowercaseString> decider = null);
     }
 }

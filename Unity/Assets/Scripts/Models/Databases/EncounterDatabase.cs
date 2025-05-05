@@ -14,7 +14,7 @@ namespace SpaceDeck.Models.Databases
 
         public static void AddEncounter(EncounterImport import)
         {
-            AddEncounter(import);
+            AddEncounter(import.GetPrototype(RewardDatabasePickRewardPrototypeProvider.Instance));
         }
 
         public static void AddEncounter(EncounterPrototype toAdd)

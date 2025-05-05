@@ -1,16 +1,16 @@
 {
-	"Id": "starter_strike",
-	"EffectScript": "[TARGET:FOE][DAMAGE:3]",
+	"Id": "rare_strikester",
+	"EffectScript": "[TARGET:FOE][DAMAGE:7]",
 	"ElementalGain": [],
 	"StringQualities":
 	[
 		{
 			"Key": "Name",
-			"Value": "Strike"
+			"Value": "Strikester"
 		},
 		{
 			"Key": "Rarity",
-			"Value": "Starter"
+			"Value": "Rare"
 		},
 	],
 	"NumericQualities":

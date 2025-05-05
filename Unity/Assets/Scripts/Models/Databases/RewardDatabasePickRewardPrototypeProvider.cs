@@ -13,13 +13,13 @@ namespace SpaceDeck.Models.Databases
     {
         public static readonly RewardDatabasePickRewardPrototypeProvider Instance = new RewardDatabasePickRewardPrototypeProvider();
 
-        public IEnumerable<PickRewardPrototype> GetPrototypes(IEnumerable<PickRewardImport> rewards)
+        public IEnumerable<PickRewardPrototype> GetPrototypes(IEnumerable<LowercaseString> rewards)
         {
             List<PickRewardPrototype> prototypes = new List<PickRewardPrototype>();
 
-            foreach (PickRewardImport imports in rewards)
+            foreach (LowercaseString imports in rewards)
             {
-                prototypes.Add(imports.GetPrototype());
+                prototypes.Add(RewardDatabase.GetRewardPrototype(imports));
             }
 
             return prototypes;
