@@ -16,6 +16,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Deltas;
     using SpaceDeck.Utility.Logging;
     using SpaceDeck.Tokenization.Evaluatables.Questions;
+    using SpaceDeck.Models.Instances;
 
     public class GameplayUXController : MonoBehaviour
     {
@@ -337,7 +338,7 @@ namespace SpaceDeck.UX
             this.UpdateUX();
         }
 
-        public void ShowShopPanel(IReadOnlyList<IShopEntry> itemsInShop)
+        public void ShowShopPanel(IReadOnlyList<LinkedShopEntry> itemsInShop)
         {
             this.ShopPanelUXInstance.gameObject.SetActive(true);
             this.ShopPanelUXInstance.SetShopItems(itemsInShop);
@@ -667,6 +668,12 @@ namespace SpaceDeck.UX
 
         public void RepresentEncounter(EncounterState toStart)
         {
+            // MINT NEXT TODO LOOK HERE [MINT] LOOK
+            // [MINT] LOOK HERE
+            // We need to use this moment, somewhere along the line, to grab a LinkedShopEntry for all the IShopEntry available here
+            // and put that somewhere consistent we can refer to
+            // Teach GameState to have it, but not IGameStateMutator so that it doesn't have to be in minimum
+
             if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.ShopEncounter)
             {
                 this.ShowShopPanel(toStart.GetShop());

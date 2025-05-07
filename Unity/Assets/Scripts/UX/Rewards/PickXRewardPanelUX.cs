@@ -6,7 +6,7 @@ namespace SpaceDeck.UX
     using UnityEngine;
     using UnityEngine.EventSystems;
     using static SpaceDeck.GameState.Minimum.PickReward;
-    using static SpaceDeck.GameState.Minimum.Reward;
+    using static SpaceDeck.GameState.Minimum.RewardPrototype;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Imports;
@@ -48,9 +48,9 @@ namespace SpaceDeck.UX
                     break;
             }
 
-            foreach (Reward slot in toRepresent.RewardOptions)
+            foreach (RewardPrototype slot in toRepresent.RewardOptions)
             {
-                Reward pulledOutSlot = slot;
+                RewardPrototype pulledOutSlot = slot;
 
                 int amountToAward = pulledOutSlot.GetAmount(mutator);
 
@@ -86,7 +86,7 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void RewardSlotChosen(Reward rewards)
+        public void RewardSlotChosen(RewardPrototype rewards)
         {
             this.RewardsPanel.GainReward(rewards);
             this.PicksRemaining--;

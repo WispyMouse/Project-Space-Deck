@@ -27,7 +27,7 @@ namespace SpaceDeck.Models.Databases
 
         public static PickReward GetReward(PickRewardPrototype prototype)
         {
-            List<Reward> rewards = new List<Reward>(prototype.Rewards);
+            List<RewardPrototype> rewards = new List<RewardPrototype>(prototype.Rewards);
 
             PickReward newReward = new PickReward(PickReward.PickRewardProtocol.ChooseX, prototype.PickNumber, prototype.Rewards);
             return newReward;

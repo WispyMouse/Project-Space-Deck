@@ -7,6 +7,7 @@ namespace SpaceDeck.UX
     using UnityEngine.EventSystems;
     using SpaceDeck.UX;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Instances;
 
     public class ShopUX : MonoBehaviour
     {
@@ -48,11 +49,11 @@ namespace SpaceDeck.UX
             Destroy(selectedItem.gameObject);
         }
 
-        public void SetShopItems(IReadOnlyList<IShopEntry> shopEntries)
+        public void SetShopItems(IReadOnlyList<LinkedShopEntry> shopEntries)
         {
             this.DestroyItems();
 
-            foreach (IShopEntry curEntry in shopEntries)
+            foreach (LinkedShopEntry curEntry in shopEntries)
             {
                 ShopItemUX shopEntry = Instantiate(this.ShopItemUXPF, this.ShopItemUXHolderTransform);
                 shopEntry.SetFromEntry(this.CentralGameStateControllerInstance.GameplayState, curEntry, ShopItemSelected);

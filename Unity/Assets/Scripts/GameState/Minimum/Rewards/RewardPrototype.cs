@@ -4,7 +4,7 @@ namespace SpaceDeck.GameState.Minimum
     using System;
     using System.Collections.Generic;
 
-    public class Reward
+    public class RewardPrototype
     {
         public enum RewardIdentityKind
         {
@@ -15,16 +15,20 @@ namespace SpaceDeck.GameState.Minimum
 
         public readonly LowercaseString Id;
         public readonly RewardIdentityKind IdentityKind;
+        public readonly int RewardAmount;
 
-        public Reward(LowercaseString id, RewardIdentityKind identityKind)
+        public RewardPrototype(LowercaseString id, RewardIdentityKind identityKind, int rewardAmount = 1)
         {
             this.Id = id;
             this.IdentityKind = identityKind;
+            this.RewardAmount = rewardAmount;
         }
 
         public virtual int GetAmount(IGameStateMutator mutator)
         {
-            return 1;
+            // TODO: This would theoretically allow you to do things like "whenever you gain a potion, gain another of it"
+            // Will probably require some retooling, because "GetAmount" doesn't really communicate "GetAmountYouWouldGainIf..."
+            return this.RewardAmount;
         }
     }
 }

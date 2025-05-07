@@ -9,6 +9,10 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
     using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.Models.Instances;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
+    using System.Linq;
 
     public class ShopItemUX : MonoBehaviour
     {
@@ -34,7 +38,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private GameObject CanNotAffordOverlay;
 
-        public void SetFromEntry(IGameStateMutator mutator, IShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
+        public void SetFromEntry(IGameStateMutator mutator, LinkedShopEntry toRepresent, Action<ShopItemUX> onClickDelegate)
         {
             int gainedAmount = toRepresent.GetGainedAmount(mutator);
 
@@ -42,21 +46,35 @@ namespace SpaceDeck.UX
             this.OnClickDelegate = onClickDelegate;
             this.RepresentCosts(toRepresent.Costs, mutator);
 
-            if (toRepresent.GainedCard != null)
+            switch (toRepresent.GainedReward.IdentityKind)
             {
-                RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                thisCard.SetFromCard(toRepresent.GainedCard, (DisplayedCardUX card) => { this.OnClick(); });
-                thisCard.SetQuantity(gainedAmount);
-            }
-            else if (toRepresent.GainedArtifact != null)
-            {
-                RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                rewardArtifact.SetFromArtifact(toRepresent.GainedArtifact, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
-            }
-            else if (toRepresent.GainedCurrency != null)
-            {
-                RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                rewardCurrency.SetFromCurrency(toRepresent.GainedCurrency, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
+                case RewardPrototype.RewardIdentityKind.Card:
+                    if (toRepresent.LinkedGainedReward.GainedCards.Count != 1)
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.ShopItemUX, $"Asked to represent a number of cards other than 1, but the system isn't set up for it yet. Arbitrarily using first.");
+                    }
+
+                    RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
+                    thisCard.SetFromCard(toRepresent.LinkedGainedReward.GainedCards[0], (DisplayedCardUX card) => { this.OnClick(); });
+                    thisCard.SetQuantity(toRepresent.LinkedGainedReward.GainedCards.Count());
+                    break;
+                case RewardPrototype.RewardIdentityKind.Artifact:
+                    // RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
+                    // rewardArtifact.SetFromArtifact(toRepresent.GainedArtifact, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
+                    throw new System.NotImplementedException($"Oops, artifacts aren't implemented again yet!");
+                    break;
+                case RewardPrototype.RewardIdentityKind.Currency:
+                    if (toRepresent.LinkedGainedReward.GainedCurrency.Count != 1)
+                    {
+                        Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.ShopItemUX, $"Asked to represent a number of currencies other than 1, but the system isn't set up for it yet. Arbitrarily using something.");
+                    }
+
+                    List<KeyValuePair<Currency, int>> arbitaryOrderedList = toRepresent.LinkedGainedReward.GainedCurrency.ToList();
+                    KeyValuePair<Currency, int> arbitrarilySelectedCurrency = arbitaryOrderedList[0];
+
+                    RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
+                    rewardCurrency.SetFromCurrency(arbitrarilySelectedCurrency.Key, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
+                    break;
             }
         }
 
@@ -65,7 +83,7 @@ namespace SpaceDeck.UX
             this.OnClickDelegate.Invoke(this);
         }
 
-        void RepresentCosts(List<IShopCost> costs, IGameStateMutator mutator)
+        void RepresentCosts(IReadOnlyList<IShopCost> costs, IGameStateMutator mutator)
         {
             if (costs.Count == 0)
             {

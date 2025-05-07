@@ -15,6 +15,7 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString CentralGameStateController = nameof(CentralGameStateController);
         public static readonly LowercaseString Change = nameof(Change);
         public static readonly LowercaseString GameplayUXController = nameof(GameplayUXController);
+        public static readonly LowercaseString ShopItemUX = nameof(ShopItemUX);
 
         public static readonly LowercaseString GetLinkedScriptingToken = nameof(GetLinkedScriptingToken);
         public static readonly LowercaseString TokenTryGetChanges = nameof(TokenTryGetChanges);
@@ -29,7 +30,9 @@ namespace SpaceDeck.Utility.Wellknown
         public static readonly LowercaseString LinkingFailure = nameof(LinkingFailure);
         public static readonly LowercaseString ParseTokenText = nameof(ParseTokenText);
         public static readonly LowercaseString Route = nameof(Route);
+
         public static readonly LowercaseString EnemyDatabase = nameof(EnemyDatabase);
+        public static readonly LowercaseString CardDatabase = nameof(CardDatabase);
 
         public static readonly LowercaseString DatabaseImportCompletion = nameof(DatabaseImportCompletion);
     }

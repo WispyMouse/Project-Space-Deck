@@ -526,7 +526,7 @@ namespace SpaceDeck.GameState.Execution
                 return;
             }
 
-            this.Gain(toBuy);
+            this.Gain(toBuy.GainedReward);
 
             foreach (IShopCost cost in toBuy.Costs)
             {
@@ -535,14 +535,38 @@ namespace SpaceDeck.GameState.Execution
             }
         }
 
-        public void Gain(IShopEntry toGain)
+        public void Gain(RewardPrototype toGain)
         {
-            throw new System.NotImplementedException();
+            for (int ii = 0; ii < toGain.RewardAmount; ii++)
+            {
+                switch (toGain.IdentityKind)
+                {
+                    case RewardPrototype.RewardIdentityKind.Card:
+                        CardInstance instanceToGain = CardDatabase.GetInstance(toGain.Id);
+                        this.AddCard(instanceToGain, WellknownZones.Campaign);
+                        break;
+                    case RewardPrototype.RewardIdentityKind.Artifact:
+                        throw new System.NotImplementedException($"Oops, artifacts aren't implemented again yet!");
+                        break;
+                    case RewardPrototype.RewardIdentityKind.Currency:
+                        Currency currency = CurrencyDatabase.Get(toGain.Id);
+                        ModCurrency(currency, toGain.RewardAmount);
+                        break;
+                }
+            }
         }
 
-        public void Gain(Reward toGain)
+        public void Gain(LinkedRewardInstance toGain)
         {
-            throw new System.NotImplementedException();
+            foreach (LinkedCardInstance card in toGain.GainedCards)
+            {
+                this.AddCard(card, WellknownZones.Campaign);
+            }
+
+            foreach (Currency currencyKey in toGain.GainedCurrency.Keys)
+            {
+                this.ModCurrency(currencyKey, toGain.GainedCurrency[currencyKey]);
+            }
         }
 
         public ChoiceNode GetCampaignCurrentNode()

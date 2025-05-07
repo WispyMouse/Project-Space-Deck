@@ -48,7 +48,7 @@ namespace SpaceDeck.UX
             this.Rewards = null;
         }
 
-        public void GainReward(Reward reward)
+        public void GainReward(RewardPrototype reward)
         {
             this.CentralGameStateControllerInstance.GameplayState.Gain(reward);
         }

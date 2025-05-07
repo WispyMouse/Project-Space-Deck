@@ -1,7 +1,6 @@
 namespace SpaceDeck.Models.Instances
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Prototypes;

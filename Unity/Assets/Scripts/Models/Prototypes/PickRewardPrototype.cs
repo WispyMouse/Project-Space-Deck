@@ -8,9 +8,9 @@ namespace SpaceDeck.Models.Prototypes
     {
         public readonly LowercaseString Id;
         public readonly int PickNumber;
-        public readonly IReadOnlyList<Reward> Rewards;
+        public readonly IReadOnlyList<RewardPrototype> Rewards;
 
-        public PickRewardPrototype(LowercaseString id, int pickNumber, IReadOnlyList<Reward> rewards)
+        public PickRewardPrototype(LowercaseString id, int pickNumber, IReadOnlyList<RewardPrototype> rewards)
         {
             this.Id = id;
             this.PickNumber = pickNumber;

@@ -13,13 +13,13 @@ namespace SpaceDeck.GameState.Minimum
 
         public readonly PickRewardProtocol Protocol = PickRewardProtocol.ChooseX;
         public readonly int ProtocolArgument = 1;
-        public readonly List<Reward> RewardOptions = new List<Reward>();
+        public readonly List<RewardPrototype> RewardOptions = new List<RewardPrototype>();
 
-        public PickReward(PickRewardProtocol protocol, int protocolArgument, IEnumerable<Reward> rewardOptions)
+        public PickReward(PickRewardProtocol protocol, int protocolArgument, IEnumerable<RewardPrototype> rewardOptions)
         {
             this.Protocol = protocol;
             this.ProtocolArgument = protocolArgument;
-            this.RewardOptions = new List<Reward>(rewardOptions);
+            this.RewardOptions = new List<RewardPrototype>(rewardOptions);
         }
     }
 }

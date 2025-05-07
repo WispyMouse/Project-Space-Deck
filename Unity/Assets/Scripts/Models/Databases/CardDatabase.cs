@@ -11,6 +11,7 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Wellknown;
+    using System.Diagnostics;
 
     public static class CardDatabase
     {
@@ -54,29 +55,35 @@ namespace SpaceDeck.Models.Databases
             Prototypes.Add(prototype.Id, prototype);
         }
 
-        public static LinkedCardInstance GetInstance(LowercaseString id)
+        public static LinkedCardInstance GetInstance(LowercaseString id, bool exactIdMatchOnly = false)
         {
-            CardPrototype matchingPrototype = GetPrototype(id);
+            CardPrototype matchingPrototype = GetPrototype(id, exactIdMatchOnly);
             return new LinkedCardInstance(matchingPrototype, ElementDatabase.Provider);
         }
 
-        public static LinkedCardInstance GetInstance(LowercaseStringSet criteria)
+        public static LinkedCardInstance GetInstance(LowercaseStringSet criteria, bool exactIdMatchOnly = false)
         {
-            CardPrototype matchingPrototype = GetPrototype(criteria);
+            CardPrototype matchingPrototype = GetPrototype(criteria, exactIdMatchOnly);
             return new LinkedCardInstance(matchingPrototype, ElementDatabase.Provider);
         }
 
-        public static CardPrototype GetPrototype(LowercaseString id)
+        public static CardPrototype GetPrototype(LowercaseString id, bool exactIdMatchOnly = false)
         {
             LowercaseStringSet set = new LowercaseStringSet(id);
-            return GetPrototype(set);
+            return GetPrototype(set, exactIdMatchOnly);
         }
 
-        public static CardPrototype GetPrototype(LowercaseStringSet criteria)
+        public static CardPrototype GetPrototype(LowercaseStringSet criteria, bool exactIdMatchOnly = false)
         {
             if (criteria.OnlyValue.HasValue && Prototypes.TryGetValue(criteria.OnlyValue.Value, out CardPrototype exactMatch))
             {
                 return exactMatch;
+            }
+
+            if (exactIdMatchOnly)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.CardDatabase, $"{nameof(GetPrototype)} called with {nameof(exactIdMatchOnly)}, but couldn't find an exact match to {criteria.ToString()}.");
+                return null;
             }
 
             List<CardPrototype> matchingPrototypes = new List<CardPrototype>();

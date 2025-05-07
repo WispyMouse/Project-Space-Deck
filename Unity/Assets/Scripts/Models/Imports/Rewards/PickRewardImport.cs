@@ -8,7 +8,7 @@ namespace SpaceDeck.Models.Imports
     using System.Text.RegularExpressions;
     using UnityEngine;
     using static SpaceDeck.GameState.Minimum.PickReward;
-    using static SpaceDeck.GameState.Minimum.Reward;
+    using static SpaceDeck.GameState.Minimum.RewardPrototype;
 
     [System.Serializable]
     public class PickRewardImport : Importable
@@ -20,7 +20,7 @@ namespace SpaceDeck.Models.Imports
 
         public PickRewardPrototype GetPrototype()
         {
-            List<Reward> rewardIdentities = new List<Reward>();
+            List<RewardPrototype> rewardIdentities = new List<RewardPrototype>();
             foreach (RewardIdentityImport import in this.RewardIdentities)
             {
                 if (string.IsNullOrEmpty(import.RewardIdentifier))
@@ -28,7 +28,7 @@ namespace SpaceDeck.Models.Imports
                     Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.DatabaseImportCompletion, $"{nameof(import.RewardIdentifier)} is empty for PickRewardImport id '{this.Id}'.");
                 }
 
-                rewardIdentities.Add(new Reward(import.RewardIdentifier, import.IdentityKind));
+                rewardIdentities.Add(new RewardPrototype(import.RewardIdentifier, import.IdentityKind));
             }
 
             return new PickRewardPrototype(this.Id, this.ProtocolArgument, rewardIdentities);

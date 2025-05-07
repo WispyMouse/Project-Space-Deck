@@ -4,11 +4,9 @@ namespace SpaceDeck.GameState.Minimum
 {
     public interface IShopEntry
     {
-        List<IShopCost> Costs { get; }
+        IReadOnlyList<IShopCost> Costs { get; }
 
-        AppliedStatusEffect GainedArtifact { get; }
-        CardInstance GainedCard { get; }
-        Currency GainedCurrency { get; }
+        RewardPrototype GainedReward { get; }
 
         int GetGainedAmount(IGameStateMutator mutator);
     }
