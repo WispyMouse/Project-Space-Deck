@@ -5,6 +5,7 @@ namespace SpaceDeck.GameState.Execution
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
+    using SpaceDeck.Models.Prototypes;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
     using SpaceDeck.Utility.Logging;
@@ -28,7 +29,7 @@ namespace SpaceDeck.GameState.Execution
     /// </summary>
     public class GameState : IGameStateMutator, ICardPlayer
     {
-        public EncounterState CurrentEncounterState = null;
+        public EncounterInstance CurrentEncounterState = null;
         public readonly List<Entity> PersistentEntities = new List<Entity>();
         public readonly PendingResolveStack PendingResolves = new PendingResolveStack();
         public readonly List<CardInstance> CardsInDeck = new List<CardInstance>();
@@ -233,10 +234,11 @@ namespace SpaceDeck.GameState.Execution
             return true;
         }
 
-        public void StartEncounter(EncounterState encounter)
+        public void StartEncounter(EncounterPrototype encounterPrototype)
         {
-            this.CurrentEncounterState = encounter;
-            this.CurrentCampaignState = encounter.GetStartingCampaignState();
+            EncounterInstance instance = new EncounterInstance(encounterPrototype, EncounterDatabaseEntitiesProvider.Instance, RewardDatabasePickRewardProvider.Instance);
+            this.CurrentEncounterState = instance;
+            this.CurrentCampaignState = instance.GetStartingCampaignState();
 
             this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
         }
@@ -585,7 +587,7 @@ namespace SpaceDeck.GameState.Execution
             this.StartNextRoomFromEncounter(chosen.WillEncounter);
         }
 
-        public void StartNextRoomFromEncounter(EncounterState basedOn)
+        public void StartNextRoomFromEncounter(EncounterPrototype basedOn)
         {
             this.CurrentEncounterState = null;
             this.StartEncounter(basedOn);
@@ -717,6 +719,11 @@ namespace SpaceDeck.GameState.Execution
             {
                 PendingRewards = this.CurrentEncounterState.EncounterRewards;
             }
+        }
+
+        public IReadOnlyList<LinkedShopEntry> GetShopFromCurrentEncounter()
+        {
+            return Array.Empty<LinkedShopEntry>();
         }
     }
 }

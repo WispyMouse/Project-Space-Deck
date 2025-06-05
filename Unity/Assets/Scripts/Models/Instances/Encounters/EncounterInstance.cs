@@ -53,5 +53,12 @@ namespace SpaceDeck.Models.Instances
 
             return dialogue.ToString();
         }
+
+        public IReadOnlyList<LinkedShopEntry> GetLinkedShop()
+        {
+            IReadOnlyList<IShopEntry> baseShop = this.GetShop();
+
+            return Array.Empty<LinkedShopEntry>();
+        }
     }
 }

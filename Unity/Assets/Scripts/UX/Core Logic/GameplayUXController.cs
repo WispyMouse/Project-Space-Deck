@@ -666,21 +666,15 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void RepresentEncounter(EncounterState toStart)
+        public void RepresentCurrentEncounter()
         {
-            // MINT NEXT TODO LOOK HERE [MINT] LOOK
-            // [MINT] LOOK HERE
-            // We need to use this moment, somewhere along the line, to grab a LinkedShopEntry for all the IShopEntry available here
-            // and put that somewhere consistent we can refer to
-            // Teach GameState to have it, but not IGameStateMutator so that it doesn't have to be in minimum
-
             if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.ShopEncounter)
             {
-                this.ShowShopPanel(toStart.GetShop());
+                this.ShowShopPanel(this.CentralGameStateControllerInstance.GameplayState.GetShopFromCurrentEncounter());
             }
             else if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.DialogueEncounter)
             {
-                this.EncounterRepresenterUXInstance.RepresentEncounter(toStart, this.CentralGameStateControllerInstance.GameplayState);
+                this.EncounterRepresenterUXInstance.RepresentEncounter(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState, this.CentralGameStateControllerInstance.GameplayState);
             }
             else
             {
