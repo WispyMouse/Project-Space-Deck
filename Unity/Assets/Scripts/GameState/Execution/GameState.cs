@@ -234,13 +234,25 @@ namespace SpaceDeck.GameState.Execution
             return true;
         }
 
-        public void StartEncounter(EncounterPrototype encounterPrototype)
+        public void StartEncounterByState(EncounterState encounterState)
         {
-            EncounterInstance instance = new EncounterInstance(encounterPrototype, EncounterDatabaseEntitiesProvider.Instance, RewardDatabasePickRewardProvider.Instance);
-            this.CurrentEncounterState = instance;
-            this.CurrentCampaignState = instance.GetStartingCampaignState();
+            EncounterInstance wrappedInstance = new EncounterInstance(encounterState);
+            this.StartEncounter(wrappedInstance);
+        }
+
+
+        public void StartEncounter(EncounterInstance encounterInstance)
+        {
+            this.CurrentEncounterState = encounterInstance;
+            this.CurrentCampaignState = encounterInstance.GetStartingCampaignState();
 
             this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
+        }
+
+        public void StartNextRoomByPrototype(EncounterPrototype basedOn)
+        {
+            EncounterInstance instance = new EncounterInstance(basedOn, EncounterDatabaseEntitiesProvider.Instance, RewardDatabasePickRewardProvider.Instance);
+            this.StartEncounter(instance);
         }
 
         public void MoveCard(CardInstance card, LowercaseString zone)
@@ -584,16 +596,14 @@ namespace SpaceDeck.GameState.Execution
         public void MakeChoiceNodeDecision(ChoiceNodeOption chosen)
         {
             chosen.WasSelected = true;
-            this.StartNextRoomFromEncounter(chosen.WillEncounter);
+            if (!EncounterDatabase.TryGetEncounterWithArguments(new RandomDecider<EncounterPrototype>(), chosen.WillEncounterId, chosen.Arguments, out EncounterInstance instance))
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.GameState, $"Failed to get an encounter with the provided id '{chosen.WillEncounterId}'.");
+            }
+            this.StartEncounter(instance);
         }
 
-        public void StartNextRoomFromEncounter(EncounterPrototype basedOn)
-        {
-            this.CurrentEncounterState = null;
-            this.StartEncounter(basedOn);
-        }
-
-        public bool StartNextRoomFromCampaign(out ChoiceNode nextChoice)
+        public bool StartNextRoomFromCampaign(out LinkedChoiceNode nextChoice)
         {
             this.RouteIndex++;
 
@@ -604,7 +614,8 @@ namespace SpaceDeck.GameState.Execution
                 return false;
             }
 
-            nextChoice = this.BasedOnRoute.Choices[this.RouteIndex];
+            ChoiceNode baseNode = this.BasedOnRoute.Choices[this.RouteIndex];
+            nextChoice = new LinkedChoiceNode(baseNode, EncounterDatabseEncounterProvider.Instance);
 
             return true;
         }

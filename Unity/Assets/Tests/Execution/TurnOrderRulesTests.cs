@@ -68,7 +68,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
@@ -102,7 +102,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
@@ -136,7 +136,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
@@ -171,7 +171,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
@@ -210,7 +210,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             encounter.EncounterEntities.Add(playerEntity);
 
             // ACT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
@@ -248,7 +248,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             encounter.EncounterEntities.Add(playerEntity);
 
             // ACT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);

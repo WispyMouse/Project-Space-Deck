@@ -509,7 +509,7 @@ namespace SpaceDeck.UX
             this.ShowRewardsPanel(toPresent);
         }
 
-        public void PresentNextRouteChoice(ChoiceNode nextChoice)
+        public void PresentNextRouteChoice(LinkedChoiceNode nextChoice)
         {
             this.CancelAllSelections();
 
@@ -531,7 +531,9 @@ namespace SpaceDeck.UX
         public void ProceedToNextRoom()
         {
             this.CancelAllSelections();
-            if (this.CentralGameStateControllerInstance.GameplayState.StartNextRoomFromCampaign(out ChoiceNode nextChoice))
+            this.Annihilate();
+            this.PlacePlayerCharacter();
+            if (this.CentralGameStateControllerInstance.GameplayState.StartNextRoomFromCampaign(out LinkedChoiceNode nextChoice))
             {
                 this.PresentNextRouteChoice(nextChoice);
             }

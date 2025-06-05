@@ -95,7 +95,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
 
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
@@ -185,7 +185,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
 
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
@@ -215,7 +215,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
             
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
@@ -252,7 +252,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
 
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             HashSet<int> allNumbers = new HashSet<int>();
 
             // ACT

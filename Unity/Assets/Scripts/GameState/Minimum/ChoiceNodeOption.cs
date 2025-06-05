@@ -1,38 +1,19 @@
 namespace SpaceDeck.GameState.Minimum
 {
     using SpaceDeck.Utility.Minimum;
+    using System;
     using System.Collections.Generic;
 
     public class ChoiceNodeOption
     {
-        public string NodeName => this.WillEncounter?.EncounterName;
-        public EncounterState WillEncounter { get; set; }
         public readonly LowercaseString WillEncounterId;
+        public readonly IReadOnlyList<string> Arguments;
         public bool WasSelected { get; set; } = false;
 
-        public ChoiceNodeOption(LowercaseString encounter)
+        public ChoiceNodeOption(LowercaseString encounter, IReadOnlyList<string> arguments = null)
         {
             this.WillEncounterId = encounter;
-        }
-
-        public ChoiceNodeOption(EncounterState willEncounter) : this(willEncounter.EncounterId)
-        {
-            this.WillEncounter = willEncounter;
-        }
-
-        public void LinkEncounter(EncounterState willEncounter)
-        {
-            this.WillEncounter = willEncounter;
-        }
-
-        public string GetName()
-        {
-            return this.WillEncounter?.EncounterName;
-        }
-
-        public string GetDescription()
-        {
-            return this.WillEncounter?.EncounterDescription;
+            this.Arguments = arguments ?? Array.Empty<string>();
         }
     }
 }

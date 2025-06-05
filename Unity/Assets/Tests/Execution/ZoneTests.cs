@@ -51,7 +51,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -86,7 +86,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -123,7 +123,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -158,7 +158,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             for (int ii = 0; ii < cardsInDeck; ii++)
@@ -219,7 +219,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ACT
             EncounterState encounter = new EncounterState();
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT

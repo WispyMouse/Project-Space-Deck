@@ -65,7 +65,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, healthAmount);
             encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:{healthAmount}]";
@@ -95,7 +95,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             GameState gameState = new GameState();
 
             // ACT
-            gameState.StartEncounter(new EncounterState());
+            gameState.StartEncounterByState(new EncounterState());
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT

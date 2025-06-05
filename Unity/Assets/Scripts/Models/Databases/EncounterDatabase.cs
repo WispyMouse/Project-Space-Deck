@@ -22,7 +22,7 @@ namespace SpaceDeck.Models.Databases
             EncounterData.Add(toAdd.Id, toAdd);
         }
 
-        public static bool TryGetEncounterWithArguments(RandomDecider<EncounterPrototype> decider, string kind, List<string> arguments, out EncounterInstance encounter)
+        public static bool TryGetEncounterWithArguments(RandomDecider<EncounterPrototype> decider, string kind, IEnumerable<string> arguments, out EncounterInstance encounter)
         {
             kind = kind.ToLower();
 

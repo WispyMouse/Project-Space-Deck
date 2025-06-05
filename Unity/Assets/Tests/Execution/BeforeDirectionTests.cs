@@ -106,7 +106,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, data.StartingHealth);
             gameState.ModStatusEffectStacks(targetingEntity, import.Id, data.DamageReduction);
             encounterState.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounter(encounterState);
+            gameState.StartEncounterByState(encounterState);
             PendingResolveExecutor.ResolveAll(gameState);
 
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:{data.Damage}]";

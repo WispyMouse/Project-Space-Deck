@@ -5,10 +5,11 @@ namespace SpaceDeck.UX
     using UnityEngine;
     using SpaceDeck.UX;
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Instances;
 
     public class ChoiceNodeSelectorUX : MonoBehaviour
     {
-        public ChoiceNode CurrentlyRepresenting;
+        public LinkedChoiceNode CurrentlyRepresenting;
 
         [SerializeReference]
         private ChoiceNodeOptionUX OptionPrefab;
@@ -21,12 +22,12 @@ namespace SpaceDeck.UX
         [SerializeReference]
         private GameplayUXController UXController;
 
-        public void RepresentNode(ChoiceNode toRepresent)
+        public void RepresentNode(LinkedChoiceNode toRepresent)
         {
             this.ClearNodes();
             this.CurrentlyRepresenting = toRepresent;
 
-            foreach (ChoiceNodeOption option in toRepresent.Options)
+            foreach (LinkedChoiceNodeOption option in toRepresent.LinkedOptions)
             {
                 ChoiceNodeOptionUX optionUx = Instantiate(this.OptionPrefab, this.TransformParent);
                 optionUx.RepresentOption(this, option);

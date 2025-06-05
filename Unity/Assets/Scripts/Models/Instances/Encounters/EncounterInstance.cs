@@ -33,6 +33,17 @@ namespace SpaceDeck.Models.Instances
             }
         }
 
+        public EncounterInstance(EncounterState state)
+        {
+            this.Prototype = null;
+
+            this.EncounterId = state.EncounterId;
+            this.EncounterName = state.EncounterName;
+            this.EncounterDescription = state.EncounterDescription;
+            this.EncounterEntities.AddRange(state.EncounterEntities);
+            this.EncounterRewards.AddRange(state.EncounterRewards);
+        }
+
         public override string BuildEncounterDialogue(LowercaseString index, IGameStateMutator mutator)
         {
             if (!this.Prototype.EncounterScripts.TryGetValue(index, out EncounterScript script))

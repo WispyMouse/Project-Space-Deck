@@ -102,7 +102,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -134,7 +134,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -172,7 +172,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity), targetingEntity);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
@@ -207,7 +207,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";
@@ -258,7 +258,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             entityThree.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             entityThree.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(entityThree);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";
@@ -316,7 +316,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ACT
             Entity toStack = new Entity();
             encounterState.EncounterEntities.Add(toStack);
-            gameState.StartEncounter(encounterState);
+            gameState.StartEncounterByState(encounterState);
             gameState.ModStatusEffectStacks(toStack, import.Id, numberOfStacks);
             gameState.EntityPerformsAction(toStack, evaluateAndLogNumericLinkedToken);
 
@@ -366,7 +366,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             encounterState.EncounterEntities.Add(toStack);
 
             // ACT
-            gameState.StartEncounter(encounterState);
+            gameState.StartEncounterByState(encounterState);
             gameState.StartConsideringPlayingCard(instance);
             gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(toStack));
             PendingResolveExecutor.ResolveAll(gameState);
@@ -414,7 +414,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardInstance instance = CardDatabase.GetInstance(cardImport.Id);
 
             // ACT
-            gameState.StartEncounter(encounterState);
+            gameState.StartEncounterByState(encounterState);
             gameState.StartConsideringPlayingCard(instance);
             Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);

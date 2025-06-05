@@ -52,7 +52,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{debugStatusId} {stacksToApply}]";
@@ -104,7 +104,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             encounter.EncounterEntities.Add(targetingEntity);
 
             // ACT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{debugStatusId} {stacksToApply}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
@@ -170,7 +170,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             encounter.EncounterEntities.Add(targetingEntity);
 
             // ACT AND ASSERT
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // The poison applies at the end of the entity's turn

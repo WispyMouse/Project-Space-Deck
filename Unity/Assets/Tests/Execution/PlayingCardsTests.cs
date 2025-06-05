@@ -62,7 +62,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 elementalGain: null
                 );
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -98,7 +98,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Entity foeEntity = new Entity();
             foeEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
             encounter.EncounterEntities.Add(foeEntity);
-            gameState.StartEncounter(encounter);
+            gameState.StartEncounterByState(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
             IndexChoosingAnswerer answerer = new IndexChoosingAnswerer(0);
 
