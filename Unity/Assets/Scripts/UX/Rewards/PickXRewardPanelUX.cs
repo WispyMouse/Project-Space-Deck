@@ -52,6 +52,7 @@ namespace SpaceDeck.UX
             foreach (RewardPrototype slot in toRepresent.RewardOptions)
             {
                 RewardPrototype pulledOutSlot = slot;
+                LinkedRewardInstance rewardInstance = RewardDatabase.GetReward(pulledOutSlot);
 
                 int amountToAward = pulledOutSlot.GetAmount(mutator);
 
@@ -59,15 +60,15 @@ namespace SpaceDeck.UX
                 {
                     case RewardIdentityKind.Currency:
                         RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                        rewardCurrency.SetFromCurrency(CurrencyDatabase.Get(pulledOutSlot.Id), (RewardCurrencyUX currency) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
+                        rewardCurrency.SetFromCurrency(CurrencyDatabase.Get(pulledOutSlot.Id), (RewardCurrencyUX currency) => { this.RewardSlotChosen(rewardInstance); }, amountToAward);
                         break;
                     case RewardIdentityKind.Artifact:
                         RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                        rewardArtifact.SetFromArtifact(StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this.RewardSlotChosen(pulledOutSlot); }, amountToAward);
+                        rewardArtifact.SetFromArtifact(StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this.RewardSlotChosen(rewardInstance); }, amountToAward);
                         break;
                     case RewardIdentityKind.Card:
                         RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                        thisCard.SetFromCard(CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this.RewardSlotChosen(pulledOutSlot); });
+                        thisCard.SetFromCard(CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this.RewardSlotChosen(rewardInstance); });
                         thisCard.SetQuantity(amountToAward);
                         break;
                 }

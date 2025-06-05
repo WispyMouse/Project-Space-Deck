@@ -19,7 +19,7 @@ namespace SpaceDeck.Models.Databases
 
             foreach (LowercaseString imports in rewards)
             {
-                prototypes.Add(RewardDatabase.GetRewardPrototype(imports));
+                prototypes.Add(RewardDatabase.GetPickRewardPrototype(imports));
             }
 
             return prototypes;

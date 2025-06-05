@@ -84,11 +84,6 @@ namespace SpaceDeck.GameState.Minimum
             return Array.Empty<EncounterOption>();
         }
 
-        public virtual IReadOnlyList<IShopEntry> GetShop()
-        {
-            return Array.Empty<IShopEntry>();
-        }
-
         public virtual LowercaseString GetStartingCampaignState()
         {
             if (this.IsShopEncounter)

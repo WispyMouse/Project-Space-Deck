@@ -530,6 +530,11 @@ namespace SpaceDeck.GameState.Execution
             return this.CurrentEncounterState.GetCardZone(card);
         }
 
+        public void PurchaseShopItem(LinkedShopEntry toBuy)
+        {
+            this.PurchaseShopItem(toBuy.LinkedGainedReward, toBuy.Costs);
+        }
+
         public void PurchaseShopItem(LinkedRewardInstance toGain, IEnumerable<IShopCost> costs)
         {
             bool canAfford = this.CanAfford(costs);

@@ -18,7 +18,7 @@ namespace SpaceDeck.Models.Instances
         public override bool HasEncounterDialogue => this.Prototype.EncounterScripts.Count > 0;
         public override bool IsShopEncounter => this.Prototype.IsShopEncounter;
 
-        public EncounterInstance(EncounterPrototype prototype, IEncounterEntitiesProvider entityProvider, IPickRewardProvider rewardProvider) :base()
+        public EncounterInstance(EncounterPrototype prototype, IEncounterEntitiesProvider entityProvider, ILinkedPickRewardProvider rewardProvider) :base()
         {
             this.Prototype = prototype;
 

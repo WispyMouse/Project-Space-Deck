@@ -14,18 +14,29 @@ namespace SpaceDeck.Models.Databases
         public static Dictionary<LowercaseString, PickRewardPrototype> PickRewardData { get; private set; } = new Dictionary<LowercaseString, PickRewardPrototype>();
 
 
-        public static PickRewardPrototype GetRewardPrototype(LowercaseString id)
+        public static PickRewardPrototype GetPickRewardPrototype(LowercaseString id)
         {
             return PickRewardData[id];
         }
 
-        public static PickReward GetReward(LowercaseString id)
+        public static PickReward GetPickReward(LowercaseString id)
         {
             PickRewardPrototype prototype = PickRewardData[id];
-            return GetReward(prototype);
+            return GetPickReward(prototype);
         }
 
-        public static PickReward GetReward(PickRewardPrototype prototype)
+        public static PickReward GetPickReward(LowercaseStringSet argument)
+        {
+            if (argument.OnlyValue.HasValue)
+            {
+                return GetPickReward(argument.OnlyValue.Value);
+            }
+
+            // TODO LOG
+            return null;
+        }
+
+        public static PickReward GetPickReward(PickRewardPrototype prototype)
         {
             List<RewardPrototype> rewards = new List<RewardPrototype>(prototype.Rewards);
 
@@ -33,12 +44,12 @@ namespace SpaceDeck.Models.Databases
             return newReward;
         }
 
-        public static void AddReward(PickRewardImport toImport)
+        public static void AddPickReward(PickRewardImport toImport)
         {
-            AddReward(toImport.GetPrototype());
+            AddPickReward(toImport.GetPrototype());
         }
 
-        public static void AddReward(PickRewardPrototype toImport)
+        public static void AddPickReward(PickRewardPrototype toImport)
         {
             PickRewardData.Add(toImport.Id, toImport);
         }
@@ -47,6 +58,27 @@ namespace SpaceDeck.Models.Databases
         public static void ClearDatabase()
         {
             PickRewardData.Clear();
+        }
+
+        public static LinkedRewardInstance GetReward(RewardPrototype rewardPrototype)
+        {
+            List<LinkedCardInstance> gainedCards = new List<LinkedCardInstance>();
+            Dictionary<Currency, int> gainedCurrency = new Dictionary<Currency, int>();
+
+            switch (rewardPrototype.IdentityKind)
+            {
+                case RewardPrototype.RewardIdentityKind.Card:
+                    gainedCards.Add(CardDatabase.GetInstance(rewardPrototype.Id));
+                    break;
+                case RewardPrototype.RewardIdentityKind.Artifact:
+                    // TODO
+                    break;
+                case RewardPrototype.RewardIdentityKind.Currency:
+                    // TODO
+                    break;
+            }
+
+            return new LinkedRewardInstance(gainedCards, gainedCurrency);
         }
     }
 }

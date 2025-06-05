@@ -8,7 +8,7 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
 
-    public class RewardDatabasePickRewardProvider : IPickRewardProvider
+    public class RewardDatabasePickRewardProvider : ILinkedPickRewardProvider
     {
         public static readonly RewardDatabasePickRewardProvider Instance = new RewardDatabasePickRewardProvider();
 
@@ -17,28 +17,35 @@ namespace SpaceDeck.Models.Databases
 
         }
 
-        public IEnumerable<PickReward> GetRewards(IEnumerable<LowercaseString> ids, RandomDecider<LowercaseString> decider = null)
+        public IEnumerable<LinkedPickReward> GetRewards(IEnumerable<LowercaseString> ids, RandomDecider<LowercaseString> decider = null)
         {
-            List<PickReward> pickRewards = new List<PickReward>();
-
+            List<PickRewardPrototype> rewardPrototypes = new List<PickRewardPrototype>();
             foreach (LowercaseString reward in ids)
             {
-                pickRewards.Add(RewardDatabase.GetReward(reward));
+                PickRewardPrototype pickReward = RewardDatabase.GetPickRewardPrototype(reward);
+                rewardPrototypes.Add(pickReward);
+            }
+
+            return this.GetRewards(rewardPrototypes, decider);
+        }
+
+        public IEnumerable<LinkedPickReward> GetRewards(IEnumerable<PickRewardPrototype> rewards, RandomDecider<LowercaseString> decider = null)
+        {
+            List<LinkedPickReward> pickRewards = new List<LinkedPickReward>();
+
+            foreach (PickRewardPrototype reward in rewards)
+            {
+                PickReward pickReward = RewardDatabase.GetPickReward(reward);
+                LinkedPickReward linkedPickReward = new LinkedPickReward(pickReward, this);
+                pickRewards.Add(linkedPickReward);
             }
 
             return pickRewards;
         }
 
-        public IEnumerable<PickReward> GetRewards(IEnumerable<PickRewardPrototype> rewards, RandomDecider<LowercaseString> decider = null)
+        public LinkedRewardInstance GetReward(RewardPrototype rewardPrototype, RandomDecider<LowercaseString> decider = null)
         {
-            List<PickReward> pickRewards = new List<PickReward>();
-
-            foreach (PickRewardPrototype reward in rewards)
-            {
-                pickRewards.Add(RewardDatabase.GetReward(reward));
-            }
-
-            return pickRewards;
+            return RewardDatabase.GetReward(rewardPrototype);
         }
     }
 }
