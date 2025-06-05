@@ -1,0 +1,19 @@
+{
+	"Id": "trivialfight",
+	"Name": "Trivial Fight",
+	"Description": "One enemy, one hp.",
+	"EnemiesInEncounterById":
+	[
+		"trivialenemy",
+	],
+	"EncounterTags":
+	[
+		"TrivialFight"
+	],
+	"Arguments": [],
+	"EncounterScripts": [],
+	"RewardIdentities":
+	[
+		"commoncard"
+	],
+}

@@ -10,6 +10,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Imports;
+    using SpaceDeck.Models.Instances;
 
     public class PickXRewardPanelUX : MonoBehaviour
     {
@@ -86,7 +87,7 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void RewardSlotChosen(RewardPrototype rewards)
+        public void RewardSlotChosen(LinkedRewardInstance rewards)
         {
             this.RewardsPanel.GainReward(rewards);
             this.PicksRemaining--;

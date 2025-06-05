@@ -530,9 +530,9 @@ namespace SpaceDeck.GameState.Execution
             return this.CurrentEncounterState.GetCardZone(card);
         }
 
-        public void PurchaseShopItem(IShopEntry toBuy)
+        public void PurchaseShopItem(LinkedRewardInstance toGain, IEnumerable<IShopCost> costs)
         {
-            bool canAfford = this.CanAfford(toBuy.Costs);
+            bool canAfford = this.CanAfford(costs);
 
             if (!canAfford)
             {
@@ -540,33 +540,12 @@ namespace SpaceDeck.GameState.Execution
                 return;
             }
 
-            this.Gain(toBuy.GainedReward);
+            this.Gain(toGain);
 
-            foreach (IShopCost cost in toBuy.Costs)
+            foreach (IShopCost cost in costs)
             {
                 int currencyAmount = cost.GetCost(this);
                 this.ModCurrency(cost.CurrencyType, -currencyAmount);
-            }
-        }
-
-        public void Gain(RewardPrototype toGain)
-        {
-            for (int ii = 0; ii < toGain.RewardAmount; ii++)
-            {
-                switch (toGain.IdentityKind)
-                {
-                    case RewardPrototype.RewardIdentityKind.Card:
-                        CardInstance instanceToGain = CardDatabase.GetInstance(toGain.Id);
-                        this.AddCard(instanceToGain, WellknownZones.Campaign);
-                        break;
-                    case RewardPrototype.RewardIdentityKind.Artifact:
-                        throw new System.NotImplementedException($"Oops, artifacts aren't implemented again yet!");
-                        break;
-                    case RewardPrototype.RewardIdentityKind.Currency:
-                        Currency currency = CurrencyDatabase.Get(toGain.Id);
-                        ModCurrency(currency, toGain.RewardAmount);
-                        break;
-                }
             }
         }
 
@@ -730,11 +709,6 @@ namespace SpaceDeck.GameState.Execution
             {
                 PendingRewards = this.CurrentEncounterState.EncounterRewards;
             }
-        }
-
-        public IReadOnlyList<LinkedShopEntry> GetShopFromCurrentEncounter()
-        {
-            return Array.Empty<LinkedShopEntry>();
         }
     }
 }

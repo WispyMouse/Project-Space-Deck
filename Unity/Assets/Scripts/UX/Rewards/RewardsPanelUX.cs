@@ -1,6 +1,7 @@
 namespace SpaceDeck.UX
 {
     using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Instances;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace SpaceDeck.UX
             this.Rewards = null;
         }
 
-        public void GainReward(RewardPrototype reward)
+        public void GainReward(LinkedRewardInstance reward)
         {
             this.CentralGameStateControllerInstance.GameplayState.Gain(reward);
         }

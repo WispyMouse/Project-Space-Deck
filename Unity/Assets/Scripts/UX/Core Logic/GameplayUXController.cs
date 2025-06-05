@@ -672,7 +672,7 @@ namespace SpaceDeck.UX
         {
             if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.ShopEncounter)
             {
-                this.ShowShopPanel(this.CentralGameStateControllerInstance.GameplayState.GetShopFromCurrentEncounter());
+                this.ShowShopPanel(this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState.ShopEntries);
             }
             else if (this.CentralGameStateControllerInstance.GameplayState.CurrentCampaignState == WellknownCampaignStates.DialogueEncounter)
             {

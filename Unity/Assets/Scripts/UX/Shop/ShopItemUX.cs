@@ -16,7 +16,7 @@ namespace SpaceDeck.UX
 
     public class ShopItemUX : MonoBehaviour
     {
-        public IShopEntry RepresentingEntry { get; set; }
+        public LinkedShopEntry RepresentingEntry { get; set; }
 
         [SerializeReference]
         private RewardCardUX RewardCardPF;
@@ -46,35 +46,16 @@ namespace SpaceDeck.UX
             this.OnClickDelegate = onClickDelegate;
             this.RepresentCosts(toRepresent.Costs, mutator);
 
-            switch (toRepresent.GainedReward.IdentityKind)
+            if (toRepresent.LinkedGainedReward != null)
             {
-                case RewardPrototype.RewardIdentityKind.Card:
-                    if (toRepresent.LinkedGainedReward.GainedCards.Count != 1)
-                    {
-                        Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.ShopItemUX, $"Asked to represent a number of cards other than 1, but the system isn't set up for it yet. Arbitrarily using first.");
-                    }
+                if (toRepresent.LinkedGainedReward.GainedCards.Count != 1)
+                {
+                    Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.ShopItemUX, $"Asked to represent a number of cards other than 1, but the system isn't set up for it yet. Arbitrarily using first.");
+                }
 
-                    RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                    thisCard.SetFromCard(toRepresent.LinkedGainedReward.GainedCards[0], (DisplayedCardUX card) => { this.OnClick(); });
-                    thisCard.SetQuantity(toRepresent.LinkedGainedReward.GainedCards.Count());
-                    break;
-                case RewardPrototype.RewardIdentityKind.Artifact:
-                    // RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                    // rewardArtifact.SetFromArtifact(toRepresent.GainedArtifact, (RewardArtifactUX artifact) => { this.OnClick(); }, gainedAmount);
-                    throw new System.NotImplementedException($"Oops, artifacts aren't implemented again yet!");
-                    break;
-                case RewardPrototype.RewardIdentityKind.Currency:
-                    if (toRepresent.LinkedGainedReward.GainedCurrency.Count != 1)
-                    {
-                        Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.ShopItemUX, $"Asked to represent a number of currencies other than 1, but the system isn't set up for it yet. Arbitrarily using something.");
-                    }
-
-                    List<KeyValuePair<Currency, int>> arbitaryOrderedList = toRepresent.LinkedGainedReward.GainedCurrency.ToList();
-                    KeyValuePair<Currency, int> arbitrarilySelectedCurrency = arbitaryOrderedList[0];
-
-                    RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                    rewardCurrency.SetFromCurrency(arbitrarilySelectedCurrency.Key, (RewardCurrencyUX currency) => { this.OnClick(); }, gainedAmount);
-                    break;
+                RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
+                thisCard.SetFromCard(toRepresent.LinkedGainedReward.GainedCards[0], (DisplayedCardUX card) => { this.OnClick(); });
+                thisCard.SetQuantity(toRepresent.LinkedGainedReward.GainedCards.Count());
             }
         }
 
@@ -83,9 +64,9 @@ namespace SpaceDeck.UX
             this.OnClickDelegate.Invoke(this);
         }
 
-        void RepresentCosts(IReadOnlyList<IShopCost> costs, IGameStateMutator mutator)
+        void RepresentCosts(IEnumerable<IShopCost> costs, IGameStateMutator mutator)
         {
-            if (costs.Count == 0)
+            if (costs.Count() == 0)
             {
                 this.CostsLabel.text = "Free!";
                 return;

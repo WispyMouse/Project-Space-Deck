@@ -19,6 +19,7 @@ namespace SpaceDeck.Models.Imports
         public string[] Arguments = Array.Empty<string>();
         public EncounterScriptImport[] DialogueScripts;
         public string[] RewardIdentities = Array.Empty<string>();
+        public LowercaseStringSet[] ShopItems = Array.Empty<LowercaseStringSet>();
 
         public EncounterPrototype GetPrototype(IPickRewardPrototypeProvider pickRewardPrototypeProvider)
         {
@@ -46,6 +47,12 @@ namespace SpaceDeck.Models.Imports
                 rewardIdentities.Add(rewardIdentity);
             }
 
+            List<LowercaseStringSet> shopItems = new List<LowercaseStringSet>();
+            foreach (LowercaseStringSet shopItem in this.ShopItems)
+            {
+                shopItems.Add(shopItem);
+            }
+
             IEnumerable<PickRewardPrototype> rewardPrototypes = pickRewardPrototypeProvider.GetPrototypes(rewardIdentities);
 
             return new EncounterPrototype(this.Id,
@@ -56,7 +63,8 @@ namespace SpaceDeck.Models.Imports
                 this.IsShopEncounter,
                 this.Arguments,
                 encounterScripts,
-                rewardPrototypes);
+                rewardPrototypes,
+                shopItems);
         }
     }
 }

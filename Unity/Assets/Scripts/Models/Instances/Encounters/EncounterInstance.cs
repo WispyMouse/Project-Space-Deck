@@ -13,6 +13,7 @@ namespace SpaceDeck.Models.Instances
     public class EncounterInstance : EncounterState
     {
         public readonly EncounterPrototype Prototype;
+        public readonly IReadOnlyList<LinkedShopEntry> ShopEntries;
 
         public override bool HasEncounterDialogue => this.Prototype.EncounterScripts.Count > 0;
         public override bool IsShopEncounter => this.Prototype.IsShopEncounter;
@@ -63,13 +64,6 @@ namespace SpaceDeck.Models.Instances
             }
 
             return dialogue.ToString();
-        }
-
-        public IReadOnlyList<LinkedShopEntry> GetLinkedShop()
-        {
-            IReadOnlyList<IShopEntry> baseShop = this.GetShop();
-
-            return Array.Empty<LinkedShopEntry>();
         }
     }
 }
