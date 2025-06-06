@@ -64,6 +64,12 @@ namespace SpaceDeck.Models.Databases
         public static LinkedCardInstance GetInstance(LowercaseStringSet criteria, bool exactIdMatchOnly = false)
         {
             CardPrototype matchingPrototype = GetPrototype(criteria, exactIdMatchOnly);
+
+            if (matchingPrototype == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.CardDatabase, $"Could not find card instance that fits criteria '{criteria.ToString()}'");
+            }
+
             return new LinkedCardInstance(matchingPrototype, ElementDatabase.Provider);
         }
 
@@ -93,23 +99,25 @@ namespace SpaceDeck.Models.Databases
 
                 foreach (LowercaseString tag in criteria.Strings)
                 {
-                    if (tag == "[card]")
+                    if (tag == "[card]" || CurrencyDatabase.IsCost(tag))
                     {
                         continue;
                     }
 
+                    LowercaseString trimmedTag = tag.Value.TrimStart('[').TrimEnd(']');
+
                     // Is it in the tags?
-                    if (prototype.Tags.Contains(tag))
+                    if (prototype.Tags.Contains(trimmedTag))
                     {
                         continue;
                     }
                     // Is it the rarity?
-                    else if (prototype.Qualities.GetStringQuality(WellknownQualities.Rarity) == tag)
+                    else if (prototype.Qualities.GetStringQuality(WellknownQualities.Rarity) == trimmedTag)
                     {
                         continue;
                     }
                     // Is it the name?
-                    else if (prototype.Qualities.GetStringQuality(WellknownQualities.Name) == tag)
+                    else if (prototype.Qualities.GetStringQuality(WellknownQualities.Name) == trimmedTag)
                     {
                         continue;
                     }

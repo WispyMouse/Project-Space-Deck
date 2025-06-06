@@ -19,30 +19,37 @@
 		[
 			"[common]",
 			"[card]",
+			"[cost:currency_gold:25]",
 		],
 		[
 			"[common]",
 			"[card]",
+			"[cost:currency_gold:25]",
 		],
 		[
 			"[common]",
 			"[card]",
+			"[cost:currency_gold:30]",
 		],
 		[
 			"[common]",
 			"[card]",
+			"[cost:currency_gold:35]",
 		],
 		[
 			"[uncommon]",
 			"[card]",
+			"[cost:currency_gold:60]",
 		],
 		[
 			"[uncommon]",
 			"[card]",
+			"[cost:currency_gold:75]",
 		],
 		[
 			"[rare]",
 			"[card]",
+			"[cost:currency_gold:150]",
 		],
 	],
 }

@@ -4,6 +4,7 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
@@ -51,7 +52,7 @@ namespace SpaceDeck.Models.Databases
         public LinkedShopEntry GetShopEntry(LowercaseStringSet criteria)
         {
             LinkedRewardInstance reward = RewardDatabase.GetReward(criteria);
-            IEnumerable<IShopCost> shopCosts = RewardDatabase.GetCosts(reward);
+            IEnumerable<IShopCost> shopCosts = RewardDatabase.GetCosts(criteria);
             LinkedShopEntry shopEntry = new LinkedShopEntry(shopCosts, reward);
             return shopEntry;
         }

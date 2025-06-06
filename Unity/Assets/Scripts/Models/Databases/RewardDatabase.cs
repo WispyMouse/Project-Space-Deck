@@ -7,8 +7,10 @@ namespace SpaceDeck.Models.Databases
     using SpaceDeck.Models.Imports;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Models.Prototypes;
+    using SpaceDeck.Tokenization.Evaluatables;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Minimum;
-
+    using SpaceDeck.Utility.Wellknown;
 
     public class RewardDatabase
     {
@@ -99,10 +101,20 @@ namespace SpaceDeck.Models.Databases
             return new LinkedRewardInstance(gainedCards, gainedCurrency);
         }
 
-        public static IEnumerable<IShopCost> GetCosts(LinkedRewardInstance basedOn)
+        public static IEnumerable<IShopCost> GetCosts(LowercaseStringSet basedOn)
         {
-            // TODO!
-            return Array.Empty<IShopCost>();
+            // Expecting some amount of [cost:gold:numericevaluatablevaluestring]
+            List<IShopCost> shopCosts = new List<IShopCost>();
+
+            foreach (LowercaseString tagging in basedOn.Strings)
+            {
+                if (CurrencyDatabase.IsCost(tagging))
+                {
+                    shopCosts.Add(CurrencyDatabase.GetCost(tagging));
+                }
+            }
+
+            return shopCosts;
         }
     }
 }
