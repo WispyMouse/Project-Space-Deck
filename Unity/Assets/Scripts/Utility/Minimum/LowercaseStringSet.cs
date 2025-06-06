@@ -8,7 +8,7 @@ namespace SpaceDeck.Utility.Minimum
     public struct LowercaseStringSet : IEquatable<LowercaseStringSet>
     {
         private readonly HashSet<LowercaseString> _Strings;
-        public IReadOnlyCollection<LowercaseString> Strings => _Strings;
+        public ICollection<LowercaseString> Strings => _Strings;
 
         /// <summary>
         /// If <see cref="Strings"/> contains exactly one item,
@@ -36,7 +36,7 @@ namespace SpaceDeck.Utility.Minimum
             }
         }
 
-        public LowercaseStringSet(List<string> tags)
+        public LowercaseStringSet(IEnumerable<string> tags)
         {
             _Strings = new HashSet<LowercaseString>();
             foreach (string curString in tags)

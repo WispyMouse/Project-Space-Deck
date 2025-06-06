@@ -10,5 +10,6 @@ namespace SpaceDeck.Models.Instances
         IEnumerable<LinkedPickReward> GetRewards(IEnumerable<LowercaseString> ids, RandomDecider<LowercaseString> decider = null);
         IEnumerable<LinkedPickReward> GetRewards(IEnumerable<PickRewardPrototype> prototypes, RandomDecider<LowercaseString> decider = null);
         LinkedRewardInstance GetReward(RewardPrototype rewardPrototype, RandomDecider<LowercaseString> decider = null);
+        LinkedShopEntry GetShopEntry(LowercaseStringSet criteria);
     }
 }

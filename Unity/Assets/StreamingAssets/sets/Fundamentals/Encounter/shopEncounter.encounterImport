@@ -1,0 +1,48 @@
+{
+	"Id": "shopencounter",
+	"Name": "Shop",
+	"Description": "Simple shop encounter",
+	"EnemiesInEncounterById":
+	[
+	],
+	"Tags":
+	[
+		"shop"
+	],
+	"Arguments": [],
+	"EncounterScripts": [],
+	"RewardIdentities":
+	[
+	],
+	"ShopItems":
+	[
+		[
+			"[common]",
+			"[card]",
+		],
+		[
+			"[common]",
+			"[card]",
+		],
+		[
+			"[common]",
+			"[card]",
+		],
+		[
+			"[common]",
+			"[card]",
+		],
+		[
+			"[uncommon]",
+			"[card]",
+		],
+		[
+			"[uncommon]",
+			"[card]",
+		],
+		[
+			"[rare]",
+			"[card]",
+		],
+	],
+}

@@ -93,6 +93,11 @@ namespace SpaceDeck.Models.Databases
 
                 foreach (LowercaseString tag in criteria.Strings)
                 {
+                    if (tag == "[card]")
+                    {
+                        continue;
+                    }
+
                     // Is it in the tags?
                     if (prototype.Tags.Contains(tag))
                     {

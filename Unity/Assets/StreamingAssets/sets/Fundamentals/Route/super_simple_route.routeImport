@@ -38,6 +38,9 @@
 				{
 					"ChoiceNodeKind": "trivialfight"
 				},
+				{
+					"ChoiceNodeKind": "[shop]"
+				},
 			],
 		},
 		{
@@ -53,6 +56,9 @@
 				{
 					"ChoiceNodeKind": "trivialfight"
 				},
+				{
+					"ChoiceNodeKind": "[shop]"
+				},
 			],
 		},
 		{
@@ -67,6 +73,9 @@
 				},
 				{
 					"ChoiceNodeKind": "trivialfight"
+				},
+				{
+					"ChoiceNodeKind": "[shop]"
 				},
 			],
 		},

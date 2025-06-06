@@ -47,5 +47,13 @@ namespace SpaceDeck.Models.Databases
         {
             return RewardDatabase.GetReward(rewardPrototype);
         }
+
+        public LinkedShopEntry GetShopEntry(LowercaseStringSet criteria)
+        {
+            LinkedRewardInstance reward = RewardDatabase.GetReward(criteria);
+            IEnumerable<IShopCost> shopCosts = RewardDatabase.GetCosts(reward);
+            LinkedShopEntry shopEntry = new LinkedShopEntry(shopCosts, reward);
+            return shopEntry;
+        }
     }
 }

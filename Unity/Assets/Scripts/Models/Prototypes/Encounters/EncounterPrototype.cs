@@ -3,6 +3,7 @@ namespace SpaceDeck.Models.Prototypes
     using SpaceDeck.Utility.Minimum;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class EncounterPrototype
     {
@@ -11,7 +12,7 @@ namespace SpaceDeck.Models.Prototypes
         public readonly string Description;
         public readonly HashSet<LowercaseString> EncounterTags = new HashSet<LowercaseString>();
         public readonly IEnumerable<LowercaseStringSet> EnemiesInEncounterById = new List<LowercaseStringSet>();
-        public readonly bool IsShopEncounter;
+        public bool IsShopEncounter => ShopItems.Count() != 0;
         public readonly IEnumerable<string> Arguments = new List<string>();
         public readonly Dictionary<LowercaseString, EncounterScript> EncounterScripts = new Dictionary<LowercaseString, EncounterScript>();
         public readonly IEnumerable<PickRewardPrototype> Rewards = new List<PickRewardPrototype>();
@@ -23,7 +24,6 @@ namespace SpaceDeck.Models.Prototypes
             string description,
             HashSet<LowercaseString> encounterTags,
             IReadOnlyList<LowercaseStringSet> enemiesInEncounterById,
-            bool isShopEncounter,
             IReadOnlyList<string> arguments,
             IEnumerable<EncounterScript> encounterScripts,
             IEnumerable<PickRewardPrototype> rewards,
@@ -34,7 +34,6 @@ namespace SpaceDeck.Models.Prototypes
             this.Description = description;
             this.EncounterTags = encounterTags;
             this.EnemiesInEncounterById = enemiesInEncounterById;
-            this.IsShopEncounter = isShopEncounter;
             this.Arguments = arguments;
             this.Rewards = rewards;
             this.ShopItems = shopItems;

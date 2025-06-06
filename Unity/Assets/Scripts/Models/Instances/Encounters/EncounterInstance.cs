@@ -28,6 +28,14 @@ namespace SpaceDeck.Models.Instances
             this.EncounterEntities.AddRange(entityProvider.GetEntities(this.Prototype.EnemiesInEncounterById));
             this.EncounterRewards.AddRange(rewardProvider.GetRewards(this.Prototype.Rewards));
 
+            List<LinkedShopEntry> shopEntries = new List<LinkedShopEntry>();
+            foreach (LowercaseStringSet shopItem in prototype.ShopItems)
+            {
+                LinkedShopEntry shopEntry = rewardProvider.GetShopEntry(shopItem);
+                shopEntries.Add(shopEntry);
+            }
+            this.ShopEntries = shopEntries;
+
             if (!this.IsShopEncounter && !this.HasEncounterDialogue && this.EncounterEntities.Count == 0)
             {
                 Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.DatabaseImportCompletion, $"Encounter with prototype id '{this.EncounterId}' is labeled as a combat encounter, but has no entities in it.");

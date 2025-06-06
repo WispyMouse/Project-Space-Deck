@@ -1,5 +1,6 @@
 namespace SpaceDeck.Models.Databases
 {
+    using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using SpaceDeck.GameState.Minimum;
@@ -60,6 +61,23 @@ namespace SpaceDeck.Models.Databases
             PickRewardData.Clear();
         }
 
+        public static LinkedRewardInstance GetReward(LowercaseStringSet criteria)
+        {
+            List<LinkedCardInstance> gainedCards = new List<LinkedCardInstance>();
+            Dictionary<Currency, int> gainedCurrency = new Dictionary<Currency, int>();
+
+            if (criteria.Strings.Contains("[card]"))
+            {
+                gainedCards.Add(CardDatabase.GetInstance(criteria));
+            }
+            else
+            {
+                // oops todo
+            }
+
+            return new LinkedRewardInstance(gainedCards, gainedCurrency);
+        }
+
         public static LinkedRewardInstance GetReward(RewardPrototype rewardPrototype)
         {
             List<LinkedCardInstance> gainedCards = new List<LinkedCardInstance>();
@@ -79,6 +97,12 @@ namespace SpaceDeck.Models.Databases
             }
 
             return new LinkedRewardInstance(gainedCards, gainedCurrency);
+        }
+
+        public static IEnumerable<IShopCost> GetCosts(LinkedRewardInstance basedOn)
+        {
+            // TODO!
+            return Array.Empty<IShopCost>();
         }
     }
 }
