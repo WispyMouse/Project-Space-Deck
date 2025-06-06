@@ -510,7 +510,16 @@ namespace SpaceDeck.GameState.Execution
 
         public bool CanAfford(IEnumerable<IShopCost> costs)
         {
-            throw new NotImplementedException();
+            foreach (IShopCost cost in costs)
+            {
+                int amount = cost.GetCost(this);
+                int amountOwned = GetCurrency(cost.CurrencyType);
+                if (amount > amountOwned)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public LowercaseString GetCardZone(CardInstance card)
