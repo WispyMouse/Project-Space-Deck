@@ -47,6 +47,8 @@ namespace SpaceDeck.UX
             this.CentralGameStateControllerInstance.GameplayState.PurchaseShopItem(selectedItem.RepresentingEntry);
             this.ActiveShopItemUXs.Remove(selectedItem);
             Destroy(selectedItem.gameObject);
+
+            UpdateAffordability();
         }
 
         public void SetShopItems(IReadOnlyList<LinkedShopEntry> shopEntries)
@@ -58,6 +60,16 @@ namespace SpaceDeck.UX
                 ShopItemUX shopEntry = Instantiate(this.ShopItemUXPF, this.ShopItemUXHolderTransform);
                 shopEntry.SetFromEntry(this.CentralGameStateControllerInstance.GameplayState, curEntry, ShopItemSelected);
                 this.ActiveShopItemUXs.Add(shopEntry);
+            }
+
+            UpdateAffordability();
+        }
+
+        private void UpdateAffordability()
+        {
+            foreach (ShopItemUX item in this.ActiveShopItemUXs)
+            {
+                item.UpdateAffordability(this.CentralGameStateControllerInstance.GameplayState);
             }
         }
     }

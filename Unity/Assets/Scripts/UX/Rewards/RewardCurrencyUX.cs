@@ -24,6 +24,7 @@ namespace SpaceDeck.UX
         [SerializeReference]
         public LayoutElement OwnLayoutElement;
 
+        public LinkedRewardInstance RewardInstance;
         public Currency RepresentedCurrency;
         public int RewardAmount;
 
@@ -31,8 +32,9 @@ namespace SpaceDeck.UX
 
         public bool ShouldShowBase => true;
 
-        public void SetFromCurrency(Currency basedOn, Action<RewardCurrencyUX> onClick, int amount)
+        public void SetFromCurrency(LinkedRewardInstance basedOnReward, Currency basedOn, Action<RewardCurrencyUX> onClick, int amount)
         {
+            this.RewardInstance = basedOnReward;
             this.RepresentedCurrency = basedOn;
 
             if (SpriteLookup.TryGetSprite(basedOn.Id, out Sprite currencySprite))

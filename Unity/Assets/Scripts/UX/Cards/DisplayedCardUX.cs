@@ -7,6 +7,7 @@ namespace SpaceDeck.UX
     using UnityEngine.EventSystems;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX;
+    using SpaceDeck.Models.Instances;
 
     public class DisplayedCardUX : MonoBehaviour, IMouseHoverListener
     {

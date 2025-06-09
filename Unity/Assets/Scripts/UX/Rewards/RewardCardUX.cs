@@ -3,6 +3,8 @@ namespace SpaceDeck.UX
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using SpaceDeck.GameState.Minimum;
+    using SpaceDeck.Models.Instances;
     using UnityEngine;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
@@ -19,6 +21,12 @@ namespace SpaceDeck.UX
         private TMPro.TMP_Text QuantityLabel;
 
         public override bool ShouldShowBase { get; } = false;
+        public LinkedRewardInstance RewardInstance { get; private set; }
+
+        public void SetFromCard(LinkedRewardInstance rewardInstance, CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null)
+        {
+            this.RewardInstance = rewardInstance;
+        }
 
         public void SetQuantity(int value)
         {
@@ -41,7 +49,6 @@ namespace SpaceDeck.UX
 
         public override void Clicked()
         {
-            this.HideCardAfterBeingPicked();
             base.Clicked();
         }
 

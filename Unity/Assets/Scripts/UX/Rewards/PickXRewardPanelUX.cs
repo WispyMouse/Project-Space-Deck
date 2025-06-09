@@ -60,15 +60,15 @@ namespace SpaceDeck.UX
                 {
                     case RewardIdentityKind.Currency:
                         RewardCurrencyUX rewardCurrency = Instantiate(this.RewardCurrencyPF, this.RewardCardHolder);
-                        rewardCurrency.SetFromCurrency(CurrencyDatabase.Get(pulledOutSlot.Id), (RewardCurrencyUX currency) => { this.RewardSlotChosen(rewardInstance); }, amountToAward);
+                        rewardCurrency.SetFromCurrency(rewardInstance, CurrencyDatabase.Get(pulledOutSlot.Id), (RewardCurrencyUX currency) => { this.RewardSlotChosen(rewardCurrency); }, amountToAward);
                         break;
                     case RewardIdentityKind.Artifact:
                         RewardArtifactUX rewardArtifact = Instantiate(this.RewardArtifactPF, this.RewardCardHolder);
-                        rewardArtifact.SetFromArtifact(StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this.RewardSlotChosen(rewardInstance); }, amountToAward);
+                        rewardArtifact.SetFromArtifact(rewardInstance, StatusEffectDatabase.GetInstance(pulledOutSlot.Id), (RewardArtifactUX artifact) => { this.RewardSlotChosen(rewardArtifact); }, amountToAward);
                         break;
                     case RewardIdentityKind.Card:
                         RewardCardUX thisCard = Instantiate(this.RewardCardPF, this.RewardCardHolder);
-                        thisCard.SetFromCard(CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this.RewardSlotChosen(rewardInstance); });
+                        thisCard.SetFromCard(rewardInstance, CardDatabase.GetInstance(pulledOutSlot.Id), (DisplayedCardUX card) => { this.RewardSlotChosen(thisCard); });
                         thisCard.SetQuantity(amountToAward);
                         break;
                 }
@@ -88,9 +88,27 @@ namespace SpaceDeck.UX
             }
         }
 
-        public void RewardSlotChosen(LinkedRewardInstance rewards)
+        public void RewardSlotChosen(RewardCurrencyUX currencyReward)
         {
-            this.RewardsPanel.GainReward(rewards);
+            this.GainReward(currencyReward.RewardInstance);
+            Destroy(currencyReward.gameObject);
+        }
+
+        public void RewardSlotChosen(RewardArtifactUX artifactReward)
+        {
+            this.GainReward(artifactReward.RewardInstance);
+            Destroy(artifactReward.gameObject);
+        }
+
+        public void RewardSlotChosen(RewardCardUX cardReward)
+        {
+            this.GainReward(cardReward.RewardInstance);
+            Destroy(cardReward.gameObject);
+        }
+
+        private void GainReward(LinkedRewardInstance rewardInstance)
+        {
+            this.RewardsPanel.GainReward(rewardInstance);
             this.PicksRemaining--;
 
             if (this.PicksRemaining <= 0)

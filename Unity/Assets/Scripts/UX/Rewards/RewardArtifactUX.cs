@@ -8,10 +8,12 @@ namespace SpaceDeck.UX
     using UnityEngine.UI;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.UX.AssetLookup;
+    using SpaceDeck.Models.Instances;
 
     public class RewardArtifactUX : MonoBehaviour, IMouseHoverListener
     {
         public AppliedStatusEffect RepresentedArtifact { get; private set; }
+        public LinkedRewardInstance RewardInstance { get; private set; }
 
         [SerializeReference]
         private Image ImageRepresentation;
@@ -29,9 +31,10 @@ namespace SpaceDeck.UX
 
         private Action<RewardArtifactUX> OnClicked {get; set;} 
 
-        public void SetFromArtifact(AppliedStatusEffect artifact, Action<RewardArtifactUX> onClick, int amount)
+        public void SetFromArtifact(LinkedRewardInstance basedOnReward, AppliedStatusEffect artifact, Action<RewardArtifactUX> onClick, int amount)
         {
             this.RepresentedArtifact = artifact;
+            this.RewardInstance = basedOnReward;
 
             if (SpriteLookup.TryGetSprite(artifact.Id, out Sprite sprite))
             {
