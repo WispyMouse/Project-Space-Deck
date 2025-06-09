@@ -29,6 +29,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.GameState.Deltas;
     using SpaceDeck.Utility.Unity;
     using SpaceDeck.Tokenization.Functions;
+    using SpaceDeck.Models.Instances;
 
     public class StatusEffectsTests : EditModeTestBase
     {
@@ -49,10 +50,9 @@ namespace SpaceDeck.Tests.EditMode.Execution
             StatusEffectDatabase.RegisterStatusEffectPrototype(new StatusEffectPrototype(debugStatusId, debugStatusId.ToString()));
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{debugStatusId} {stacksToApply}]";
@@ -99,12 +99,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 });
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
-            encounter.EncounterEntities.Add(targetingEntity);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
 
             // ACT
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{debugStatusId} {stacksToApply}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
@@ -163,14 +162,13 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ARRANGE
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             gameState.ModStatusEffectStacks(targetingEntity, import.Id, startingPoison);
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, startingHealth);
-            encounter.EncounterEntities.Add(targetingEntity);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
 
             // ACT AND ASSERT
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // The poison applies at the end of the entity's turn

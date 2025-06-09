@@ -25,6 +25,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
     using SpaceDeck.Models.Databases;
     using SpaceDeck.GameState.Deltas;
+    using SpaceDeck.Models.Instances;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -61,11 +62,10 @@ namespace SpaceDeck.Tests.EditMode.Execution
             RuleReference.RegisterRule(zeroLifeIsDeathRule);
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, healthAmount);
-            encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:{healthAmount}]";
@@ -95,7 +95,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
             GameState gameState = new GameState();
 
             // ACT
-            gameState.StartEncounterByState(new EncounterState());
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty);
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT

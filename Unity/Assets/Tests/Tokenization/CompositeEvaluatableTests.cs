@@ -25,6 +25,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
     using SpaceDeck.Utility.Unity;
+    using SpaceDeck.Models.Instances;
 
     public class CompositeEvaluatableTests
     {
@@ -93,9 +94,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
 
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
@@ -183,9 +184,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
 
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
@@ -213,9 +214,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
-            
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
+
+            gameState.StartEncounter(encounter);
 
             // ACT
             gameState.StartConsideringPlayingCard(instance);
@@ -250,9 +251,9 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             CardInstance instance = CardDatabase.GetInstance(import.Id);
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
 
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             HashSet<int> allNumbers = new HashSet<int>();
 
             // ACT

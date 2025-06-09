@@ -84,7 +84,7 @@ namespace SpaceDeck.UX
 
         private Entity previousCombatTurnTaker { get; set; } = null;
         public GameState CurrentGameState => this.CentralGameStateControllerInstance?.GameplayState;
-        public EncounterState CurrentEncounterState => this.CurrentGameState.CurrentEncounterState;
+        public EncounterInstance CurrentEncounterState => this.CurrentGameState.CurrentEncounterState;
 
 
         private void Awake()
@@ -660,7 +660,7 @@ namespace SpaceDeck.UX
             this.CardBrowserUXInstance.SetFromCards(cardsInExile);
         }
 
-        public void EncounterDialogueComplete(EncounterState completed)
+        public void EncounterDialogueComplete(EncounterInstance completed)
         {
             if (completed == this.CentralGameStateControllerInstance.GameplayState.CurrentEncounterState)
             {

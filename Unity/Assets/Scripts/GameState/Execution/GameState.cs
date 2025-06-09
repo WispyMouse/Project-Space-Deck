@@ -162,6 +162,11 @@ namespace SpaceDeck.GameState.Execution
 
         public void EndCurrentEntityTurn()
         {
+            if(this.EntityTurnTakerCalculator == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.GameState, $"Asked to end the current entity turn, but there's no turn taker calculator.");
+            }
+
             if (!this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this, out Entity currentTurn))
             {
                 Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.GameState, $"Asked to end the current entity turn, but no entity was identified with {nameof(this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn)}.");
@@ -235,13 +240,6 @@ namespace SpaceDeck.GameState.Execution
             }
 
             return true;
-        }
-
-        public EncounterInstance StartEncounterByState(EncounterState encounterState)
-        {
-            EncounterInstance wrappedInstance = new EncounterInstance(encounterState);
-            this.StartEncounter(wrappedInstance);
-            return wrappedInstance;
         }
 
 

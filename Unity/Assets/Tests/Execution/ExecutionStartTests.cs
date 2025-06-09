@@ -29,6 +29,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Utility.Logging;
     using UnityEngine.TestTools;
     using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+    using SpaceDeck.Models.Instances;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -99,11 +100,10 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
-            encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -131,11 +131,10 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EvaluatablesReference.SubscribeEvaluatable(new ConstantNumericEvaluatableParser());
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
-            encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:1]";
@@ -169,11 +168,10 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(linkedTokenSet.Scopes.Count == 1 && linkedTokenSet.Scopes[0].Tokens.Count == 1 && linkedTokenSet.Scopes[0].Tokens[0] is DamageLinkedToken damageToken, $"Expecting linking to result in a single token of the {nameof(DamageLinkedToken)} type.");
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
-            encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
+            gameState.StartEncounter(encounter);
 
             ExecutionAnswerSet answers = new ExecutionAnswerSet(new EffectTargetExecutionAnswer(linkedTokenSet.GetQuestions()[0], targetingEntity), targetingEntity);
             Assert.True(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, answers, gameState, out GameStateDelta generatedDelta), "Should be able to create a game state delta from provided context.");
@@ -203,12 +201,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";
@@ -244,28 +241,24 @@ namespace SpaceDeck.Tests.EditMode.Execution
             EvaluatablesReference.SubscribeEvaluatable(new FoeTargetEvaluatableParser());
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
 
             // Make a player to use a card
             Entity playerEntity = new Entity();
             playerEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             playerEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(playerEntity);
 
             // Add three enemies, so there's some ambiguity on who to target
             Entity entityOne = new Entity();
             entityOne.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             entityOne.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(entityOne);
             Entity entityTwoThisOneIsTheTarget = new Entity();
             entityTwoThisOneIsTheTarget.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             entityTwoThisOneIsTheTarget.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(entityTwoThisOneIsTheTarget);
             Entity entityThree = new Entity();
             entityThree.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
             entityThree.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(entityThree);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { playerEntity, entityOne, entityTwoThisOneIsTheTarget, entityThree });
+            gameState.StartEncounter(encounter);
 
             // ACT
             string damageArgumentTokenTextString = $"[TARGET:FOE][{damageScriptingCommand.Identifier}:1]";
@@ -318,12 +311,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(EvaluatablesReference.TryGetNumericEvaluatableValue($"COUNTSTACKS(SELF,{import.Id})", out stacksEvaluatable), "Should be able to parse the count token.");
             EvaluateAndLogNumericLinkedToken evaluateAndLogNumericLinkedToken = new EvaluateAndLogNumericLinkedToken(stacksEvaluatable, setReportedValue);
             GameState gameState = new GameState();
-            EncounterState encounterState = new EncounterState();
 
             // ACT
             Entity toStack = new Entity();
-            encounterState.EncounterEntities.Add(toStack);
-            gameState.StartEncounterByState(encounterState);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { toStack });
+            gameState.StartEncounter(encounter);
             gameState.ModStatusEffectStacks(toStack, import.Id, numberOfStacks);
             gameState.EntityPerformsAction(toStack, evaluateAndLogNumericLinkedToken);
 
@@ -368,12 +360,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ARRANGE
             CardInstance instance = CardDatabase.GetInstance(cardImport.Id);
             GameState gameState = new GameState();
-            EncounterState encounterState = new EncounterState();
             Entity toStack = new Entity();
-            encounterState.EncounterEntities.Add(toStack);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { toStack });
 
             // ACT
-            gameState.StartEncounterByState(encounterState);
+            gameState.StartEncounter(encounter);
             gameState.StartConsideringPlayingCard(instance);
             gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(toStack));
             PendingResolveExecutor.ResolveAll(gameState);
@@ -417,11 +408,12 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ARRANGE
             GameState gameState = new GameState();
-            EncounterState encounterState = new EncounterState();
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
+            gameState.StartEncounter(encounter);
             CardInstance instance = CardDatabase.GetInstance(cardImport.Id);
 
             // ACT
-            gameState.StartEncounterByState(encounterState);
+            gameState.StartEncounter(encounter);
             gameState.StartConsideringPlayingCard(instance);
             Assert.IsTrue(gameState.TryExecuteCurrentCard(new ExecutionAnswerSet(user: null)), "Should be able to execute question-less card.");
             PendingResolveExecutor.ResolveAll(gameState);

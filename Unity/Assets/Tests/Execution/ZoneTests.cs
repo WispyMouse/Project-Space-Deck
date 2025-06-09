@@ -41,7 +41,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             RuleReference.RegisterRule(new PlayedCardsAreDiscardedRule());
             RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             CardImport import = new CardImport()
             {
                 Id = nameof(PlayedCard_IsDiscarded),
@@ -51,7 +50,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
+            gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -76,7 +76,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
             ScriptingCommandReference.RegisterScriptingCommand(new SetDestinationScriptingCommand());
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
             CardImport import = new CardImport()
             {
                 Id = nameof(PlayedCard_SetExileDestination_Moved),
@@ -86,7 +86,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -113,7 +113,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
             ScriptingCommandReference.RegisterScriptingCommand(new SetDestinationScriptingCommand());
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             CardImport import = new CardImport()
             {
                 Id = nameof(PlayedCard_SetHandDestination_Moved),
@@ -123,7 +122,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
+            gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -148,7 +148,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ARRANGE
             ScriptingCommandReference.RegisterScriptingCommand(new SetDestinationScriptingCommand());
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             CardImport import = new CardImport()
             {
                 Id = nameof(ExiledCards_DoNotShuffleIn),
@@ -158,7 +157,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.RegisterCardPrototype(cardPrototype);
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
+            gameState.StartEncounter(encounter);
 
             // ACT
             for (int ii = 0; ii < cardsInDeck; ii++)
@@ -218,8 +218,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
             gameState.AddCard(addedCard, WellknownZones.Campaign);
 
             // ACT
-            EncounterState encounter = new EncounterState();
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT

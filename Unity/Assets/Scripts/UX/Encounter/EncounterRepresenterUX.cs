@@ -12,6 +12,7 @@ namespace SpaceDeck.UX
     using SpaceDeck.UX;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
+    using SpaceDeck.Models.Instances;
 
     public class EncounterRepresenterUX : MonoBehaviour
     {
@@ -33,9 +34,9 @@ namespace SpaceDeck.UX
         private EncounterDialogueButtonUX DialogueButtonPF;
 
         private LowercaseString currentEncounterIndex = WellknownEncounters.Intro;
-        private EncounterState representingModel = null;
+        private EncounterInstance representingModel = null;
 
-        public void RepresentEncounter(EncounterState toRepresent, IGameStateMutator mutator)
+        public void RepresentEncounter(EncounterInstance toRepresent, IGameStateMutator mutator)
         {
             this.representingModel = toRepresent;
             this.NameLabel.text = toRepresent.EncounterName;

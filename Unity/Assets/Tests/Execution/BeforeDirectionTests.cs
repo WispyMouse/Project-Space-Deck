@@ -26,6 +26,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.GameState.Deltas;
     using SpaceDeck.Tokenization.Functions;
     using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+    using SpaceDeck.Models.Instances;
 
     public class BeforeDirectionTests : EditModeTestBase
     {
@@ -102,12 +103,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ARRANGE
 
             GameState gameState = new GameState();
-            EncounterState encounterState = new EncounterState();
             Entity targetingEntity = new Entity();
             targetingEntity.Qualities.SetNumericQuality(WellknownQualities.Health, data.StartingHealth);
             gameState.ModStatusEffectStacks(targetingEntity, import.Id, data.DamageReduction);
-            encounterState.EncounterEntities.Add(targetingEntity);
-            gameState.StartEncounterByState(encounterState);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { targetingEntity });
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             string damageArgumentTokenTextString = $"[{damageScriptingCommand.Identifier}:{data.Damage}]";

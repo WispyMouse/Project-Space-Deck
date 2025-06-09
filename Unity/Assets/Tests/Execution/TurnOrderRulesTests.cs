@@ -48,21 +48,19 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             RuleReference.RegisterRule(new EncounterStartPlayerTurnRule());
             RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
 
             Entity factionOneEntityFirst = new Entity();
             factionOneEntityFirst.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(factionOneEntityFirst);
             Entity factionOneEntitySecond = new Entity();
             factionOneEntitySecond.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(factionOneEntitySecond);
 
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(factionTwoEntity);
+
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { factionOneEntityFirst, factionOneEntitySecond, factionTwoEntity });
 
             // ACT
-            encounter = gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
@@ -82,21 +80,18 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
             RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
 
             Entity factionOneEntityFirst = new Entity();
             factionOneEntityFirst.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(factionOneEntityFirst);
             Entity factionOneEntitySecond = new Entity();
             factionOneEntitySecond.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(factionOneEntitySecond);
 
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { factionOneEntityFirst, factionOneEntitySecond, factionTwoEntity });
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
@@ -120,18 +115,16 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             RuleReference.RegisterRule(new FactionEndTurnNextFactionRule());
 
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
 
             Entity factionOneEntity = new Entity();
             factionOneEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(factionOneEntity);
 
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(factionTwoEntity);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { factionOneEntity, factionTwoEntity });
 
             // ACT
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             Debug.Log($"[{nameof(FactionTurnEnd_NextFaction)}] Upon starting the encounter, the first faction to move is '{gameState.FactionTurnTakerCalculator.GetCurrentFaction()}'.");
             gameState.EndCurrentEntityTurn();
@@ -157,18 +150,15 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
             RuleReference.RegisterRule(new FactionEndTurnNextFactionRule());
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
 
             Entity factionOneEntity = new Entity();
             factionOneEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(factionOneEntity);
-
             Entity factionTwoEntity = new Entity();
             factionTwoEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(factionTwoEntity);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { factionOneEntity, factionTwoEntity });
 
             // ACT
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
@@ -200,14 +190,12 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 gameState.AddCard(new TestCard(), WellknownZones.Campaign);
             }
 
-            EncounterState encounter = new EncounterState();
-
             Entity playerEntity = new Entity();
             playerEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(playerEntity);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { playerEntity });
 
             // ACT
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
@@ -238,14 +226,12 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
                 gameState.AddCard(new TestCard(), WellknownZones.Campaign);
             }
 
-            EncounterState encounter = new EncounterState();
-
             Entity playerEntity = new Entity();
             playerEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
-            encounter.EncounterEntities.Add(playerEntity);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { playerEntity });
 
             // ACT
-            gameState.StartEncounterByState(encounter);
+            gameState.StartEncounter(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);

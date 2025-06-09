@@ -53,7 +53,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
             bool debugValue = false;
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             CardPrototype cardPrototype = new CardPrototype(
                 nameof(PlayCard_NoQuestions_DebugExecutes),
                 LinkedTokenMaker.CreateTokenListFromLinkedTokens(
@@ -62,7 +61,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
                 elementalGain: null
                 );
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty);
+            gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
 
             // ACT
@@ -89,7 +89,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
             RuleReference.RegisterRule(new MovePlayedCardToDestinationRule());
             bool debugValue = false;
             GameState gameState = new GameState();
-            EncounterState encounter = new EncounterState();
             CardPrototype cardPrototype = new CardPrototype(
                 nameof(PlayCard_OneQuestion_AutoExecutes),
                 LinkedTokenMaker.CreateTokenListFromLinkedTokens(
@@ -98,8 +97,9 @@ namespace SpaceDeck.Tests.EditMode.Execution
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             Entity foeEntity = new Entity();
             foeEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            encounter.EncounterEntities.Add(foeEntity);
-            gameState.StartEncounterByState(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { foeEntity });
+            gameState.StartEncounter(encounter);
+            gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
             IndexChoosingAnswerer answerer = new IndexChoosingAnswerer(0);
 
