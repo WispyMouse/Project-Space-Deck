@@ -31,14 +31,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
     /// These tests cover the experience of a player attempting to play a card.
     /// This is to ensure that "playing cards" functions appropriately.
     /// </summary>
-    public class PlayingCardsTests
+    public class PlayingCardsTests : EditModeTestBase
     {
-        [TearDown]
-        public void TearDown()
-        {
-            CommonTestUtility.TearDownDatabases();
-        }
-
         /// <summary>
         /// Creates a card that changes a variable.
         /// This validates that playing the card does execute things.
@@ -95,10 +89,11 @@ namespace SpaceDeck.Tests.EditMode.Execution
                     new ExecuteWithTargetLinkedToken(new ChangeTargetEvaluatableValue(FoeTargetProvider.Instance), (IGameStateMutator mutator) => { debugValue = true; }))
                 );
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
+            Entity userEntity = new Entity();
+            userEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
             Entity foeEntity = new Entity();
             foeEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Foe);
-            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { foeEntity });
-            gameState.StartEncounter(encounter);
+            EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { userEntity, foeEntity });
             gameState.StartEncounter(encounter);
             gameState.AddCard(cardInstance, WellknownZones.Hand);
             IndexChoosingAnswerer answerer = new IndexChoosingAnswerer(0);

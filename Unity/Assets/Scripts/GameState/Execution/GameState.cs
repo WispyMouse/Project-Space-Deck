@@ -704,7 +704,7 @@ namespace SpaceDeck.GameState.Execution
         /// </summary>
         public Entity GetPlayerEntity()
         {
-            foreach (Entity curEntity in this.PersistentEntities)
+            foreach (Entity curEntity in this.AllEntities)
             {
                 if (this.GetNumericQuality(curEntity, WellknownQualities.Faction) == WellknownFactions.Player)
                 {

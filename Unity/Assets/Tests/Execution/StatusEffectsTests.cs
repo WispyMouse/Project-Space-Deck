@@ -55,7 +55,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             gameState.StartEncounter(encounter);
 
             // ACT
-            string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{debugStatusId} {stacksToApply}]";
+            string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{stacksToApply} {debugStatusId}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
@@ -104,7 +104,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ACT
             gameState.StartEncounter(encounter);
-            string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{debugStatusId} {stacksToApply}]";
+            string damageArgumentTokenTextString = $"[{applyStatusEffectStacksScriptingCommand.Identifier}:{stacksToApply} {debugStatusId}]";
             Assert.True(TokenTextMaker.TryGetTokenTextFromString(damageArgumentTokenTextString, out TokenText oneArgumentTokenText), "Should be able to parse Token Text String into Token Text.");
             Assert.True(ParsedTokenMaker.TryGetParsedTokensFromTokenText(oneArgumentTokenText, out ParsedTokenList parsedSet), "Should be able to parse tokens from token text.");
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
@@ -153,7 +153,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             import.Reactors.Add(new ReactorImport()
             {
                 TriggerOnEventIds = new List<string>() { WellknownGameStateEvents.EntityTurnEnded },
-                TokenText = $"[TARGET:SELF][DAMAGE:COUNTSTACKS(self,{import.Id})][APPLYSTATUSEFFECTSTACKS:{import.Id} -1]",
+                TokenText = $"[TARGET:SELF][DAMAGE:COUNTSTACKS(self,{import.Id})][APPLYSTATUSEFFECTSTACKS:-1 {import.Id}]",
                 Direction = GameStateEventTrigger.TriggerDirection.After
             });
             StatusEffectDatabase.RegisterStatusEffect(import);
