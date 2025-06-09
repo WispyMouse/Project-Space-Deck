@@ -26,6 +26,7 @@ namespace SpaceDeck.UX
         public void SetFromCard(LinkedRewardInstance rewardInstance, CardInstance toSet, Action<DisplayedCardUX> inCardSelectedAction = null)
         {
             this.RewardInstance = rewardInstance;
+            this.SetFromCard(toSet, inCardSelectedAction);
         }
 
         public void SetQuantity(int value)

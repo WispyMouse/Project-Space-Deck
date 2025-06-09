@@ -22,6 +22,10 @@
 	],
 	"StartingCurrencies":
 	[
+		{
+			"Key": "currency_gold",
+			"Value": 100,
+		},
 	],
 	"Choices":
 	[

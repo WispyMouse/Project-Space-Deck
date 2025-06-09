@@ -543,6 +543,7 @@ namespace SpaceDeck.UX
         {
             this.CancelAllSelections();
             this.CentralGameStateControllerInstance.RouteChosen(chosenRoute);
+            this.UpdateUX();
         }
 
         public void ShowCampaignChooser()
