@@ -103,6 +103,7 @@ namespace SpaceDeck.UX
             if (this.GameplayState.CurrentCampaignState != WellknownCampaignStates.CombatEncounter)
             {
                 // Do nothing if not in a combat encounter
+                Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.GameplayUXController, $"Asked to end turn, but it's not a combat.");
                 return;
             }
 

@@ -28,6 +28,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
     using SpaceDeck.Utility.Unity;
     using SpaceDeck.Utility.Logging;
     using UnityEngine.TestTools;
+    using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
     /// <summary>
     /// This class holds tests that were made as part of a
@@ -245,6 +246,12 @@ namespace SpaceDeck.Tests.EditMode.Execution
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
 
+            // Make a player to use a card
+            Entity playerEntity = new Entity();
+            playerEntity.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
+            playerEntity.Qualities.SetNumericQuality(WellknownQualities.Faction, WellknownFactions.Player);
+            encounter.EncounterEntities.Add(playerEntity);
+
             // Add three enemies, so there's some ambiguity on who to target
             Entity entityOne = new Entity();
             entityOne.Qualities.SetNumericQuality(WellknownQualities.Health, 100);
@@ -267,7 +274,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             Assert.True(LinkedTokenMaker.TryGetLinkedTokenList(parsedSet, out LinkedTokenList linkedTokenSet), "Should be able to link tokens.");
 
             ExecutionAnswerSet answers = null;
-            new IndexChoosingAnswerer(1).HandleQuestions(new QuestionAnsweringContext(gameState, entityOne), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
+            new IndexChoosingAnswerer(1).HandleQuestions(new QuestionAnsweringContext(gameState, playerEntity), linkedTokenSet.GetQuestions(), (ExecutionAnswerSet handledAnswer) =>
             {
                 answers = handledAnswer;
             });

@@ -24,6 +24,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     using SpaceDeck.Models.Databases;
     using SpaceDeck.Models.Instances;
     using SpaceDeck.Tests.EditMode.Common.TestFixtures;
+    using SpaceDeck.Tests.EditMode.Execution;
 
     /// <summary>
     /// Tests relating to the turn-order ruleset, used in Slay the Spire games.
@@ -34,15 +35,8 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
     /// - Entity Turn End: Pick the next faction turn member to start turn. Otherwise, end fation turn.
     /// - Faction Turn End: Make next faction take turn.
     /// </summary>
-    public class TurnOrderRulesTests
+    public class TurnOrderRulesTests : EditModeTestBase
     {
-        [TearDown]
-        public void TearDown()
-        {
-            CommonTestUtility.TearDownDatabases();
-        }
-
-
         /// <summary>
         /// When the encounter starts, the first faction should start their turn.
         /// This should lead to it becoming the turn of the first faction member.
@@ -68,7 +62,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             encounter.EncounterEntities.Add(factionTwoEntity);
 
             // ACT
-            gameState.StartEncounterByState(encounter);
+            encounter = gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
 
             // ASSERT
@@ -124,6 +118,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             RuleReference.RegisterRule(new FactionStartsFirstTurnRule());
             RuleReference.RegisterRule(new TurnEndNextAllyOrEndFactionTurnRule());
             RuleReference.RegisterRule(new FactionEndTurnNextFactionRule());
+
             GameState gameState = new GameState();
             EncounterState encounter = new EncounterState();
 
@@ -138,8 +133,10 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
             // ACT
             gameState.StartEncounterByState(encounter);
             PendingResolveExecutor.ResolveAll(gameState);
+            Debug.Log($"[{nameof(FactionTurnEnd_NextFaction)}] Upon starting the encounter, the first faction to move is '{gameState.FactionTurnTakerCalculator.GetCurrentFaction()}'.");
             gameState.EndCurrentEntityTurn();
             PendingResolveExecutor.ResolveAll(gameState);
+            Debug.Log($"[{nameof(FactionTurnEnd_NextFaction)}] Upon ending the first faction entity's turn, the next faction to move is '{gameState.FactionTurnTakerCalculator.GetCurrentFaction()}'.");
 
             // ASSERT
             Assert.AreEqual(WellknownFactions.Foe, gameState.FactionTurnTakerCalculator.GetCurrentFaction(), "It should be the enemy faction's turn.");

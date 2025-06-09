@@ -14,6 +14,7 @@ namespace SpaceDeck.GameState.Execution
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
     /// <summary>
@@ -154,18 +155,20 @@ namespace SpaceDeck.GameState.Execution
 
         public void StartEntityTurn(Entity toStart)
         {
-            Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"Start turn for '{this.GetStringQuality(toStart, WellknownQualities.Name)}'.");
+            Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"Start turn for '{this.GetStringQuality(toStart, WellknownQualities.Name)}' (faction id '{this.GetNumericQuality(toStart, WellknownQualities.Faction, WellknownFactions.UnknownFaction)}')");
             this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnStarted,
                 new ActionExecutor((IGameStateMutator mutator) => { mutator.EntityTurnTakerCalculator.SetCurrentTurnTaker(toStart); })));
         }
 
         public void EndCurrentEntityTurn()
         {
-            if (this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this, out Entity currentTurn))
+            if (!this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn(this, out Entity currentTurn))
             {
-                Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"End turn for '{this.GetStringQuality(currentTurn, WellknownQualities.Name)}'.");
-                this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, currentTurn));
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.GameState, $"Asked to end the current entity turn, but no entity was identified with {nameof(this.EntityTurnTakerCalculator.TryGetCurrentEntityTurn)}.");
             }
+
+            Logging.DebugLog(WellknownLoggingLevels.DebugVerbose, WellknownLoggingCategories.GameState, $"End turn for '{this.GetStringQuality(currentTurn, WellknownQualities.Name)}'.  (faction id '{this.GetNumericQuality(currentTurn, WellknownQualities.Faction, WellknownFactions.UnknownFaction)}')");
+            this.TriggerAndStack(new GameStateEventTrigger(Utility.Wellknown.WellknownGameStateEvents.EntityTurnEnded, currentTurn));
         }
 
         public void EndCurrentFactionTurn()
@@ -234,10 +237,11 @@ namespace SpaceDeck.GameState.Execution
             return true;
         }
 
-        public void StartEncounterByState(EncounterState encounterState)
+        public EncounterInstance StartEncounterByState(EncounterState encounterState)
         {
             EncounterInstance wrappedInstance = new EncounterInstance(encounterState);
             this.StartEncounter(wrappedInstance);
+            return wrappedInstance;
         }
 
 
@@ -245,6 +249,8 @@ namespace SpaceDeck.GameState.Execution
         {
             this.CurrentEncounterState = encounterInstance;
             this.CurrentCampaignState = encounterInstance.GetStartingCampaignState();
+
+            this.SetCampaignState(encounterInstance.GetStartingCampaignState());
 
             this.TriggerAndStack(new GameStateEventTrigger(WellknownGameStateEvents.EncounterStart));
         }
@@ -267,9 +273,9 @@ namespace SpaceDeck.GameState.Execution
                 return this.CardsInDeck;
             }
 
-            if (this.CurrentEncounterState != null && this.CurrentEncounterState.ZonesWithCards.ContainsKey(zone))
+            if (this.CurrentEncounterState != null && this.CurrentEncounterState.ZoneToCards.ContainsKey(zone))
             {
-                return this.CurrentEncounterState.ZonesWithCards[zone];
+                return this.CurrentEncounterState.ZoneToCards[zone];
             }
 
             return Array.Empty<CardInstance>();
@@ -282,18 +288,18 @@ namespace SpaceDeck.GameState.Execution
                 return;
             }
 
-            if (!this.CurrentEncounterState.ZonesWithCards.ContainsKey(WellknownZones.Deck))
+            if (!this.CurrentEncounterState.ZoneToCards.ContainsKey(WellknownZones.Deck))
             {
                 return;
             }
 
-            List<CardInstance> cardsToShuffle = new List<CardInstance>(this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck]);
-            this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck].Clear();
+            List<CardInstance> cardsToShuffle = new List<CardInstance>(this.CurrentEncounterState.ZoneToCards[WellknownZones.Deck]);
+            this.CurrentEncounterState.ZoneToCards[WellknownZones.Deck].Clear();
 
             while (cardsToShuffle.Count > 0)
             {
                 int randomIndex = new Random().Next(cardsToShuffle.Count);
-                this.CurrentEncounterState.ZonesWithCards[WellknownZones.Deck].Add(cardsToShuffle[randomIndex]);
+                this.CurrentEncounterState.ZoneToCards[WellknownZones.Deck].Add(cardsToShuffle[randomIndex]);
                 cardsToShuffle.RemoveAt(randomIndex);
             }
         }
@@ -315,14 +321,14 @@ namespace SpaceDeck.GameState.Execution
                 return;
             }
 
-            if (!this.CurrentEncounterState.ZonesWithCards.ContainsKey(zone))
+            if (!this.CurrentEncounterState.ZoneToCards.ContainsKey(zone))
             {
-                this.CurrentEncounterState.ZonesWithCards.Add(zone, new List<CardInstance>());
+                this.CurrentEncounterState.ZoneToCards.Add(zone, new List<CardInstance>());
             }
 
             Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Adding card '{card.Id}' to '{zone}' deck.");
-            this.CurrentEncounterState.ZonesWithCards[zone].Add(card);
-            this.CurrentEncounterState.CardsInZones.Add(card, zone);
+            this.CurrentEncounterState.ZoneToCards[zone].Add(card);
+            this.CurrentEncounterState.CardToZone.Add(card, zone);
         }
 
         public QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay)

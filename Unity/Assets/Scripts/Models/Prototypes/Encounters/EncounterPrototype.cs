@@ -23,8 +23,8 @@ namespace SpaceDeck.Models.Prototypes
             string name,
             string description,
             HashSet<LowercaseString> encounterTags,
-            IReadOnlyList<LowercaseStringSet> enemiesInEncounterById,
-            IReadOnlyList<string> arguments,
+            IEnumerable<LowercaseStringSet> enemiesInEncounterById,
+            IEnumerable<string> arguments,
             IEnumerable<EncounterScript> encounterScripts,
             IEnumerable<PickRewardPrototype> rewards,
             IEnumerable<LowercaseStringSet> shopItems)
@@ -32,11 +32,11 @@ namespace SpaceDeck.Models.Prototypes
             this.Id = id;
             this.Name = name;
             this.Description = description;
-            this.EncounterTags = encounterTags;
-            this.EnemiesInEncounterById = enemiesInEncounterById;
-            this.Arguments = arguments;
-            this.Rewards = rewards;
-            this.ShopItems = shopItems;
+            this.EncounterTags = encounterTags ?? new HashSet<LowercaseString>();
+            this.EnemiesInEncounterById = enemiesInEncounterById ?? Array.Empty<LowercaseStringSet>(); ;
+            this.Arguments = arguments ?? Array.Empty<string>();
+            this.Rewards = rewards ?? Array.Empty<PickRewardPrototype>();
+            this.ShopItems = shopItems ?? Array.Empty<LowercaseStringSet>();
             
             foreach (EncounterScript script in encounterScripts)
             {

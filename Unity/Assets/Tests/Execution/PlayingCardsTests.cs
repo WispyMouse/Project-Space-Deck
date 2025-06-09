@@ -72,7 +72,8 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ASSERT
             Assert.IsTrue(debugValue, "The card should have successfully played, resulting in the action changing the debug value to true.");
-            Assert.IsTrue(encounter.CardsInZones[cardInstance] == WellknownZones.Discard, "The played card should now be in the discard pile.");
+            Assert.IsTrue(encounter.CardToZone.ContainsKey(cardInstance), "The played card should exist in some zone.");
+            Assert.IsTrue(encounter.CardToZone[cardInstance] == WellknownZones.Discard, "The played card should now be in the discard pile.");
         }
 
         /// <summary>
@@ -115,7 +116,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ASSERT
             Assert.IsTrue(debugValue, "The card should have successfully played, resulting in the action changing the debug value to true.");
-            Assert.IsTrue(encounter.CardsInZones[cardInstance] == WellknownZones.Discard, "The played card should now be in the discard pile.");
+            Assert.IsTrue(encounter.CardToZone[cardInstance] == WellknownZones.Discard, "The played card should now be in the discard pile.");
         }
     }
 }

@@ -49,7 +49,19 @@ namespace SpaceDeck.Tests.EditMode.Common.TestFixtures
         {
             if (question is EffectTargetExecutionQuestion targetQuestion)
             {
-                IChangeTarget target = targetQuestion.Options.GetProvidedTargets(answeringContext)[this.Index];
+                IReadOnlyList<IChangeTarget> targets = targetQuestion.Options.GetProvidedTargets(answeringContext);
+
+                if (targets == null)
+                {
+                    Assert.Fail($"Asked for targets and received a null list. {nameof(targetQuestion.Options.GetProvidedTargets)} may be empty, but should never be null.");
+                }
+
+                if (targets.Count < this.Index)
+                {
+                    Assert.Fail($"This answerer was set to answer '{this.Index}', but the list of available targets contains only '{targets.Count}' targets.");
+                }
+
+                IChangeTarget target = targets[this.Index];
                 answerReceiver.Invoke(new EffectTargetExecutionAnswer(question, target));
             }
             else

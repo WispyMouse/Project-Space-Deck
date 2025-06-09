@@ -4,6 +4,8 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
     using SpaceDeck.Tokenization.Evaluatables;
     using SpaceDeck.Tokenization.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Utility.Logging;
+    using SpaceDeck.Utility.Wellknown;
     using System.Collections.Generic;
 
     /// <summary>
@@ -15,6 +17,11 @@ namespace SpaceDeck.Tokenization.Evaluatables.Questions
 
         public EffectTargetExecutionQuestion(LinkedToken linkedToken, ChangeTargetProvider options) : base(linkedToken)
         {
+            if (options == null)
+            {
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.Question, $"{nameof(EffectTargetExecutionQuestion)} created with null options.");
+            }
+
             this.Options = options;
         }
 

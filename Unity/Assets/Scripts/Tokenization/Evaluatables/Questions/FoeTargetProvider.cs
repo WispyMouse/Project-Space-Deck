@@ -26,7 +26,7 @@ namespace SpaceDeck.Tokenization.Evaluatables
                 return null;
             }
 
-            decimal userFaction = answeringContext.User.Qualities.GetNumericQuality(WellknownQualities.Faction);
+            decimal userFaction = answeringContext.User.Qualities.GetNumericQuality(WellknownQualities.Faction, WellknownFactions.UnknownFaction);
             List<IChangeTarget> foes = new List<IChangeTarget>();
             foreach (IChangeTarget target in answeringContext.StartingGameState.GetAllEntities())
             {

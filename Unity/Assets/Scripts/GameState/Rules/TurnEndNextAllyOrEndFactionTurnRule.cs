@@ -7,6 +7,7 @@ namespace SpaceDeck.GameState.Rules
     using SpaceDeck.GameState.Execution;
     using SpaceDeck.GameState.Minimum;
     using SpaceDeck.Tokenization.Minimum.Context;
+    using SpaceDeck.Utility.Logging;
     using SpaceDeck.Utility.Wellknown;
     using static SpaceDeck.GameState.Minimum.GameStateEventTrigger;
 
@@ -20,6 +21,7 @@ namespace SpaceDeck.GameState.Rules
         {
             if (gameStateMutator.CampaignState != WellknownCampaignStates.CombatEncounter)
             {
+                Logging.DebugLog(WellknownLoggingLevels.Warning, WellknownLoggingCategories.Rule, $"An entity has ended its turn, but the campaign is not in a combat context. It is in the state '{gameStateMutator.CampaignState}'.");
                 applications = null;
                 return false;
             }

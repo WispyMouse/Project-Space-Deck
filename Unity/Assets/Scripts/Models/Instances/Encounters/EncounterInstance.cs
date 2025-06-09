@@ -10,21 +10,33 @@ namespace SpaceDeck.Models.Instances
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
 
-    public class EncounterInstance : EncounterState
+    public class EncounterInstance
     {
         public readonly EncounterPrototype Prototype;
         public readonly IReadOnlyList<LinkedShopEntry> ShopEntries;
 
-        public override bool HasEncounterDialogue => this.Prototype.EncounterScripts.Count > 0;
-        public override bool IsShopEncounter => this.Prototype.IsShopEncounter;
+        public override bool HasEncounterDialogue =>
+            // If there's no prototype, there's no dialogue
+            !(this.Prototype == null)
+            // If there is a prototype and it has encounter scripts, it is an encounter
+            && (this.Prototype.EncounterScripts.Count > 0);
+        public override bool IsShopEncounter => 
+            // By default this is a shop encounter if it contains a shop entry            
+            this.ShopEntries.Count > 0 
+            // If this has a prototype: If that prototype isn't a shop encounter, this isn't a shop encounter
+            && (this.Prototype == null || this.Prototype.IsShopEncounter);
 
-        public EncounterInstance(EncounterPrototype prototype, IEncounterEntitiesProvider entityProvider, ILinkedPickRewardProvider rewardProvider) :base()
+        private EncounterInstance(LowercaseString encounterId, string encounterName, string encounterDescription) : base()
+        {
+            this.EncounterId = encounterId;
+            this.EncounterName = encounterName;
+            this.EncounterDescription = encounterDescription;
+        }
+
+        public EncounterInstance(EncounterPrototype prototype, IEncounterEntitiesProvider entityProvider, ILinkedPickRewardProvider rewardProvider) : this(prototype.Id, prototype.Name, prototype.Description)
         {
             this.Prototype = prototype;
 
-            this.EncounterId = prototype.Id;
-            this.EncounterName = prototype.Name;
-            this.EncounterDescription = prototype.Description;
             this.EncounterEntities.AddRange(entityProvider.GetEntities(this.Prototype.EnemiesInEncounterById));
             this.EncounterRewards.AddRange(rewardProvider.GetRewards(this.Prototype.Rewards));
 
@@ -34,6 +46,7 @@ namespace SpaceDeck.Models.Instances
                 LinkedShopEntry shopEntry = rewardProvider.GetShopEntry(shopItem);
                 shopEntries.Add(shopEntry);
             }
+
             this.ShopEntries = shopEntries;
 
             if (!this.IsShopEncounter && !this.HasEncounterDialogue && this.EncounterEntities.Count == 0)
@@ -46,11 +59,11 @@ namespace SpaceDeck.Models.Instances
         {
             this.Prototype = null;
 
-            this.EncounterId = state.EncounterId;
-            this.EncounterName = state.EncounterName;
-            this.EncounterDescription = state.EncounterDescription;
             this.EncounterEntities.AddRange(state.EncounterEntities);
             this.EncounterRewards.AddRange(state.EncounterRewards);
+
+            // TODO: Enable EncounterState fed shops
+            this.ShopEntries = Array.Empty<LinkedShopEntry>();
         }
 
         public override string BuildEncounterDialogue(LowercaseString index, IGameStateMutator mutator)

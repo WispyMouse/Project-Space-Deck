@@ -26,7 +26,7 @@ namespace SpaceDeck.GameState.Deltas
         public static void ApplyResolve(IGameStateMutator originalState, IResolve toResolve)
         {
             toResolve.Apply(originalState);
-            GameStateUpdated.Invoke(originalState, null);
+            GameStateUpdated?.Invoke(originalState, null);
         }
 
         public static void ApplyGameStateDelta(IGameStateMutator originalState, GameStateDelta delta)
@@ -40,7 +40,7 @@ namespace SpaceDeck.GameState.Deltas
             {
                 change.Apply(originalState);
             }
-            GameStateUpdated.Invoke(originalState, delta);
+            GameStateUpdated?.Invoke(originalState, delta);
         }
     }
 }
