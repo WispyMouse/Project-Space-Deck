@@ -160,7 +160,7 @@ namespace SpaceDeck.UX
             // Add starting cards to player's deck
             foreach (LowercaseString startingCard in route.StartingCards)
             {
-                this.GameplayState.AddCard(CardDatabase.GetInstance(startingCard), WellknownZones.Campaign);
+                this.GameplayState.AddCardToCampaignDeck(CardDatabase.GetInstance(startingCard));
             }
 
             this.UXController.PresentNextRouteChoice(nextChoice);

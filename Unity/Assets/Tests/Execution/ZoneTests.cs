@@ -52,7 +52,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
             gameState.StartEncounter(encounter);
-            gameState.AddCard(cardInstance, WellknownZones.Hand);
+            gameState.AddCardToEncounter(cardInstance, WellknownZones.Hand);
 
             // ACT
             gameState.StartConsideringPlayingCard(cardInstance);
@@ -87,7 +87,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.LinkTokens();
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             gameState.StartEncounter(encounter);
-            gameState.AddCard(cardInstance, WellknownZones.Hand);
+            gameState.AddCardToEncounter(cardInstance, WellknownZones.Hand);
 
             // ACT
             gameState.StartConsideringPlayingCard(cardInstance);
@@ -124,7 +124,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             LinkedCardInstance cardInstance = new LinkedCardInstance(cardPrototype, ElementDatabase.Provider);
             EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });
             gameState.StartEncounter(encounter);
-            gameState.AddCard(cardInstance, WellknownZones.Hand);
+            gameState.AddCardToEncounter(cardInstance, WellknownZones.Hand);
 
             // ACT
             gameState.StartConsideringPlayingCard(cardInstance);
@@ -163,7 +163,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             // ACT
             for (int ii = 0; ii < cardsInDeck; ii++)
             {
-                gameState.AddCard(new LinkedCardInstance(cardPrototype, ElementDatabase.Provider), WellknownZones.Deck);
+                gameState.AddCardToEncounter(new LinkedCardInstance(cardPrototype, ElementDatabase.Provider), WellknownZones.Deck);
             }
             CardInstance exileThis = gameState.GetCardsInZone(WellknownZones.Deck)[0];
             gameState.MoveCard(exileThis, WellknownZones.Exile);
@@ -193,7 +193,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ACT
             CardInstance addedCard = CardDatabase.GetInstance(import.Id);
-            gameState.AddCard(addedCard, WellknownZones.Campaign);
+            gameState.AddCardToCampaignDeck(addedCard);
 
             // ASSERT
             Assert.AreEqual(1, gameState.CardsInDeck.Count, "Should be exactly one card in the deck.");
@@ -215,7 +215,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
             CardDatabase.LinkTokens();
             GameState gameState = new GameState();
             CardInstance addedCard = CardDatabase.GetInstance(import.Id);
-            gameState.AddCard(addedCard, WellknownZones.Campaign);
+            gameState.AddCardToCampaignDeck(addedCard);
 
             // ACT
             EncounterInstance encounter = new EncounterInstance(string.Empty, string.Empty, string.Empty, new List<Entity>() { });

@@ -302,21 +302,17 @@ namespace SpaceDeck.GameState.Execution
             }
         }
 
-        public void AddCard(CardInstance card, LowercaseString zone)
+        public void AddCardToCampaignDeck(CardInstance card)
+        {
+            Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Adding card '{card.Id}' to '{WellknownZones.Campaign}' deck.");
+            this.CardsInDeck.Add(card);
+        }
+
+        public void AddCardToEncounter(CardInstance card, LowercaseString zone, bool addToCampaignDeck = false)
         {
             if (this.CurrentEncounterState == null)
             {
-                if (zone == WellknownZones.Campaign)
-                {
-                    Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Adding card '{card.Id}' to '{WellknownZones.Campaign}' deck.");
-                    this.CardsInDeck.Add(card);
-                }
-                else
-                {
-                    Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.GameState, $"Attempted to add card '{card.Id}' to the deck, but its zone target is '{zone}' and there isn't currently a combat situation. The only valid zone to add to is the '{WellknownZones.Campaign}' at this time.");
-                }
-
-                return;
+                Logging.DebugLog(WellknownLoggingLevels.Error, WellknownLoggingCategories.GameState, $"Asked to add card to encounter, but not in an encounter.");
             }
 
             if (!this.CurrentEncounterState.ZoneToCards.ContainsKey(zone))
@@ -327,6 +323,11 @@ namespace SpaceDeck.GameState.Execution
             Logging.DebugLog(WellknownLoggingLevels.Debug, WellknownLoggingCategories.GameState, $"Adding card '{card.Id}' to '{zone}' deck.");
             this.CurrentEncounterState.ZoneToCards[zone].Add(card);
             this.CurrentEncounterState.CardToZone.Add(card, zone);
+
+            if (addToCampaignDeck)
+            {
+                this.AddCardToCampaignDeck(card);
+            }
         }
 
         public QuestionAnsweringContext StartConsideringPlayingCard(CardInstance toPlay)
@@ -571,7 +572,7 @@ namespace SpaceDeck.GameState.Execution
         {
             foreach (LinkedCardInstance card in toGain.GainedCards)
             {
-                this.AddCard(card, WellknownZones.Campaign);
+                this.AddCardToCampaignDeck(card);
             }
 
             foreach (Currency currencyKey in toGain.GainedCurrency.Keys)

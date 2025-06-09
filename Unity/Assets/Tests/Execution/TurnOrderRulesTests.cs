@@ -187,7 +187,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             for (int ii = 0; ii < cardsToDraw; ii ++)
             {
-                gameState.AddCard(new TestCard(), WellknownZones.Campaign);
+                gameState.AddCardToCampaignDeck(new TestCard());
             }
 
             Entity playerEntity = new Entity();
@@ -223,7 +223,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
 
             for (int ii = 0; ii < cardsToDraw; ii++)
             {
-                gameState.AddCard(new TestCard(), WellknownZones.Campaign);
+                gameState.AddCardToCampaignDeck(new TestCard());
             }
 
             Entity playerEntity = new Entity();

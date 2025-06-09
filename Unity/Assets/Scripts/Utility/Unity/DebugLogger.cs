@@ -1,6 +1,5 @@
 namespace SpaceDeck.Utility.Unity
 {
-    using NUnit.Framework;
     using SpaceDeck.Utility.Minimum;
     using SpaceDeck.Utility.Wellknown;
     using System.Collections;
@@ -30,7 +29,7 @@ namespace SpaceDeck.Utility.Unity
 
                 if (AssertFailureOnError)
                 {
-                    Assert.Fail($"{logCategory}: {toLog}");
+                    Debug.LogError($"{logCategory}: {toLog}");
                 }
             }
             else

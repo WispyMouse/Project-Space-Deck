@@ -52,7 +52,8 @@ namespace SpaceDeck.GameState.Minimum
         LowercaseString GetCardZone(CardInstance card);
         void ShuffleDeck();
         void ShuffleDiscardAndDeck();
-        void AddCard(CardInstance card, LowercaseString zone);
+        void AddCardToCampaignDeck(CardInstance card);
+        void AddCardToEncounter(CardInstance card, LowercaseString zone, bool addToCampaignDeck = false);
 
         bool CanAfford(IEnumerable<IShopCost> costs);
         void SetCampaignState(LowercaseString toState);

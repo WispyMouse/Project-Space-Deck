@@ -21,7 +21,7 @@ namespace SpaceDeck.GameState.Changes
 
         public override void Apply(IGameStateMutator toApplyTo)
         {
-            toApplyTo.AddCard(this.CardInstance, this.Zone);
+            toApplyTo.AddCardToEncounter(this.CardInstance, this.Zone);
         }
 
         public override string Describe()

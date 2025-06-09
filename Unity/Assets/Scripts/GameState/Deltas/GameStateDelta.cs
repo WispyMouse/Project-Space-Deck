@@ -349,7 +349,12 @@ namespace SpaceDeck.GameState.Deltas
             // TODO: Shuffle
         }
 
-        public void AddCard(CardInstance card, LowercaseString zone)
+        public void AddCardToCampaignDeck(CardInstance card)
+        {
+            // TODO: Hmm...
+        }
+
+        public void AddCardToEncounter(CardInstance card, LowercaseString zone, bool addToCampaignDeck = false)
         {
             this.CardDestinationChanges.Add(card, zone);
         }
