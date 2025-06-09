@@ -32,7 +32,7 @@ namespace SpaceDeck.Tests.EditMode.Tokenization
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            DebugLogger.SubscribeDebugListener(true);
+            DebugLogger.SubscribeDebugListener();
         }
 
         [OneTimeTearDown]

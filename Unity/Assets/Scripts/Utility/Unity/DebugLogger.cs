@@ -8,11 +8,8 @@ namespace SpaceDeck.Utility.Unity
 
     public class DebugLogger : MonoBehaviour
     {
-        public static bool AssertFailureOnError = false;
-
-        public static void SubscribeDebugListener(bool assertFailureOnError)
+        public static void SubscribeDebugListener()
         {
-            AssertFailureOnError = assertFailureOnError;
             Logging.Logging.DebugLoggingActionEvent += DebugLogging;
         }
 
@@ -26,11 +23,6 @@ namespace SpaceDeck.Utility.Unity
             if (logLevel == WellknownLoggingLevels.Error)
             {
                 UnityEngine.Debug.LogError($"{logCategory}: {toLog}");
-
-                if (AssertFailureOnError)
-                {
-                    Debug.LogError($"{logCategory}: {toLog}");
-                }
             }
             else
             {

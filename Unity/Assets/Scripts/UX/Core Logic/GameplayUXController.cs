@@ -17,6 +17,8 @@ namespace SpaceDeck.UX
     using SpaceDeck.Utility.Logging;
     using SpaceDeck.Tokenization.Evaluatables.Questions;
     using SpaceDeck.Models.Instances;
+    using SpaceDeck.Utility.Unity;
+    using SpaceDeck.Utility.Minimum;
 
     public class GameplayUXController : MonoBehaviour
     {
@@ -91,6 +93,15 @@ namespace SpaceDeck.UX
         {
             this.Annihilate();
             GameStateDeltaApplier.GameStateUpdated += UpdateUXFromStateDelta;
+            Logging.DebugLoggingActionEvent += (LowercaseString logLevel, LowercaseString logCategory, string log) => 
+            {
+                const int MAXLOGLENGTH = 1000;
+                this.Log.text += log + "\n";
+                if (this.Log.text.Length > MAXLOGLENGTH)
+                {
+                    this.Log.text = this.Log.text.Substring(this.Log.text.Length - MAXLOGLENGTH);
+                }
+            };
         }
 
         private void OnEnable()

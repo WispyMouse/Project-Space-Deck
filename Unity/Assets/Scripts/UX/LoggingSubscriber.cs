@@ -8,7 +8,7 @@ namespace SpaceDeck.UX
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void SubscribeUnityLogger()
         {
-            DebugLogger.SubscribeDebugListener(false);
+            DebugLogger.SubscribeDebugListener();
         }
     }
 }

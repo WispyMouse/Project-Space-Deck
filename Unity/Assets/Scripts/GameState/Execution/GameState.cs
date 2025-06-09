@@ -607,7 +607,7 @@ namespace SpaceDeck.GameState.Execution
 
             if (this.RouteIndex >= this.BasedOnRoute.Choices.Count)
             {
-                // TODO: LOG VICTORY
+                Logging.DebugLog(WellknownLoggingLevels.Playerfacing, WellknownLoggingCategories.GameState, $"You win! There are no more nodes on this encounter. Press Restart to play again.");
                 nextChoice = null;
                 return false;
             }

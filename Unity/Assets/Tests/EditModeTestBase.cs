@@ -32,7 +32,7 @@ namespace SpaceDeck.Tests.EditMode.Execution
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            DebugLogger.SubscribeDebugListener(true);
+            DebugLogger.SubscribeDebugListener();
         }
 
         [OneTimeTearDown]
@@ -44,7 +44,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
         [SetUp]
         public void SetUp()
         {
-            DebugLogger.AssertFailureOnError = true;
             LogAssert.ignoreFailingMessages = false;
         }
 

@@ -5556,6 +5556,7 @@ GameObject:
   - component: {fileID: 1446218015}
   - component: {fileID: 1446218014}
   - component: {fileID: 1446218013}
+  - component: {fileID: 1446218016}
   m_Layer: 5
   m_Name: Logs
   m_TagString: Untagged
@@ -5652,6 +5653,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446218011}
   m_CullTransparentMesh: 1
+--- !u!114 &1446218016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446218011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e61e890c0bc77e4190906b83e6eda91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1469519608
 GameObject:
   m_ObjectHideFlags: 0

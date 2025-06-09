@@ -113,7 +113,6 @@ namespace SpaceDeck.Tests.EditMode.Execution
 
             // ASSERT
             // DAMAGE requires a target, and without a target this shouldn't be able to evaluate
-            DebugLogger.AssertFailureOnError = false;
             LogAssert.ignoreFailingMessages = true;
             Assert.False(GameStateDeltaMaker.TryCreateDelta(linkedTokenSet, gameState, out GameStateDelta generatedDelta), "Should not be able to create delta without providing context.");
         }
