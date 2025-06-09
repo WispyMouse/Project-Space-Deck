@@ -24,9 +24,15 @@ namespace SpaceDeck.UX
     using SpaceDeck.Utility.Wellknown;
     using SpaceDeck.Utility.Logging;
     using SpaceDeck.GameState.Execution;
+    using PlasticPipe.PlasticProtocol.Messages;
 
     public class CentralGameStateController : MonoBehaviour
     {
+        public delegate void OnRouteChosenDelegate(Route chosenRoute);
+        public static event OnRouteChosenDelegate OnRouteChosen;
+        public delegate void OnResetGameDelegate();
+        public static event OnResetGameDelegate OnResetGame;
+
         public SpaceDeck.GameState.Execution.GameState GameplayState;
         public Entity CampaignPlayer;
 
@@ -97,6 +103,8 @@ namespace SpaceDeck.UX
             this.UXController.Annihilate();
             this.GameplayState = null;
             this.UXController.ShowCampaignChooser();
+
+            OnResetGame?.Invoke();
         }
 
         IEnumerator BootupSequence()
@@ -162,6 +170,8 @@ namespace SpaceDeck.UX
             {
                 this.GameplayState.AddCardToCampaignDeck(CardDatabase.GetInstance(startingCard));
             }
+
+            OnRouteChosen?.Invoke(route);
 
             this.UXController.PresentNextRouteChoice(nextChoice);
         }

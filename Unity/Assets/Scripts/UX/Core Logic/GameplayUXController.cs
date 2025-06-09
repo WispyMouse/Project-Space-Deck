@@ -485,6 +485,9 @@ namespace SpaceDeck.UX
             this.PlayerHandRepresenter.Annihilate();
             this.EnemyRepresenterUX.Annihilate();
             this.CardBrowserUXInstance.Close();
+            this.CampaignChooserUXInstance.HideChooser();
+            this.ChoiceUXFolder.SetActive(false);
+            this.CancelAllSelections();
 
             for (int ii = this.PlayerRepresentationTransform.childCount - 1; ii >= 0; ii--)
             {
