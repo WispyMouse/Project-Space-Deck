@@ -1507,7 +1507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7859fa5e8628ff94bad386605720bbef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EditorScene: EditorCenter
+  EditorScene: CreatorScene
 --- !u!114 &478751965
 MonoBehaviour:
   m_ObjectHideFlags: 0

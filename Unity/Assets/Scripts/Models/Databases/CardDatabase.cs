@@ -17,6 +17,8 @@ namespace SpaceDeck.Models.Databases
     {
         private readonly static Dictionary<LowercaseString, CardPrototype> Prototypes = new Dictionary<LowercaseString, CardPrototype>();
 
+        public static IEnumerable<CardPrototype> AllPrototypes => Prototypes.Values;
+
         public static void AddCardToDatabase(CardImport import)
         {
             // TODO: CardImport is Serializable, so it's not necessarily nullable

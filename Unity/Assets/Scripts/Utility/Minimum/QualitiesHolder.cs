@@ -94,5 +94,15 @@ namespace SpaceDeck.Utility.Minimum
                 this.SetNumericQuality(numericKey, from.NumericQualities[numericKey]);
             }
         }
+
+        public IReadOnlyDictionary<LowercaseString, decimal> GetNumericQualities()
+        {
+            return new Dictionary<LowercaseString, decimal>(this.NumericQualities);
+        }
+
+        public IReadOnlyDictionary<LowercaseString, string> GetStringQualities()
+        {
+            return new Dictionary<LowercaseString, string>(this.StringQualities);
+        }
     }
 }
